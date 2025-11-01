@@ -4,20 +4,20 @@
 
 class BaseEdgeCanvas : public BaseCanvas {
   public:
-  static constexpr int A = R * 2;
-  static constexpr int B = A * 5;
+  static constexpr int Width = UnitSize * 2;
+  static constexpr int Height = Width * 5;
 
   int
   RotateWidth() const {
-    return Rotate ? A: B;
+    return Rotate ? Width : Height;
   }
 
   int
   RotateHeight() const {
-    return Rotate ? B: A;
+    return Rotate ? Height : Width;
   }
 
-  explicit BaseEdgeCanvas(bool rotate, QWidget* parent) : Rotate(rotate), BaseCanvas(parent) {
+  explicit BaseEdgeCanvas(bool rotate, QWidget* parent) : BaseCanvas(parent), Rotate(rotate) {
     resize(QSize(RotateWidth(), RotateHeight()));
   }
 

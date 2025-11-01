@@ -32,7 +32,7 @@ class MainWindow final : public BaseCanvasLayer {
     BoxCanvasLayer.New(this);
     EdgeCanvasLayer.New(this);
     DotCanvasLayer.New(this);
-    std::function<std::function<void()>(Edge)> CallBackFactory = [this](Edge edge) {
+    auto CallBackFactory = [this](Edge edge) {
       return [edge, this] { return setPlayerMoveEdge(edge); };
     };
     EdgeButtonLayer.New(CallBackFactory, this);

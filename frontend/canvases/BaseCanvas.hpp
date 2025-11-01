@@ -8,6 +8,8 @@
 
 class BaseCanvas : public QWidget {
   public:
+  static constexpr int UnitSize = 8;
+
   explicit BaseCanvas(QWidget* parent) : QWidget(parent) {
   }
 
@@ -34,6 +36,4 @@ class BaseCanvas : public QWidget {
 
     return windowColor.lightness() < 128;
   }
-
-  static constexpr int R = 8;
 };

@@ -17,16 +17,16 @@ class EdgeLayer : public BaseCanvasLayer {
   resizeEvent(QResizeEvent* event) override {
     BaseCanvasLayer::resizeEvent(event);
 
-    int x0 = (width() - BoardWindowSize) / 2 - R;
-    int y0 = (height() - BoardWindowSize) / 2 - R;
+    int x0 = (width() - BoardWidth) / 2 - UnitSize;
+    int y0 = (height() - BoardWidth) / 2 - UnitSize;
 
     for (Edge edge = 0; edge < Edge::Max; edge++) {
-      int x = x0 + edge.Dot1().X() * EdgeCanvas::B;
-      int y = y0 + edge.Dot1().Y() * EdgeCanvas::B;
+      int x = x0 + edge.Dot1().X() * EdgeCanvas::Height;
+      int y = y0 + edge.Dot1().Y() * EdgeCanvas::Height;
       if (edge.Dot1().X() == edge.Dot2().X()) {
-        y += R;
+        y += UnitSize;
       } else {
-        x += R;
+        x += UnitSize;
       }
       Canvases.At(edge)->move(x, y);
     }

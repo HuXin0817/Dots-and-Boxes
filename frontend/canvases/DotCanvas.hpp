@@ -9,7 +9,7 @@ class DotCanvas final : public BaseCanvas {
   Q_OBJECT
 
   public:
-  static constexpr int A = 2 * R;
+  static constexpr int Width = 2 * UnitSize;
 
   QColor
   Color() const override {
@@ -21,7 +21,7 @@ class DotCanvas final : public BaseCanvas {
   }
 
   explicit DotCanvas(QWidget* parent) : BaseCanvas(parent) {
-    setFixedSize(A, A);
+    setFixedSize(Width, Width);
   }
 
   void
@@ -37,6 +37,6 @@ class DotCanvas final : public BaseCanvas {
     int x = width() / 2;
     int y = height() / 2;
 
-    painter.drawEllipse(QPoint(x, y), R, R);
+    painter.drawEllipse(QPoint(x, y), UnitSize, UnitSize);
   }
 };

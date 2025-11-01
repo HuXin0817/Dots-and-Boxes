@@ -8,10 +8,10 @@ class BoxCanvas final : public BaseCanvas {
   Q_OBJECT
 
   public:
-  static constexpr int A = EdgeCanvas::B - 2 * R;
+  static constexpr int Width = EdgeCanvas::Height - 2 * UnitSize;
 
   explicit BoxCanvas(QWidget* parent) : BaseCanvas(parent) {
-    resize(QSize(A, A));
+    resize(QSize(Width, Width));
   }
 
   CanvasState State = CanvasState::Free;
@@ -41,9 +41,9 @@ class BoxCanvas final : public BaseCanvas {
     painter.setPen(Qt::NoPen);
     painter.setBrush(QBrush(Color()));
 
-    int x = width() / 2 - A / 2;
-    int y = height() / 2 - A / 2;
+    int x = width() / 2 - Width / 2;
+    int y = height() / 2 - Width / 2;
 
-    painter.drawRect(x, y, A, A);
+    painter.drawRect(x, y, Width, Width);
   }
 };

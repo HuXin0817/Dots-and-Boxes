@@ -26,13 +26,13 @@ class DotCanvasLayer final : public BaseCanvasLayer {
   resizeEvent(QResizeEvent* event) override {
     BaseCanvasLayer::resizeEvent(event);
 
-    int x0 = (width() - BoardWindowSize) / 2 - R;
-    int y0 = (height() - BoardWindowSize) / 2 - R;
+    int x0 = (width() - BoardWidth) / 2 - UnitSize;
+    int y0 = (height() - BoardWidth) / 2 - UnitSize;
 
     for (int i = 0; i < Dot::Size; i++) {
       for (int j = 0; j < Dot::Size; j++) {
-        int x = x0 + i * EdgeCanvas::B;
-        int y = y0 + j * EdgeCanvas::B;
+        int x = x0 + i * EdgeCanvas::Height;
+        int y = y0 + j * EdgeCanvas::Height;
         DotCanvases.At(Dot(i, j))->move(x, y);
       }
     }
