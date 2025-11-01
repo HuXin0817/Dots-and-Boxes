@@ -2,10 +2,10 @@
 
 #include <QWidget>
 
-#include "../src/common/Array.h"
-#include "../src/model/Edge.h"
+#include "../../src/common/Array.h"
+#include "../../src/model/Edge.h"
+#include "../canvases/EdgeCanvas.h"
 #include "BaseCanvasLayer.h"
-#include "EdgeCanvas.h"
 #include "EdgeLayer.h"
 
 class EdgeCanvasLayer final : public EdgeLayer<EdgeCanvas> {

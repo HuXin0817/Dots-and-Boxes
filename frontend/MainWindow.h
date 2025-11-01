@@ -7,10 +7,10 @@
 #include <thread>
 
 #include "../src/ai/AIConfig.h"
-#include "BoxCanvasLayer.h"
-#include "DotCanvasLayer.h"
-#include "EdgeButtonLayer.h"
-#include "EdgeCanvasLayer.h"
+#include "layers/BoxCanvasLayer.h"
+#include "layers/DotCanvasLayer.h"
+#include "layers/EdgeButtonLayer.h"
+#include "layers/EdgeCanvasLayer.h"
 
 class MainWindow final : public BaseCanvasLayer {
   Q_OBJECT

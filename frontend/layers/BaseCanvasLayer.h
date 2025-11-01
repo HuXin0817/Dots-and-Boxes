@@ -1,7 +1,7 @@
 #pragma once
 
-#include "BoxCanvas.h"
-#include "EdgeCanvas.h"
+#include "../canvases/BoxCanvas.h"
+#include "../canvases/EdgeCanvas.h"
 
 class BaseCanvasLayer : public BaseCanvas {
   public:

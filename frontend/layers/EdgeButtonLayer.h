@@ -2,9 +2,9 @@
 
 #include <QWidget>
 
-#include "../src/common/Array.h"
-#include "../src/model/Edge.h"
-#include "EdgeButton.h"
+#include "../../src/common/Array.h"
+#include "../../src/model/Edge.h"
+#include "../canvases/EdgeButton.h"
 #include "EdgeLayer.h"
 
 class EdgeButtonLayer final : public EdgeLayer<EdgeButton> {

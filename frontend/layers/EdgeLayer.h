@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../src/common/Array.h"
-#include "../src/model/Edge.h"
+#include "../../src/common/Array.h"
+#include "../../src/model/Edge.h"
 #include "BaseCanvasLayer.h"
 
 template <class Canvas>

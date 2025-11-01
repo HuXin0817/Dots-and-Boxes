@@ -1,12 +1,12 @@
 #pragma once
 
-#include "../src/common/Array.h"
-#include "../src/common/Ptr.h"
-#include "../src/model/Square.h"
+#include "../../src/common/Array.h"
+#include "../../src/common/Ptr.h"
+#include "../../src/model/Square.h"
+#include "../canvases/BoxCanvas.h"
+#include "../canvases/DotCanvas.h"
+#include "../canvases/EdgeCanvas.h"
 #include "BaseCanvasLayer.h"
-#include "BoxCanvas.h"
-#include "DotCanvas.h"
-#include "EdgeCanvas.h"
 
 class BoxCanvasLayer final : public BaseCanvasLayer {
   friend class MainWindow;
