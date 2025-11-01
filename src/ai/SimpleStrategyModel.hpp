@@ -27,10 +27,10 @@ class SimpleStrategyModel final : public SearchModel {
     }
 
     if (!ScoreableEdges.Empty()) {
-      return ScoreableEdges.Export();
+      return Export(ScoreableEdges);
     }
     if (!EnemyUnscoreableEdges.Empty()) {
-      return EnemyUnscoreableEdges.Export();
+      return Export(EnemyUnscoreableEdges);
     }
 
     return {EmptyEdges.begin(), EmptyEdges.end()};

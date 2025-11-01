@@ -35,7 +35,7 @@ class BasicSearchModel final : public SearchModel {
       }
     }
 
-    return candidateEdges.Export();
+    return Export(candidateEdges);
   }
 
   private:

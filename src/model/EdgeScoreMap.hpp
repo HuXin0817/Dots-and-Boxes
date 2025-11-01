@@ -44,7 +44,7 @@ class EdgeScoreMap {
         }
       }
     }
-    return BestEdges.Export();
+    return ::Export(BestEdges);
   }
 
   private:

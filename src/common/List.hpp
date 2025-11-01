@@ -3,7 +3,6 @@
 #include <cassert>
 
 #include "Array.hpp"
-#include "Span.hpp"
 
 template <class T, int Cap>
 class List {
@@ -11,56 +10,23 @@ class List {
   void
   Reset(T item) {
     Data.At(0) = item;
-    Len = 1;
+    Length = 1;
   }
 
   void
   Clear() {
-    Len = 0;
-  }
-
-  bool
-  Empty() const {
-    return Len == 0;
+    Length = 0;
   }
 
   void
   Append(T item) {
-    assert(Len < Cap);
-    Data.At(Len++) = item;
+    assert(Length < Cap);
+    Data.At(Length++) = item;
   }
 
-  Span<T>
-  Export() const {
-    return {Data.begin(), Data.begin() + Len};
-  }
-
-  int
-  Size() const {
-    return Len;
-  }
-
-  T*
-  begin() {
-    return Data.begin();
-  }
-
-  T*
-  end() {
-    return Data.begin() + Len;
-  }
-
-  const T*
-  begin() const {
-    return Data.begin();
-  }
-
-  const T*
-  end() const {
-    return Data.begin() + Len;
-  }
+  I(Data.begin(), Data.begin() + Length, Length);
 
   private:
   Array<T, Cap> Data;
-  int Len = 0;
+  int Length = 0;
 };

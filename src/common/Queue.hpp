@@ -3,7 +3,6 @@
 #include <cassert>
 
 #include "Array.hpp"
-#include "Span.hpp"
 
 template <class T, int Cap>
 class Queue {
@@ -12,11 +11,6 @@ class Queue {
   Clear() {
     Begin = 0;
     End = 0;
-  }
-
-  bool
-  Empty() const {
-    return Begin == End;
   }
 
   void
@@ -31,10 +25,7 @@ class Queue {
     return Data.At(Begin++);
   }
 
-  Span<T>
-  Export() const {
-    return {Data.begin() + Begin, Data.begin() + End};
-  }
+  I(Data.begin() + Begin, Data.begin() + End, End - Begin);
 
   private:
   Array<T, Cap> Data;

@@ -33,7 +33,7 @@ class ImprovedSearchModel final : public SearchModel {
       }
     }
 
-    return SearchEdges.Export();
+    return Export(SearchEdges);
   }
 
   private:
