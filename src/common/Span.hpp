@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Config.hpp"
+
 template <class T>
 class Span {
   public:
