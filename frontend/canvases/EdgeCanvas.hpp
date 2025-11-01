@@ -1,25 +1,17 @@
 #pragma once
 
+#include "BaseEdgeCanvas.hpp"
 #include "DotCanvas.hpp"
 
-class EdgeCanvas final : public BaseCanvas {
+class EdgeCanvas final : public BaseEdgeCanvas {
   Q_OBJECT
 
   public:
-  static constexpr int A = R * 2;
-  static constexpr int B = A * 5;
-
-  explicit EdgeCanvas(bool rotate, QWidget* parent) : BaseCanvas(parent), Rotate(rotate) {
-    if (Rotate) {
-      resize(QSize(A, B));
-    } else {
-      resize(QSize(B, A));
-    }
+  explicit EdgeCanvas(bool rotate, QWidget* parent) : BaseEdgeCanvas(rotate, parent) {
   }
 
   CanvasState State = CanvasState::Free;
   bool HighLight = true;
-  bool Rotate = false;
 
   QColor
   Color() const override {
@@ -52,21 +44,15 @@ class EdgeCanvas final : public BaseCanvas {
   protected:
   void
   paintEvent(QPaintEvent* event) override {
-    BaseCanvas::paintEvent(event);
+    BaseEdgeCanvas::paintEvent(event);
 
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setPen(Qt::NoPen);
     painter.setBrush(QBrush(Color()));
 
-    if (Rotate) {
-      int x = width() / 2 - A / 2;
-      int y = height() / 2 - B / 2;
-      painter.drawRect(x, y, A, B);
-    } else {
-      int x = width() / 2 - B / 2;
-      int y = height() / 2 - A / 2;
-      painter.drawRect(x, y, B, A);
-    }
+    int x = width() / 2 - RotateWidth() / 2;
+    int y = height() / 2 - RotateHeight() / 2;
+    painter.drawRect(x, y, RotateWidth(), RotateHeight());
   }
 };
