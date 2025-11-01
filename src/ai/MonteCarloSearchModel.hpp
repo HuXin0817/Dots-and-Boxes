@@ -9,6 +9,8 @@ class MonteCarloSearchModel final : public SearchModel {
   friend class ParallelSearchModel;
 
   public:
+  static constexpr int SearchTime = 10000;
+
   MonteCarloSearchModel() = default;
 
   Span<Edge>
@@ -34,7 +36,6 @@ class MonteCarloSearchModel final : public SearchModel {
 
   private:
   ImprovedSearchModel SubModel;
-  const int SearchTime = 10000;
   BoardV2 AuxBoard;
   EdgeScoreMap ScoreMap;
 };
