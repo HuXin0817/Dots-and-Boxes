@@ -34,7 +34,7 @@ class MonteCarloSearchModel final : public SearchModel {
 
   private:
   ImprovedSearchModel SubModel;
-  const int SearchTime = 1000;
+  const int SearchTime = 10000;
   BoardV2 AuxBoard;
   EdgeScoreMap ScoreMap;
 };

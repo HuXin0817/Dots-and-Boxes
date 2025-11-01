@@ -5,7 +5,7 @@
 
 class ParallelSearchModel final : public SearchModel {
   public:
-  static constexpr int SearchGroupNumber = 100;
+  static constexpr int ParallelNumber = 10;
 
   ParallelSearchModel() = default;
 
@@ -15,18 +15,21 @@ class ParallelSearchModel final : public SearchModel {
       return edges;
     }
 
-    thread_local MonteCarloSearchModel model;
-    EdgeScoreMap result;
+    result.Reset();
 
 #pragma omp parallel for
-    for (int i = 0; i < SearchGroupNumber; ++i) {
+    for (auto& model : SubModels) {
       model.BestCandidateEdges(board);
-#pragma omp critical
-      {
-        result.Add(model.ScoreMap);
-      }
+    }
+
+    for (auto& model : SubModels) {
+      result.Add(model.ScoreMap);
     }
 
     return result.Export();
   }
+
+  private:
+  Array<MonteCarloSearchModel, ParallelNumber> SubModels;
+  EdgeScoreMap result;
 };
