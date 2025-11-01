@@ -18,7 +18,7 @@ find_package(Qt6 COMPONENTS
         Widgets
         REQUIRED)
 
-file(GLOB_RECURSE HEADERS "*.h")
+file(GLOB_RECURSE HEADERS "*.hpp")
 
 add_executable(Dots_and_Boxes main.cpp ${HEADERS})
 

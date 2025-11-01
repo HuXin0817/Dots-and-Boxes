@@ -2,8 +2,7 @@
 #include <QString>
 #include <QStyleFactory>
 
-#include "frontend/MainWindow.h"
-#include "src/ai/AIConfig.h"
+#include "frontend/MainWindow.hpp"
 
 auto player1Model = AIModelType::L4;
 auto player2Model = AIModelType::L4;
