@@ -11,7 +11,7 @@ class ParallelSearchModel final : public SearchModel {
 
   Span<Edge>
   BestCandidateEdges(const BoardV2& board) override {
-    if (auto edges = ImprovedSearchModel().BestCandidateEdges(board); edges.Size() == 1) {
+    if (auto edges = SubModels.At(0).SubModel.BestCandidateEdges(board); edges.Size() == 1) {
       return edges;
     }
 
