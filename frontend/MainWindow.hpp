@@ -6,25 +6,41 @@
 #include <chrono>
 #include <thread>
 
-#include "../src/ai/AIConfig.hpp"
+#include "../src/robot/RobotConfig.hpp"
 #include "layers/BoxCanvasLayer.hpp"
 #include "layers/DotCanvasLayer.hpp"
 #include "layers/EdgeButtonLayer.hpp"
 #include "layers/EdgeCanvasLayer.hpp"
 
+enum class PlayerType {
+  Human,
+  Robot,
+};
+
+inline std::string
+PlayerTypeToString(PlayerType type) {
+  switch (type) {
+    case PlayerType::Human:
+      return "Human";
+    case PlayerType::Robot:
+      return "Robot";
+  }
+}
+
 class MainWindow final : public BaseCanvasLayer {
   Q_OBJECT
+
   public:
-  explicit MainWindow(bool AIPlayer1,
-                      bool AIPlayer2,
-                      AIModelType AIPlayer1Type,
-                      AIModelType AIPlayer2Type,
+  explicit MainWindow(PlayerType Player1Type,
+                      PlayerType Player2Type,
+                      RobotType Robot1Type,
+                      RobotType Robot2Type,
                       QWidget* parent = nullptr)
       : BaseCanvasLayer(parent),
-        AIPlayer1(AIPlayer1),
-        AIPlayer2(AIPlayer2),
-        Player1Model(AIConfig::createModel(AIPlayer1Type)),
-        Player2Model(AIConfig::createModel(AIPlayer2Type)) {
+        Player1Type(Player1Type),
+        Player2Type(Player2Type),
+        Robot1(RobotConfig::CreateRobot(Robot1Type)),
+        Robot2(RobotConfig::CreateRobot(Robot2Type)) {
     resize(WindowSize, WindowSize);
     setMinimumSize(WindowSize, WindowSize);
 
@@ -49,7 +65,7 @@ class MainWindow final : public BaseCanvasLayer {
 
   signals:
   void
-  requestAIMove();
+  requestRobotMove();
 
   public slots:
   void
@@ -107,10 +123,10 @@ class MainWindow final : public BaseCanvasLayer {
       while (Board->Step::Gaming()) {
         auto startTime = std::chrono::high_resolution_clock::now();
 
-        if (AIPlayer1 && Board->Turn == Player1Turn) {
-          PlayerMoveEdge = RandomChoice(Player1Model->BestCandidateEdges(*Board));
-        } else if (AIPlayer2 && Board->Turn == Player2Turn) {
-          PlayerMoveEdge = RandomChoice(Player2Model->BestCandidateEdges(*Board));
+        if (Player1Type == PlayerType::Robot && Board->Turn == Player1Turn) {
+          PlayerMoveEdge = RandomChoice(Robot1->BestCandidateEdges(*Board));
+        } else if (Player2Type == PlayerType::Robot && Board->Turn == Player2Turn) {
+          PlayerMoveEdge = RandomChoice(Robot2->BestCandidateEdges(*Board));
         } else {
           PlayerMoveEdge = -1;
           while (PlayerMoveEdge == -1) {
@@ -150,10 +166,10 @@ class MainWindow final : public BaseCanvasLayer {
   }
 
   private:
-  bool AIPlayer1;
-  bool AIPlayer2;
-  Ptr<SearchModel> Player1Model;
-  Ptr<SearchModel> Player2Model;
+  PlayerType Player1Type;
+  PlayerType Player2Type;
+  Ptr<Robot> Robot1;
+  Ptr<Robot> Robot2;
   Edge PlayerMoveEdge;
   Ptr<BoardV2> Board;
   Ptr<BoxCanvasLayer> BoxCanvasLayer;
@@ -167,10 +183,10 @@ class MainWindow final : public BaseCanvasLayer {
     if (Board->Contains(edge)) {
       return;
     }
-    if (AIPlayer1 && Board->Turn == Player1Turn) {
+    if (Player1Type == PlayerType::Robot && Board->Turn == Player1Turn) {
       return;
     }
-    if (AIPlayer2 && Board->Turn == Player2Turn) {
+    if (Player2Type == PlayerType::Robot && Board->Turn == Player2Turn) {
       return;
     }
     PlayerMoveEdge = edge;

@@ -2,11 +2,11 @@
 
 #include "../common/List.hpp"
 #include "../common/Span.hpp"
-#include "BasicSearchModel.hpp"
+#include "BasicSearchRobot.hpp"
 
-class ImprovedSearchModel final : public SearchModel {
+class ImprovedSearchRobot final : public Robot {
   public:
-  ImprovedSearchModel() = default;
+  ImprovedSearchRobot() = default;
 
   Span<Edge>
   BestCandidateEdges(const BoardV2& board) override {
@@ -37,7 +37,7 @@ class ImprovedSearchModel final : public SearchModel {
   }
 
   private:
-  BasicSearchModel SubModel;
+  BasicSearchRobot SubModel;
   BoardV2 AuxBoard;
   List<Edge, Edge::Max> SearchEdges;
 };

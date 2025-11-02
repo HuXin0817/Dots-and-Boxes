@@ -3,14 +3,14 @@
 #include "../board/BoardV2.hpp"
 #include "../common/List.hpp"
 #include "../common/Span.hpp"
-#include "SearchModel.hpp"
+#include "Robot.hpp"
 
-class SimpleStrategyModel final : public SearchModel {
-  friend class BasicSearchModel;
-  friend class ImprovedSearchModel;
+class SimpleStrategyRobot final : public Robot {
+  friend class BasicSearchRobot;
+  friend class ImprovedSearchRobot;
 
   public:
-  SimpleStrategyModel() = default;
+  SimpleStrategyRobot() = default;
 
   Span<Edge>
   BestCandidateEdges(const BoardV2& board) override {

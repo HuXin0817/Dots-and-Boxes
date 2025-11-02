@@ -1,13 +1,13 @@
 #pragma once
 
-#include "MonteCarloSearchModel.hpp"
-#include "SearchModel.hpp"
+#include "MonteCarloSearchRobot.hpp"
+#include "Robot.hpp"
 
-class ParallelSearchModel final : public SearchModel {
+class ParallelSearchRobot final : public Robot {
   public:
   static constexpr int ParallelNumber = 10;
 
-  ParallelSearchModel() = default;
+  ParallelSearchRobot() = default;
 
   Span<Edge>
   BestCandidateEdges(const BoardV2& board) override {
@@ -30,6 +30,6 @@ class ParallelSearchModel final : public SearchModel {
   }
 
   private:
-  Array<MonteCarloSearchModel, ParallelNumber> SubModels;
+  Array<MonteCarloSearchRobot, ParallelNumber> SubModels;
   EdgeScoreMap result;
 };

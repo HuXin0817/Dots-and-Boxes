@@ -2,11 +2,11 @@
 
 #include "../board/BoardV3.hpp"
 #include "../common/Span.hpp"
-#include "SearchModel.hpp"
-#include "SimpleStrategyModel.hpp"
+#include "Robot.hpp"
+#include "SimpleStrategyRobot.hpp"
 
-class BasicSearchModel final : public SearchModel {
-  friend class ImprovedSearchModel;
+class BasicSearchRobot final : public Robot {
+  friend class ImprovedSearchRobot;
 
   public:
   Span<Edge>
@@ -39,6 +39,6 @@ class BasicSearchModel final : public SearchModel {
   }
 
   private:
-  SimpleStrategyModel SubModel;
+  SimpleStrategyRobot SubModel;
   BoardV3 AuxBoard;
 };

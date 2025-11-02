@@ -3,15 +3,15 @@
 #include "../board/BoardV2.hpp"
 #include "../common/Random.hpp"
 #include "../model/EdgeScoreMap.hpp"
-#include "ImprovedSearchModel.hpp"
+#include "ImprovedSearchRobot.hpp"
 
-class MonteCarloSearchModel final : public SearchModel {
-  friend class ParallelSearchModel;
+class MonteCarloSearchRobot final : public Robot {
+  friend class ParallelSearchRobot;
 
   public:
   static constexpr int SearchTime = 10000;
 
-  MonteCarloSearchModel() = default;
+  MonteCarloSearchRobot() = default;
 
   Span<Edge>
   BestCandidateEdges(const BoardV2& board) override {
@@ -35,7 +35,7 @@ class MonteCarloSearchModel final : public SearchModel {
   }
 
   private:
-  ImprovedSearchModel SubModel;
+  ImprovedSearchRobot SubModel;
   BoardV2 AuxBoard;
   EdgeScoreMap ScoreMap;
 };

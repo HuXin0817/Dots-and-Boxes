@@ -4,9 +4,9 @@
 #include "../common/Span.hpp"
 #include "../model/Edge.hpp"
 
-class SearchModel {
+class Robot {
   public:
-  virtual ~SearchModel() = default;
+  virtual ~Robot() = default;
 
   virtual Span<Edge>
   BestCandidateEdges(const BoardV2& board) = 0;
