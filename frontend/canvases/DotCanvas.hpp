@@ -11,13 +11,12 @@ class DotCanvas final : public BaseCanvas {
   public:
   static constexpr int Width = 2 * UnitSize;
 
+  static inline QColor DarkThemeColor = {202, 202, 202, 255};
+  static inline QColor LightThemeColor = {255, 255, 255, 255};
+
   QColor
   Color() const override {
-    if (isDarkTheme()) {
-      return {202, 202, 202, 255};
-    } else {
-      return {255, 255, 255, 255};
-    }
+    return isDarkTheme() ? DarkThemeColor : LightThemeColor;
   }
 
   explicit DotCanvas(QWidget* parent) : BaseCanvas(parent) {

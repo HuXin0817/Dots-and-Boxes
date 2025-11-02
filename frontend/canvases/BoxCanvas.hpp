@@ -16,19 +16,18 @@ class BoxCanvas final : public BaseCanvas {
 
   CanvasState State = CanvasState::Free;
 
+  static inline QColor Player1OccupyColor = {64, 64, 255, 64};
+  static inline QColor Player2OccupyColor = {255, 64, 64, 64};
+
   QColor
   Color() const override {
-    if (State == CanvasState::Free) {
-      return {0, 0, 0, 0};
-    }
     if (State == CanvasState::Player1Occupy) {
-      return {64, 64, 255, 64};
+      return Player1OccupyColor;
     }
     if (State == CanvasState::Player2Occupy) {
-      return {255, 64, 64, 64};
+      return Player2OccupyColor;
     }
-
-    return {};
+    return {0, 0, 0, 0};
   }
 
   protected:

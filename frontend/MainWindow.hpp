@@ -40,13 +40,12 @@ class MainWindow final : public BaseCanvasLayer {
     EdgeButtonLayer.New(CallBackFactory, this);
   }
 
+  static inline QColor DarkThemeColor = {43, 43, 43, 255};
+  static inline QColor LightThemeColor = {242, 242, 242, 255};
+
   QColor
   Color() const override {
-    if (isDarkTheme()) {
-      return {43, 43, 43, 255};
-    } else {
-      return {242, 242, 242, 255};
-    }
+    return isDarkTheme() ? DarkThemeColor : LightThemeColor;
   }
 
   signals:
