@@ -2,21 +2,21 @@
 
 #include "../common/Queue.hpp"
 #include "../model/Edge.hpp"
-#include "BoardV1.hpp"
+#include "EdgeCountableBoard.hpp"
 
-class BoardV3 : public BoardV1 {
+class ScoreableEdgeBoard : public EdgeCountableBoard {
   public:
-  BoardV3() = default;
+  ScoreableEdgeBoard() = default;
 
   void
-  Reset(const BoardV1& newBoard) {
+  Reset(const EdgeCountableBoard& newBoard) {
     GetBoardV1() = newBoard;
     ScoreableEdges.Clear();
   }
 
   int
   Add(Edge edge) {
-    int score = BoardV1::Add(edge);
+    int score = EdgeCountableBoard::Add(edge);
     for (Box box : EdgeBoxMapper::EdgeNearBoxes.At(edge)) {
       if (EdgeCountOfBox::At(box) == 3) {
         Edge edgeToAdd = FindNotContainsEdgeInBox(box);

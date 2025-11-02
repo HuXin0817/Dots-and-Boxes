@@ -3,15 +3,15 @@
 #include "../model/Edge.hpp"
 #include "../model/EdgeCountOfBox.hpp"
 #include "../model/Square.hpp"
-#include "BoardV0.hpp"
+#include "BasicBoard.hpp"
 
-class BoardV1 : public BoardV0, public EdgeCountOfBox {
+class EdgeCountableBoard : public BasicBoard, public EdgeCountOfBox {
   public:
-  BoardV1() = default;
+  EdgeCountableBoard() = default;
 
   int
   Add(Edge edge) {
-    BoardV0::Add(edge);
+    BasicBoard::Add(edge);
     return EdgeCountOfBox::Add(edge);
   }
 
@@ -37,12 +37,12 @@ class BoardV1 : public BoardV0, public EdgeCountOfBox {
     return -1;
   }
 
-  BoardV1&
+  EdgeCountableBoard&
   GetBoardV1() {
     return *this;
   }
 
-  const BoardV1&
+  const EdgeCountableBoard&
   GetBoardV1() const {
     return *this;
   }

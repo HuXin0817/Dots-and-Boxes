@@ -9,7 +9,7 @@ class ImprovedSearchRobot final : public Robot {
   ImprovedSearchRobot() = default;
 
   Span<Edge>
-  BestCandidateEdges(const BoardV2& board) override {
+  BestCandidateEdges(const ScoreCountableBoard& board) override {
     if (auto edges = SubRobot.BestCandidateEdges(board);
         !SubRobot.SubRobot.EnemyUnscoreableEdges.Empty()) {
       return edges;
@@ -38,6 +38,6 @@ class ImprovedSearchRobot final : public Robot {
 
   private:
   BasicSearchRobot SubRobot;
-  BoardV2 SimulationBoard;
+  ScoreCountableBoard SimulationBoard;
   List<Edge, Edge::Max> SearchEdges;
 };

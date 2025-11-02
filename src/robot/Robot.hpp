@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../board/BoardV2.hpp"
+#include "../board/ScoreCountableBoard.hpp"
 #include "../common/Span.hpp"
 #include "../model/Edge.hpp"
 
@@ -9,5 +9,5 @@ class Robot {
   virtual ~Robot() = default;
 
   virtual Span<Edge>
-  BestCandidateEdges(const BoardV2& board) = 0;
+  BestCandidateEdges(const ScoreCountableBoard& board) = 0;
 };

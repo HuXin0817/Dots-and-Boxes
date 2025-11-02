@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../board/BoardV3.hpp"
+#include "../board/ScoreableEdgeBoard.hpp"
 #include "../common/Span.hpp"
 #include "Robot.hpp"
 #include "SimpleStrategyRobot.hpp"
@@ -10,7 +10,7 @@ class BasicSearchRobot final : public Robot {
 
   public:
   Span<Edge>
-  BestCandidateEdges(const BoardV2& board) override {
+  BestCandidateEdges(const ScoreCountableBoard& board) override {
     if (auto edges = SubRobot.BestCandidateEdges(board);
         !SubRobot.EnemyUnscoreableEdges.Empty() || !SubRobot.ScoreableEdges.Empty()) {
       return edges;
@@ -36,5 +36,5 @@ class BasicSearchRobot final : public Robot {
 
   private:
   SimpleStrategyRobot SubRobot;
-  BoardV3 SimulationBoard;
+  ScoreableEdgeBoard SimulationBoard;
 };

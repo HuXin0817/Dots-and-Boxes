@@ -5,9 +5,9 @@
 #include "../model/Edge.hpp"
 #include "../model/Step.hpp"
 
-class BoardV0 : public Step {
+class BasicBoard : public Step {
   public:
-  BoardV0() {
+  BasicBoard() {
     for (Edge edge = 0; edge < Edge::Max; edge++) {
       EdgeIndexes.At(edge) = edge;
       Edges.At(edge) = edge;

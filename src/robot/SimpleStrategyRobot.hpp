@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../board/BoardV2.hpp"
+#include "../board/ScoreCountableBoard.hpp"
 #include "../common/List.hpp"
 #include "../common/Span.hpp"
 #include "Robot.hpp"
@@ -13,7 +13,7 @@ class SimpleStrategyRobot final : public Robot {
   SimpleStrategyRobot() = default;
 
   Span<Edge>
-  BestCandidateEdges(const BoardV2& board) override {
+  BestCandidateEdges(const ScoreCountableBoard& board) override {
     EnemyUnscoreableEdges.Clear();
     ScoreableEdges.Clear();
     auto EmptyEdges = board.EmptyEdges();

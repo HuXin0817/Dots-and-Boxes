@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../board/BoardV2.hpp"
+#include "../board/ScoreCountableBoard.hpp"
 #include "../common/Random.hpp"
 #include "../model/EdgeScoreMap.hpp"
 #include "ImprovedSearchRobot.hpp"
@@ -14,7 +14,7 @@ class MonteCarloSearchRobot final : public Robot {
   MonteCarloSearchRobot() = default;
 
   Span<Edge>
-  BestCandidateEdges(const BoardV2& board) override {
+  BestCandidateEdges(const ScoreCountableBoard& board) override {
     if (auto edges = SubRobot.BestCandidateEdges(board); edges.Size() == 1) {
       return edges;
     }
@@ -36,6 +36,6 @@ class MonteCarloSearchRobot final : public Robot {
 
   private:
   ImprovedSearchRobot SubRobot;
-  BoardV2 SimulationBoard;
+  ScoreCountableBoard SimulationBoard;
   EdgeScoreMap SearchResult;
 };

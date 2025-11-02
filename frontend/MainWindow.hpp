@@ -151,7 +151,7 @@ class MainWindow final : public BaseCanvasLayer {
   Ptr<Robot> Robot1;
   Ptr<Robot> Robot2;
   Edge PlayerMoveEdge;
-  Ptr<BoardV2> Board;
+  Ptr<ScoreCountableBoard> Board;
   Ptr<BoxCanvasLayer> BoxCanvasLayer;
   Ptr<EdgeCanvasLayer> EdgeCanvasLayer;
   Ptr<DotCanvasLayer> DotCanvasLayer;
