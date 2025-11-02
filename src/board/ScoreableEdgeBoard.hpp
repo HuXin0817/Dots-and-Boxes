@@ -10,7 +10,7 @@ class ScoreableEdgeBoard : public EdgeCountableBoard {
 
   void
   Reset(const EdgeCountableBoard& newBoard) {
-    GetBoardV1() = newBoard;
+    GetEdgeCountableBoard() = newBoard;
     ScoreableEdges.Clear();
   }
 

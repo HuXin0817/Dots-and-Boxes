@@ -21,7 +21,7 @@ class BasicSearchRobot final : public Robot {
     assert(candidateEdges.Empty());
 
     for (Edge edge : board.EmptyEdges()) {
-      SimulationBoard.Reset(board.GetBoardV1());
+      SimulationBoard.Reset(board.GetEdgeCountableBoard());
       SimulationBoard.Add(edge);
       if (int score = SimulationBoard.MaxObtainableScore(minScore); score < minScore) {
         minScore = score;

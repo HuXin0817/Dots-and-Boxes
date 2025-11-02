@@ -38,12 +38,12 @@ class EdgeCountableBoard : public BasicBoard, public EdgeCountOfBox {
   }
 
   EdgeCountableBoard&
-  GetBoardV1() {
+  GetEdgeCountableBoard() {
     return *this;
   }
 
   const EdgeCountableBoard&
-  GetBoardV1() const {
+  GetEdgeCountableBoard() const {
     return *this;
   }
 };

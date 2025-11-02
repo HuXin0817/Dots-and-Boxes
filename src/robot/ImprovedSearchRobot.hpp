@@ -18,7 +18,7 @@ class ImprovedSearchRobot final : public Robot {
     SearchEdges.Clear();
     int maxScore = -Box::Max;
     for (Edge emptyEdge : board.EmptyEdges()) {
-      SimulationBoard.Reset(board.GetBoardV1());
+      SimulationBoard.Reset(board.GetEdgeCountableBoard());
       SimulationBoard.Add(emptyEdge);
       while (SimulationBoard.Gaming()) {
         Edge edge = SubRobot.BestCandidateEdges(SimulationBoard).At(0);

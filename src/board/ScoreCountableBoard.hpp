@@ -9,7 +9,7 @@ class ScoreCountableBoard : public EdgeCountableBoard, public ScoreMap {
 
   void
   Reset(const EdgeCountableBoard& newBoard) {
-    GetBoardV1() = newBoard;
+    GetEdgeCountableBoard() = newBoard;
     ScoreMap::Reset();
   }
 
