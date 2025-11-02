@@ -7,25 +7,11 @@
 #include <thread>
 
 #include "../src/robot/RobotConfig.hpp"
+#include "PlayerConfig.hpp"
 #include "layers/BoxCanvasLayer.hpp"
 #include "layers/DotCanvasLayer.hpp"
 #include "layers/EdgeButtonLayer.hpp"
 #include "layers/EdgeCanvasLayer.hpp"
-
-enum class PlayerType {
-  Human,
-  Robot,
-};
-
-inline std::string
-PlayerTypeToString(PlayerType type) {
-  switch (type) {
-    case PlayerType::Human:
-      return "Human";
-    case PlayerType::Robot:
-      return "Robot";
-  }
-}
 
 class MainWindow final : public BaseCanvasLayer {
   Q_OBJECT

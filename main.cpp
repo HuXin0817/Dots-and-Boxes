@@ -37,18 +37,10 @@ main(int argc, char* argv[]) {
     }
     if (arg.find("--player1=") == 0) {
       std::string value = arg.substr(10);
-      if (value == "human" || value == "Human" || value == "HUMAN") {
-        Player1Type = PlayerType::Human;
-      } else if (value == "robot" || value == "Robot" || value == "ROBOT") {
-        Player1Type = PlayerType::Robot;
-      }
+      Player1Type = PlayerConfig::ParsePlayerType(value);
     } else if (arg.find("--player2=") == 0) {
       std::string value = arg.substr(10);
-      if (value == "human" || value == "Human" || value == "HUMAN") {
-        Player2Type = PlayerType::Human;
-      } else if (value == "robot" || value == "Robot" || value == "ROBOT") {
-        Player2Type = PlayerType::Robot;
-      }
+      Player2Type = PlayerConfig::ParsePlayerType(value);
     } else if (arg.find("--robot1=") == 0) {
       std::string value = arg.substr(9);
       Robot1Type = RobotConfig::ParseRobotType(value);
@@ -59,12 +51,12 @@ main(int argc, char* argv[]) {
   }
 
   printf("Starting game with player configuration:\n");
-  printf("  Player 1: %s", PlayerTypeToString(Player1Type).c_str());
+  printf("  Player 1: %s", PlayerConfig::GetPlayerTypeString(Player1Type).c_str());
   if (Player1Type == PlayerType::Robot) {
     printf(" - %s", RobotConfig::GetRobotName(Robot1Type).c_str());
   }
   printf("\n");
-  printf("  Player 2: %s", PlayerTypeToString(Player2Type).c_str());
+  printf("  Player 2: %s", PlayerConfig::GetPlayerTypeString(Player2Type).c_str());
   if (Player2Type == PlayerType::Robot) {
     printf(" - %s", RobotConfig::GetRobotName(Robot2Type).c_str());
   }
