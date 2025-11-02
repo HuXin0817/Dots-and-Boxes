@@ -48,11 +48,6 @@ class MainWindow final : public BaseCanvasLayer {
     return isDarkTheme() ? DarkThemeColor : LightThemeColor;
   }
 
-  signals:
-  void
-  requestRobotMove();
-
-  public slots:
   void
   Add(Edge edge) {
     if (Board->NowStep() > 0) {
