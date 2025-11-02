@@ -1,9 +1,7 @@
 #pragma once
 
 #include "Square.hpp"
-
-static constexpr bool Player1Turn = true;
-static constexpr bool Player2Turn = !Player1Turn;
+#include "Turn.hpp"
 
 static constexpr int MinWinnerScore = Box::Max / 2 + 1;
 
@@ -23,7 +21,7 @@ class ScoreMap {
   void
   Add(int score) {
     if (score == 0) {
-      Turn = !Turn;
+      Turn.Change();
       return;
     }
     if (Turn == Player1Turn) {
@@ -50,5 +48,5 @@ class ScoreMap {
 
   int Player1Score = 0;
   int Player2Score = 0;
-  bool Turn = Player1Turn;
+  PlayerTurn Turn = Player1Turn;
 };
