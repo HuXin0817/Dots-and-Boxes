@@ -18,14 +18,14 @@ class ImprovedSearchRobot final : public Robot {
     SearchEdges.Clear();
     int maxScore = -Box::Max;
     for (Edge emptyEdge : board.EmptyEdges()) {
-      AuxBoard.Reset(board.GetBoardV1());
-      AuxBoard.Add(emptyEdge);
-      while (AuxBoard.Gaming()) {
-        Edge edge = SubRobot.BestCandidateEdges(AuxBoard).At(0);
+      SimulationBoard.Reset(board.GetBoardV1());
+      SimulationBoard.Add(emptyEdge);
+      while (SimulationBoard.Gaming()) {
+        Edge edge = SubRobot.BestCandidateEdges(SimulationBoard).At(0);
         assert(board.MaxCount(edge) > 1);
-        AuxBoard.Add(edge);
+        SimulationBoard.Add(edge);
       }
-      if (int score = AuxBoard.Score(); score > maxScore) {
+      if (int score = SimulationBoard.Score(); score > maxScore) {
         maxScore = score;
         SearchEdges.Reset(emptyEdge);
       } else if (score == maxScore) {
@@ -38,6 +38,6 @@ class ImprovedSearchRobot final : public Robot {
 
   private:
   BasicSearchRobot SubRobot;
-  BoardV2 AuxBoard;
+  BoardV2 SimulationBoard;
   List<Edge, Edge::Max> SearchEdges;
 };

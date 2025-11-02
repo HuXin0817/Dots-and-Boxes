@@ -21,9 +21,9 @@ class BasicSearchRobot final : public Robot {
     assert(candidateEdges.Empty());
 
     for (Edge edge : board.EmptyEdges()) {
-      AuxBoard.Reset(board.GetBoardV1());
-      AuxBoard.Add(edge);
-      if (int score = AuxBoard.MaxObtainableScore(minScore); score < minScore) {
+      SimulationBoard.Reset(board.GetBoardV1());
+      SimulationBoard.Add(edge);
+      if (int score = SimulationBoard.MaxObtainableScore(minScore); score < minScore) {
         minScore = score;
         candidateEdges.Reset(edge);
       } else if (score == minScore) {
@@ -36,5 +36,5 @@ class BasicSearchRobot final : public Robot {
 
   private:
   SimpleStrategyRobot SubRobot;
-  BoardV3 AuxBoard;
+  BoardV3 SimulationBoard;
 };

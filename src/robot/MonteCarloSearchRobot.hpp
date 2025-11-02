@@ -22,13 +22,13 @@ class MonteCarloSearchRobot final : public Robot {
     SearchResult.Reset();
     int times = SearchTime / board.RemainStep() + 1;
     while (times--) {
-      AuxBoard.Reset(board.GetBoardV1());
-      Edge edge = RandomChoice(SubRobot.BestCandidateEdges(AuxBoard));
-      AuxBoard.Add(edge);
-      while (AuxBoard.Gaming()) {
-        AuxBoard.Add(RandomChoice(SubRobot.BestCandidateEdges(AuxBoard)));
+      SimulationBoard.Reset(board.GetBoardV1());
+      Edge edge = RandomChoice(SubRobot.BestCandidateEdges(SimulationBoard));
+      SimulationBoard.Add(edge);
+      while (SimulationBoard.Gaming()) {
+        SimulationBoard.Add(RandomChoice(SubRobot.BestCandidateEdges(SimulationBoard)));
       }
-      SearchResult.Add(edge, AuxBoard.Score());
+      SearchResult.Add(edge, SimulationBoard.Score());
     }
 
     return SearchResult.Export();
@@ -36,6 +36,6 @@ class MonteCarloSearchRobot final : public Robot {
 
   private:
   ImprovedSearchRobot SubRobot;
-  BoardV2 AuxBoard;
+  BoardV2 SimulationBoard;
   EdgeScoreMap SearchResult;
 };
