@@ -22,7 +22,7 @@ class ParallelSearchModel final : public SearchModel {
       model.BestCandidateEdges(board);
     }
 
-    for (auto& model : SubModels) {
+    for (const auto& model : SubModels) {
       result.Add(model.ScoreMap);
     }
 
