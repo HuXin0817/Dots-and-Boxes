@@ -11,13 +11,13 @@ class BasicSearchRobot final : public Robot {
   public:
   Span<Edge>
   BestCandidateEdges(const BoardV2& board) override {
-    if (auto edges = SubModel.BestCandidateEdges(board);
-        !SubModel.EnemyUnscoreableEdges.Empty() || !SubModel.ScoreableEdges.Empty()) {
+    if (auto edges = SubRobot.BestCandidateEdges(board);
+        !SubRobot.EnemyUnscoreableEdges.Empty() || !SubRobot.ScoreableEdges.Empty()) {
       return edges;
     }
 
     int minScore = Box::Max + 1;
-    auto& candidateEdges = SubModel.EnemyUnscoreableEdges;
+    auto& candidateEdges = SubRobot.EnemyUnscoreableEdges;
     assert(candidateEdges.Empty());
 
     for (Edge edge : board.EmptyEdges()) {
@@ -35,6 +35,6 @@ class BasicSearchRobot final : public Robot {
   }
 
   private:
-  SimpleStrategyRobot SubModel;
+  SimpleStrategyRobot SubRobot;
   BoardV3 AuxBoard;
 };

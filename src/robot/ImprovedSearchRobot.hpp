@@ -10,8 +10,8 @@ class ImprovedSearchRobot final : public Robot {
 
   Span<Edge>
   BestCandidateEdges(const BoardV2& board) override {
-    if (auto edges = SubModel.BestCandidateEdges(board);
-        !SubModel.SubModel.EnemyUnscoreableEdges.Empty()) {
+    if (auto edges = SubRobot.BestCandidateEdges(board);
+        !SubRobot.SubRobot.EnemyUnscoreableEdges.Empty()) {
       return edges;
     }
 
@@ -21,7 +21,7 @@ class ImprovedSearchRobot final : public Robot {
       AuxBoard.Reset(board.GetBoardV1());
       AuxBoard.Add(emptyEdge);
       while (AuxBoard.Gaming()) {
-        Edge edge = SubModel.BestCandidateEdges(AuxBoard).At(0);
+        Edge edge = SubRobot.BestCandidateEdges(AuxBoard).At(0);
         assert(board.MaxCount(edge) > 1);
         AuxBoard.Add(edge);
       }
@@ -37,7 +37,7 @@ class ImprovedSearchRobot final : public Robot {
   }
 
   private:
-  BasicSearchRobot SubModel;
+  BasicSearchRobot SubRobot;
   BoardV2 AuxBoard;
   List<Edge, Edge::Max> SearchEdges;
 };

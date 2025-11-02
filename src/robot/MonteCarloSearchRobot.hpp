@@ -15,27 +15,27 @@ class MonteCarloSearchRobot final : public Robot {
 
   Span<Edge>
   BestCandidateEdges(const BoardV2& board) override {
-    if (auto edges = SubModel.BestCandidateEdges(board); edges.Size() == 1) {
+    if (auto edges = SubRobot.BestCandidateEdges(board); edges.Size() == 1) {
       return edges;
     }
 
-    ScoreMap.Reset();
+    SearchResult.Reset();
     int times = SearchTime / board.RemainStep() + 1;
     while (times--) {
       AuxBoard.Reset(board.GetBoardV1());
-      Edge edge = RandomChoice(SubModel.BestCandidateEdges(AuxBoard));
+      Edge edge = RandomChoice(SubRobot.BestCandidateEdges(AuxBoard));
       AuxBoard.Add(edge);
       while (AuxBoard.Gaming()) {
-        AuxBoard.Add(RandomChoice(SubModel.BestCandidateEdges(AuxBoard)));
+        AuxBoard.Add(RandomChoice(SubRobot.BestCandidateEdges(AuxBoard)));
       }
-      ScoreMap.Add(edge, AuxBoard.Score());
+      SearchResult.Add(edge, AuxBoard.Score());
     }
 
-    return ScoreMap.Export();
+    return SearchResult.Export();
   }
 
   private:
-  ImprovedSearchRobot SubModel;
+  ImprovedSearchRobot SubRobot;
   BoardV2 AuxBoard;
-  EdgeScoreMap ScoreMap;
+  EdgeScoreMap SearchResult;
 };

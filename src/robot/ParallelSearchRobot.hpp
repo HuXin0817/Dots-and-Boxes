@@ -11,25 +11,25 @@ class ParallelSearchRobot final : public Robot {
 
   Span<Edge>
   BestCandidateEdges(const BoardV2& board) override {
-    if (auto edges = SubModels.At(0).SubModel.BestCandidateEdges(board); edges.Size() == 1) {
+    if (auto edges = SubRobots.At(0).SubRobot.BestCandidateEdges(board); edges.Size() == 1) {
       return edges;
     }
 
-    result.Reset();
+    SearchResult.Reset();
 
 #pragma omp parallel for
-    for (auto& model : SubModels) {
+    for (auto& model : SubRobots) {
       model.BestCandidateEdges(board);
     }
 
-    for (const auto& model : SubModels) {
-      result.Add(model.ScoreMap);
+    for (const auto& model : SubRobots) {
+      SearchResult.Add(model.SearchResult);
     }
 
-    return result.Export();
+    return SearchResult.Export();
   }
 
   private:
-  Array<MonteCarloSearchRobot, ParallelNumber> SubModels;
-  EdgeScoreMap result;
+  Array<MonteCarloSearchRobot, ParallelNumber> SubRobots;
+  EdgeScoreMap SearchResult;
 };
