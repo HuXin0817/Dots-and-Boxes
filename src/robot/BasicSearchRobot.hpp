@@ -22,11 +22,7 @@ class BasicSearchRobot final : public Robot {
 
     for (Edge edge : board.EmptyEdges()) {
       AuxBoard.Reset(board.GetBoardV1());
-#ifdef NDEBUG
       AuxBoard.Add(edge);
-#else
-      assert(AuxBoard.Add(edge) == 0);
-#endif
       if (int score = AuxBoard.MaxObtainableScore(minScore); score < minScore) {
         minScore = score;
         candidateEdges.Reset(edge);
