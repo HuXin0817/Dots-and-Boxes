@@ -12,18 +12,13 @@ class Array {
 
   Array&
   operator=(const Array& other) {
-    if (this != &other) {
-      std::memcpy(Data, other.Data, Length * sizeof(T));
-    }
+    std::memcpy(Data, other.Data, Length * sizeof(T));
     return *this;
   }
 
   Array&
   operator=(std::initializer_list<T> init) {
-    int i = 0;
-    for (const auto& item : init) {
-      Data[i++] = item;
-    }
+    std::memcpy(Data, init.begin(), Length * sizeof(T));
     return *this;
   }
 
