@@ -37,7 +37,7 @@ static constexpr int BoardSize = 6;
     return (_Size);                \
   }                                \
   int Empty() const {              \
-    return Size() == 0;            \
+    return (_Size) == 0;            \
   }                                \
   auto& At(int i) {                \
     assert(i >= 0 && i < (_Size)); \
