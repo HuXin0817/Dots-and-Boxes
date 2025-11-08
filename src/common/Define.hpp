@@ -1,6 +1,8 @@
 #pragma once
 
 #include <cassert>
+#include <sstream>
+#include <string>
 
 static constexpr int BoardSize = 6;
 
