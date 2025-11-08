@@ -1,6 +1,6 @@
 #pragma once
 
-#include "string"
+#include <string>
 
 enum class PlayerType {
   Human,
