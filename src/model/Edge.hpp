@@ -42,10 +42,9 @@ class Edge {
     return v & 1;
   }
 
-  std::string
-  ToString() const {
+  operator std::string() const {
     std::stringstream ss;
-    ss << Dot1().ToString() << " -> " << Dot2().ToString();
+    ss << Dot1() << " -> " << Dot2();
     return ss.str();
   }
 

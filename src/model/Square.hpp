@@ -3,7 +3,7 @@
 #include <sstream>
 #include <string>
 
-#include "../common/Config.hpp"
+#include "../common/Define.hpp"
 
 template <int A>
 class Square {
@@ -21,8 +21,7 @@ class Square {
     return v % Size;
   }
 
-  std::string
-  ToString() const {
+  operator std::string() const {
     std::stringstream ss;
     ss << "(" << X() << ", " << Y() << ")";
     return ss.str();

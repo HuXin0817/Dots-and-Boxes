@@ -3,7 +3,7 @@
 #include <cstring>
 #include <initializer_list>
 
-#include "Config.hpp"
+#include "Define.hpp"
 
 template <class T, int Length>
 class Array {

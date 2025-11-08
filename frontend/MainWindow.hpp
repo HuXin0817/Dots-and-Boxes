@@ -122,7 +122,7 @@ class MainWindow final : public BaseCanvasLayer {
         printf("| Step %d | Player %d Move %s | Score %d : %d | Time: %.2fs |\n",
                Board->NowStep(),
                Board->Turn == Player1Turn ? 1 : 2,
-               PlayerMoveEdge.ToString().c_str(),
+               std::to_string(PlayerMoveEdge).c_str(),
                Board->Player1Score,
                Board->Player2Score,
                seconds);
