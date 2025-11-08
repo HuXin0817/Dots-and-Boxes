@@ -7,7 +7,7 @@
 #include "../canvases/EdgeButton.hpp"
 #include "EdgeLayer.hpp"
 
-class EdgeButtonLayer final : public EdgeLayer<EdgeButton> {
+class EdgeButtonLayer final : public EdgeLayer<EdgeButtonCanvas> {
   friend class MainWindow;
 
   Q_OBJECT
