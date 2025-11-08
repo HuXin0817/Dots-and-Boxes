@@ -44,7 +44,7 @@ class Edge {
 
   operator std::string() const {
     std::stringstream ss;
-    ss << Dot1() << " -> " << Dot2();
+    ss << std::string(Dot1()) << " -> " << std::string(Dot2());
     return ss.str();
   }
 

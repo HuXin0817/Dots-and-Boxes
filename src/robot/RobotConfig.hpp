@@ -2,6 +2,7 @@
 
 #include <string>
 
+#include "../common/Ptr.hpp"
 #include "BasicSearchRobot.hpp"
 #include "ImprovedSearchRobot.hpp"
 #include "MonteCarloSearchRobot.hpp"
@@ -13,7 +14,7 @@ enum class RobotType { L0, L1, L2, L3, L4 };
 
 class RobotConfig {
   public:
-  static Robot*
+  static Ptr<Robot>
   CreateRobot(RobotType type) {
     switch (type) {
       case RobotType::L0:
