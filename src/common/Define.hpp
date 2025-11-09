@@ -4,19 +4,25 @@
 
 static constexpr int BoardSize = 6;
 
-#define V(Class)         \
-  public:                \
-  Class() = default;     \
-  Class(int v) : v(v) {  \
-  }                      \
-  void operator++(int) { \
-    v++;                 \
-  }                      \
-  operator int() const { \
-    return v;            \
-  }                      \
-                         \
-  private:               \
+#define V(Class)                        \
+  public:                               \
+  Class() = default;                    \
+  Class(int v) : v(v) {                 \
+  }                                     \
+  void operator++(int) {                \
+    v++;                                \
+  }                                     \
+  operator int() const {                \
+    return v;                           \
+  }                                     \
+  auto operator<=>(Class other) const { \
+    return v <=> other.v;               \
+  }                                     \
+  auto operator<=>(int other) const {   \
+    return v <=> other;                 \
+  }                                     \
+                                        \
+  private:                              \
   int v = 0;
 
 #define I(_Begin, _End, _Size)     \
