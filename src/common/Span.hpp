@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Define.hpp"
+#include "Macro.hpp"
 
 template <class T>
 class Span {

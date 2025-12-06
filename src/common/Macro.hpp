@@ -2,8 +2,6 @@
 
 #include <cassert>
 
-static constexpr int BoardSize = 6;
-
 #define V(Class)                        \
   public:                               \
   Class() = default;                    \

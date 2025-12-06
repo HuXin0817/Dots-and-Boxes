@@ -3,7 +3,8 @@
 #include <sstream>
 #include <string>
 
-#include "../common/Define.hpp"
+#include "../Config.hpp"
+#include "../common/Macro.hpp"
 
 template <int A>
 class Square {

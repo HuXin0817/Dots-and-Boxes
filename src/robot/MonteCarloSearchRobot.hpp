@@ -9,8 +9,6 @@ class MonteCarloSearchRobot final : public Robot {
   friend class ParallelSearchRobot;
 
   public:
-  static constexpr int SearchTime = 10000;
-
   MonteCarloSearchRobot() = default;
 
   Span<Edge>

@@ -5,8 +5,6 @@
 
 class ParallelSearchRobot final : public Robot {
   public:
-  static constexpr int ParallelNumber = 10;
-
   ParallelSearchRobot() = default;
 
   Span<Edge>
