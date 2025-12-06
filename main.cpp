@@ -17,13 +17,12 @@ main(int argc, char* argv[]) {
   Application.setOrganizationName("Dots and Boxes");
   Application.setStyle(QStyleFactory::create("Fusion"));
 
-  printf("Starting game with player configuration:\n");
-  printf("  Player 1: %s", PlayerConfig::GetPlayerTypeString(Player1Type).c_str());
+  printf("Starting game with player configuration:");
+  printf("\n  Player 1: %s", PlayerConfig::GetPlayerTypeString(Player1Type).c_str());
   if (Player1Type == PlayerType::Robot) {
     printf(" - %s", RobotConfig::GetRobotName(Robot1Type).c_str());
   }
-  printf("\n");
-  printf("  Player 2: %s", PlayerConfig::GetPlayerTypeString(Player2Type).c_str());
+  printf("\n  Player 2: %s", PlayerConfig::GetPlayerTypeString(Player2Type).c_str());
   if (Player2Type == PlayerType::Robot) {
     printf(" - %s", RobotConfig::GetRobotName(Robot2Type).c_str());
   }
