@@ -31,13 +31,13 @@ class MainWindow final : public BaseCanvasLayer {
     setMinimumSize(WindowSize, WindowSize);
 
     Board.New();
-    BoxCanvasLayer.New(this);
-    EdgeCanvasLayer.New(this);
-    DotCanvasLayer.New(this);
+    BoxCanvases.New(this);
+    EdgeCanvases.New(this);
+    DotCanvases.New(this);
     auto CallBackFactory = [this](Edge edge) {
       return [edge, this] { return setPlayerMoveEdge(edge); };
     };
-    EdgeButtonLayer.New(CallBackFactory, this);
+    EdgeButtons.New(CallBackFactory, this);
   }
 
   static inline QColor DarkThemeColor = {43, 43, 43, 255};
@@ -51,10 +51,10 @@ class MainWindow final : public BaseCanvasLayer {
   void
   Add(Edge edge) {
     if (Board->NowStep() > 0) {
-      EdgeCanvasLayer->Canvases.At(LastEdge)->HighLight = false;
+      EdgeCanvases->Canvases.At(LastEdge)->HighLight = false;
     }
-    EdgeCanvasLayer->Canvases.At(edge)->State = StateFromTurn(Board->Turn);
-    EdgeCanvasLayer->Canvases.At(edge)->raise();
+    EdgeCanvases->Canvases.At(edge)->State = StateFromTurn(Board->Turn);
+    EdgeCanvases->Canvases.At(edge)->raise();
 
     for (Box box : EdgeBoxMapper::EdgeNearBoxes.At(edge)) {
       int count = 0;
@@ -64,7 +64,7 @@ class MainWindow final : public BaseCanvasLayer {
         }
       }
       if (count == 3) {
-        BoxCanvasLayer->BoxCanvases.At(box)->State = StateFromTurn(Board->Turn);
+        BoxCanvases->BoxCanvases.At(box)->State = StateFromTurn(Board->Turn);
       }
     }
 
@@ -90,9 +90,9 @@ class MainWindow final : public BaseCanvasLayer {
     int x = (width() - WindowSize) / 2;
     int y = (height() - WindowSize) / 2;
 
-    BoxCanvasLayer->move(x, y);
-    EdgeCanvasLayer->move(x, y);
-    DotCanvasLayer->move(x, y);
+    BoxCanvases->move(x, y);
+    EdgeCanvases->move(x, y);
+    DotCanvases->move(x, y);
   }
 
   void
@@ -137,7 +137,7 @@ class MainWindow final : public BaseCanvasLayer {
       }
 
       std::this_thread::sleep_for(std::chrono::seconds(2));
-      EdgeCanvasLayer->Canvases.At(LastEdge)->HighLight = false;
+      EdgeCanvases->Canvases.At(LastEdge)->HighLight = false;
       update();
 
       std::this_thread::sleep_for(std::chrono::seconds(2));
@@ -152,10 +152,10 @@ class MainWindow final : public BaseCanvasLayer {
   Ptr<Robot> Robot2;
   Edge PlayerMoveEdge;
   Ptr<ScoreCountableBoard> Board;
-  Ptr<BoxCanvasLayer> BoxCanvasLayer;
-  Ptr<EdgeCanvasLayer> EdgeCanvasLayer;
-  Ptr<DotCanvasLayer> DotCanvasLayer;
-  Ptr<EdgeButtonLayer> EdgeButtonLayer;
+  Ptr<BoxCanvasLayer> BoxCanvases;
+  Ptr<EdgeCanvasLayer> EdgeCanvases;
+  Ptr<DotCanvasLayer> DotCanvases;
+  Ptr<EdgeButtonLayer> EdgeButtons;
   Edge LastEdge;
 
   void
