@@ -5,16 +5,15 @@
 #include "../model/EdgeScoreMap.hpp"
 #include "ImprovedSearchRobot.hpp"
 
-class MonteCarloSearchRobot final : public Robot {
-  friend class ParallelSearchRobot;
-
+template <int BoardSize>
+class MonteCarloSearchRobot final : public Robot<BoardSize> {
   static constexpr int SearchTime = 1 << 14;
 
   public:
   MonteCarloSearchRobot() = default;
 
-  Span<Edge>
-  BestCandidateEdges(const ScoreCountableBoard& board) override {
+  Span<Edge<BoardSize>>
+  BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override {
     if (auto edges = SubRobot.BestCandidateEdges(board); edges.Size() == 1) {
       return edges;
     }
@@ -34,8 +33,7 @@ class MonteCarloSearchRobot final : public Robot {
     return SearchResult.Export();
   }
 
-  private:
-  ImprovedSearchRobot SubRobot;
-  ScoreCountableBoard SimulationBoard;
-  EdgeScoreMap SearchResult;
+  ImprovedSearchRobot<BoardSize> SubRobot;
+  ScoreCountableBoard<BoardSize> SimulationBoard;
+  EdgeScoreMap<BoardSize> SearchResult;
 };

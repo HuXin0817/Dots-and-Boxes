@@ -3,7 +3,6 @@
 #include <sstream>
 #include <string>
 
-#include "../Config.hpp"
 #include "../common/Macro.hpp"
 
 template <int A>
@@ -31,8 +30,5 @@ class Square {
   static constexpr int Size = A;
   static constexpr int Max = Size * Size;
 
-  V(Square)
+  V(Square<A>)
 };
-
-using Dot = Square<BoardSize + 1>;
-using Box = Square<BoardSize>;

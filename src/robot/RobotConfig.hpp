@@ -12,23 +12,24 @@
 
 enum class RobotType { L0, L1, L2, L3, L4 };
 
+template <int BoardSize>
 class RobotConfig {
   public:
-  static Ptr<Robot>
+  static Ptr<Robot<BoardSize>>
   CreateRobot(RobotType type) {
     switch (type) {
       case RobotType::L0:
-        return new SimpleStrategyRobot();
+        return new SimpleStrategyRobot<BoardSize>();
       case RobotType::L1:
-        return new BasicSearchRobot();
+        return new BasicSearchRobot<BoardSize>();
       case RobotType::L2:
-        return new ImprovedSearchRobot();
+        return new ImprovedSearchRobot<BoardSize>();
       case RobotType::L3:
-        return new MonteCarloSearchRobot();
+        return new MonteCarloSearchRobot<BoardSize>();
       case RobotType::L4:
-        return new ParallelSearchRobot();
+        return new ParallelSearchRobot<BoardSize>();
       default:
-        return new ParallelSearchRobot();
+        return new ParallelSearchRobot<BoardSize>();
     }
   }
 

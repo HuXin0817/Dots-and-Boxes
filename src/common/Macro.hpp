@@ -49,8 +49,6 @@
   bool operator>=(int other) const {   \
     return v >= other;                 \
   }                                    \
-                                       \
-  private:                             \
   int v = 0;
 
 #define I(_Begin, _End, _Size)     \

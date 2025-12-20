@@ -5,22 +5,21 @@
 #include "Robot.hpp"
 #include "SimpleStrategyRobot.hpp"
 
-class BasicSearchRobot final : public Robot {
-  friend class ImprovedSearchRobot;
-
+template <int BoardSize>
+class BasicSearchRobot final : public Robot<BoardSize> {
   public:
-  Span<Edge>
-  BestCandidateEdges(const ScoreCountableBoard& board) override {
+  Span<Edge<BoardSize>>
+  BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override {
     if (auto edges = SubRobot.BestCandidateEdges(board);
         !SubRobot.EnemyUnscoreableEdges.Empty() || !SubRobot.ScoreableEdges.Empty()) {
       return edges;
     }
 
-    int minScore = Box::Max + 1;
+    int minScore = Box<BoardSize>::Max + 1;
     auto& candidateEdges = SubRobot.EnemyUnscoreableEdges;
     assert(candidateEdges.Empty());
 
-    for (Edge edge : board.EmptyEdges()) {
+    for (Edge<BoardSize> edge : board.EmptyEdges()) {
       SimulationBoard.Reset(board.GetEdgeCountableBoard());
       SimulationBoard.Add(edge);
       if (int score = SimulationBoard.MaxObtainableScore(minScore); score < minScore) {
@@ -34,7 +33,6 @@ class BasicSearchRobot final : public Robot {
     return Export(candidateEdges);
   }
 
-  private:
-  SimpleStrategyRobot SubRobot;
-  ScoreableEdgeBoard SimulationBoard;
+  SimpleStrategyRobot<BoardSize> SubRobot;
+  ScoreableEdgeBoard<BoardSize> SimulationBoard;
 };

@@ -7,15 +7,13 @@
 #include "../canvases/EdgeCanvas.hpp"
 #include "BaseCanvasLayer.hpp"
 
-class BoxCanvasLayer final : public BaseCanvasLayer {
-  friend class MainWindow;
-
-  Q_OBJECT
-
+template <int BoardSize>
+class BoxCanvasLayer final : public BaseCanvasLayer<BoardSize> {
   public:
-  explicit BoxCanvasLayer(QWidget* parent) : BaseCanvasLayer(parent) {
-    resize(WindowSize, WindowSize);
-    for (Box box = 0; box < Box::Max; box++) {
+  explicit BoxCanvasLayer(QWidget* parent) : BaseCanvasLayer<BoardSize>(parent) {
+    BaseCanvasLayer<BoardSize>::resize(BaseCanvasLayer<BoardSize>::WindowSize,
+                                       BaseCanvasLayer<BoardSize>::WindowSize);
+    for (Box<BoardSize> box = 0; box < Box<BoardSize>::Max; box++) {
       BoxCanvases.At(box).New(this);
     }
   }
@@ -23,20 +21,22 @@ class BoxCanvasLayer final : public BaseCanvasLayer {
   protected:
   void
   resizeEvent(QResizeEvent* event) override {
-    BaseCanvasLayer::resizeEvent(event);
+    BaseCanvasLayer<BoardSize>::resizeEvent(event);
 
-    int x0 = (width() - BoardWidth) / 2 + UnitSize;
-    int y0 = (height() - BoardWidth) / 2 + UnitSize;
+    int x0 = (BaseCanvasLayer<BoardSize>::width() - BaseCanvasLayer<BoardSize>::BoardWidth) / 2 +
+             BaseCanvasLayer<BoardSize>::UnitSize;
+    int y0 = (BaseCanvasLayer<BoardSize>::height() - BaseCanvasLayer<BoardSize>::BoardWidth) / 2 +
+             BaseCanvasLayer<BoardSize>::UnitSize;
 
-    for (int i = 0; i < Box::Size; i++) {
-      for (int j = 0; j < Box::Size; j++) {
+    for (int i = 0; i < Box<BoardSize>::Size; i++) {
+      for (int j = 0; j < Box<BoardSize>::Size; j++) {
         int x = x0 + i * EdgeCanvas::Height;
         int y = y0 + j * EdgeCanvas::Height;
-        BoxCanvases.At(Box(i, j))->move(x, y);
+        BoxCanvases.At(Box<BoardSize>(i, j))->move(x, y);
       }
     }
   }
 
-  private:
-  Array<Ptr<BoxCanvas>, Box::Max> BoxCanvases;
+  public:
+  Array<Ptr<BoxCanvas>, Box<BoardSize>::Max> BoxCanvases;
 };

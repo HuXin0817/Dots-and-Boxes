@@ -6,21 +6,22 @@
 #include "../model/Square.hpp"
 #include "BasicBoard.hpp"
 
-class EdgeCountableBoard : public BasicBoard, public EdgeCountOfBox {
+template <int BoardSize>
+class EdgeCountableBoard : public BasicBoard<BoardSize>, public EdgeCountOfBox<BoardSize> {
   public:
   EdgeCountableBoard() = default;
 
   int
-  Add(Edge edge) {
-    BasicBoard::Add(edge);
-    return EdgeCountOfBox::Add(edge);
+  Add(Edge<BoardSize> edge) {
+    BasicBoard<BoardSize>::Add(edge);
+    return EdgeCountOfBox<BoardSize>::Add(edge);
   }
 
-  Edge
-  FindNotContainsEdgeInBox(Box box) const {
-    assert(EdgeCountOfBox::At(box) == 3);
+  Edge<BoardSize>
+  FindNotContainsEdgeInBox(Box<BoardSize> box) const {
+    assert(EdgeCountOfBox<BoardSize>::At(box) == 3);
     for (Edge edge : NearEdges(box)) {
-      if (NotContains(edge)) {
+      if (BasicBoard<BoardSize>::NotContains(edge)) {
         return edge;
       }
     }
@@ -28,10 +29,10 @@ class EdgeCountableBoard : public BasicBoard, public EdgeCountOfBox {
     return -1;
   }
 
-  Edge
+  Edge<BoardSize>
   FindScoreableEdge() const {
-    for (Box box = 0; box < Box::Max; box++) {
-      if (EdgeCountOfBox::At(box) == 3) {
+    for (Box<BoardSize> box = 0; box < Box<BoardSize>::Max; box++) {
+      if (EdgeCountOfBox<BoardSize>::At(box) == 3) {
         return FindNotContainsEdgeInBox(box);
       }
     }

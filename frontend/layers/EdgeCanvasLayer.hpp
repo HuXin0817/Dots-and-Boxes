@@ -7,17 +7,15 @@
 #include "../canvases/EdgeCanvas.hpp"
 #include "EdgeLayer.hpp"
 
-class EdgeCanvasLayer final : public EdgeLayer<EdgeCanvas> {
-  friend class MainWindow;
-
-  Q_OBJECT
-
+template <int BoardSize>
+class EdgeCanvasLayer final : public EdgeLayer<BoardSize, EdgeCanvas> {
   public:
-  explicit EdgeCanvasLayer(QWidget* parent) : EdgeLayer(parent) {
-    resize(WindowSize, WindowSize);
+  explicit EdgeCanvasLayer(QWidget* parent) : EdgeLayer<BoardSize, EdgeCanvas>(parent) {
+    EdgeLayer<BoardSize, EdgeCanvas>::resize(EdgeLayer<BoardSize, EdgeCanvas>::WindowSize,
+                                             EdgeLayer<BoardSize, EdgeCanvas>::WindowSize);
 
-    for (Edge edge = 0; edge < Edge::Max; edge++) {
-      Canvases.At(edge).New(edge.Rotate(), this);
+    for (Edge<BoardSize> edge = 0; edge < Edge<BoardSize>::Max; edge++) {
+      EdgeLayer<BoardSize, EdgeCanvas>::Canvases.At(edge).New(edge.Rotate(), this);
     }
   }
 };

@@ -7,44 +7,45 @@
 #include "../model/Edge.hpp"
 #include "../model/Step.hpp"
 
-class BasicBoard : public Step {
+template <int BoardSize>
+class BasicBoard : public Step<BoardSize> {
   public:
   BasicBoard() {
-    for (Edge edge = 0; edge < Edge::Max; edge++) {
+    for (Edge<BoardSize> edge = 0; edge < Edge<BoardSize>::Max; edge++) {
       EdgeIndexes.At(edge) = edge;
       Edges.At(edge) = edge;
     }
   }
 
   void
-  Add(Edge edge) {
+  Add(Edge<BoardSize> edge) {
     assert(NotContains(edge));
-    Edge nowEdge = Edges.At(NowStep());
+    Edge nowEdge = Edges.At(Step<BoardSize>::NowStep());
     int edgeIndex = EdgeIndexes.At(edge);
-    std::swap(Edges.At(edgeIndex), Edges.At(NowStep()));
-    EdgeIndexes.At(edge) = NowStep();
+    std::swap(Edges.At(edgeIndex), Edges.At(Step<BoardSize>::NowStep()));
+    EdgeIndexes.At(edge) = Step<BoardSize>::NowStep();
     EdgeIndexes.At(nowEdge) = edgeIndex;
-    Go();
+    Step<BoardSize>::Go();
   }
 
   bool
-  Contains(Edge edge) const {
-    return EdgeIndexes.At(edge) < NowStep();
+  Contains(Edge<BoardSize> edge) const {
+    return EdgeIndexes.At(edge) < Step<BoardSize>::NowStep();
   }
 
   bool
-  NotContains(Edge edge) const {
-    return EdgeIndexes.At(edge) >= NowStep();
+  NotContains(Edge<BoardSize> edge) const {
+    return EdgeIndexes.At(edge) >= Step<BoardSize>::NowStep();
   }
 
-  Span<Edge>
+  Span<Edge<BoardSize>>
   EmptyEdges() const {
-    return {Edges.begin() + NowStep(), Edges.begin() + Edge::Max};
+    return {Edges.begin() + Step<BoardSize>::NowStep(), Edges.begin() + Edge<BoardSize>::Max};
   }
 
-  Span<Edge>
+  Span<Edge<BoardSize>>
   MoveRecord() const {
-    return {Edges.begin(), Edges.begin() + NowStep()};
+    return {Edges.begin(), Edges.begin() + Step<BoardSize>::NowStep()};
   }
 
   operator std::string() const {
@@ -68,8 +69,8 @@ class BasicBoard : public Step {
 
     for (int i = 0; i < rows; i++) {
       for (int j = 0; j < BoardSize; j++) {
-        Dot dot1(i, j);
-        Dot dot2(i, j + 1);
+        Dot<BoardSize> dot1(i, j);
+        Dot<BoardSize> dot2(i, j + 1);
         Edge edge(dot1, dot2);
         char ch = Contains(edge) ? '-' : ' ';
         grid.At(i * 2).At(j * 2 + 1) = ch;
@@ -78,8 +79,8 @@ class BasicBoard : public Step {
 
     for (int i = 0; i < BoardSize; i++) {
       for (int j = 0; j < cols; j++) {
-        Dot dot1(i, j);
-        Dot dot2(i + 1, j);
+        Dot<BoardSize> dot1(i, j);
+        Dot<BoardSize> dot2(i + 1, j);
         Edge edge(dot1, dot2);
         char ch = Contains(edge) ? '|' : ' ';
         grid.At(i * 2 + 1).At(j * 2) = ch;
@@ -100,6 +101,6 @@ class BasicBoard : public Step {
   }
 
   private:
-  Array<Edge, Edge::Max> Edges;
-  Array<int, Edge::Max> EdgeIndexes;
+  Array<Edge<BoardSize>, Edge<BoardSize>::Max> Edges;
+  Array<int, Edge<BoardSize>::Max> EdgeIndexes;
 };

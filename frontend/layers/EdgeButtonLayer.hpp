@@ -7,19 +7,19 @@
 #include "../canvases/EdgeButton.hpp"
 #include "EdgeLayer.hpp"
 
-class EdgeButtonLayer final : public EdgeLayer<EdgeButtonCanvas> {
-  friend class MainWindow;
-
-  Q_OBJECT
-
+template <int BoardSize>
+class EdgeButtonLayer final : public EdgeLayer<BoardSize, EdgeButtonCanvas> {
   public:
-  explicit EdgeButtonLayer(const std::function<std::function<void()>(Edge)>& CallBackFactory,
-                           QWidget* parent)
-      : EdgeLayer(parent) {
-    resize(WindowSize, WindowSize);
+  explicit EdgeButtonLayer(
+      const std::function<std::function<void()>(Edge<BoardSize>)>& CallBackFactory, QWidget* parent)
+      : EdgeLayer<BoardSize, EdgeButtonCanvas>(parent) {
+    EdgeLayer<BoardSize, EdgeButtonCanvas>::resize(
+        EdgeLayer<BoardSize, EdgeButtonCanvas>::WindowSize,
+        EdgeLayer<BoardSize, EdgeButtonCanvas>::WindowSize);
 
-    for (Edge edge = 0; edge < Edge::Max; edge++) {
-      Canvases.At(edge).New(edge.Rotate(), CallBackFactory(edge), this);
+    for (Edge<BoardSize> edge = 0; edge < Edge<BoardSize>::Max; edge++) {
+      EdgeLayer<BoardSize, EdgeButtonCanvas>::Canvases.At(edge).New(
+          edge.Rotate(), CallBackFactory(edge), this);
     }
   }
 };

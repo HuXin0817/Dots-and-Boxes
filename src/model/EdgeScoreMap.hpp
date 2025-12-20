@@ -5,6 +5,7 @@
 #include "../common/Span.hpp"
 #include "Edge.hpp"
 
+template <int BoardSize>
 class EdgeScoreMap {
   public:
   EdgeScoreMap() = default;
@@ -17,23 +18,23 @@ class EdgeScoreMap {
   }
 
   void
-  Add(Edge edge, int score) {
+  Add(Edge<BoardSize> edge, int score) {
     Time.At(edge)++;
     Score.At(edge) += score;
   }
 
   void
   Add(const EdgeScoreMap& other) {
-    for (int i = 0; i < Edge::Max; i++) {
+    for (int i = 0; i < Edge<BoardSize>::Max; i++) {
       Time.At(i) += other.Time.At(i);
       Score.At(i) += other.Score.At(i);
     }
   }
 
-  Span<Edge>
+  Span<Edge<BoardSize>>
   Export() {
     float maxScore = 0.0;
-    for (Edge edge = 0; edge < Edge::Max; edge++) {
+    for (Edge<BoardSize> edge = 0; edge < Edge<BoardSize>::Max; edge++) {
       if (Time.At(edge) > 0) {
         float score = static_cast<float>(Score.At(edge)) / static_cast<float>(Time.At(edge));
         if (score > maxScore || BestEdges.Empty()) {
@@ -48,7 +49,7 @@ class EdgeScoreMap {
   }
 
   private:
-  Array<int, Edge::Max> Time;
-  Array<int, Edge::Max> Score;
-  List<Edge, Edge::Max> BestEdges;
+  Array<int, Edge<BoardSize>::Max> Time;
+  Array<int, Edge<BoardSize>::Max> Score;
+  List<Edge<BoardSize>, Edge<BoardSize>::Max> BestEdges;
 };

@@ -5,15 +5,13 @@
 #include "../common/Span.hpp"
 #include "Robot.hpp"
 
-class SimpleStrategyRobot final : public Robot {
-  friend class BasicSearchRobot;
-  friend class ImprovedSearchRobot;
-
+template <int BoardSize>
+class SimpleStrategyRobot final : public Robot<BoardSize> {
   public:
   SimpleStrategyRobot() = default;
 
-  Span<Edge>
-  BestCandidateEdges(const ScoreCountableBoard& board) override {
+  Span<Edge<BoardSize>>
+  BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override {
     EnemyUnscoreableEdges.Clear();
     ScoreableEdges.Clear();
     auto EmptyEdges = board.EmptyEdges();
@@ -36,7 +34,6 @@ class SimpleStrategyRobot final : public Robot {
     return {EmptyEdges.begin(), EmptyEdges.end()};
   }
 
-  private:
-  List<Edge, Edge::Max> EnemyUnscoreableEdges;
-  List<Edge, Edge::Max> ScoreableEdges;
+  List<Edge<BoardSize>, Edge<BoardSize>::Max> EnemyUnscoreableEdges;
+  List<Edge<BoardSize>, Edge<BoardSize>::Max> ScoreableEdges;
 };

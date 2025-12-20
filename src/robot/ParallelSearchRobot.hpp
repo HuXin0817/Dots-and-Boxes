@@ -3,14 +3,15 @@
 #include "MonteCarloSearchRobot.hpp"
 #include "Robot.hpp"
 
-class ParallelSearchRobot final : public Robot {
+template <int BoardSize>
+class ParallelSearchRobot final : public Robot<BoardSize> {
   static constexpr int ParallelNumber = 10;
 
   public:
   ParallelSearchRobot() = default;
 
-  Span<Edge>
-  BestCandidateEdges(const ScoreCountableBoard& board) override {
+  Span<Edge<BoardSize>>
+  BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override {
     if (auto edges = SubRobots.At(0).SubRobot.BestCandidateEdges(board); edges.Size() == 1) {
       return edges;
     }
@@ -30,6 +31,6 @@ class ParallelSearchRobot final : public Robot {
   }
 
   private:
-  Array<MonteCarloSearchRobot, ParallelNumber> SubRobots;
-  EdgeScoreMap SearchResult;
+  Array<MonteCarloSearchRobot<BoardSize>, ParallelNumber> SubRobots;
+  EdgeScoreMap<BoardSize> SearchResult;
 };

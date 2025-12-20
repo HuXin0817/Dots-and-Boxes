@@ -4,19 +4,20 @@
 #include "../common/Span.hpp"
 #include "BasicSearchRobot.hpp"
 
-class ImprovedSearchRobot final : public Robot {
+template <int BoardSize>
+class ImprovedSearchRobot final : public Robot<BoardSize> {
   public:
   ImprovedSearchRobot() = default;
 
-  Span<Edge>
-  BestCandidateEdges(const ScoreCountableBoard& board) override {
+  Span<Edge<BoardSize>>
+  BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override {
     if (auto edges = SubRobot.BestCandidateEdges(board);
         !SubRobot.SubRobot.EnemyUnscoreableEdges.Empty()) {
       return edges;
     }
 
     SearchEdges.Clear();
-    int maxScore = -Box::Max;
+    int maxScore = -Box<BoardSize>::Max;
     for (Edge emptyEdge : board.EmptyEdges()) {
       SimulationBoard.Reset(board.GetEdgeCountableBoard());
       SimulationBoard.Add(emptyEdge);
@@ -37,7 +38,7 @@ class ImprovedSearchRobot final : public Robot {
   }
 
   private:
-  BasicSearchRobot SubRobot;
-  ScoreCountableBoard SimulationBoard;
-  List<Edge, Edge::Max> SearchEdges;
+  BasicSearchRobot<BoardSize> SubRobot;
+  ScoreCountableBoard<BoardSize> SimulationBoard;
+  List<Edge<BoardSize>, Edge<BoardSize>::Max> SearchEdges;
 };

@@ -13,28 +13,31 @@
 #include "layers/EdgeButtonLayer.hpp"
 #include "layers/EdgeCanvasLayer.hpp"
 
-class MainWindow final : public BaseCanvasLayer {
-  Q_OBJECT
-
+template <int BoardSize>
+class MainWindow final : public BaseCanvasLayer<BoardSize> {
   public:
   explicit MainWindow(PlayerType Player1Type,
                       PlayerType Player2Type,
                       RobotType Robot1Type,
                       RobotType Robot2Type,
                       QWidget* parent = nullptr)
-      : BaseCanvasLayer(parent),
+      : BaseCanvasLayer<BoardSize>(parent),
         Player1Type(Player1Type),
         Player2Type(Player2Type),
-        Robot1(RobotConfig::CreateRobot(Robot1Type)),
-        Robot2(RobotConfig::CreateRobot(Robot2Type)) {
-    resize(WindowSize, WindowSize);
-    setMinimumSize(WindowSize, WindowSize);
+        Robot1(RobotConfig<BoardSize>::CreateRobot(Robot1Type)),
+        Robot2(RobotConfig<BoardSize>::CreateRobot(Robot2Type)) {
+    BaseCanvasLayer<BoardSize>::resize(BaseCanvasLayer<BoardSize>::WindowSize,
+                                       BaseCanvasLayer<BoardSize>::WindowSize);
+    BaseCanvasLayer<BoardSize>::setMinimumSize(BaseCanvasLayer<BoardSize>::WindowSize,
+                                               BaseCanvasLayer<BoardSize>::WindowSize);
 
     Board.New();
     BoxCanvases.New(this);
     EdgeCanvases.New(this);
     DotCanvases.New(this);
-    auto CallBackFactory = [this](Edge edge) { return [edge, this] { setPlayerMoveEdge(edge); }; };
+    auto CallBackFactory = [this](Edge<BoardSize> edge) {
+      return [edge, this] { setPlayerMoveEdge(edge); };
+    };
     EdgeButtons.New(CallBackFactory, this);
   }
 
@@ -43,15 +46,15 @@ class MainWindow final : public BaseCanvasLayer {
 
   QColor
   Color() const override {
-    return isDarkTheme() ? DarkThemeColor : LightThemeColor;
+    return BaseCanvasLayer<BoardSize>::isDarkTheme() ? DarkThemeColor : LightThemeColor;
   }
 
   void
-  Add(Edge edge) {
+  Add(Edge<BoardSize> edge) {
     if (Board->NowStep() > 0) {
       EdgeCanvases->Canvases.At(LastEdge)->HighLight = false;
     }
-    EdgeCanvases->Canvases.At(edge)->State = StateFromTurn(Board->Turn);
+    EdgeCanvases->Canvases.At(edge)->State = BaseCanvasLayer<BoardSize>::StateFromTurn(Board->Turn);
     EdgeCanvases->Canvases.At(edge)->raise();
 
     for (Box box : NearBoxes(edge)) {
@@ -62,31 +65,32 @@ class MainWindow final : public BaseCanvasLayer {
         }
       }
       if (count == 3) {
-        BoxCanvases->BoxCanvases.At(box)->State = StateFromTurn(Board->Turn);
+        BoxCanvases->BoxCanvases.At(box)->State =
+            BaseCanvasLayer<BoardSize>::StateFromTurn(Board->Turn);
       }
     }
 
     Board->Add(edge);
     LastEdge = edge;
-    update();
+    BaseCanvasLayer<BoardSize>::update();
     QApplication::beep();
   }
 
   protected:
   void
   paintEvent(QPaintEvent* event) override {
-    BaseCanvasLayer::paintEvent(event);
+    BaseCanvasLayer<BoardSize>::paintEvent(event);
 
     QPainter painter(this);
-    painter.fillRect(rect(), Color());
+    painter.fillRect(BaseCanvasLayer<BoardSize>::rect(), Color());
   }
 
   void
   resizeEvent(QResizeEvent* event) override {
-    BaseCanvasLayer::resizeEvent(event);
+    BaseCanvasLayer<BoardSize>::resizeEvent(event);
 
-    int x = (width() - WindowSize) / 2;
-    int y = (height() - WindowSize) / 2;
+    int x = (BaseCanvasLayer<BoardSize>::width() - BaseCanvasLayer<BoardSize>::WindowSize) / 2;
+    int y = (BaseCanvasLayer<BoardSize>::height() - BaseCanvasLayer<BoardSize>::WindowSize) / 2;
 
     BoxCanvases->move(x, y);
     EdgeCanvases->move(x, y);
@@ -95,7 +99,7 @@ class MainWindow final : public BaseCanvasLayer {
 
   void
   showEvent(QShowEvent* event) override {
-    BaseCanvasLayer::showEvent(event);
+    BaseCanvasLayer<BoardSize>::showEvent(event);
 
     std::thread([this] {
       while (Board->Step::Gaming()) {
@@ -136,28 +140,28 @@ class MainWindow final : public BaseCanvasLayer {
 
       std::this_thread::sleep_for(std::chrono::seconds(2));
       EdgeCanvases->Canvases.At(LastEdge)->HighLight = false;
-      update();
+      BaseCanvasLayer<BoardSize>::update();
 
       std::this_thread::sleep_for(std::chrono::seconds(2));
-      close();
+      BaseCanvasLayer<BoardSize>::close();
     }).detach();
   }
 
   private:
   PlayerType Player1Type;
   PlayerType Player2Type;
-  Ptr<Robot> Robot1;
-  Ptr<Robot> Robot2;
-  Edge PlayerMoveEdge;
-  Ptr<ScoreCountableBoard> Board;
-  Ptr<BoxCanvasLayer> BoxCanvases;
-  Ptr<EdgeCanvasLayer> EdgeCanvases;
-  Ptr<DotCanvasLayer> DotCanvases;
-  Ptr<EdgeButtonLayer> EdgeButtons;
-  Edge LastEdge;
+  Ptr<Robot<BoardSize>> Robot1;
+  Ptr<Robot<BoardSize>> Robot2;
+  Edge<BoardSize> PlayerMoveEdge;
+  Ptr<ScoreCountableBoard<BoardSize>> Board;
+  Ptr<BoxCanvasLayer<BoardSize>> BoxCanvases;
+  Ptr<EdgeCanvasLayer<BoardSize>> EdgeCanvases;
+  Ptr<DotCanvasLayer<BoardSize>> DotCanvases;
+  Ptr<EdgeButtonLayer<BoardSize>> EdgeButtons;
+  Edge<BoardSize> LastEdge;
 
   void
-  setPlayerMoveEdge(Edge edge) {
+  setPlayerMoveEdge(Edge<BoardSize> edge) {
     if (Board->Contains(edge)) {
       return;
     }

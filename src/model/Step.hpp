@@ -2,16 +2,17 @@
 
 #include "Edge.hpp"
 
+template <int BoardSize>
 class Step {
   public:
   bool
   Gaming() const {
-    return v < Edge::Max;
+    return v < Edge<BoardSize>::Max;
   }
 
   int
   RemainStep() const {
-    return Edge::Max - v;
+    return Edge<BoardSize>::Max - v;
   }
 
   int

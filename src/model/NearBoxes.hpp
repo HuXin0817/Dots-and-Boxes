@@ -5,20 +5,22 @@
 #include "../common/Array.hpp"
 #include "../common/List.hpp"
 #include "../common/Span.hpp"
+#include "Box.hpp"
 #include "Edge.hpp"
-#include "Square.hpp"
 
+template <int BoardSize>
 class NearBoxesMapper {
+  public:
   NearBoxesMapper() {
-    Array<List<Box, 2>, Edge::Max> edgeNearBoxes;
-    for (Edge edge = 0; edge < Edge::Max; edge++) {
+    Array<List<Box<BoardSize>, 2>, Edge<BoardSize>::Max> edgeNearBoxes;
+    for (Edge<BoardSize> edge = 0; edge < Edge<BoardSize>::Max; edge++) {
       edgeNearBoxes.At(edge) = GetNearBoxes(edge);
     }
 
-    Array<Array<int, Box::Max>, Box::Max> adjacencyMatrix = {};
-    Array<int, Box::Max> boxDegrees = {};
+    Array<Array<int, Box<BoardSize>::Max>, Box<BoardSize>::Max> adjacencyMatrix = {};
+    Array<int, Box<BoardSize>::Max> boxDegrees = {};
 
-    for (Edge edge = 0; edge < Edge::Max; edge++) {
+    for (Edge<BoardSize> edge = 0; edge < Edge<BoardSize>::Max; edge++) {
       if (edgeNearBoxes.At(edge).Size() == 2) {
         int firstBox = edgeNearBoxes.At(edge).At(0);
         int secondBox = edgeNearBoxes.At(edge).At(1);
@@ -29,16 +31,16 @@ class NearBoxesMapper {
       }
     }
 
-    List<int, Box::Max> oddDegreeBoxes;
-    for (int box = 0; box < Box::Max; box++) {
+    List<int, Box<BoardSize>::Max> oddDegreeBoxes;
+    for (int box = 0; box < Box<BoardSize>::Max; box++) {
       if (boxDegrees.At(box) % 2 == 1) {
         oddDegreeBoxes.Append(box);
       }
     }
 
-    auto findEulerianPath = [&](int startBox) -> List<int, Edge::Max> {
-      List<int, Edge::Max> eulerianPath;
-      Array<int, Edge::Max> pathStack;
+    auto findEulerianPath = [&](int startBox) -> List<int, Edge<BoardSize>::Max> {
+      List<int, Edge<BoardSize>::Max> eulerianPath;
+      Array<int, Edge<BoardSize>::Max> pathStack;
       int stackSize = 0;
       pathStack.At(stackSize++) = startBox;
 
@@ -46,7 +48,7 @@ class NearBoxesMapper {
         int currentBox = pathStack.At(stackSize - 1);
 
         bool found = false;
-        for (int nextBox = 0; nextBox < Box::Max; nextBox++) {
+        for (int nextBox = 0; nextBox < Box<BoardSize>::Max; nextBox++) {
           if (adjacencyMatrix.At(currentBox).At(nextBox) > 0) {
             found = true;
             pathStack.At(stackSize++) = nextBox;
@@ -74,17 +76,17 @@ class NearBoxesMapper {
     };
 
     int nearBoxesBufferIndex = 0;
-    Array<List<int, Edge::Max>, Box::Max> boxToIndices;
-    Array<Array<int, Box::Max>, Box::Max> boxPairToIndex;
-    for (int i = 0; i < Box::Max; i++) {
-      for (int j = 0; j < Box::Max; j++) {
+    Array<List<int, Edge<BoardSize>::Max>, Box<BoardSize>::Max> boxToIndices;
+    Array<Array<int, Box<BoardSize>::Max>, Box<BoardSize>::Max> boxPairToIndex;
+    for (int i = 0; i < Box<BoardSize>::Max; i++) {
+      for (int j = 0; j < Box<BoardSize>::Max; j++) {
         boxPairToIndex.At(i).At(j) = NearBoxesBufferSize;
       }
     }
 
     while (true) {
       int startBox = -1;
-      for (int box = 0; box < Box::Max; box++) {
+      for (int box = 0; box < Box<BoardSize>::Max; box++) {
         if (boxDegrees.At(box) > 0) {
           if (boxDegrees.At(box) % 2 == 1) {
             startBox = box;
@@ -99,20 +101,20 @@ class NearBoxesMapper {
         break;
       }
 
-      List<int, Edge::Max> eulerianPath = findEulerianPath(startBox);
+      List<int, Edge<BoardSize>::Max> eulerianPath = findEulerianPath(startBox);
       if (eulerianPath.Empty()) {
         continue;
       }
 
       for (int i = 0; i < eulerianPath.Size(); i++) {
-        int box = eulerianPath.At(i);
+        Box<BoardSize> box = eulerianPath.At(i);
         NearBoxesBuffer.At(nearBoxesBufferIndex++) = box;
         boxToIndices.At(box).Append(nearBoxesBufferIndex - 1);
 
         if (i > 0) {
           int prevBox = eulerianPath.At(i - 1);
-          int minBox = prevBox < box ? prevBox : box;
-          int maxBox = prevBox < box ? box : prevBox;
+          int minBox = prevBox < box ? prevBox : static_cast<int>(box);
+          int maxBox = prevBox < box ? static_cast<int>(box) : prevBox;
           if (boxPairToIndex.At(minBox).At(maxBox) == NearBoxesBufferSize) {
             boxPairToIndex.At(minBox).At(maxBox) = nearBoxesBufferIndex - 2;
           }
@@ -120,7 +122,7 @@ class NearBoxesMapper {
       }
     }
 
-    for (Edge edge = 0; edge < Edge::Max; edge++) {
+    for (Edge<BoardSize> edge = 0; edge < Edge<BoardSize>::Max; edge++) {
       if (edgeNearBoxes.At(edge).Size() == 1) {
         int box = edgeNearBoxes.At(edge).At(0);
         if (boxToIndices.At(box).Empty()) {
@@ -130,8 +132,8 @@ class NearBoxesMapper {
       }
     }
 
-    Array<bool, Edge::Max> edgeProcessed = {};
-    for (Edge edge = 0; edge < Edge::Max; edge++) {
+    Array<bool, Edge<BoardSize>::Max> edgeProcessed = {};
+    for (Edge<BoardSize> edge = 0; edge < Edge<BoardSize>::Max; edge++) {
       if (edgeNearBoxes.At(edge).Size() == 2) {
         int firstBox = edgeNearBoxes.At(edge).At(0);
         int secondBox = edgeNearBoxes.At(edge).At(1);
@@ -245,7 +247,7 @@ class NearBoxesMapper {
       }
     }
 
-    for (Edge edge = 0; edge < Edge::Max; edge++) {
+    for (Edge<BoardSize> edge = 0; edge < Edge<BoardSize>::Max; edge++) {
       if (!edgeProcessed.At(edge) && edgeNearBoxes.At(edge).Size() == 2) {
         int firstBox = edgeNearBoxes.At(edge).At(0);
         int secondBox = edgeNearBoxes.At(edge).At(1);
@@ -265,20 +267,20 @@ class NearBoxesMapper {
     assert(CheckBoxNearBoxes());
   }
 
-  List<Box, 2>
-  GetNearBoxes(Edge edge) {
-    List<Box, 2> result;
+  List<Box<BoardSize>, 2>
+  GetNearBoxes(Edge<BoardSize> edge) {
+    List<Box<BoardSize>, 2> result;
 
     int x = edge.Dot2().X() - 1;
     int y = edge.Dot2().Y() - 1;
     if (x >= 0 && y >= 0) {
-      result.Append(Box(x, y));
+      result.Append(Box<BoardSize>(x, y));
     }
 
     x = edge.Dot1().X();
     y = edge.Dot1().Y();
     if (x < BoardSize && y < BoardSize) {
-      result.Append(Box(x, y));
+      result.Append(Box<BoardSize>(x, y));
     }
 
     return result;
@@ -286,7 +288,7 @@ class NearBoxesMapper {
 
   bool
   CheckBoxNearBoxes() {
-    for (Edge edge = 0; edge < Edge::Max; edge++) {
+    for (Edge<BoardSize> edge = 0; edge < Edge<BoardSize>::Max; edge++) {
       auto expectedNearBoxes = GetNearBoxes(edge);
       if (EdgeNearBoxes.At(edge).Size() != expectedNearBoxes.Size()) {
         return false;
@@ -318,17 +320,15 @@ class NearBoxesMapper {
   }
 
   static constexpr int NearBoxesBufferSize = 4 * BoardSize * BoardSize - 8 * BoardSize + 3;
-  Array<Box, NearBoxesBufferSize> NearBoxesBuffer;
+  Array<Box<BoardSize>, NearBoxesBufferSize> NearBoxesBuffer;
 
-  Array<Span<Box>, Edge::Max> EdgeNearBoxes;
-
-  friend const Span<Box>&
-  NearBoxes(Edge edge);
+  Array<Span<Box<BoardSize>>, Edge<BoardSize>::Max> EdgeNearBoxes;
 };
 
-inline const Span<Box>&
-NearBoxes(Edge edge) {
-  static NearBoxesMapper NearBoxesMapperInstance;
+template <int BoardSize>
+inline const Span<Box<BoardSize>>&
+NearBoxes(Edge<BoardSize> edge) {
+  static NearBoxesMapper<BoardSize> NearBoxesMapperInstance;
 
   return NearBoxesMapperInstance.EdgeNearBoxes.At(edge);
 }

@@ -3,9 +3,10 @@
 #include "Square.hpp"
 #include "Turn.hpp"
 
-static constexpr int MinWinnerScore = Box::Max / 2 + 1;
-
+template <int BoardSize>
 class ScoreMap {
+  static constexpr int MinWinnerScore = Box<BoardSize>::Max / 2 + 1;
+
   public:
   ScoreMap() {
     Reset();

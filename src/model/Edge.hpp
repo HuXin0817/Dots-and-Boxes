@@ -1,12 +1,13 @@
 #pragma once
 
-#include "Square.hpp"
+#include "Dot.hpp"
 
+template <int BoardSize>
 class Edge {
   public:
   static constexpr int Max = 2 * BoardSize * (BoardSize + 1);
 
-  Edge(Dot dot1, Dot dot2) {
+  Edge(Dot<BoardSize> dot1, Dot<BoardSize> dot2) {
     if (dot2 - dot1 == 1) {
       v = 2 * (dot1 - dot1 / (BoardSize + 1)) + 1;
     } else {
@@ -17,7 +18,7 @@ class Edge {
     assert(Dot2() == dot2);
   }
 
-  Dot
+  Dot<BoardSize>
   Dot1() const {
     int dot = v >> 1;
     if (v & 1) {
@@ -26,7 +27,7 @@ class Edge {
     return dot;
   }
 
-  Dot
+  Dot<BoardSize>
   Dot2() const {
     int dot = v >> 1;
     if (v & 1) {
@@ -48,5 +49,5 @@ class Edge {
     return ss.str();
   }
 
-  V(Edge)
+  V(Edge<BoardSize>)
 };

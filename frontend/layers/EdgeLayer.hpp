@@ -5,33 +5,34 @@
 #include "../../src/model/Edge.hpp"
 #include "BaseCanvasLayer.hpp"
 
-template <class Canvas>
-class EdgeLayer : public BaseCanvasLayer {
-  friend class MainWindow;
-
+template <int BoardSize, class Canvas>
+class EdgeLayer : public BaseCanvasLayer<BoardSize> {
   public:
-  explicit EdgeLayer(QWidget* parent) : BaseCanvasLayer(parent) {
+  explicit EdgeLayer(QWidget* parent) : BaseCanvasLayer<BoardSize>(parent) {
   }
 
   protected:
   void
   resizeEvent(QResizeEvent* event) override {
-    BaseCanvasLayer::resizeEvent(event);
+    BaseCanvasLayer<BoardSize>::resizeEvent(event);
 
-    int x0 = (width() - BoardWidth) / 2 - UnitSize;
-    int y0 = (height() - BoardWidth) / 2 - UnitSize;
+    int x0 = (BaseCanvasLayer<BoardSize>::width() - BaseCanvasLayer<BoardSize>::BoardWidth) / 2 -
+             BaseCanvasLayer<BoardSize>::UnitSize;
+    int y0 = (BaseCanvasLayer<BoardSize>::height() - BaseCanvasLayer<BoardSize>::BoardWidth) / 2 -
+             BaseCanvasLayer<BoardSize>::UnitSize;
 
-    for (Edge edge = 0; edge < Edge::Max; edge++) {
+    for (Edge<BoardSize> edge = 0; edge < Edge<BoardSize>::Max; edge++) {
       int x = x0 + edge.Dot1().X() * EdgeCanvas::Height;
       int y = y0 + edge.Dot1().Y() * EdgeCanvas::Height;
       if (edge.Dot1().X() == edge.Dot2().X()) {
-        y += UnitSize;
+        y += BaseCanvasLayer<BoardSize>::UnitSize;
       } else {
-        x += UnitSize;
+        x += BaseCanvasLayer<BoardSize>::UnitSize;
       }
       Canvases.At(edge)->move(x, y);
     }
   }
 
-  Array<Ptr<Canvas>, Edge::Max> Canvases;
+  public:
+  Array<Ptr<Canvas>, Edge<BoardSize>::Max> Canvases;
 };
