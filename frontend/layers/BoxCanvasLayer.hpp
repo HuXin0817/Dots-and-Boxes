@@ -4,7 +4,6 @@
 #include "../../src/common/Ptr.hpp"
 #include "../../src/model/Square.hpp"
 #include "../canvases/BoxCanvas.hpp"
-#include "../canvases/DotCanvas.hpp"
 #include "../canvases/EdgeCanvas.hpp"
 #include "BaseCanvasLayer.hpp"
 

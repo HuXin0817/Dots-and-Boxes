@@ -8,6 +8,8 @@
 class MonteCarloSearchRobot final : public Robot {
   friend class ParallelSearchRobot;
 
+  static constexpr int SearchTime = 1 << 14;
+
   public:
   MonteCarloSearchRobot() = default;
 

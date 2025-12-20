@@ -34,9 +34,7 @@ class MainWindow final : public BaseCanvasLayer {
     BoxCanvases.New(this);
     EdgeCanvases.New(this);
     DotCanvases.New(this);
-    auto CallBackFactory = [this](Edge edge) {
-      return [edge, this] { return setPlayerMoveEdge(edge); };
-    };
+    auto CallBackFactory = [this](Edge edge) { return [edge, this] { setPlayerMoveEdge(edge); }; };
     EdgeButtons.New(CallBackFactory, this);
   }
 

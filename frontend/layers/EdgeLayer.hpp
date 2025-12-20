@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../src/common/Array.hpp"
+#include "../../src/common/Ptr.hpp"
 #include "../../src/model/Edge.hpp"
 #include "BaseCanvasLayer.hpp"
 

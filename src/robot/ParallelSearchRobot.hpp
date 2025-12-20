@@ -4,6 +4,8 @@
 #include "Robot.hpp"
 
 class ParallelSearchRobot final : public Robot {
+  static constexpr int ParallelNumber = 10;
+
   public:
   ParallelSearchRobot() = default;
 

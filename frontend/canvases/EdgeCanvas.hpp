@@ -1,7 +1,8 @@
 #pragma once
 
+#include <QPainter>
+
 #include "BaseEdgeCanvas.hpp"
-#include "DotCanvas.hpp"
 
 class EdgeCanvas final : public BaseEdgeCanvas {
   Q_OBJECT

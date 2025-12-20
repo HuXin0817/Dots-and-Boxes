@@ -5,7 +5,6 @@
 #include "../../src/common/Array.hpp"
 #include "../../src/model/Edge.hpp"
 #include "../canvases/EdgeCanvas.hpp"
-#include "BaseCanvasLayer.hpp"
 #include "EdgeLayer.hpp"
 
 class EdgeCanvasLayer final : public EdgeLayer<EdgeCanvas> {

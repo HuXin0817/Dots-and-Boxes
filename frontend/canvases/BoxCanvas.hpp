@@ -1,7 +1,6 @@
 #pragma once
 
 #include "BaseCanvas.hpp"
-#include "DotCanvas.hpp"
 #include "EdgeCanvas.hpp"
 
 class BoxCanvas final : public BaseCanvas {
