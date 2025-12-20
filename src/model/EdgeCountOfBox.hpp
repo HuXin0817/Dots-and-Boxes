@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../common/Array.hpp"
-#include "EdgeBoxMapper.hpp"
+#include "NearBoxes.hpp"
 
 class EdgeCountOfBox : public Array<int, Box::Max> {
   public:

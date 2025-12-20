@@ -2,6 +2,7 @@
 
 #include "../model/Edge.hpp"
 #include "../model/EdgeCountOfBox.hpp"
+#include "../model/NearEdges.hpp"
 #include "../model/Square.hpp"
 #include "BasicBoard.hpp"
 
