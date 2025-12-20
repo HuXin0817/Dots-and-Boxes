@@ -9,7 +9,6 @@
 #include "Square.hpp"
 
 class NearBoxesMapper {
-  private:
   NearBoxesMapper() {
     Array<List<Box, 2>, Edge::Max> edgeNearBoxes;
     for (Edge edge = 0; edge < Edge::Max; edge++) {
