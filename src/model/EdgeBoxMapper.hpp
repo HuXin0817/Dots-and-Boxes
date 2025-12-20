@@ -9,7 +9,7 @@
 #include "Square.hpp"
 
 class EdgeBoxMapper {
-  static Array<Array<Edge, 4>, Box::Max>
+  Array<Array<Edge, 4>, Box::Max>
   GetBoxNearEdges() {
     Array<Array<Edge, 4>, Box::Max> boxNearEdges;
 
@@ -31,10 +31,7 @@ class EdgeBoxMapper {
     return boxNearEdges;
   }
 
-  static constexpr int NearBoxesBufferSize = 4 * BoardSize * BoardSize - 8 * BoardSize + 3;
-  static inline Array<Box, NearBoxesBufferSize> NearBoxesBuffer;
-
-  static List<Box, 2>
+  List<Box, 2>
   GetNearBoxes(Edge edge) {
     List<Box, 2> result;
 
@@ -53,7 +50,7 @@ class EdgeBoxMapper {
     return result;
   }
 
-  static Array<Span<Box>, Edge::Max>
+  Array<Span<Box>, Edge::Max>
   GetEdgeNearBoxes() {
     Array<List<Box, 2>, Edge::Max> edgeNearBoxes;
     for (Edge edge = 0; edge < Edge::Max; edge++) {
@@ -313,7 +310,7 @@ class EdgeBoxMapper {
     return edgeToBoxSpans;
   }
 
-  static bool
+  bool
   CheckBoxNearBoxes(Array<Span<Box>, Edge::Max> edgeToBoxSpans) {
     for (Edge edge = 0; edge < Edge::Max; edge++) {
       auto expectedNearBoxes = GetNearBoxes(edge);
@@ -346,7 +343,26 @@ class EdgeBoxMapper {
     return true;
   }
 
-  public:
-  static inline Array<Array<Edge, 4>, Box::Max> BoxNearEdges = GetBoxNearEdges();
-  static inline Array<Span<Box>, Edge::Max> EdgeNearBoxes = GetEdgeNearBoxes();
+  static constexpr int NearBoxesBufferSize = 4 * BoardSize * BoardSize - 8 * BoardSize + 3;
+  Array<Box, NearBoxesBufferSize> NearBoxesBuffer;
+
+  Array<Array<Edge, 4>, Box::Max> BoxNearEdges = GetBoxNearEdges();
+  Array<Span<Box>, Edge::Max> EdgeNearBoxes = GetEdgeNearBoxes();
+
+  friend const Array<Edge, 4>&
+  NearEdges(Box box);
+  friend Span<Box>
+  NearBoxes(Edge edge);
 };
+
+static EdgeBoxMapper EdgeBoxMapperInstance;
+
+inline const Array<Edge, 4>&
+NearEdges(Box box) {
+  return EdgeBoxMapperInstance.BoxNearEdges.At(box);
+}
+
+inline Span<Box>
+NearBoxes(Edge edge) {
+  return EdgeBoxMapperInstance.EdgeNearBoxes.At(edge);
+}

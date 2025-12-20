@@ -54,9 +54,9 @@ class MainWindow final : public BaseCanvasLayer {
     EdgeCanvases->Canvases.At(edge)->State = StateFromTurn(Board->Turn);
     EdgeCanvases->Canvases.At(edge)->raise();
 
-    for (Box box : EdgeBoxMapper::EdgeNearBoxes.At(edge)) {
+    for (Box box : NearBoxes(edge)) {
       int count = 0;
-      for (Edge nearEdge : EdgeBoxMapper::BoxNearEdges.At(box)) {
+      for (Edge nearEdge : NearEdges(box)) {
         if (Board->Contains(nearEdge)) {
           count++;
         }

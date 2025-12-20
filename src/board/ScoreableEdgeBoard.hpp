@@ -17,7 +17,7 @@ class ScoreableEdgeBoard : public EdgeCountableBoard {
   int
   Add(Edge edge) {
     int score = EdgeCountableBoard::Add(edge);
-    for (Box box : EdgeBoxMapper::EdgeNearBoxes.At(edge)) {
+    for (Box box : NearBoxes(edge)) {
       if (EdgeCountOfBox::At(box) == 3) {
         Edge edgeToAdd = FindNotContainsEdgeInBox(box);
         ScoreableEdges.Append(edgeToAdd);
