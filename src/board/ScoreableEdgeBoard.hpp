@@ -18,9 +18,9 @@ class ScoreableEdgeBoard {
   int
   Add(Edge<BoardSize> edge) {
     int score = EdgeCountableBoard.Add(edge);
-    for (Box box : NearBoxes(edge)) {
+    for (Box<BoardSize> box : NearBoxes(edge)) {
       if (EdgeCountableBoard.GetEdgeCountOfBox().At(box) == 3) {
-        Edge edgeToAdd = EdgeCountableBoard.FindNotContainsEdgeInBox(box);
+        Edge<BoardSize> edgeToAdd = EdgeCountableBoard.FindNotContainsEdgeInBox(box);
         ScoreableEdges.Append(edgeToAdd);
       }
     }
@@ -32,13 +32,13 @@ class ScoreableEdgeBoard {
     int score = 0;
     while (EdgeCountableBoard.GetBasicBoard().GetStep().Gaming()) {
       if (ScoreableEdges.Empty()) {
-        if (Edge edge = EdgeCountableBoard.FindScoreableEdge(); edge != -1) {
+        if (Edge<BoardSize> edge = EdgeCountableBoard.FindScoreableEdge(); edge != -1) {
           ScoreableEdges.Append(edge);
         } else {
           break;
         }
       }
-      Edge edge = ScoreableEdges.Pop();
+      Edge<BoardSize> edge = ScoreableEdges.Pop();
       if (EdgeCountableBoard.GetBasicBoard().Contains(edge)) {
         continue;
       }

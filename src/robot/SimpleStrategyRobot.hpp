@@ -16,7 +16,7 @@ class SimpleStrategyRobot final : public Robot<BoardSize> {
     ScoreableEdges.Clear();
     auto EmptyEdges = board.GetEdgeCountableBoard().GetBasicBoard().EmptyEdges();
 
-    for (Edge edge : EmptyEdges) {
+    for (Edge<BoardSize> edge : EmptyEdges) {
       if (int maxCount = board.GetEdgeCountableBoard().GetEdgeCountOfBox().MaxCount(edge);
           maxCount == 3) {
         ScoreableEdges.Append(edge);

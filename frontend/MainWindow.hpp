@@ -58,9 +58,9 @@ class MainWindow final : public BaseCanvasLayer<BoardSize> {
         BaseCanvasLayer<BoardSize>::StateFromTurn(Board->GetScoreMap().GetTurn()));
     EdgeCanvases->GetCanvases().At(edge)->raise();
 
-    for (Box box : NearBoxes(edge)) {
+    for (Box<BoardSize> box : NearBoxes(edge)) {
       int count = 0;
-      for (Edge nearEdge : NearEdges(box)) {
+      for (Edge<BoardSize> nearEdge : NearEdges(box)) {
         if (Board->GetEdgeCountableBoard().GetBasicBoard().Contains(nearEdge)) {
           count++;
         }

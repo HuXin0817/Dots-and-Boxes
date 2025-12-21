@@ -20,7 +20,7 @@ class EdgeCountableBoard {
   Edge<BoardSize>
   FindNotContainsEdgeInBox(Box<BoardSize> box) const {
     assert(EdgeCountOfBox.At(box) == 3);
-    for (Edge edge : NearEdges(box)) {
+    for (Edge<BoardSize> edge : NearEdges(box)) {
       if (BasicBoard.NotContains(edge)) {
         return edge;
       }

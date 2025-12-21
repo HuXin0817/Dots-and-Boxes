@@ -23,7 +23,7 @@ class MonteCarloSearchRobot final : public Robot<BoardSize> {
         SearchTime / board.GetEdgeCountableBoard().GetBasicBoard().GetStep().RemainStep() + 1;
     while (times--) {
       SimulationBoard.Reset(board.GetEdgeCountableBoard());
-      Edge edge = RandomChoice(SubRobot.BestCandidateEdges(SimulationBoard));
+      Edge<BoardSize> edge = RandomChoice(SubRobot.BestCandidateEdges(SimulationBoard));
       SimulationBoard.Add(edge);
       while (SimulationBoard.Gaming()) {
         SimulationBoard.Add(RandomChoice(SubRobot.BestCandidateEdges(SimulationBoard)));

@@ -13,7 +13,7 @@ class EdgeCountOfBox : public Array<int, Box<BoardSize>::Max> {
   int
   Add(Edge<BoardSize> edge) {
     int score = 0;
-    for (Box box : NearBoxes(edge)) {
+    for (Box<BoardSize> box : NearBoxes(edge)) {
       Array<int, Box<BoardSize>::Max>::At(box)++;
       int num = Array<int, Box<BoardSize>::Max>::At(box);
       assert(num <= 4);
@@ -27,7 +27,7 @@ class EdgeCountOfBox : public Array<int, Box<BoardSize>::Max> {
   int
   MaxCount(Edge<BoardSize> edge) const {
     int maxCount = 0;
-    for (Box box : NearBoxes(edge)) {
+    for (Box<BoardSize> box : NearBoxes(edge)) {
       maxCount = std::max(maxCount, Array<int, Box<BoardSize>::Max>::At(box));
     }
     return maxCount;
