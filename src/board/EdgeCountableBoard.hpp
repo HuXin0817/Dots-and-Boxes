@@ -39,16 +39,6 @@ class EdgeCountableBoard {
     return -1;
   }
 
-  EdgeCountableBoard&
-  GetEdgeCountableBoard() {
-    return *this;
-  }
-
-  const EdgeCountableBoard&
-  GetEdgeCountableBoard() const {
-    return *this;
-  }
-
   const BasicBoard<BoardSize>&
   GetBasicBoard() const {
     return BasicBoard;

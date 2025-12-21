@@ -10,7 +10,7 @@ class ScoreCountableBoard {
 
   void
   Reset(const EdgeCountableBoard<BoardSize>& newBoard) {
-    EdgeCountableBoard.GetEdgeCountableBoard() = newBoard;
+    EdgeCountableBoard = newBoard;
     ScoreMap.Reset();
   }
 
