@@ -13,8 +13,8 @@ class BoxCanvasLayer final : public BaseCanvasLayer<BoardSize> {
   explicit BoxCanvasLayer(QWidget* parent) : BaseCanvasLayer<BoardSize>(parent) {
     BaseCanvasLayer<BoardSize>::resize(BaseCanvasLayer<BoardSize>::WindowSize,
                                        BaseCanvasLayer<BoardSize>::WindowSize);
-    for (Box<BoardSize> box = 0; box < Box<BoardSize>::Max; box++) {
-      BoxCanvases.At(box).New(this);
+    for (Box<BoardSize> box = 0; box.Int() < Box<BoardSize>::Max; box.IntRef()++) {
+      BoxCanvases.At(box.Int()).New(this);
     }
   }
 
@@ -42,7 +42,7 @@ class BoxCanvasLayer final : public BaseCanvasLayer<BoardSize> {
       for (int j = 0; j < Box<BoardSize>::Size; j++) {
         int x = x0 + i * EdgeCanvas::Height;
         int y = y0 + j * EdgeCanvas::Height;
-        BoxCanvases.At(Box<BoardSize>(i, j))->move(x, y);
+        BoxCanvases.At(Box<BoardSize>(i, j).Int())->move(x, y);
       }
     }
   }

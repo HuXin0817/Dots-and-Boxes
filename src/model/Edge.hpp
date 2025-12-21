@@ -8,14 +8,14 @@ class Edge {
   static constexpr int Max = 2 * BoardSize * (BoardSize + 1);
 
   Edge(Dot<BoardSize> dot1, Dot<BoardSize> dot2) {
-    if (dot2 - dot1 == 1) {
-      v = 2 * (dot1 - dot1 / (BoardSize + 1)) + 1;
+    if (dot2.Int() - dot1.Int() == 1) {
+      v = 2 * (dot1.Int() - dot1.Int() / (BoardSize + 1)) + 1;
     } else {
-      v = 2 * dot1;
+      v = 2 * dot1.Int();
     }
 
-    assert(Dot1() == dot1);
-    assert(Dot2() == dot2);
+    assert(Dot1().Int() == dot1.Int());
+    assert(Dot2().Int() == dot2.Int());
   }
 
   Dot<BoardSize>

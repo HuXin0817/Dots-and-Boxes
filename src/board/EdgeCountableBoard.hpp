@@ -19,7 +19,7 @@ class EdgeCountableBoard {
 
   Edge<BoardSize>
   FindNotContainsEdgeInBox(Box<BoardSize> box) const {
-    assert(EdgeCountOfBox.At(box) == 3);
+    assert(EdgeCountOfBox.At(box.Int()) == 3);
     for (Edge<BoardSize> edge : NearEdges(box)) {
       if (BasicBoard.NotContains(edge)) {
         return edge;
@@ -31,8 +31,8 @@ class EdgeCountableBoard {
 
   Edge<BoardSize>
   FindScoreableEdge() const {
-    for (Box<BoardSize> box = 0; box < Box<BoardSize>::Max; box++) {
-      if (EdgeCountOfBox.At(box) == 3) {
+    for (Box<BoardSize> box = 0; box.Int() < Box<BoardSize>::Max; box.IntRef()++) {
+      if (EdgeCountOfBox.At(box.Int()) == 3) {
         return FindNotContainsEdgeInBox(box);
       }
     }

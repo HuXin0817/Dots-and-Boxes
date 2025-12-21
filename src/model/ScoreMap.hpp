@@ -25,7 +25,7 @@ class ScoreMap {
       Turn.Change();
       return;
     }
-    if (Turn == Player1Turn) {
+    if (Turn.Bool() == Player1Turn.Bool()) {
       Player1Score += score;
     } else {
       Player2Score += score;

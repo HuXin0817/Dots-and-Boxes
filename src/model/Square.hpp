@@ -43,9 +43,6 @@ public:                                          \
     }                                            \
     SubClass(int x, int y) : SquareClass(x, y) { \
     }                                            \
-    operator int() {                             \
-      return SquareClass::v;                     \
-    }                                            \
   }
 
 DefSquareSubClass(Dot, Square<BoardSize + 1>);

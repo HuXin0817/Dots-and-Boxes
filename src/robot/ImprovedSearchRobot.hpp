@@ -23,7 +23,7 @@ class ImprovedSearchRobot final : public Robot<BoardSize> {
       SimulationBoard.Add(emptyEdge);
       while (SimulationBoard.Gaming()) {
         Edge<BoardSize> edge = SubRobot.BestCandidateEdges(SimulationBoard).At(0);
-        assert(board.MaxCount(edge) > 1);
+        assert(board.GetEdgeCountableBoard().GetEdgeCountOfBox().MaxCount(edge.Int()) > 1);
         SimulationBoard.Add(edge);
       }
       if (int score = SimulationBoard.GetScoreMap().Score(); score > maxScore) {

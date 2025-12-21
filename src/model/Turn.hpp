@@ -12,7 +12,8 @@ class PlayerTurn {
     v = !v;
   }
 
-  operator bool() const {
+  bool
+  Bool() const {
     return v;
   }
 
@@ -21,4 +22,4 @@ class PlayerTurn {
 };
 
 static const PlayerTurn Player1Turn = true;
-static const PlayerTurn Player2Turn = !Player1Turn;
+static const PlayerTurn Player2Turn = !Player1Turn.Bool();

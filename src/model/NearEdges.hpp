@@ -16,7 +16,7 @@ class NearEdgesMapper {
         Dot<BoardSize> topRight(x + 1, y);
         Dot<BoardSize> bottomLeft(x, y + 1);
         Dot<BoardSize> bottomRight(x + 1, y + 1);
-        BoxNearEdges.At(Box<BoardSize>(x, y)) = {
+        BoxNearEdges.At(Box<BoardSize>(x, y).Int()) = {
             Edge(topLeft, topRight),
             Edge(topLeft, bottomLeft),
             Edge(bottomLeft, bottomRight),
@@ -37,5 +37,5 @@ inline const Array<Edge<BoardSize>, 4>&
 NearEdges(Box<BoardSize> box) {
   static NearEdgesMapper<BoardSize> NearEdgesMapperInstance;
 
-  return NearEdgesMapperInstance.BoxNearEdges.At(box);
+  return NearEdgesMapperInstance.BoxNearEdges.At(box.Int());
 }

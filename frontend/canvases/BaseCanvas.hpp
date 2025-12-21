@@ -25,8 +25,9 @@ class BaseCanvas : public QWidget {
   };
 
   static CanvasState
-  StateFromTurn(bool Turn) {
-    return Turn == Player1Turn ? CanvasState::Player1Occupy : CanvasState::Player2Occupy;
+  StateFromTurn(PlayerTurn Turn) {
+    return Turn.Bool() == Player1Turn.Bool() ? CanvasState::Player1Occupy
+                                             : CanvasState::Player2Occupy;
   }
 
   static bool

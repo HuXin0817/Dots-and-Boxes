@@ -9,9 +9,9 @@ template <int BoardSize>
 class BasicBoard {
   public:
   BasicBoard() {
-    for (Edge<BoardSize> edge = 0; edge < Edge<BoardSize>::Max; edge++) {
-      EdgeIndexes.At(edge) = edge;
-      Edges.At(edge) = edge;
+    for (Edge<BoardSize> edge = 0; edge.Int() < Edge<BoardSize>::Max; edge.IntRef()++) {
+      EdgeIndexes.At(edge.Int()) = edge.Int();
+      Edges.At(edge.Int()) = edge;
     }
   }
 
@@ -19,21 +19,21 @@ class BasicBoard {
   Add(Edge<BoardSize> edge) {
     assert(NotContains(edge));
     Edge<BoardSize> nowEdge = Edges.At(Step.NowStep());
-    int edgeIndex = EdgeIndexes.At(edge);
+    int edgeIndex = EdgeIndexes.At(edge.Int());
     std::swap(Edges.At(edgeIndex), Edges.At(Step.NowStep()));
-    EdgeIndexes.At(edge) = Step.NowStep();
-    EdgeIndexes.At(nowEdge) = edgeIndex;
+    EdgeIndexes.At(edge.Int()) = Step.NowStep();
+    EdgeIndexes.At(nowEdge.Int()) = edgeIndex;
     Step.Go();
   }
 
   bool
   Contains(Edge<BoardSize> edge) const {
-    return EdgeIndexes.At(edge) < Step.NowStep();
+    return EdgeIndexes.At(edge.Int()) < Step.NowStep();
   }
 
   bool
   NotContains(Edge<BoardSize> edge) const {
-    return EdgeIndexes.At(edge) >= Step.NowStep();
+    return EdgeIndexes.At(edge.Int()) >= Step.NowStep();
   }
 
   Span<Edge<BoardSize>>
