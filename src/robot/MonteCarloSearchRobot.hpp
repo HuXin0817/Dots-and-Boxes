@@ -19,7 +19,8 @@ class MonteCarloSearchRobot final : public Robot<BoardSize> {
     }
 
     SearchResult.Reset();
-    int times = SearchTime / board.RemainStep() + 1;
+    int times =
+        SearchTime / board.GetEdgeCountableBoard().GetBasicBoard().GetStep().RemainStep() + 1;
     while (times--) {
       SimulationBoard.Reset(board.GetEdgeCountableBoard());
       Edge edge = RandomChoice(SubRobot.BestCandidateEdges(SimulationBoard));
@@ -27,7 +28,7 @@ class MonteCarloSearchRobot final : public Robot<BoardSize> {
       while (SimulationBoard.Gaming()) {
         SimulationBoard.Add(RandomChoice(SubRobot.BestCandidateEdges(SimulationBoard)));
       }
-      SearchResult.Add(edge, SimulationBoard.Score());
+      SearchResult.Add(edge, SimulationBoard.GetScoreMap().Score());
     }
 
     return SearchResult.Export();

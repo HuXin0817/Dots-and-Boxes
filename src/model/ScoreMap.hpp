@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Square.hpp"
+#include "Box.hpp"
 #include "Turn.hpp"
 
 template <int BoardSize>
@@ -47,6 +47,22 @@ class ScoreMap {
     return Player1Score < MinWinnerScore && Player2Score < MinWinnerScore;
   }
 
+  int
+  GetPlayer1Score() const {
+    return Player1Score;
+  }
+
+  int
+  GetPlayer2Score() const {
+    return Player2Score;
+  }
+
+  PlayerTurn
+  GetTurn() const {
+    return Turn;
+  }
+
+  private:
   int Player1Score = 0;
   int Player2Score = 0;
   PlayerTurn Turn = Player1Turn;

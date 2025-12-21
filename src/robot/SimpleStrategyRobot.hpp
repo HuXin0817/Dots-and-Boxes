@@ -14,10 +14,11 @@ class SimpleStrategyRobot final : public Robot<BoardSize> {
   BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override {
     EnemyUnscoreableEdges.Clear();
     ScoreableEdges.Clear();
-    auto EmptyEdges = board.EmptyEdges();
+    auto EmptyEdges = board.GetEdgeCountableBoard().GetBasicBoard().EmptyEdges();
 
     for (Edge edge : EmptyEdges) {
-      if (int maxCount = board.MaxCount(edge); maxCount == 3) {
+      if (int maxCount = board.GetEdgeCountableBoard().GetEdgeCountOfBox().MaxCount(edge);
+          maxCount == 3) {
         ScoreableEdges.Append(edge);
       } else if (maxCount < 2) {
         EnemyUnscoreableEdges.Append(edge);

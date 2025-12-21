@@ -5,22 +5,22 @@
 #include "EdgeCountableBoard.hpp"
 
 template <int BoardSize>
-class ScoreableEdgeBoard : public EdgeCountableBoard<BoardSize> {
+class ScoreableEdgeBoard {
   public:
   ScoreableEdgeBoard() = default;
 
   void
   Reset(const EdgeCountableBoard<BoardSize>& newBoard) {
-    EdgeCountableBoard<BoardSize>::GetEdgeCountableBoard() = newBoard;
+    EdgeCountableBoard.GetEdgeCountableBoard() = newBoard;
     ScoreableEdges.Clear();
   }
 
   int
   Add(Edge<BoardSize> edge) {
-    int score = EdgeCountableBoard<BoardSize>::Add(edge);
+    int score = EdgeCountableBoard.Add(edge);
     for (Box box : NearBoxes(edge)) {
-      if (EdgeCountOfBox<BoardSize>::At(box) == 3) {
-        Edge edgeToAdd = EdgeCountableBoard<BoardSize>::FindNotContainsEdgeInBox(box);
+      if (EdgeCountableBoard.GetEdgeCountOfBox().At(box) == 3) {
+        Edge edgeToAdd = EdgeCountableBoard.FindNotContainsEdgeInBox(box);
         ScoreableEdges.Append(edgeToAdd);
       }
     }
@@ -30,16 +30,16 @@ class ScoreableEdgeBoard : public EdgeCountableBoard<BoardSize> {
   int
   MaxObtainableScore(int minScore) {
     int score = 0;
-    while (EdgeCountableBoard<BoardSize>::Gaming()) {
+    while (EdgeCountableBoard.GetBasicBoard().GetStep().Gaming()) {
       if (ScoreableEdges.Empty()) {
-        if (Edge edge = EdgeCountableBoard<BoardSize>::FindScoreableEdge(); edge != -1) {
+        if (Edge edge = EdgeCountableBoard.FindScoreableEdge(); edge != -1) {
           ScoreableEdges.Append(edge);
         } else {
           break;
         }
       }
       Edge edge = ScoreableEdges.Pop();
-      if (EdgeCountableBoard<BoardSize>::Contains(edge)) {
+      if (EdgeCountableBoard.GetBasicBoard().Contains(edge)) {
         continue;
       }
       int addScore = Add(edge);
@@ -53,5 +53,6 @@ class ScoreableEdgeBoard : public EdgeCountableBoard<BoardSize> {
   }
 
   private:
+  EdgeCountableBoard<BoardSize> EdgeCountableBoard;
   Queue<Edge<BoardSize>, Edge<BoardSize>::Max> ScoreableEdges;
 };

@@ -5,6 +5,11 @@
 template <int BoardSize>
 class Step {
   public:
+  void
+  Reset() {
+    v = 0;
+  }
+
   bool
   Gaming() const {
     return v < Edge<BoardSize>::Max;

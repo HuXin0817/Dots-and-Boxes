@@ -4,25 +4,49 @@
 #include "EdgeCountableBoard.hpp"
 
 template <int BoardSize>
-class ScoreCountableBoard : public EdgeCountableBoard<BoardSize>, public ScoreMap<BoardSize> {
+class ScoreCountableBoard {
   public:
   ScoreCountableBoard() = default;
 
   void
   Reset(const EdgeCountableBoard<BoardSize>& newBoard) {
-    EdgeCountableBoard<BoardSize>::GetEdgeCountableBoard() = newBoard;
-    ScoreMap<BoardSize>::Reset();
+    EdgeCountableBoard.GetEdgeCountableBoard() = newBoard;
+    ScoreMap.Reset();
   }
 
   int
   Add(Edge<BoardSize> edge) {
-    int score = EdgeCountableBoard<BoardSize>::Add(edge);
-    ScoreMap<BoardSize>::Add(score);
+    int score = EdgeCountableBoard.Add(edge);
+    ScoreMap.Add(score);
     return score;
   }
 
   bool
   Gaming() const {
-    return ScoreMap<BoardSize>::Gaming() && EdgeCountableBoard<BoardSize>::Gaming();
+    return ScoreMap.Gaming() && EdgeCountableBoard.GetBasicBoard().GetStep().Gaming();
   }
+
+  const EdgeCountableBoard<BoardSize>&
+  GetEdgeCountableBoard() const {
+    return EdgeCountableBoard;
+  }
+
+  EdgeCountableBoard<BoardSize>&
+  GetEdgeCountableBoard() {
+    return EdgeCountableBoard;
+  }
+
+  const ScoreMap<BoardSize>&
+  GetScoreMap() const {
+    return ScoreMap;
+  }
+
+  ScoreMap<BoardSize>&
+  GetScoreMap() {
+    return ScoreMap;
+  }
+
+  private:
+  EdgeCountableBoard<BoardSize> EdgeCountableBoard;
+  ScoreMap<BoardSize> ScoreMap;
 };

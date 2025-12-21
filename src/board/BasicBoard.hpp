@@ -8,7 +8,7 @@
 #include "../model/Step.hpp"
 
 template <int BoardSize>
-class BasicBoard : public Step<BoardSize> {
+class BasicBoard {
   public:
   BasicBoard() {
     for (Edge<BoardSize> edge = 0; edge < Edge<BoardSize>::Max; edge++) {
@@ -20,32 +20,42 @@ class BasicBoard : public Step<BoardSize> {
   void
   Add(Edge<BoardSize> edge) {
     assert(NotContains(edge));
-    Edge nowEdge = Edges.At(Step<BoardSize>::NowStep());
+    Edge nowEdge = Edges.At(Step.NowStep());
     int edgeIndex = EdgeIndexes.At(edge);
-    std::swap(Edges.At(edgeIndex), Edges.At(Step<BoardSize>::NowStep()));
-    EdgeIndexes.At(edge) = Step<BoardSize>::NowStep();
+    std::swap(Edges.At(edgeIndex), Edges.At(Step.NowStep()));
+    EdgeIndexes.At(edge) = Step.NowStep();
     EdgeIndexes.At(nowEdge) = edgeIndex;
-    Step<BoardSize>::Go();
+    Step.Go();
   }
 
   bool
   Contains(Edge<BoardSize> edge) const {
-    return EdgeIndexes.At(edge) < Step<BoardSize>::NowStep();
+    return EdgeIndexes.At(edge) < Step.NowStep();
   }
 
   bool
   NotContains(Edge<BoardSize> edge) const {
-    return EdgeIndexes.At(edge) >= Step<BoardSize>::NowStep();
+    return EdgeIndexes.At(edge) >= Step.NowStep();
   }
 
   Span<Edge<BoardSize>>
   EmptyEdges() const {
-    return {Edges.begin() + Step<BoardSize>::NowStep(), Edges.begin() + Edge<BoardSize>::Max};
+    return {Edges.begin() + Step.NowStep(), Edges.begin() + Edge<BoardSize>::Max};
   }
 
   Span<Edge<BoardSize>>
   MoveRecord() const {
-    return {Edges.begin(), Edges.begin() + Step<BoardSize>::NowStep()};
+    return {Edges.begin(), Edges.begin() + Step.NowStep()};
+  }
+
+  const Step<BoardSize>&
+  GetStep() const {
+    return Step;
+  }
+
+  Step<BoardSize>&
+  GetStep() {
+    return Step;
   }
 
   operator std::string() const {
@@ -101,6 +111,7 @@ class BasicBoard : public Step<BoardSize> {
   }
 
   private:
+  Step<BoardSize> Step;
   Array<Edge<BoardSize>, Edge<BoardSize>::Max> Edges;
   Array<int, Edge<BoardSize>::Max> EdgeIndexes;
 };
