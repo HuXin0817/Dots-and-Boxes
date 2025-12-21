@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Dot.hpp"
+#include "Square.hpp"
 
 template <int BoardSize>
 class Edge {

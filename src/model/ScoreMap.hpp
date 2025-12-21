@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Box.hpp"
+#include "Square.hpp"
 #include "Turn.hpp"
 
 template <int BoardSize>

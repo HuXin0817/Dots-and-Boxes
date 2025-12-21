@@ -32,3 +32,21 @@ class Square {
 
   V(Square<A>)
 };
+
+#define DefSquareSubClass(SubClass, SquareClass) \
+  template <int BoardSize>                       \
+  class SubClass : public SquareClass {          \
+public:                                          \
+    SubClass() : SquareClass() {                 \
+    }                                            \
+    SubClass(int v) : SquareClass(v) {           \
+    }                                            \
+    SubClass(int x, int y) : SquareClass(x, y) { \
+    }                                            \
+    operator int() {                             \
+      return SquareClass::v;                     \
+    }                                            \
+  }
+
+DefSquareSubClass(Dot, Square<BoardSize + 1>);
+DefSquareSubClass(Box, Square<BoardSize>);

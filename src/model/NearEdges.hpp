@@ -3,8 +3,8 @@
 #include <cassert>
 
 #include "../common/Array.hpp"
-#include "Box.hpp"
 #include "Edge.hpp"
+#include "Square.hpp"
 
 template <int BoardSize>
 class NearEdgesMapper {

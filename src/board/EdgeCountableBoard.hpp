@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../model/Box.hpp"
 #include "../model/Edge.hpp"
 #include "../model/EdgeCountOfBox.hpp"
 #include "../model/NearEdges.hpp"
+#include "../model/Square.hpp"
 #include "BasicBoard.hpp"
 
 template <int BoardSize>

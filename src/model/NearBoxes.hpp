@@ -5,8 +5,8 @@
 #include "../common/Array.hpp"
 #include "../common/List.hpp"
 #include "../common/Span.hpp"
-#include "Box.hpp"
 #include "Edge.hpp"
+#include "Square.hpp"
 
 template <int BoardSize>
 class NearBoxesMapper {
@@ -113,8 +113,8 @@ class NearBoxesMapper {
 
         if (i > 0) {
           int prevBox = eulerianPath.At(i - 1);
-          int minBox = prevBox < box ? prevBox : static_cast<int>(box);
-          int maxBox = prevBox < box ? static_cast<int>(box) : prevBox;
+          int minBox = prevBox < box ? prevBox : box.operator int();
+          int maxBox = prevBox < box ? box.operator int() : prevBox;
           if (boxPairToIndex.At(minBox).At(maxBox) == NearBoxesBufferSize) {
             boxPairToIndex.At(minBox).At(maxBox) = nearBoxesBufferIndex - 2;
           }
