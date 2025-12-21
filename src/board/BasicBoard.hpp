@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string>
-
 #include "../common/Array.hpp"
 #include "../common/Span.hpp"
 #include "../model/Edge.hpp"
