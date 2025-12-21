@@ -4,7 +4,7 @@
 
 #include "../../src/common/Array.hpp"
 #include "../../src/common/Ptr.hpp"
-#include "../../src/model/Square.hpp"
+#include "../../src/model/Dot.hpp"
 #include "../canvases/DotCanvas.hpp"
 #include "../canvases/EdgeCanvas.hpp"
 #include "BaseCanvasLayer.hpp"
@@ -18,6 +18,16 @@ class DotCanvasLayer final : public BaseCanvasLayer<BoardSize> {
     for (Dot<BoardSize> dot = 0; dot < Dot<BoardSize>::Max; dot++) {
       DotCanvases.At(dot).New(this);
     }
+  }
+
+  const Array<Ptr<DotCanvas>, Dot<BoardSize>::Max>&
+  GetDotCanvases() const {
+    return DotCanvases;
+  }
+
+  Array<Ptr<DotCanvas>, Dot<BoardSize>::Max>&
+  GetDotCanvases() {
+    return DotCanvases;
   }
 
   protected:

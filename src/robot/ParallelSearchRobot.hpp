@@ -12,7 +12,7 @@ class ParallelSearchRobot final : public Robot<BoardSize> {
 
   Span<Edge<BoardSize>>
   BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override {
-    if (auto edges = SubRobots.At(0).SubRobot.BestCandidateEdges(board); edges.Size() == 1) {
+    if (auto edges = SubRobots.At(0).GetSubRobot().BestCandidateEdges(board); edges.Size() == 1) {
       return edges;
     }
 
@@ -24,7 +24,7 @@ class ParallelSearchRobot final : public Robot<BoardSize> {
     }
 
     for (const auto& model : SubRobots) {
-      SearchResult.Add(model.SearchResult);
+      SearchResult.Add(model.GetSearchResult());
     }
 
     return SearchResult.Export();

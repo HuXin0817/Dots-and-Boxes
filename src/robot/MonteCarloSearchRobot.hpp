@@ -33,6 +33,27 @@ class MonteCarloSearchRobot final : public Robot<BoardSize> {
     return SearchResult.Export();
   }
 
+  const ImprovedSearchRobot<BoardSize>&
+  GetSubRobot() const {
+    return SubRobot;
+  }
+
+  ImprovedSearchRobot<BoardSize>&
+  GetSubRobot() {
+    return SubRobot;
+  }
+
+  const EdgeScoreMap<BoardSize>&
+  GetSearchResult() const {
+    return SearchResult;
+  }
+
+  EdgeScoreMap<BoardSize>&
+  GetSearchResult() {
+    return SearchResult;
+  }
+
+  private:
   ImprovedSearchRobot<BoardSize> SubRobot;
   ScoreCountableBoard<BoardSize> SimulationBoard;
   EdgeScoreMap<BoardSize> SearchResult;

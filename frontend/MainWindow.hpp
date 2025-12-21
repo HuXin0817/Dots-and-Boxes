@@ -52,10 +52,11 @@ class MainWindow final : public BaseCanvasLayer<BoardSize> {
   void
   Add(Edge<BoardSize> edge) {
     if (Board->NowStep() > 0) {
-      EdgeCanvases->Canvases.At(LastEdge)->HighLight = false;
+      EdgeCanvases->GetCanvases().At(LastEdge)->SetHighLight(false);
     }
-    EdgeCanvases->Canvases.At(edge)->State = BaseCanvasLayer<BoardSize>::StateFromTurn(Board->Turn);
-    EdgeCanvases->Canvases.At(edge)->raise();
+    EdgeCanvases->GetCanvases().At(edge)->SetState(
+        BaseCanvasLayer<BoardSize>::StateFromTurn(Board->Turn));
+    EdgeCanvases->GetCanvases().At(edge)->raise();
 
     for (Box box : NearBoxes(edge)) {
       int count = 0;
@@ -65,8 +66,8 @@ class MainWindow final : public BaseCanvasLayer<BoardSize> {
         }
       }
       if (count == 3) {
-        BoxCanvases->BoxCanvases.At(box)->State =
-            BaseCanvasLayer<BoardSize>::StateFromTurn(Board->Turn);
+        BoxCanvases->GetBoxCanvases().At(box)->SetState(
+            BaseCanvasLayer<BoardSize>::StateFromTurn(Board->Turn));
       }
     }
 
@@ -139,7 +140,7 @@ class MainWindow final : public BaseCanvasLayer<BoardSize> {
       }
 
       std::this_thread::sleep_for(std::chrono::seconds(2));
-      EdgeCanvases->Canvases.At(LastEdge)->HighLight = false;
+      EdgeCanvases->GetCanvases().At(LastEdge)->SetHighLight(false);
       BaseCanvasLayer<BoardSize>::update();
 
       std::this_thread::sleep_for(std::chrono::seconds(2));

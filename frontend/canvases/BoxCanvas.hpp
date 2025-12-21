@@ -4,16 +4,12 @@
 #include "EdgeCanvas.hpp"
 
 class BoxCanvas final : public BaseCanvas {
-  Q_OBJECT
-
   public:
   static constexpr int Width = EdgeCanvas::Height - 2 * UnitSize;
 
   explicit BoxCanvas(QWidget* parent) : BaseCanvas(parent) {
     resize(QSize(Width, Width));
   }
-
-  CanvasState State = CanvasState::Free;
 
   static inline QColor Player1OccupyColor = {64, 64, 255, 64};
   static inline QColor Player2OccupyColor = {255, 64, 64, 64};
@@ -27,6 +23,11 @@ class BoxCanvas final : public BaseCanvas {
       return Player2OccupyColor;
     }
     return {0, 0, 0, 0};
+  }
+
+  void
+  SetState(CanvasState State) {
+    this->State = State;
   }
 
   protected:
@@ -44,4 +45,7 @@ class BoxCanvas final : public BaseCanvas {
 
     painter.drawRect(x, y, Width, Width);
   }
+
+  private:
+  CanvasState State = CanvasState::Free;
 };

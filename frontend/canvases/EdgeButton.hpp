@@ -3,11 +3,7 @@
 #include "BaseEdgeCanvas.hpp"
 
 class EdgeButtonCanvas final : public BaseEdgeCanvas {
-  Q_OBJECT
-
   public:
-  std::function<void()> CallBack;
-
   explicit EdgeButtonCanvas(bool rotate, std::function<void()> callBack, QWidget* parent)
       : BaseEdgeCanvas(rotate, parent), CallBack(std::move(callBack)) {
   }
@@ -19,4 +15,7 @@ class EdgeButtonCanvas final : public BaseEdgeCanvas {
 
     CallBack();
   }
+
+  private:
+  std::function<void()> CallBack;
 };

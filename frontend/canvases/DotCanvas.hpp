@@ -6,8 +6,6 @@
 #include "BaseCanvas.hpp"
 
 class DotCanvas final : public BaseCanvas {
-  Q_OBJECT
-
   public:
   static constexpr int Width = 2 * UnitSize;
 

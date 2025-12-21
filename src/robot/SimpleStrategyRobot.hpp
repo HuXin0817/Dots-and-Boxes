@@ -34,6 +34,27 @@ class SimpleStrategyRobot final : public Robot<BoardSize> {
     return {EmptyEdges.begin(), EmptyEdges.end()};
   }
 
+  const List<Edge<BoardSize>, Edge<BoardSize>::Max>&
+  GetEnemyUnscoreableEdges() const {
+    return EnemyUnscoreableEdges;
+  }
+
+  List<Edge<BoardSize>, Edge<BoardSize>::Max>&
+  GetEnemyUnscoreableEdges() {
+    return EnemyUnscoreableEdges;
+  }
+
+  const List<Edge<BoardSize>, Edge<BoardSize>::Max>&
+  GetScoreableEdges() const {
+    return ScoreableEdges;
+  }
+
+  List<Edge<BoardSize>, Edge<BoardSize>::Max>&
+  GetScoreableEdges() {
+    return ScoreableEdges;
+  }
+
+  private:
   List<Edge<BoardSize>, Edge<BoardSize>::Max> EnemyUnscoreableEdges;
   List<Edge<BoardSize>, Edge<BoardSize>::Max> ScoreableEdges;
 };

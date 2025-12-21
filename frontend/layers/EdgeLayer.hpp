@@ -11,6 +11,16 @@ class EdgeLayer : public BaseCanvasLayer<BoardSize> {
   explicit EdgeLayer(QWidget* parent) : BaseCanvasLayer<BoardSize>(parent) {
   }
 
+  const Array<Ptr<Canvas>, Edge<BoardSize>::Max>&
+  GetCanvases() const {
+    return Canvases;
+  }
+
+  Array<Ptr<Canvas>, Edge<BoardSize>::Max>&
+  GetCanvases() {
+    return Canvases;
+  }
+
   protected:
   void
   resizeEvent(QResizeEvent* event) override {
@@ -33,6 +43,6 @@ class EdgeLayer : public BaseCanvasLayer<BoardSize> {
     }
   }
 
-  public:
+  private:
   Array<Ptr<Canvas>, Edge<BoardSize>::Max> Canvases;
 };

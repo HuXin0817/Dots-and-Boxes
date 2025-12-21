@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../src/model/Square.hpp"
+#include "../../src/model/Box.hpp"
 #include "../canvases/BoxCanvas.hpp"
 #include "../canvases/EdgeCanvas.hpp"
 

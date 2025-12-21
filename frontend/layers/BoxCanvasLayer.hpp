@@ -18,6 +18,16 @@ class BoxCanvasLayer final : public BaseCanvasLayer<BoardSize> {
     }
   }
 
+  const Array<Ptr<BoxCanvas>, Box<BoardSize>::Max>&
+  GetBoxCanvases() const {
+    return BoxCanvases;
+  }
+
+  Array<Ptr<BoxCanvas>, Box<BoardSize>::Max>&
+  GetBoxCanvases() {
+    return BoxCanvases;
+  }
+
   protected:
   void
   resizeEvent(QResizeEvent* event) override {
@@ -37,6 +47,6 @@ class BoxCanvasLayer final : public BaseCanvasLayer<BoardSize> {
     }
   }
 
-  public:
+  private:
   Array<Ptr<BoxCanvas>, Box<BoardSize>::Max> BoxCanvases;
 };

@@ -11,12 +11,12 @@ class BasicSearchRobot final : public Robot<BoardSize> {
   Span<Edge<BoardSize>>
   BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override {
     if (auto edges = SubRobot.BestCandidateEdges(board);
-        !SubRobot.EnemyUnscoreableEdges.Empty() || !SubRobot.ScoreableEdges.Empty()) {
+        !SubRobot.GetEnemyUnscoreableEdges().Empty() || !SubRobot.GetScoreableEdges().Empty()) {
       return edges;
     }
 
     int minScore = Box<BoardSize>::Max + 1;
-    auto& candidateEdges = SubRobot.EnemyUnscoreableEdges;
+    auto& candidateEdges = SubRobot.GetEnemyUnscoreableEdges();
     assert(candidateEdges.Empty());
 
     for (Edge<BoardSize> edge : board.EmptyEdges()) {
@@ -33,6 +33,17 @@ class BasicSearchRobot final : public Robot<BoardSize> {
     return Export(candidateEdges);
   }
 
+  const SimpleStrategyRobot<BoardSize>&
+  GetSubRobot() const {
+    return SubRobot;
+  }
+
+  SimpleStrategyRobot<BoardSize>&
+  GetSubRobot() {
+    return SubRobot;
+  }
+
+  private:
   SimpleStrategyRobot<BoardSize> SubRobot;
   ScoreableEdgeBoard<BoardSize> SimulationBoard;
 };

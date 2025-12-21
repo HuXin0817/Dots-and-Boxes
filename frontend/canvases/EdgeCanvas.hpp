@@ -5,14 +5,9 @@
 #include "BaseEdgeCanvas.hpp"
 
 class EdgeCanvas final : public BaseEdgeCanvas {
-  Q_OBJECT
-
   public:
   explicit EdgeCanvas(bool rotate, QWidget* parent) : BaseEdgeCanvas(rotate, parent) {
   }
-
-  CanvasState State = CanvasState::Free;
-  bool HighLight = true;
 
   static inline QColor DarkThemeColor = {65, 65, 65, 255};
   static inline QColor LightThemeColor = {217, 217, 217, 255};
@@ -41,6 +36,16 @@ class EdgeCanvas final : public BaseEdgeCanvas {
     return color;
   }
 
+  void
+  SetHighLight(bool HighLight) {
+    this->HighLight = HighLight;
+  }
+
+  void
+  SetState(CanvasState State) {
+    this->State = State;
+  }
+
   protected:
   void
   paintEvent(QPaintEvent* event) override {
@@ -55,4 +60,8 @@ class EdgeCanvas final : public BaseEdgeCanvas {
     int y = height() / 2 - RotateHeight() / 2;
     painter.drawRect(x, y, RotateWidth(), RotateHeight());
   }
+
+  private:
+  CanvasState State = CanvasState::Free;
+  bool HighLight = true;
 };
