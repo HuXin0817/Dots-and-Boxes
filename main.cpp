@@ -1,7 +1,4 @@
-#include <QStyleFactory>
-
 #include "frontend/MainWindow.hpp"
-#include "src/robot/RobotConfig.hpp"
 
 static constexpr int BoardSize = 6;
 static constexpr RobotType Robot1Type = RobotType::L4;
@@ -39,7 +36,6 @@ main(int argc, char* argv[]) {
   Application.setApplicationName("Dots and Boxes");
   Application.setApplicationVersion("1.0");
   Application.setOrganizationName("Dots and Boxes");
-  Application.setStyle(QStyleFactory::create("Fusion"));
 
   printf("Starting game with player configuration:");
   printf("\n  Player 1: %s", PlayerConfig::GetPlayerTypeString(Player1Type).c_str());
@@ -47,7 +43,9 @@ main(int argc, char* argv[]) {
   printf("\n\n");
 
   QWidget* mainWindow = CreateWindow(BoardSize);
-  mainWindow->show();
+  if (mainWindow) {
+    mainWindow->show();
+  }
 
   return Application.exec();
 }
