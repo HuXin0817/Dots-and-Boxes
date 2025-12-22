@@ -6,7 +6,7 @@
 #include "NearBoxes.hpp"
 
 template <int BoardSize>
-class EdgeCountOfBox : public Array<int, Box<BoardSize>::Max> {
+class EdgeCountOfBox {
   public:
   EdgeCountOfBox() = default;
 
@@ -14,8 +14,8 @@ class EdgeCountOfBox : public Array<int, Box<BoardSize>::Max> {
   Add(Edge<BoardSize> edge) {
     int score = 0;
     for (auto box : NearBoxes(edge)) {
-      Array<int, Box<BoardSize>::Max>::At(box.Int())++;
-      int num = Array<int, Box<BoardSize>::Max>::At(box.Int());
+      Map.At(box.Int())++;
+      int num = Map.At(box.Int());
       assert(num <= 4);
       if (num == 4) {
         score++;
@@ -25,11 +25,19 @@ class EdgeCountOfBox : public Array<int, Box<BoardSize>::Max> {
   }
 
   int
+  EdgeCount(Box<BoardSize> box) const {
+    return Map.At(box.Int());
+  }
+
+  int
   MaxCount(Edge<BoardSize> edge) const {
     int maxCount = 0;
     for (auto box : NearBoxes(edge)) {
-      maxCount = std::max(maxCount, Array<int, Box<BoardSize>::Max>::At(box.Int()));
+      maxCount = std::max(maxCount, Map.At(box.Int()));
     }
     return maxCount;
   }
+
+  private:
+  Array<int, Box<BoardSize>::Max> Map;
 };

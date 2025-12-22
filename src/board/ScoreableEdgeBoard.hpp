@@ -19,7 +19,7 @@ class ScoreableEdgeBoard {
   Add(Edge<BoardSize> edge) {
     int score = EdgeCountableBoard.Add(edge);
     for (auto box : NearBoxes(edge)) {
-      if (EdgeCountableBoard.GetEdgeCountOfBox().At(box.Int()) == 3) {
+      if (EdgeCountableBoard.GetEdgeCountOfBox().EdgeCount(box) == 3) {
         auto edgeToAdd = EdgeCountableBoard.FindNotContainsEdgeInBox(box);
         ScoreableEdges.Append(edgeToAdd);
       }

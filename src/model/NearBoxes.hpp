@@ -107,7 +107,7 @@ class NearBoxesMapper {
       }
 
       for (int i = 0; i < eulerianPath.Size(); i++) {
-        auto box = eulerianPath.At(i);
+        Box<BoardSize> box = eulerianPath.At(i);
         NearBoxesBuffer.At(nearBoxesBufferIndex++) = box;
         boxToIndices.At(box.Int()).Append(nearBoxesBufferIndex - 1);
 
