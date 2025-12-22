@@ -101,13 +101,13 @@ class NearBoxesMapper {
         break;
       }
 
-      List<int, Edge<BoardSize>::Max> eulerianPath = findEulerianPath(startBox);
+      auto eulerianPath = findEulerianPath(startBox);
       if (eulerianPath.Empty()) {
         continue;
       }
 
       for (int i = 0; i < eulerianPath.Size(); i++) {
-        Box<BoardSize> box = eulerianPath.At(i);
+        auto box = eulerianPath.At(i);
         NearBoxesBuffer.At(nearBoxesBufferIndex++) = box;
         boxToIndices.At(box.Int()).Append(nearBoxesBufferIndex - 1);
 

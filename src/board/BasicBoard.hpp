@@ -18,7 +18,7 @@ class BasicBoard {
   void
   Add(Edge<BoardSize> edge) {
     assert(NotContains(edge));
-    Edge<BoardSize> nowEdge = Edges.At(Step.NowStep());
+    auto nowEdge = Edges.At(Step.NowStep());
     int edgeIndex = EdgeIndexes.At(edge.Int());
     std::swap(Edges.At(edgeIndex), Edges.At(Step.NowStep()));
     EdgeIndexes.At(edge.Int()) = Step.NowStep();
