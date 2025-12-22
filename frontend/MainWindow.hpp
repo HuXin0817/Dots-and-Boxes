@@ -56,8 +56,7 @@ class MainWindow final : public BaseCanvasLayer<BoardSize> {
     }
     EdgeCanvases->GetCanvases()
         .At(edge.Int())
-        ->SetState(
-            BaseCanvasLayer<BoardSize>::StateFromTurn(Board->GetScoreMap().GetTurn().Bool()));
+        ->SetState(BaseCanvasLayer<BoardSize>::StateFromTurn(Board->GetScoreMap().GetTurn()));
     EdgeCanvases->GetCanvases().At(edge.Int())->raise();
 
     for (auto box : NearBoxes(edge)) {
