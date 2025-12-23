@@ -14,9 +14,9 @@ class SimpleStrategyRobot final : public Robot<BoardSize> {
   BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override {
     EnemyUnscoreableEdges.Clear();
     ScoreableEdges.Clear();
-    auto EmptyEdges = board.GetEdgeCountableBoard().GetBasicBoard().EmptyEdges();
+    auto emptyEdges = board.GetEdgeCountableBoard().GetBasicBoard().EmptyEdges();
 
-    for (auto edge : EmptyEdges) {
+    for (auto edge : emptyEdges) {
       if (int maxCount = board.GetEdgeCountableBoard().GetEdgeCountOfBox().MaxCount(edge);
           maxCount == 3) {
         ScoreableEdges.Append(edge);
@@ -32,7 +32,7 @@ class SimpleStrategyRobot final : public Robot<BoardSize> {
       return Export(EnemyUnscoreableEdges);
     }
 
-    return {EmptyEdges.begin(), EmptyEdges.end()};
+    return {emptyEdges.begin(), emptyEdges.end()};
   }
 
   const List<Edge<BoardSize>, Edge<BoardSize>::Max>&

@@ -38,13 +38,13 @@ class EdgeCanvas final : public BaseEdgeCanvas<BoardSize> {
   }
 
   void
-  SetHighLight(bool HighLight) {
-    this->HighLight = HighLight;
+  SetHighLight(bool highLight) {
+    HighLight = highLight;
   }
 
   void
-  SetState(typename BaseEdgeCanvas<BoardSize>::CanvasState State) {
-    this->State = State;
+  SetState(typename BaseEdgeCanvas<BoardSize>::CanvasState state) {
+    State = state;
   }
 
   protected:
@@ -57,10 +57,11 @@ class EdgeCanvas final : public BaseEdgeCanvas<BoardSize> {
     painter.setPen(Qt::NoPen);
     painter.setBrush(QBrush(Color()));
 
-    int x = BaseEdgeCanvas<BoardSize>::width() / 2 - BaseEdgeCanvas<BoardSize>::RotateWidth() / 2;
-    int y = BaseEdgeCanvas<BoardSize>::height() / 2 - BaseEdgeCanvas<BoardSize>::RotateHeight() / 2;
     painter.drawRect(
-        x, y, BaseEdgeCanvas<BoardSize>::RotateWidth(), BaseEdgeCanvas<BoardSize>::RotateHeight());
+        BaseEdgeCanvas<BoardSize>::width() / 2 - BaseEdgeCanvas<BoardSize>::RotateWidth() / 2,
+        BaseEdgeCanvas<BoardSize>::height() / 2 - BaseEdgeCanvas<BoardSize>::RotateHeight() / 2,
+        BaseEdgeCanvas<BoardSize>::RotateWidth(),
+        BaseEdgeCanvas<BoardSize>::RotateHeight());
   }
 
   private:

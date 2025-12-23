@@ -11,30 +11,30 @@ class MainWindowCreator {
   template <int N>
   QWidget*
   CreateMainWindowImpl(int size,
-                       PlayerType Player1Type,
-                       PlayerType Player2Type,
-                       RobotType Robot1Type,
-                       RobotType Robot2Type) {
+                       PlayerType player1Type,
+                       PlayerType player2Type,
+                       RobotType robot1Type,
+                       RobotType robot2Type) {
     if (size == N) {
-      return new MainWindow<N>(Player1Type, Player2Type, Robot1Type, Robot2Type);
+      return new MainWindow<N>(player1Type, player2Type, robot1Type, robot2Type);
     }
     if constexpr (N > 2) {
-      return CreateMainWindowImpl<N - 1>(size, Player1Type, Player2Type, Robot1Type, Robot2Type);
+      return CreateMainWindowImpl<N - 1>(size, player1Type, player2Type, robot1Type, robot2Type);
     }
     return nullptr;
   }
 
   public:
   QWidget*
-  CreateMainWindow(int BoardSize,
-                   PlayerType Player1Type,
-                   PlayerType Player2Type,
-                   RobotType Robot1Type,
-                   RobotType Robot2Type) {
-    if (BoardSize <= 1 || BoardSize > MaxBoardSize) {
+  CreateMainWindow(int boardSize,
+                   PlayerType player1Type,
+                   PlayerType player2Type,
+                   RobotType robot1Type,
+                   RobotType robot2Type) {
+    if (boardSize <= 1 || boardSize > MaxBoardSize) {
       return nullptr;
     }
     return CreateMainWindowImpl<MaxBoardSize>(
-        BoardSize, Player1Type, Player2Type, Robot1Type, Robot2Type);
+        boardSize, player1Type, player2Type, robot1Type, robot2Type);
   }
 };

@@ -8,11 +8,11 @@ static constexpr RobotType Robot2Type = RobotType::L4;
 
 int
 main(int argc, char* argv[]) {
-  QApplication Application(argc, argv);
+  QApplication application(argc, argv);
 
-  Application.setApplicationName("Dots and Boxes");
-  Application.setApplicationVersion("1.0");
-  Application.setOrganizationName("Dots and Boxes");
+  application.setApplicationName("Dots and Boxes");
+  application.setApplicationVersion("1.0");
+  application.setOrganizationName("Dots and Boxes");
 
   printf("Starting game with player configuration:");
   printf("\n  Player 1: %s", PlayerConfig::GetPlayerTypeString(Player1Type).c_str());
@@ -25,5 +25,5 @@ main(int argc, char* argv[]) {
     mainWindow->show();
   }
 
-  return Application.exec();
+  return application.exec();
 }

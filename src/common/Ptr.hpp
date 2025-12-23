@@ -21,9 +21,9 @@ class Ptr {
 
   template <class... Args>
   void
-  New(Args&&... _args) {
+  New(Args&&... args) {
     assert(Data == nullptr);
-    Data = new T(std::forward<Args>(_args)...);
+    Data = new T(std::forward<Args>(args)...);
   }
 
   T*

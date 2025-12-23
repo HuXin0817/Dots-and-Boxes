@@ -27,8 +27,8 @@ class BoxCanvas final : public BaseCanvas<BoardSize> {
   }
 
   void
-  SetState(typename BaseCanvas<BoardSize>::CanvasState State) {
-    this->State = State;
+  SetState(typename BaseCanvas<BoardSize>::CanvasState state) {
+    State = state;
   }
 
   protected:

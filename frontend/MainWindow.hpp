@@ -16,16 +16,16 @@
 template <int BoardSize>
 class MainWindow final : public BaseCanvasLayer<BoardSize> {
   public:
-  explicit MainWindow(PlayerType Player1Type,
-                      PlayerType Player2Type,
-                      RobotType Robot1Type,
-                      RobotType Robot2Type,
+  explicit MainWindow(PlayerType player1Type,
+                      PlayerType player2Type,
+                      RobotType robot1Type,
+                      RobotType robot2Type,
                       QWidget* parent = nullptr)
       : BaseCanvasLayer<BoardSize>(parent),
-        Player1Type(Player1Type),
-        Player2Type(Player2Type),
-        Robot1(RobotConfig<BoardSize>::CreateRobot(Robot1Type)),
-        Robot2(RobotConfig<BoardSize>::CreateRobot(Robot2Type)) {
+        Player1Type(player1Type),
+        Player2Type(player2Type),
+        Robot1(RobotConfig<BoardSize>::CreateRobot(robot1Type)),
+        Robot2(RobotConfig<BoardSize>::CreateRobot(robot2Type)) {
     BaseCanvasLayer<BoardSize>::resize(BaseCanvasLayer<BoardSize>::WindowSize,
                                        BaseCanvasLayer<BoardSize>::WindowSize);
     BaseCanvasLayer<BoardSize>::setMinimumSize(BaseCanvasLayer<BoardSize>::WindowSize,
