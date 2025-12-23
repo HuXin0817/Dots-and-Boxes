@@ -45,15 +45,11 @@ jobs:
       - name: Build
         run: |
           cmake --build build --config Release
-          # Verify OpenMP library is linked
-          otool -L build/Dots_and_Boxes | grep -i omp || echo "Note: OpenMP library check"
 
       - name: Test build output
         run: |
           if [ -f build/Dots_and_Boxes ]; then
-            echo "Build successful! Executable found."
             file build/Dots_and_Boxes
           else
-            echo "Error: Executable not found!"
             exit 1
           fi
