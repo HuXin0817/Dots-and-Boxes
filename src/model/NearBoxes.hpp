@@ -9,6 +9,10 @@
 #include "Square.hpp"
 
 template <int BoardSize>
+inline const Span<Box<BoardSize>>&
+NearBoxes(Edge<BoardSize> edge);
+
+template <int BoardSize>
 class NearBoxesMapper {
   public:
   NearBoxesMapper() {
@@ -329,10 +333,14 @@ class NearBoxesMapper {
     return true;
   }
 
+  private:
   static constexpr int NearBoxesBufferSize = 4 * BoardSize * BoardSize - 8 * BoardSize + 3;
   Array<Box<BoardSize>, NearBoxesBufferSize> NearBoxesBuffer;
 
   Array<Span<Box<BoardSize>>, Edge<BoardSize>::Max> EdgeNearBoxes;
+
+  friend const Span<Box<BoardSize>>&
+  NearBoxes<BoardSize>(Edge<BoardSize> edge);
 };
 
 template <int BoardSize>

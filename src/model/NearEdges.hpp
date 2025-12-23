@@ -7,6 +7,10 @@
 #include "Square.hpp"
 
 template <int BoardSize>
+inline const Array<Edge<BoardSize>, 4>&
+NearEdges(Box<BoardSize> box);
+
+template <int BoardSize>
 class NearEdgesMapper {
   public:
   NearEdgesMapper() {
@@ -26,10 +30,11 @@ class NearEdgesMapper {
     }
   }
 
+  private:
   Array<Array<Edge<BoardSize>, 4>, Box<BoardSize>::Max> BoxNearEdges;
 
   friend const Array<Edge<BoardSize>, 4>&
-  NearEdges(Box<BoardSize> box);
+  NearEdges<BoardSize>(Box<BoardSize> box);
 };
 
 template <int BoardSize>
