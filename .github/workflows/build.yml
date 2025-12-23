@@ -2,45 +2,45 @@ name: Ubuntu Build
 
 on:
   push:
-    branches: [ main, master, develop ]
+    branches: [main, master, develop]
   pull_request:
-    branches: [ main, master, develop ]
+    branches: [main, master, develop]
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Install build dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y \
-          build-essential \
-          cmake \
-          libomp-dev \
-          qt6-base-dev \
-          qt6-base-dev-tools \
-          qt6-tools-dev \
-          qt6-tools-dev-tools
-        
-    - name: Configure CMake
-      run: |
-        mkdir -p build
-        cd build
-        cmake .. -DCMAKE_BUILD_TYPE=Release
-        
-    - name: Build
-      run: |
-        cd build
-        cmake --build . -j$(nproc)
-        
-    - name: Test (optional)
-      run: |
-        cd build
-        # Add test commands here if you have tests
-        echo "Build completed successfully"
 
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            clang \
+            cmake \
+            libstdc++-dev \
+            libomp-dev \
+            qt6-base-dev \
+            qt6-base-dev-tools \
+            qt6-tools-dev \
+            qt6-tools-dev-tools
+
+      - name: Configure CMake
+        run: |
+          mkdir -p build
+          cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: |
+          cd build
+          cmake --build . -j$(nproc)
+
+      - name: Test (optional)
+        run: |
+          cd build
+          # Add test commands here if you have tests
+          echo "Build completed successfully"
