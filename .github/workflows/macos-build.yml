@@ -1,0 +1,49 @@
+name: macOS Build
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master, develop]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install OpenMP
+        run: |
+          brew install libomp
+
+      - name: Install Qt6
+        run: |
+          brew install qt@6
+
+      - name: Setup Qt6 environment
+        run: |
+          echo "CMAKE_PREFIX_PATH=$(brew --prefix qt@6)/lib/cmake" >> $GITHUB_ENV
+          echo "PATH=$(brew --prefix qt@6)/bin:$PATH" >> $GITHUB_ENV
+
+      - name: Configure CMake
+        run: |
+          cmake -B build -S . \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_PREFIX_PATH=$(brew --prefix qt@6)/lib/cmake
+
+      - name: Build
+        run: |
+          cmake --build build --config Release
+
+      - name: Test build output
+        run: |
+          if [ -f build/Dots_and_Boxes ]; then
+            echo "Build successful! Executable found."
+            file build/Dots_and_Boxes
+          else
+            echo "Error: Executable not found!"
+            exit 1
+          fi
