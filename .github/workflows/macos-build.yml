@@ -44,7 +44,7 @@ jobs:
 
       - name: Build
         run: |
-          cmake --build build --config Release
+          cmake --build build
 
       - name: Test build output
         run: |
