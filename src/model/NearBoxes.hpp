@@ -17,14 +17,14 @@ class NearBoxesMapper {
   public:
   NearBoxesMapper() {
     Array<List<Box<BoardSize>, 2>, Edge<BoardSize>::Max> edgeNearBoxes;
-    for (Edge<BoardSize> edge = 0; edge.Int() < Edge<BoardSize>::Max; edge.IntRef()++) {
+    for (Edge<BoardSize> edge = 0; edge.Int() < Edge<BoardSize>::Max; ++edge) {
       edgeNearBoxes.At(edge.Int()) = GetNearBoxes(edge);
     }
 
     Array<Array<int, Box<BoardSize>::Max>, Box<BoardSize>::Max> adjacencyMatrix = {};
     Array<int, Box<BoardSize>::Max> boxDegrees = {};
 
-    for (Edge<BoardSize> edge = 0; edge.Int() < Edge<BoardSize>::Max; edge.IntRef()++) {
+    for (Edge<BoardSize> edge = 0; edge.Int() < Edge<BoardSize>::Max; ++edge) {
       if (edgeNearBoxes.At(edge.Int()).Size() == 2) {
         int firstBox = edgeNearBoxes.At(edge.Int()).At(0).Int();
         int secondBox = edgeNearBoxes.At(edge.Int()).At(1).Int();
@@ -36,7 +36,7 @@ class NearBoxesMapper {
     }
 
     List<int, Box<BoardSize>::Max> oddDegreeBoxes;
-    for (int box = 0; box < Box<BoardSize>::Max; box++) {
+    for (int box = 0; box < Box<BoardSize>::Max; ++box) {
       if (boxDegrees.At(box) % 2 == 1) {
         oddDegreeBoxes.Append(box);
       }
@@ -90,7 +90,7 @@ class NearBoxesMapper {
 
     while (true) {
       int startBox = -1;
-      for (int box = 0; box < Box<BoardSize>::Max; box++) {
+      for (int box = 0; box < Box<BoardSize>::Max; ++box) {
         if (boxDegrees.At(box) > 0) {
           if (boxDegrees.At(box) % 2 == 1) {
             startBox = box;
@@ -126,7 +126,7 @@ class NearBoxesMapper {
       }
     }
 
-    for (Edge<BoardSize> edge = 0; edge.Int() < Edge<BoardSize>::Max; edge.IntRef()++) {
+    for (Edge<BoardSize> edge = 0; edge.Int() < Edge<BoardSize>::Max; ++edge) {
       if (edgeNearBoxes.At(edge.Int()).Size() == 1) {
         int box = edgeNearBoxes.At(edge.Int()).At(0).Int();
         if (boxToIndices.At(box).Empty()) {
@@ -137,7 +137,7 @@ class NearBoxesMapper {
     }
 
     Array<bool, Edge<BoardSize>::Max> edgeProcessed = {};
-    for (Edge<BoardSize> edge = 0; edge.Int() < Edge<BoardSize>::Max; edge.IntRef()++) {
+    for (Edge<BoardSize> edge = 0; edge.Int() < Edge<BoardSize>::Max; ++edge) {
       if (edgeNearBoxes.At(edge.Int()).Size() == 2) {
         int firstBox = edgeNearBoxes.At(edge.Int()).At(0).Int();
         int secondBox = edgeNearBoxes.At(edge.Int()).At(1).Int();
@@ -261,7 +261,7 @@ class NearBoxesMapper {
       }
     }
 
-    for (Edge<BoardSize> edge = 0; edge.Int() < Edge<BoardSize>::Max; edge.IntRef()++) {
+    for (Edge<BoardSize> edge = 0; edge.Int() < Edge<BoardSize>::Max; ++edge) {
       if (!edgeProcessed.At(edge.Int()) && edgeNearBoxes.At(edge.Int()).Size() == 2) {
         int firstBox = edgeNearBoxes.At(edge.Int()).At(0).Int();
         int secondBox = edgeNearBoxes.At(edge.Int()).At(1).Int();
@@ -302,7 +302,7 @@ class NearBoxesMapper {
 
   bool
   CheckBoxNearBoxes() {
-    for (Edge<BoardSize> edge = 0; edge.Int() < Edge<BoardSize>::Max; edge.IntRef()++) {
+    for (Edge<BoardSize> edge = 0; edge.Int() < Edge<BoardSize>::Max; ++edge) {
       auto expectedNearBoxes = GetNearBoxes(edge);
       if (EdgeNearBoxes.At(edge.Int()).Size() != expectedNearBoxes.Size()) {
         return false;

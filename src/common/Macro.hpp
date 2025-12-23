@@ -10,8 +10,9 @@
   int Int() const {     \
     return v;           \
   }                     \
-  int& IntRef() {       \
-    return v;           \
+  Class& operator++() { \
+    v++;                \
+    return *this;       \
   }                     \
                         \
   private:              \

@@ -17,7 +17,7 @@ class EdgeButtonLayer final : public EdgeLayer<BoardSize, EdgeButtonCanvas> {
         EdgeLayer<BoardSize, EdgeButtonCanvas>::WindowSize,
         EdgeLayer<BoardSize, EdgeButtonCanvas>::WindowSize);
 
-    for (Edge<BoardSize> edge = 0; edge.Int() < Edge<BoardSize>::Max; edge.IntRef()++) {
+    for (Edge<BoardSize> edge = 0; edge.Int() < Edge<BoardSize>::Max; ++edge) {
       EdgeLayer<BoardSize, EdgeButtonCanvas>::GetCanvases()
           .At(edge.Int())
           .New(edge.Rotate(), CallBackFactory(edge), this);

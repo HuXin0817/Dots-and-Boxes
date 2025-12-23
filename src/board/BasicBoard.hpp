@@ -9,7 +9,7 @@ template <int BoardSize>
 class BasicBoard {
   public:
   BasicBoard() {
-    for (Edge<BoardSize> edge = 0; edge.Int() < Edge<BoardSize>::Max; edge.IntRef()++) {
+    for (Edge<BoardSize> edge = 0; edge.Int() < Edge<BoardSize>::Max; ++edge) {
       EdgeIndexes.At(edge.Int()) = edge.Int();
       Edges.At(edge.Int()) = edge;
     }

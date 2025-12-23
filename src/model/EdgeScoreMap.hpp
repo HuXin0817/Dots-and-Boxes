@@ -34,7 +34,7 @@ class EdgeScoreMap {
   Span<Edge<BoardSize>>
   Export() {
     float maxScore = 0.0;
-    for (Edge<BoardSize> edge = 0; edge.Int() < Edge<BoardSize>::Max; edge.IntRef()++) {
+    for (Edge<BoardSize> edge = 0; edge.Int() < Edge<BoardSize>::Max; ++edge) {
       if (Time.At(edge.Int()) > 0) {
         float score =
             static_cast<float>(Score.At(edge.Int())) / static_cast<float>(Time.At(edge.Int()));

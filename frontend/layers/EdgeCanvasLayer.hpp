@@ -14,7 +14,7 @@ class EdgeCanvasLayer final : public EdgeLayer<BoardSize, EdgeCanvas> {
     EdgeLayer<BoardSize, EdgeCanvas>::resize(EdgeLayer<BoardSize, EdgeCanvas>::WindowSize,
                                              EdgeLayer<BoardSize, EdgeCanvas>::WindowSize);
 
-    for (Edge<BoardSize> edge = 0; edge.Int() < Edge<BoardSize>::Max; edge.IntRef()++) {
+    for (Edge<BoardSize> edge = 0; edge.Int() < Edge<BoardSize>::Max; ++edge) {
       EdgeLayer<BoardSize, EdgeCanvas>::GetCanvases().At(edge.Int()).New(edge.Rotate(), this);
     }
   }
