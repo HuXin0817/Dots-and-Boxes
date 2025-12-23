@@ -1,8 +1,5 @@
 #pragma once
 
-#include <QWidget>
-#include <string>
-
 #include "MainWindow.hpp"
 
 class MainWindowCreator {
