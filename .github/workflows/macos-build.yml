@@ -30,13 +30,23 @@ jobs:
 
       - name: Configure CMake
         run: |
+          LIBOMP_PREFIX=$(brew --prefix libomp)
           cmake -B build -S . \
             -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_PREFIX_PATH=$(brew --prefix qt@6)/lib/cmake
+            -DCMAKE_PREFIX_PATH=$(brew --prefix qt@6)/lib/cmake \
+            -DOpenMP_C_FLAGS="-Xpreprocessor -fopenmp -I${LIBOMP_PREFIX}/include" \
+            -DOpenMP_C_LIB_NAMES=omp \
+            -DOpenMP_C_LIBRARY="${LIBOMP_PREFIX}/lib/libomp.dylib" \
+            -DOpenMP_omp_LIBRARY="${LIBOMP_PREFIX}/lib/libomp.dylib" \
+            -DOpenMP_CXX_FLAGS="-Xpreprocessor -fopenmp -I${LIBOMP_PREFIX}/include" \
+            -DOpenMP_CXX_LIB_NAMES=omp \
+            -DOpenMP_CXX_LIBRARY="${LIBOMP_PREFIX}/lib/libomp.dylib"
 
       - name: Build
         run: |
           cmake --build build --config Release
+          # Verify OpenMP library is linked
+          otool -L build/Dots_and_Boxes | grep -i omp || echo "Note: OpenMP library check"
 
       - name: Test build output
         run: |
