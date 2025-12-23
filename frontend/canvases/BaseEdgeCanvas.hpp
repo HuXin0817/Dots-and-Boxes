@@ -8,6 +8,11 @@ class BaseEdgeCanvas : public BaseCanvas<BoardSize> {
   static constexpr int Width = BaseCanvas<BoardSize>::UnitSize * 2;
   static constexpr int Height = Width * 5;
 
+  explicit BaseEdgeCanvas(bool rotate, QWidget* parent)
+      : BaseCanvas<BoardSize>(parent), Rotate(rotate) {
+    BaseCanvas<BoardSize>::resize(QSize(RotateWidth(), RotateHeight()));
+  }
+
   int
   RotateWidth() const {
     return Rotate ? Width : Height;
@@ -16,11 +21,6 @@ class BaseEdgeCanvas : public BaseCanvas<BoardSize> {
   int
   RotateHeight() const {
     return Rotate ? Height : Width;
-  }
-
-  explicit BaseEdgeCanvas(bool rotate, QWidget* parent)
-      : BaseCanvas<BoardSize>(parent), Rotate(rotate) {
-    BaseCanvas<BoardSize>::resize(QSize(RotateWidth(), RotateHeight()));
   }
 
   private:

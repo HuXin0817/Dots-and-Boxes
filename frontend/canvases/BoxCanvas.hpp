@@ -12,11 +12,11 @@ class BoxCanvas final : public BaseCanvas<BoardSize> {
     BaseCanvas<BoardSize>::resize(QSize(Width, Width));
   }
 
-  static inline QColor Player1OccupyColor = {64, 64, 255, 64};
-  static inline QColor Player2OccupyColor = {255, 64, 64, 64};
-
   QColor
   Color() const override {
+    static QColor Player1OccupyColor = {64, 64, 255, 64};
+    static QColor Player2OccupyColor = {255, 64, 64, 64};
+
     if (State == BaseCanvas<BoardSize>::CanvasState::Player1Occupy) {
       return Player1OccupyColor;
     }

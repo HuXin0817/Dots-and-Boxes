@@ -10,13 +10,13 @@ class EdgeCanvas final : public BaseEdgeCanvas<BoardSize> {
   explicit EdgeCanvas(bool rotate, QWidget* parent) : BaseEdgeCanvas<BoardSize>(rotate, parent) {
   }
 
-  static inline QColor DarkThemeColor = {65, 65, 65, 255};
-  static inline QColor LightThemeColor = {217, 217, 217, 255};
-  static inline QColor Player1OccupyColor = {64, 64, 255, 255};
-  static inline QColor Player2OccupyColor = {255, 64, 64, 255};
-
   QColor
   Color() const override {
+    static QColor DarkThemeColor = {65, 65, 65, 255};
+    static QColor LightThemeColor = {217, 217, 217, 255};
+    static QColor Player1OccupyColor = {64, 64, 255, 255};
+    static QColor Player2OccupyColor = {255, 64, 64, 255};
+
     if (State == BaseEdgeCanvas<BoardSize>::CanvasState::Free) {
       return BaseEdgeCanvas<BoardSize>::isDarkTheme() ? DarkThemeColor : LightThemeColor;
     }

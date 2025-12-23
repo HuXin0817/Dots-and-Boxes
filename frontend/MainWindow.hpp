@@ -32,32 +32,32 @@ class MainWindow final : public BaseCanvasLayer<BoardSize> {
                                                BaseCanvasLayer<BoardSize>::WindowSize);
 
     Board.New();
-    BoxCanvases.New(this);
-    EdgeCanvases.New(this);
-    DotCanvases.New(this);
+    BoxCanvasLayer.New(this);
+    EdgeCanvasLayer.New(this);
+    DotCanvasLayer.New(this);
     auto CallBackFactory = [this](Edge<BoardSize> edge) {
       return [edge, this] { setPlayerMoveEdge(edge); };
     };
-    EdgeButtons.New(CallBackFactory, this);
+    EdgeButtonLayer.New(CallBackFactory, this);
   }
-
-  static inline QColor DarkThemeColor = {43, 43, 43, 255};
-  static inline QColor LightThemeColor = {242, 242, 242, 255};
 
   QColor
   Color() const override {
+    static QColor DarkThemeColor = {43, 43, 43, 255};
+    static QColor LightThemeColor = {242, 242, 242, 255};
+
     return BaseCanvasLayer<BoardSize>::isDarkTheme() ? DarkThemeColor : LightThemeColor;
   }
 
   void
   Add(Edge<BoardSize> edge) {
     if (Board->GetEdgeCountableBoard().GetBasicBoard().GetStep().NowStep() > 0) {
-      EdgeCanvases->GetCanvases().At(LastEdge.Int())->SetHighLight(false);
+      EdgeCanvasLayer->GetCanvases().At(LastEdge.Int())->SetHighLight(false);
     }
-    EdgeCanvases->GetCanvases()
+    EdgeCanvasLayer->GetCanvases()
         .At(edge.Int())
         ->SetState(BaseCanvasLayer<BoardSize>::StateFromTurn(Board->GetScoreMap().GetTurn()));
-    EdgeCanvases->GetCanvases().At(edge.Int())->raise();
+    EdgeCanvasLayer->GetCanvases().At(edge.Int())->raise();
 
     for (auto box : NearBoxes(edge)) {
       int count = 0;
@@ -67,7 +67,7 @@ class MainWindow final : public BaseCanvasLayer<BoardSize> {
         }
       }
       if (count == 3) {
-        BoxCanvases->GetBoxCanvases().At(box.Int())->SetState(
+        BoxCanvasLayer->GetBoxCanvases().At(box.Int())->SetState(
             BaseCanvasLayer<BoardSize>::StateFromTurn(Board->GetScoreMap().GetTurn()));
       }
     }
@@ -94,9 +94,9 @@ class MainWindow final : public BaseCanvasLayer<BoardSize> {
     int x = (BaseCanvasLayer<BoardSize>::width() - BaseCanvasLayer<BoardSize>::WindowSize) / 2;
     int y = (BaseCanvasLayer<BoardSize>::height() - BaseCanvasLayer<BoardSize>::WindowSize) / 2;
 
-    BoxCanvases->move(x, y);
-    EdgeCanvases->move(x, y);
-    DotCanvases->move(x, y);
+    BoxCanvasLayer->move(x, y);
+    EdgeCanvasLayer->move(x, y);
+    DotCanvasLayer->move(x, y);
   }
 
   void
@@ -143,7 +143,7 @@ class MainWindow final : public BaseCanvasLayer<BoardSize> {
       }
 
       std::this_thread::sleep_for(std::chrono::seconds(2));
-      EdgeCanvases->GetCanvases().At(LastEdge.Int())->SetHighLight(false);
+      EdgeCanvasLayer->GetCanvases().At(LastEdge.Int())->SetHighLight(false);
       BaseCanvasLayer<BoardSize>::update();
 
       std::this_thread::sleep_for(std::chrono::seconds(2));
@@ -158,10 +158,10 @@ class MainWindow final : public BaseCanvasLayer<BoardSize> {
   Ptr<Robot<BoardSize>> Robot2;
   Edge<BoardSize> PlayerMoveEdge;
   Ptr<ScoreCountableBoard<BoardSize>> Board;
-  Ptr<BoxCanvasLayer<BoardSize>> BoxCanvases;
-  Ptr<EdgeCanvasLayer<BoardSize>> EdgeCanvases;
-  Ptr<DotCanvasLayer<BoardSize>> DotCanvases;
-  Ptr<EdgeButtonLayer<BoardSize>> EdgeButtons;
+  Ptr<BoxCanvasLayer<BoardSize>> BoxCanvasLayer;
+  Ptr<EdgeCanvasLayer<BoardSize>> EdgeCanvasLayer;
+  Ptr<DotCanvasLayer<BoardSize>> DotCanvasLayer;
+  Ptr<EdgeButtonLayer<BoardSize>> EdgeButtonLayer;
   Edge<BoardSize> LastEdge;
 
   void

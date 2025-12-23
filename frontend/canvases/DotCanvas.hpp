@@ -10,16 +10,16 @@ class DotCanvas final : public BaseCanvas<BoardSize> {
   public:
   static constexpr int Width = 2 * BaseCanvas<BoardSize>::UnitSize;
 
-  static inline QColor DarkThemeColor = {202, 202, 202, 255};
-  static inline QColor LightThemeColor = {255, 255, 255, 255};
+  explicit DotCanvas(QWidget* parent) : BaseCanvas<BoardSize>(parent) {
+    BaseCanvas<BoardSize>::setFixedSize(Width, Width);
+  }
 
   QColor
   Color() const override {
-    return BaseCanvas<BoardSize>::isDarkTheme() ? DarkThemeColor : LightThemeColor;
-  }
+    static QColor DarkThemeColor = {202, 202, 202, 255};
+    static QColor LightThemeColor = {255, 255, 255, 255};
 
-  explicit DotCanvas(QWidget* parent) : BaseCanvas<BoardSize>(parent) {
-    BaseCanvas<BoardSize>::setFixedSize(Width, Width);
+    return BaseCanvas<BoardSize>::isDarkTheme() ? DarkThemeColor : LightThemeColor;
   }
 
   void
