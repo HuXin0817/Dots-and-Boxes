@@ -2,9 +2,10 @@
 
 #include "BaseCanvas.hpp"
 
-class BaseEdgeCanvas : public BaseCanvas {
+template <int BoardSize>
+class BaseEdgeCanvas : public BaseCanvas<BoardSize> {
   public:
-  static constexpr int Width = UnitSize * 2;
+  static constexpr int Width = BaseCanvas<BoardSize>::UnitSize * 2;
   static constexpr int Height = Width * 5;
 
   int
@@ -17,8 +18,9 @@ class BaseEdgeCanvas : public BaseCanvas {
     return Rotate ? Height : Width;
   }
 
-  explicit BaseEdgeCanvas(bool rotate, QWidget* parent) : BaseCanvas(parent), Rotate(rotate) {
-    resize(QSize(RotateWidth(), RotateHeight()));
+  explicit BaseEdgeCanvas(bool rotate, QWidget* parent)
+      : BaseCanvas<BoardSize>(parent), Rotate(rotate) {
+    BaseCanvas<BoardSize>::resize(QSize(RotateWidth(), RotateHeight()));
   }
 
   private:

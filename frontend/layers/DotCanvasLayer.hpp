@@ -20,12 +20,12 @@ class DotCanvasLayer final : public BaseCanvasLayer<BoardSize> {
     }
   }
 
-  const Array<Ptr<DotCanvas>, Dot<BoardSize>::Max>&
+  const Array<Ptr<DotCanvas<BoardSize>>, Dot<BoardSize>::Max>&
   GetDotCanvases() const {
     return DotCanvases;
   }
 
-  Array<Ptr<DotCanvas>, Dot<BoardSize>::Max>&
+  Array<Ptr<DotCanvas<BoardSize>>, Dot<BoardSize>::Max>&
   GetDotCanvases() {
     return DotCanvases;
   }
@@ -42,13 +42,13 @@ class DotCanvasLayer final : public BaseCanvasLayer<BoardSize> {
 
     for (int i = 0; i < Dot<BoardSize>::Size; i++) {
       for (int j = 0; j < Dot<BoardSize>::Size; j++) {
-        int x = x0 + i * EdgeCanvas::Height;
-        int y = y0 + j * EdgeCanvas::Height;
+        int x = x0 + i * EdgeCanvas<BoardSize>::Height;
+        int y = y0 + j * EdgeCanvas<BoardSize>::Height;
         DotCanvases.At(Dot<BoardSize>(i, j).Int())->move(x, y);
       }
     }
   }
 
   private:
-  Array<Ptr<DotCanvas>, Dot<BoardSize>::Max> DotCanvases;
+  Array<Ptr<DotCanvas<BoardSize>>, Dot<BoardSize>::Max> DotCanvases;
 };

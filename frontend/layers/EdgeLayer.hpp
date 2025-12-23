@@ -32,8 +32,8 @@ class EdgeLayer : public BaseCanvasLayer<BoardSize> {
              BaseCanvasLayer<BoardSize>::UnitSize;
 
     for (Edge<BoardSize> edge = 0; edge.Int() < Edge<BoardSize>::Max; ++edge) {
-      int x = x0 + edge.Dot1().X() * EdgeCanvas::Height;
-      int y = y0 + edge.Dot1().Y() * EdgeCanvas::Height;
+      int x = x0 + edge.Dot1().X() * EdgeCanvas<BoardSize>::Height;
+      int y = y0 + edge.Dot1().Y() * EdgeCanvas<BoardSize>::Height;
       if (edge.Dot1().X() == edge.Dot2().X()) {
         y += BaseCanvasLayer<BoardSize>::UnitSize;
       } else {

@@ -18,12 +18,12 @@ class BoxCanvasLayer final : public BaseCanvasLayer<BoardSize> {
     }
   }
 
-  const Array<Ptr<BoxCanvas>, Box<BoardSize>::Max>&
+  const Array<Ptr<BoxCanvas<BoardSize>>, Box<BoardSize>::Max>&
   GetBoxCanvases() const {
     return BoxCanvases;
   }
 
-  Array<Ptr<BoxCanvas>, Box<BoardSize>::Max>&
+  Array<Ptr<BoxCanvas<BoardSize>>, Box<BoardSize>::Max>&
   GetBoxCanvases() {
     return BoxCanvases;
   }
@@ -40,13 +40,13 @@ class BoxCanvasLayer final : public BaseCanvasLayer<BoardSize> {
 
     for (int i = 0; i < Box<BoardSize>::Size; i++) {
       for (int j = 0; j < Box<BoardSize>::Size; j++) {
-        int x = x0 + i * EdgeCanvas::Height;
-        int y = y0 + j * EdgeCanvas::Height;
+        int x = x0 + i * EdgeCanvas<BoardSize>::Height;
+        int y = y0 + j * EdgeCanvas<BoardSize>::Height;
         BoxCanvases.At(Box<BoardSize>(i, j).Int())->move(x, y);
       }
     }
   }
 
   private:
-  Array<Ptr<BoxCanvas>, Box<BoardSize>::Max> BoxCanvases;
+  Array<Ptr<BoxCanvas<BoardSize>>, Box<BoardSize>::Max> BoxCanvases;
 };

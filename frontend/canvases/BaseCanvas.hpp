@@ -6,9 +6,10 @@
 
 #include "../../src/model/Turn.hpp"
 
+template <int BoardSize>
 class BaseCanvas : public QWidget {
   public:
-  static constexpr int UnitSize = 8;
+  static constexpr int UnitSize = 6 + 16 / BoardSize;
 
   explicit BaseCanvas(QWidget* parent) : QWidget(parent) {
   }
