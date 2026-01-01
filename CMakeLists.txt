@@ -7,6 +7,13 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
+include(ProcessorCount)
+ProcessorCount(CPU_NUM)
+if(CPU_NUM EQUAL 0)
+    set(CPU_NUM 1)
+endif()
+add_compile_definitions(CPU_COUNT=${CPU_NUM})
+
 find_package(OpenMP REQUIRED)
 if(OpenMP_FOUND)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")

@@ -5,7 +5,11 @@
 
 template <int BoardSize>
 class ParallelSearchRobot final : public Robot<BoardSize> {
-  static constexpr int ParallelNumber = 10;
+#ifndef CPU_COUNT
+#define CPU_COUNT 1
+#endif
+
+  static constexpr int ParallelNumber = CPU_COUNT;
 
   public:
   ParallelSearchRobot() = default;
