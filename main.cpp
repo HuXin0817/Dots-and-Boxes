@@ -3,8 +3,6 @@
 static constexpr int BoardSize = 6;
 static constexpr PlayerType Player1Type = PlayerType::Robot;
 static constexpr PlayerType Player2Type = PlayerType::Robot;
-static constexpr RobotType Robot1Type = RobotType::L4;
-static constexpr RobotType Robot2Type = RobotType::L4;
 
 int
 main(int argc, char* argv[]) {
@@ -14,14 +12,11 @@ main(int argc, char* argv[]) {
   application.setApplicationVersion("1.0");
   application.setOrganizationName("Dots and Boxes");
 
-  printf("Starting game with player configuration:");
-  printf("\n  Player 1: %s", PlayerConfig::GetPlayerTypeString(Player1Type).c_str());
-  printf("\n  Player 2: %s", PlayerConfig::GetPlayerTypeString(Player2Type).c_str());
-  printf("\n\n");
+  qDebug("Starting game with player configuration:\n");
+  qDebug("  Player 1: %s", PlayerConfig::GetPlayerTypeString(Player1Type).c_str());
+  qDebug("  Player 2: %s\n", PlayerConfig::GetPlayerTypeString(Player2Type).c_str());
 
-  auto mainWindow = MainWindowCreator().CreateMainWindow(
-      BoardSize, Player1Type, Player2Type, Robot1Type, Robot2Type);
-  if (mainWindow) {
+  if (auto mainWindow = MainWindowCreator().CreateMainWindow(BoardSize, Player1Type, Player2Type)) {
     mainWindow->show();
   }
 

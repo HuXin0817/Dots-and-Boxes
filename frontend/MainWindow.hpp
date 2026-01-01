@@ -6,7 +6,7 @@
 #include <chrono>
 #include <thread>
 
-#include "../src/robot/RobotConfig.hpp"
+#include "../src/robot/ParallelSearchRobot.hpp"
 #include "PlayerConfig.hpp"
 #include "layers/BoxCanvasLayer.hpp"
 #include "layers/DotCanvasLayer.hpp"
@@ -16,22 +16,13 @@
 template <int BoardSize>
 class MainWindow final : public BaseCanvasLayer<BoardSize> {
   public:
-  explicit MainWindow(PlayerType player1Type,
-                      PlayerType player2Type,
-                      RobotType robot1Type,
-                      RobotType robot2Type,
-                      QWidget* parent = nullptr)
-      : BaseCanvasLayer<BoardSize>(parent),
-        Player1Type(player1Type),
-        Player2Type(player2Type),
-        Robot1(RobotConfig<BoardSize>::CreateRobot(robot1Type)),
-        Robot2(RobotConfig<BoardSize>::CreateRobot(robot2Type)) {
+  explicit MainWindow(PlayerType player1Type, PlayerType player2Type, QWidget* parent = nullptr)
+      : BaseCanvasLayer<BoardSize>(parent), Player1Type(player1Type), Player2Type(player2Type) {
     BaseCanvasLayer<BoardSize>::resize(BaseCanvasLayer<BoardSize>::WindowSize,
                                        BaseCanvasLayer<BoardSize>::WindowSize);
     BaseCanvasLayer<BoardSize>::setMinimumSize(BaseCanvasLayer<BoardSize>::WindowSize,
                                                BaseCanvasLayer<BoardSize>::WindowSize);
 
-    Board.New();
     BoxCanvasLayer.New(this);
     EdgeCanvasLayer.New(this);
     DotCanvasLayer.New(this);
@@ -51,28 +42,28 @@ class MainWindow final : public BaseCanvasLayer<BoardSize> {
 
   void
   Add(Edge<BoardSize> edge) {
-    if (Board->GetEdgeCountableBoard().GetBasicBoard().GetStep().NowStep() > 0) {
+    if (Board.GetEdgeCountableBoard().GetBasicBoard().GetStep().NowStep() > 0) {
       EdgeCanvasLayer->GetCanvases().At(LastEdge.Int())->SetHighLight(false);
     }
     EdgeCanvasLayer->GetCanvases()
         .At(edge.Int())
-        ->SetState(BaseCanvasLayer<BoardSize>::StateFromTurn(Board->GetScoreMap().GetTurn()));
+        ->SetState(BaseCanvasLayer<BoardSize>::StateFromTurn(Board.GetScoreMap().GetTurn()));
     EdgeCanvasLayer->GetCanvases().At(edge.Int())->raise();
 
     for (auto box : NearBoxes(edge)) {
       int count = 0;
       for (auto nearEdge : NearEdges(box)) {
-        if (Board->GetEdgeCountableBoard().GetBasicBoard().Contains(nearEdge)) {
+        if (Board.GetEdgeCountableBoard().GetBasicBoard().Contains(nearEdge)) {
           count++;
         }
       }
       if (count == 3) {
         BoxCanvasLayer->GetBoxCanvases().At(box.Int())->SetState(
-            BaseCanvasLayer<BoardSize>::StateFromTurn(Board->GetScoreMap().GetTurn()));
+            BaseCanvasLayer<BoardSize>::StateFromTurn(Board.GetScoreMap().GetTurn()));
       }
     }
 
-    Board->Add(edge);
+    Board.Add(edge);
     LastEdge = edge;
     BaseCanvasLayer<BoardSize>::update();
     QApplication::beep();
@@ -104,15 +95,14 @@ class MainWindow final : public BaseCanvasLayer<BoardSize> {
     BaseCanvasLayer<BoardSize>::showEvent(event);
 
     std::thread([this] {
-      while (Board->GetEdgeCountableBoard().GetBasicBoard().GetStep().Gaming()) {
+      while (Board.GetEdgeCountableBoard().GetBasicBoard().GetStep().Gaming()) {
         auto startTime = std::chrono::high_resolution_clock::now();
 
-        if (Player1Type == PlayerType::Robot &&
-            Board->GetScoreMap().GetTurn().Bool() == Player1Turn.Bool()) {
-          PlayerMoveEdge = RandomChoice(Robot1->BestCandidateEdges(*Board));
-        } else if (Player2Type == PlayerType::Robot &&
-                   Board->GetScoreMap().GetTurn().Bool() == Player2Turn.Bool()) {
-          PlayerMoveEdge = RandomChoice(Robot2->BestCandidateEdges(*Board));
+        if ((Player1Type == PlayerType::Robot &&
+             Board.GetScoreMap().GetTurn().Bool() == Player1Turn.Bool()) ||
+            (Player2Type == PlayerType::Robot &&
+             Board.GetScoreMap().GetTurn().Bool() == Player2Turn.Bool())) {
+          PlayerMoveEdge = RandomChoice(Robot.BestCandidateEdges(Board));
         } else {
           PlayerMoveEdge = -1;
           while (PlayerMoveEdge.Int() == -1) {
@@ -125,18 +115,18 @@ class MainWindow final : public BaseCanvasLayer<BoardSize> {
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
         double seconds = static_cast<double>(duration.count()) / 1000000.0;
 
-        printf("| Step %d | Player %d Move %s | Score %d : %d | Time: %.2fs |\n",
-               Board->GetEdgeCountableBoard().GetBasicBoard().GetStep().NowStep(),
-               Board->GetScoreMap().GetTurn().Bool() == Player1Turn.Bool() ? 1 : 2,
+        qDebug("| Step %d | Player %d Move %s | Score %d : %d | Time: %.2fs |",
+               Board.GetEdgeCountableBoard().GetBasicBoard().GetStep().NowStep(),
+               Board.GetScoreMap().GetTurn().Bool() == Player1Turn.Bool() ? 1 : 2,
                std::string(PlayerMoveEdge).c_str(),
-               Board->GetScoreMap().GetPlayer1Score(),
-               Board->GetScoreMap().GetPlayer2Score(),
+               Board.GetScoreMap().GetPlayer1Score(),
+               Board.GetScoreMap().GetPlayer2Score(),
                seconds);
       }
 
-      if (Board->GetScoreMap().GetPlayer1Score() > Board->GetScoreMap().GetPlayer2Score()) {
+      if (Board.GetScoreMap().GetPlayer1Score() > Board.GetScoreMap().GetPlayer2Score()) {
         printf("| Player 1 Win! |\n");
-      } else if (Board->GetScoreMap().GetPlayer2Score() > Board->GetScoreMap().GetPlayer1Score()) {
+      } else if (Board.GetScoreMap().GetPlayer2Score() > Board.GetScoreMap().GetPlayer1Score()) {
         printf("| Player 2 Win! |\n");
       } else {
         printf("| Draw! |\n");
@@ -154,10 +144,9 @@ class MainWindow final : public BaseCanvasLayer<BoardSize> {
   private:
   PlayerType Player1Type;
   PlayerType Player2Type;
-  Ptr<Robot<BoardSize>> Robot1;
-  Ptr<Robot<BoardSize>> Robot2;
+  ParallelSearchRobot<BoardSize> Robot;
   Edge<BoardSize> PlayerMoveEdge;
-  Ptr<ScoreCountableBoard<BoardSize>> Board;
+  ScoreCountableBoard<BoardSize> Board;
   Ptr<BoxCanvasLayer<BoardSize>> BoxCanvasLayer;
   Ptr<EdgeCanvasLayer<BoardSize>> EdgeCanvasLayer;
   Ptr<DotCanvasLayer<BoardSize>> DotCanvasLayer;
@@ -166,15 +155,15 @@ class MainWindow final : public BaseCanvasLayer<BoardSize> {
 
   void
   setPlayerMoveEdge(Edge<BoardSize> edge) {
-    if (Board->GetEdgeCountableBoard().GetBasicBoard().Contains(edge)) {
+    if (Board.GetEdgeCountableBoard().GetBasicBoard().Contains(edge)) {
       return;
     }
     if (Player1Type == PlayerType::Robot &&
-        Board->GetScoreMap().GetTurn().Bool() == Player1Turn.Bool()) {
+        Board.GetScoreMap().GetTurn().Bool() == Player1Turn.Bool()) {
       return;
     }
     if (Player2Type == PlayerType::Robot &&
-        Board->GetScoreMap().GetTurn().Bool() == Player2Turn.Bool()) {
+        Board.GetScoreMap().GetTurn().Bool() == Player2Turn.Bool()) {
       return;
     }
     PlayerMoveEdge = edge;
