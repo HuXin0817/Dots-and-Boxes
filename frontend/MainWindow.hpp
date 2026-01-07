@@ -125,11 +125,11 @@ class MainWindow final : public BaseCanvasLayer<BoardSize> {
       }
 
       if (Board.GetScoreMap().GetPlayer1Score() > Board.GetScoreMap().GetPlayer2Score()) {
-        printf("| Player 1 Win! |\n");
+        qDebug("| Player 1 Win! |\n");
       } else if (Board.GetScoreMap().GetPlayer2Score() > Board.GetScoreMap().GetPlayer1Score()) {
-        printf("| Player 2 Win! |\n");
+        qDebug("| Player 2 Win! |\n");
       } else {
-        printf("| Draw! |\n");
+        qDebug("| Draw! |\n");
       }
 
       std::this_thread::sleep_for(std::chrono::seconds(2));
