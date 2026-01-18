@@ -43,9 +43,3 @@ target_link_libraries(${PROJECT_NAME}
         Qt::Widgets
         OpenMP::OpenMP_CXX
 )
-
-add_executable(Benchmark benchmark/Benchmark.cpp ${HEADERS})
-
-target_link_libraries(Benchmark
-        OpenMP::OpenMP_CXX
-)
