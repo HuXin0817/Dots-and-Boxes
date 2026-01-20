@@ -4,6 +4,8 @@
 
 #include "Array.hpp"
 
+namespace dab::common {
+
 template <class T, int Cap>
 class Queue {
   public:
@@ -14,7 +16,7 @@ class Queue {
   }
 
   void
-  Append(T item) {
+  Append(const T item) {
     assert(End < Cap);
     Data.At(End++) = item;
   }
@@ -25,10 +27,12 @@ class Queue {
     return Data.At(Begin++);
   }
 
-  I(Data.begin() + Begin, Data.begin() + End, End - Begin);
+  IterableObject(Data.begin() + Begin, Data.begin() + End, End - Begin);
 
   private:
   Array<T, Cap> Data;
   int Begin = 0;
   int End = 0;
 };
+
+}  // namespace dab::common

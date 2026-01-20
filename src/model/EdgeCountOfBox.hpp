@@ -4,6 +4,9 @@
 
 #include "../common/Array.hpp"
 #include "NearBoxes.hpp"
+#include "Square.hpp"
+
+namespace dab::model {
 
 template <int BoardSize>
 class EdgeCountOfBox {
@@ -11,11 +14,11 @@ class EdgeCountOfBox {
   EdgeCountOfBox() = default;
 
   int
-  Add(Edge<BoardSize> edge) {
+  Add(const Edge<BoardSize> edge) {
     int score = 0;
-    for (auto box : NearBoxes(edge)) {
-      Map.At(box.Int())++;
-      int num = Map.At(box.Int());
+    for (const Box<BoardSize> box : NearBoxes(edge)) {
+      ++Map.At(box.Value());
+      const int num = Map.At(box.Value());
       assert(num <= 4);
       if (num == 4) {
         score++;
@@ -25,19 +28,21 @@ class EdgeCountOfBox {
   }
 
   int
-  EdgeCount(Box<BoardSize> box) const {
-    return Map.At(box.Int());
+  EdgeCount(const Box<BoardSize> box) const {
+    return Map.At(box.Value());
   }
 
   int
-  MaxCount(Edge<BoardSize> edge) const {
+  MaxCount(const Edge<BoardSize> edge) const {
     int maxCount = 0;
-    for (auto box : NearBoxes(edge)) {
-      maxCount = std::max(maxCount, Map.At(box.Int()));
+    for (const Box<BoardSize> box : NearBoxes(edge)) {
+      maxCount = std::max(maxCount, Map.At(box.Value()));
     }
     return maxCount;
   }
 
   private:
-  Array<int, Box<BoardSize>::Max> Map;
+  common::Array<int, Box<BoardSize>::Max> Map;
 };
+
+}  // namespace dab::model

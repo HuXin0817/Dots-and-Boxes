@@ -2,10 +2,12 @@
 
 #include "BaseEdgeCanvas.hpp"
 
+namespace dab::frontend::canvas {
+
 template <int BoardSize>
 class EdgeButtonCanvas final : public BaseEdgeCanvas<BoardSize> {
   public:
-  explicit EdgeButtonCanvas(bool rotate, std::function<void()> callBack, QWidget* parent)
+  explicit EdgeButtonCanvas(const bool rotate, std::function<void()> callBack, QWidget* parent)
       : BaseEdgeCanvas<BoardSize>(rotate, parent), CallBack(std::move(callBack)) {
   }
 
@@ -18,5 +20,7 @@ class EdgeButtonCanvas final : public BaseEdgeCanvas<BoardSize> {
   }
 
   private:
-  std::function<void()> CallBack;
+  const std::function<void()> CallBack;
 };
+
+}  // namespace dab::frontend::canvas

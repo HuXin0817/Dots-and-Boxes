@@ -1,7 +1,8 @@
-cmake-build-*/
 build/
 
 .DS_Store
 .idea/
 .vscode/
 .cache/
+
+compile_commands.json

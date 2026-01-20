@@ -3,6 +3,8 @@
 #include "../model/ScoreMap.hpp"
 #include "EdgeCountableBoard.hpp"
 
+namespace dab::board {
+
 template <int BoardSize>
 class ScoreCountableBoard {
   public:
@@ -15,7 +17,7 @@ class ScoreCountableBoard {
   }
 
   int
-  Add(Edge<BoardSize> edge) {
+  Add(const model::Edge<BoardSize> edge) {
     int score = EdgeCountableBoard.Add(edge);
     ScoreMap.Add(score);
     return score;
@@ -31,22 +33,14 @@ class ScoreCountableBoard {
     return EdgeCountableBoard;
   }
 
-  EdgeCountableBoard<BoardSize>&
-  GetEdgeCountableBoard() {
-    return EdgeCountableBoard;
-  }
-
-  const ScoreMap<BoardSize>&
+  const model::ScoreMap<BoardSize>&
   GetScoreMap() const {
-    return ScoreMap;
-  }
-
-  ScoreMap<BoardSize>&
-  GetScoreMap() {
     return ScoreMap;
   }
 
   private:
   EdgeCountableBoard<BoardSize> EdgeCountableBoard;
-  ScoreMap<BoardSize> ScoreMap;
+  model::ScoreMap<BoardSize> ScoreMap;
 };
+
+}  // namespace dab::board

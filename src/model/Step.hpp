@@ -2,6 +2,8 @@
 
 #include "Edge.hpp"
 
+namespace dab::model {
+
 template <int BoardSize>
 class Step {
   public:
@@ -33,3 +35,5 @@ class Step {
   private:
   int v = 0;
 };
+
+}  // namespace dab::model

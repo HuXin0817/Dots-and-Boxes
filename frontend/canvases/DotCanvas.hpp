@@ -5,6 +5,8 @@
 
 #include "BaseCanvas.hpp"
 
+namespace dab::frontend::canvas {
+
 template <int BoardSize>
 class DotCanvas final : public BaseCanvas<BoardSize> {
   public:
@@ -32,10 +34,11 @@ class DotCanvas final : public BaseCanvas<BoardSize> {
     painter.setBrush(QBrush(Color()));
     painter.setPen(Qt::NoPen);
 
-    int x = BaseCanvas<BoardSize>::width() / 2;
-    int y = BaseCanvas<BoardSize>::height() / 2;
+    const int x = BaseCanvas<BoardSize>::width() / 2;
+    const int y = BaseCanvas<BoardSize>::height() / 2;
 
-    painter.drawEllipse(
-        QPoint(x, y), BaseCanvas<BoardSize>::UnitSize, BaseCanvas<BoardSize>::UnitSize);
+    painter.drawEllipse(QPoint(x, y), BaseCanvas<BoardSize>::UnitSize, BaseCanvas<BoardSize>::UnitSize);
   }
 };
+
+}  // namespace dab::frontend::canvas

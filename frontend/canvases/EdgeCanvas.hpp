@@ -1,13 +1,16 @@
 #pragma once
 
-#include <QPainter>
+#include <qpainter.h>
 
+#include "BaseCanvas.hpp"
 #include "BaseEdgeCanvas.hpp"
+
+namespace dab::frontend::canvas {
 
 template <int BoardSize>
 class EdgeCanvas final : public BaseEdgeCanvas<BoardSize> {
   public:
-  explicit EdgeCanvas(bool rotate, QWidget* parent) : BaseEdgeCanvas<BoardSize>(rotate, parent) {
+  explicit EdgeCanvas(const bool rotate, QWidget* parent) : BaseEdgeCanvas<BoardSize>(rotate, parent) {
   }
 
   QColor
@@ -17,14 +20,14 @@ class EdgeCanvas final : public BaseEdgeCanvas<BoardSize> {
     static QColor Player1OccupyColor = {64, 64, 255, 255};
     static QColor Player2OccupyColor = {255, 64, 64, 255};
 
-    if (State == BaseEdgeCanvas<BoardSize>::CanvasState::Free) {
+    if (BaseCanvas<BoardSize>::State == BaseEdgeCanvas<BoardSize>::CanvasState::Free) {
       return BaseEdgeCanvas<BoardSize>::isDarkTheme() ? DarkThemeColor : LightThemeColor;
     }
 
     QColor color;
-    if (State == BaseEdgeCanvas<BoardSize>::CanvasState::Player1Occupy) {
+    if (BaseCanvas<BoardSize>::State == BaseEdgeCanvas<BoardSize>::CanvasState::Player1Occupy) {
       color = Player1OccupyColor;
-    } else if (State == BaseEdgeCanvas<BoardSize>::CanvasState::Player2Occupy) {
+    } else if (BaseCanvas<BoardSize>::State == BaseEdgeCanvas<BoardSize>::CanvasState::Player2Occupy) {
       color = Player2OccupyColor;
     }
 
@@ -38,13 +41,8 @@ class EdgeCanvas final : public BaseEdgeCanvas<BoardSize> {
   }
 
   void
-  SetHighLight(bool highLight) {
+  SetHighLight(const bool highLight) {
     HighLight = highLight;
-  }
-
-  void
-  SetState(typename BaseEdgeCanvas<BoardSize>::CanvasState state) {
-    State = state;
   }
 
   protected:
@@ -57,15 +55,14 @@ class EdgeCanvas final : public BaseEdgeCanvas<BoardSize> {
     painter.setPen(Qt::NoPen);
     painter.setBrush(QBrush(Color()));
 
-    painter.drawRect(
-        BaseEdgeCanvas<BoardSize>::width() / 2 - BaseEdgeCanvas<BoardSize>::RotateWidth() / 2,
-        BaseEdgeCanvas<BoardSize>::height() / 2 - BaseEdgeCanvas<BoardSize>::RotateHeight() / 2,
-        BaseEdgeCanvas<BoardSize>::RotateWidth(),
-        BaseEdgeCanvas<BoardSize>::RotateHeight());
+    painter.drawRect(BaseEdgeCanvas<BoardSize>::width() / 2 - BaseEdgeCanvas<BoardSize>::RotateWidth() / 2,
+                     BaseEdgeCanvas<BoardSize>::height() / 2 - BaseEdgeCanvas<BoardSize>::RotateHeight() / 2,
+                     BaseEdgeCanvas<BoardSize>::RotateWidth(),
+                     BaseEdgeCanvas<BoardSize>::RotateHeight());
   }
 
   private:
-  typename BaseEdgeCanvas<BoardSize>::CanvasState State =
-      BaseEdgeCanvas<BoardSize>::CanvasState::Free;
   bool HighLight = true;
 };
+
+}  // namespace dab::frontend::canvas

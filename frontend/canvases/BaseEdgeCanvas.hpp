@@ -2,14 +2,15 @@
 
 #include "BaseCanvas.hpp"
 
+namespace dab::frontend::canvas {
+
 template <int BoardSize>
 class BaseEdgeCanvas : public BaseCanvas<BoardSize> {
   public:
   static constexpr int Width = BaseCanvas<BoardSize>::UnitSize * 2;
   static constexpr int Height = Width * 5;
 
-  explicit BaseEdgeCanvas(bool rotate, QWidget* parent)
-      : BaseCanvas<BoardSize>(parent), Rotate(rotate) {
+  explicit BaseEdgeCanvas(const bool rotate, QWidget* parent) : BaseCanvas<BoardSize>(parent), Rotate(rotate) {
     BaseCanvas<BoardSize>::resize(QSize(RotateWidth(), RotateHeight()));
   }
 
@@ -24,5 +25,7 @@ class BaseEdgeCanvas : public BaseCanvas<BoardSize> {
   }
 
   private:
-  bool Rotate = false;
+  const bool Rotate = false;
 };
+
+}  // namespace dab::frontend::canvas

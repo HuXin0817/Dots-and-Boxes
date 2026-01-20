@@ -2,12 +2,12 @@
 
 #include "MainWindow.hpp"
 
-class MainWindowCreator {
-  static constexpr int MaxBoardSize = 36;
+namespace dab::frontend {
 
+class MainWindowCreator {
   template <int N>
   QWidget*
-  CreateMainWindowImpl(int size, PlayerType player1Type, PlayerType player2Type) {
+  CreateMainWindowImpl(const int size, const PlayerType player1Type, const PlayerType player2Type) {
     if (size == N) {
       return new MainWindow<N>(player1Type, player2Type);
     }
@@ -18,11 +18,15 @@ class MainWindowCreator {
   }
 
   public:
+  static constexpr int MaxBoardSize = 36;
+
   QWidget*
-  CreateMainWindow(int boardSize, PlayerType player1Type, PlayerType player2Type) {
+  CreateMainWindow(const int boardSize, const PlayerType player1Type, const PlayerType player2Type) {
     if (boardSize <= 1 || boardSize > MaxBoardSize) {
       return nullptr;
     }
     return CreateMainWindowImpl<MaxBoardSize>(boardSize, player1Type, player2Type);
   }
 };
+
+}  // namespace dab::frontend

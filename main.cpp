@@ -1,11 +1,15 @@
 #include "frontend/MainWindowCreator.hpp"
 
-static constexpr int BoardSize = 6;
-static constexpr PlayerType Player1Type = PlayerType::Robot;
-static constexpr PlayerType Player2Type = PlayerType::Robot;
+static constexpr dab::frontend::PlayerType Player1Type = dab::frontend::PlayerType::Robot;
+static constexpr dab::frontend::PlayerType Player2Type = dab::frontend::PlayerType::Robot;
 
 int
 main(int argc, char* argv[]) {
+  int BoardSize = 6;
+  if (argc >= 2) {
+    BoardSize = std::clamp(std::stoi(argv[1]), 2, dab::frontend::MainWindowCreator::MaxBoardSize);
+  }
+
   QApplication application(argc, argv);
 
   application.setApplicationName("Dots and Boxes");
@@ -13,10 +17,10 @@ main(int argc, char* argv[]) {
   application.setOrganizationName("Dots and Boxes");
 
   qDebug("Starting game with player configuration:\n");
-  qDebug("  Player 1: %s", PlayerConfig::GetPlayerTypeString(Player1Type).c_str());
-  qDebug("  Player 2: %s\n", PlayerConfig::GetPlayerTypeString(Player2Type).c_str());
+  qDebug("  Player 1: %s", dab::frontend::GetPlayerTypeString(Player1Type));
+  qDebug("  Player 2: %s\n", dab::frontend::GetPlayerTypeString(Player2Type));
 
-  if (auto mainWindow = MainWindowCreator().CreateMainWindow(BoardSize, Player1Type, Player2Type)) {
+  if (QWidget* mainWindow = dab::frontend::MainWindowCreator().CreateMainWindow(BoardSize, Player1Type, Player2Type)) {
     mainWindow->show();
   }
 

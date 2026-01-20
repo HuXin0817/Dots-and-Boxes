@@ -5,6 +5,8 @@
 #include "../common/Span.hpp"
 #include "Edge.hpp"
 
+namespace dab::model {
+
 template <int BoardSize>
 class EdgeScoreMap {
   public:
@@ -19,8 +21,8 @@ class EdgeScoreMap {
 
   void
   Add(Edge<BoardSize> edge, int score) {
-    Time.At(edge.Int())++;
-    Score.At(edge.Int()) += score;
+    ++Time.At(edge.Value());
+    Score.At(edge.Value()) += score;
   }
 
   void
@@ -31,14 +33,13 @@ class EdgeScoreMap {
     }
   }
 
-  Span<Edge<BoardSize>>
+  common::Span<Edge<BoardSize>>
   Export() {
     float maxScore = 0.0;
-    for (Edge<BoardSize> edge = 0; edge.Int() < Edge<BoardSize>::Max; ++edge) {
-      if (Time.At(edge.Int()) > 0) {
-        float score =
-            static_cast<float>(Score.At(edge.Int())) / static_cast<float>(Time.At(edge.Int()));
-        if (score > maxScore || BestEdges.Empty()) {
+    for (Edge<BoardSize> edge = 0; edge.Value() < Edge<BoardSize>::Max; ++edge) {
+      if (Time.At(edge.Value()) > 0) {
+        if (float score = static_cast<float>(Score.At(edge.Value())) / static_cast<float>(Time.At(edge.Value()));
+            score > maxScore || BestEdges.Empty()) {
           maxScore = score;
           BestEdges.Reset(edge);
         } else if (score == maxScore) {
@@ -46,11 +47,13 @@ class EdgeScoreMap {
         }
       }
     }
-    return ::Export(BestEdges);
+    return common::Export(BestEdges);
   }
 
   private:
-  Array<int, Edge<BoardSize>::Max> Time;
-  Array<int, Edge<BoardSize>::Max> Score;
-  List<Edge<BoardSize>, Edge<BoardSize>::Max> BestEdges;
+  common::Array<int, Edge<BoardSize>::Max> Time;
+  common::Array<int, Edge<BoardSize>::Max> Score;
+  common::List<Edge<BoardSize>, Edge<BoardSize>::Max> BestEdges;
 };
+
+}  // namespace dab::model

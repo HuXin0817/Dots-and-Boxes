@@ -9,25 +9,21 @@
 #include "../canvases/EdgeCanvas.hpp"
 #include "BaseCanvasLayer.hpp"
 
+namespace dab::frontend::layer {
+
 template <int BoardSize>
 class DotCanvasLayer final : public BaseCanvasLayer<BoardSize> {
   public:
   explicit DotCanvasLayer(QWidget* parent) : BaseCanvasLayer<BoardSize>(parent) {
-    BaseCanvasLayer<BoardSize>::resize(BaseCanvasLayer<BoardSize>::WindowSize,
-                                       BaseCanvasLayer<BoardSize>::WindowSize);
-    for (Dot<BoardSize> dot = 0; dot.Int() < Dot<BoardSize>::Max; ++dot) {
-      DotCanvases.At(dot.Int()).New(this);
+    BaseCanvasLayer<BoardSize>::resize(BaseCanvasLayer<BoardSize>::WindowSize, BaseCanvasLayer<BoardSize>::WindowSize);
+    for (model::Dot<BoardSize> dot = 0; dot.Value() < model::Dot<BoardSize>::Max; ++dot) {
+      DotCanvases.At(dot.Value()).New(this);
     }
   }
 
-  const Array<Ptr<DotCanvas<BoardSize>>, Dot<BoardSize>::Max>&
-  GetDotCanvases() const {
-    return DotCanvases;
-  }
-
-  Array<Ptr<DotCanvas<BoardSize>>, Dot<BoardSize>::Max>&
-  GetDotCanvases() {
-    return DotCanvases;
+  common::Ptr<canvas::DotCanvas<BoardSize>>&
+  At(const model::Dot<BoardSize> dot) {
+    return DotCanvases.At(dot.Value());
   }
 
   protected:
@@ -35,20 +31,22 @@ class DotCanvasLayer final : public BaseCanvasLayer<BoardSize> {
   resizeEvent(QResizeEvent* event) override {
     BaseCanvasLayer<BoardSize>::resizeEvent(event);
 
-    int x0 = (BaseCanvasLayer<BoardSize>::width() - BaseCanvasLayer<BoardSize>::BoardWidth) / 2 -
-             BaseCanvasLayer<BoardSize>::UnitSize;
-    int y0 = (BaseCanvasLayer<BoardSize>::height() - BaseCanvasLayer<BoardSize>::BoardWidth) / 2 -
-             BaseCanvasLayer<BoardSize>::UnitSize;
+    const int x0 = (BaseCanvasLayer<BoardSize>::width() - BaseCanvasLayer<BoardSize>::BoardWidth) / 2 -
+                   BaseCanvasLayer<BoardSize>::UnitSize;
+    const int y0 = (BaseCanvasLayer<BoardSize>::height() - BaseCanvasLayer<BoardSize>::BoardWidth) / 2 -
+                   BaseCanvasLayer<BoardSize>::UnitSize;
 
-    for (int i = 0; i < Dot<BoardSize>::Size; i++) {
-      for (int j = 0; j < Dot<BoardSize>::Size; j++) {
-        int x = x0 + i * EdgeCanvas<BoardSize>::Height;
-        int y = y0 + j * EdgeCanvas<BoardSize>::Height;
-        DotCanvases.At(Dot<BoardSize>(i, j).Int())->move(x, y);
+    for (int i = 0; i < model::Dot<BoardSize>::Size; i++) {
+      for (int j = 0; j < model::Dot<BoardSize>::Size; j++) {
+        const int x = x0 + i * canvas::EdgeCanvas<BoardSize>::Height;
+        const int y = y0 + j * canvas::EdgeCanvas<BoardSize>::Height;
+        DotCanvases.At(model::Dot<BoardSize>(i, j).Value())->move(x, y);
       }
     }
   }
 
   private:
-  Array<Ptr<DotCanvas<BoardSize>>, Dot<BoardSize>::Max> DotCanvases;
+  common::Array<common::Ptr<canvas::DotCanvas<BoardSize>>, model::Dot<BoardSize>::Max> DotCanvases;
 };
+
+}  // namespace dab::frontend::layer

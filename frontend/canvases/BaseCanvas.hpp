@@ -6,6 +6,8 @@
 
 #include "../../src/model/Turn.hpp"
 
+namespace dab::frontend::canvas {
+
 template <int BoardSize>
 class BaseCanvas : public QWidget {
   public:
@@ -25,17 +27,22 @@ class BaseCanvas : public QWidget {
     Player2Occupy,
   };
 
-  static CanvasState
-  StateFromTurn(PlayerTurn turn) {
-    return turn.Bool() == Player1Turn.Bool() ? CanvasState::Player1Occupy
-                                             : CanvasState::Player2Occupy;
-  }
-
   static bool
   isDarkTheme() {
-    auto palette = QApplication::palette();
-    auto windowColor = palette.color(QPalette::Window);
-
-    return windowColor.lightness() < 128;
+    return QApplication::palette().color(QPalette::Window).lightness() < 128;
   }
+
+  void
+  SetState(const model::PlayerTurn turn) {
+    if (turn.Value() == model::Player1Turn.Value()) {
+      State = CanvasState::Player1Occupy;
+    } else {
+      State = CanvasState::Player2Occupy;
+    }
+  }
+
+  protected:
+  typename BaseCanvas<BoardSize>::CanvasState State = BaseCanvas<BoardSize>::CanvasState::Free;
 };
+
+}  // namespace dab::frontend::canvas

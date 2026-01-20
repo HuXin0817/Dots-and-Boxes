@@ -3,6 +3,8 @@
 #include "Square.hpp"
 #include "Turn.hpp"
 
+namespace dab::model {
+
 template <int BoardSize>
 class ScoreMap {
   static constexpr int MinWinnerScore = Box<BoardSize>::Max / 2 + 1;
@@ -20,12 +22,12 @@ class ScoreMap {
   }
 
   void
-  Add(int score) {
+  Add(const int score) {
     if (score == 0) {
       Turn.Change();
       return;
     }
-    if (Turn.Bool() == Player1Turn.Bool()) {
+    if (Turn.Value() == Player1Turn.Value()) {
       Player1Score += score;
     } else {
       Player2Score += score;
@@ -38,7 +40,7 @@ class ScoreMap {
   }
 
   int
-  GetScore(int player) const {
+  GetScore(const int player) const {
     return player == 0 ? Player1Score : Player2Score;
   }
 
@@ -67,3 +69,5 @@ class ScoreMap {
   int Player2Score = 0;
   PlayerTurn Turn = Player1Turn;
 };
+
+}  // namespace dab::model

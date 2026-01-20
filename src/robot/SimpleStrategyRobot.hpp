@@ -5,20 +5,30 @@
 #include "../common/Span.hpp"
 #include "Robot.hpp"
 
+namespace dab::robot {
+
+template <int BoardSize>
+class BasicSearchRobot;
+
+template <int BoardSize>
+class ImprovedSearchRobot;
+
 template <int BoardSize>
 class SimpleStrategyRobot final : public Robot<BoardSize> {
+  friend class BasicSearchRobot<BoardSize>;
+  friend class ImprovedSearchRobot<BoardSize>;
+
   public:
   SimpleStrategyRobot() = default;
 
-  Span<Edge<BoardSize>>
-  BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override {
+  common::Span<model::Edge<BoardSize>>
+  BestCandidateEdges(const board::ScoreCountableBoard<BoardSize>& board) override {
     EnemyUnscoreableEdges.Clear();
     ScoreableEdges.Clear();
-    auto emptyEdges = board.GetEdgeCountableBoard().GetBasicBoard().EmptyEdges();
+    const common::Span<model::Edge<BoardSize>> emptyEdges = board.GetEdgeCountableBoard().GetBasicBoard().EmptyEdges();
 
-    for (auto edge : emptyEdges) {
-      if (int maxCount = board.GetEdgeCountableBoard().GetEdgeCountOfBox().MaxCount(edge);
-          maxCount == 3) {
+    for (const model::Edge<BoardSize> edge : emptyEdges) {
+      if (const int maxCount = board.GetEdgeCountableBoard().GetEdgeCountOfBox().MaxCount(edge); maxCount == 3) {
         ScoreableEdges.Append(edge);
       } else if (maxCount < 2) {
         EnemyUnscoreableEdges.Append(edge);
@@ -26,36 +36,18 @@ class SimpleStrategyRobot final : public Robot<BoardSize> {
     }
 
     if (!ScoreableEdges.Empty()) {
-      return Export(ScoreableEdges);
+      return common::Export(ScoreableEdges);
     }
     if (!EnemyUnscoreableEdges.Empty()) {
-      return Export(EnemyUnscoreableEdges);
+      return common::Export(EnemyUnscoreableEdges);
     }
 
     return {emptyEdges.begin(), emptyEdges.end()};
   }
 
-  const List<Edge<BoardSize>, Edge<BoardSize>::Max>&
-  GetEnemyUnscoreableEdges() const {
-    return EnemyUnscoreableEdges;
-  }
-
-  List<Edge<BoardSize>, Edge<BoardSize>::Max>&
-  GetEnemyUnscoreableEdges() {
-    return EnemyUnscoreableEdges;
-  }
-
-  const List<Edge<BoardSize>, Edge<BoardSize>::Max>&
-  GetScoreableEdges() const {
-    return ScoreableEdges;
-  }
-
-  List<Edge<BoardSize>, Edge<BoardSize>::Max>&
-  GetScoreableEdges() {
-    return ScoreableEdges;
-  }
-
   private:
-  List<Edge<BoardSize>, Edge<BoardSize>::Max> EnemyUnscoreableEdges;
-  List<Edge<BoardSize>, Edge<BoardSize>::Max> ScoreableEdges;
+  common::List<model::Edge<BoardSize>, model::Edge<BoardSize>::Max> EnemyUnscoreableEdges;
+  common::List<model::Edge<BoardSize>, model::Edge<BoardSize>::Max> ScoreableEdges;
 };
+
+}  // namespace dab::robot

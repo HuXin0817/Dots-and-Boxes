@@ -4,6 +4,8 @@
 #include "../model/Edge.hpp"
 #include "EdgeCountableBoard.hpp"
 
+namespace dab::board {
+
 template <int BoardSize>
 class ScoreableEdgeBoard {
   public:
@@ -16,33 +18,33 @@ class ScoreableEdgeBoard {
   }
 
   int
-  Add(Edge<BoardSize> edge) {
-    int score = EdgeCountableBoard.Add(edge);
-    for (auto box : NearBoxes(edge)) {
+  Add(const model::Edge<BoardSize> edge) {
+    const int score = EdgeCountableBoard.Add(edge);
+    for (const model::Box<BoardSize> box : NearBoxes(edge)) {
       if (EdgeCountableBoard.GetEdgeCountOfBox().EdgeCount(box) == 3) {
-        auto edgeToAdd = EdgeCountableBoard.FindNotContainsEdgeInBox(box);
-        ScoreableEdges.Append(edgeToAdd);
+        ScoreableEdges.Append(EdgeCountableBoard.FindNotContainsEdgeInBox(box));
       }
     }
     return score;
   }
 
   int
-  MaxObtainableScore(int minScore) {
+  MaxObtainableScore(const int minScore) {
     int score = 0;
     while (EdgeCountableBoard.GetBasicBoard().GetStep().Gaming()) {
       if (ScoreableEdges.Empty()) {
-        if (auto edge = EdgeCountableBoard.FindScoreableEdge(); edge.Int() != -1) {
+        if (model::Edge<BoardSize> edge = EdgeCountableBoard.FindScoreableEdge();
+            edge.Value() != model::InvalidEdge<BoardSize>().Value()) {
           ScoreableEdges.Append(edge);
         } else {
           break;
         }
       }
-      auto edge = ScoreableEdges.Pop();
+      model::Edge<BoardSize> edge = ScoreableEdges.Pop();
       if (EdgeCountableBoard.GetBasicBoard().Contains(edge)) {
         continue;
       }
-      int addScore = Add(edge);
+      const int addScore = Add(edge);
       assert(addScore > 0);
       score += addScore;
       if (score >= minScore) {
@@ -54,5 +56,7 @@ class ScoreableEdgeBoard {
 
   private:
   EdgeCountableBoard<BoardSize> EdgeCountableBoard;
-  Queue<Edge<BoardSize>, Edge<BoardSize>::Max> ScoreableEdges;
+  common::Queue<model::Edge<BoardSize>, model::Edge<BoardSize>::Max> ScoreableEdges;
 };
+
+}  // namespace dab::board

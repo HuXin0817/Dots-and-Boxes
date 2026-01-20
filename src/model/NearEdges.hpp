@@ -1,14 +1,14 @@
 #pragma once
 
-#include <cassert>
-
 #include "../common/Array.hpp"
 #include "Edge.hpp"
 #include "Square.hpp"
 
+namespace dab::model {
+
 template <int BoardSize>
-inline const Array<Edge<BoardSize>, 4>&
-NearEdges(Box<BoardSize> box);
+const common::Array<Edge<BoardSize>, 4>&
+NearEdges(const Box<BoardSize> box);
 
 template <int BoardSize>
 class NearEdgesMapper {
@@ -20,7 +20,7 @@ class NearEdgesMapper {
         Dot<BoardSize> topRight(x + 1, y);
         Dot<BoardSize> bottomLeft(x, y + 1);
         Dot<BoardSize> bottomRight(x + 1, y + 1);
-        BoxNearEdges.At(Box<BoardSize>(x, y).Int()) = {
+        BoxNearEdges.At(Box<BoardSize>(x, y).Value()) = {
             Edge(topLeft, topRight),
             Edge(topLeft, bottomLeft),
             Edge(bottomLeft, bottomRight),
@@ -31,16 +31,18 @@ class NearEdgesMapper {
   }
 
   private:
-  Array<Array<Edge<BoardSize>, 4>, Box<BoardSize>::Max> BoxNearEdges;
+  common::Array<common::Array<Edge<BoardSize>, 4>, Box<BoardSize>::Max> BoxNearEdges;
 
-  friend const Array<Edge<BoardSize>, 4>&
-  NearEdges<BoardSize>(Box<BoardSize> box);
+  friend const common::Array<Edge<BoardSize>, 4>&
+  NearEdges<BoardSize>(const Box<BoardSize> box);
 };
 
 template <int BoardSize>
-inline const Array<Edge<BoardSize>, 4>&
-NearEdges(Box<BoardSize> box) {
+const common::Array<Edge<BoardSize>, 4>&
+NearEdges(const Box<BoardSize> box) {
   static NearEdgesMapper<BoardSize> NearEdgesMapperInstance;
 
-  return NearEdgesMapperInstance.BoxNearEdges.At(box.Int());
+  return NearEdgesMapperInstance.BoxNearEdges.At(box.Value());
 }
+
+}  // namespace dab::model

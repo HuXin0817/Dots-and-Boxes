@@ -5,45 +5,34 @@
 
 #include "../common/Macro.hpp"
 
-template <int A>
-class Square {
-  public:
-  Square(int x, int y) : v(x * Size + y) {
+namespace dab::model {
+
+#define DefSquareClass(Class, SizeExpr)               \
+  template <int BoardSize>                            \
+  class Class {                                       \
+public:                                               \
+    constexpr Class(int x, int y) : v(x * Size + y) { \
+    }                                                 \
+    constexpr int                                     \
+    X() const {                                       \
+      return v / Size;                                \
+    }                                                 \
+    constexpr int                                     \
+    Y() const {                                       \
+      return v % Size;                                \
+    }                                                 \
+    explicit                                          \
+    operator std::string() const {                    \
+      std::stringstream ss;                           \
+      ss << "(" << X() << ", " << Y() << ")";         \
+      return ss.str();                                \
+    }                                                 \
+    static constexpr int Size = SizeExpr;             \
+    static constexpr int Max = Size * Size;           \
+    IntValueObject(Class)                             \
   }
 
-  int
-  X() const {
-    return v / Size;
-  }
+DefSquareClass(Dot, BoardSize + 1);
+DefSquareClass(Box, BoardSize);
 
-  int
-  Y() const {
-    return v % Size;
-  }
-
-  operator std::string() const {
-    std::stringstream ss;
-    ss << "(" << X() << ", " << Y() << ")";
-    return ss.str();
-  }
-
-  static constexpr int Size = A;
-  static constexpr int Max = Size * Size;
-
-  V(Square<A>)
-};
-
-#define DefSquareSubClass(SubClass, SquareClass) \
-  template <int BoardSize>                       \
-  class SubClass : public SquareClass {          \
-public:                                          \
-    SubClass() : SquareClass() {                 \
-    }                                            \
-    SubClass(int v) : SquareClass(v) {           \
-    }                                            \
-    SubClass(int x, int y) : SquareClass(x, y) { \
-    }                                            \
-  }
-
-DefSquareSubClass(Dot, Square<BoardSize + 1>);
-DefSquareSubClass(Box, Square<BoardSize>);
+}  // namespace dab::model

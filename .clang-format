@@ -8,7 +8,7 @@ AllowShortFunctionsOnASingleLine: false
 AllowShortIfStatementsOnASingleLine: false
 AlignTrailingComments: true
 
-ColumnLimit: 100
+ColumnLimit: 120
 DerivePointerAlignment: false
 IndentWidth: 2
 

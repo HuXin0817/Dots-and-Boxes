@@ -1,10 +1,12 @@
 #pragma once
 
+namespace dab::model {
+
 class PlayerTurn {
   public:
   PlayerTurn() = default;
 
-  PlayerTurn(bool v) : v(v) {
+  PlayerTurn(const bool v) : v(v) {
   }
 
   void
@@ -13,7 +15,7 @@ class PlayerTurn {
   }
 
   bool
-  Bool() const {
+  Value() const {
     return v;
   }
 
@@ -22,4 +24,6 @@ class PlayerTurn {
 };
 
 static const PlayerTurn Player1Turn = true;
-static const PlayerTurn Player2Turn = !Player1Turn.Bool();
+static const PlayerTurn Player2Turn = !Player1Turn.Value();
+
+}  // namespace dab::model

@@ -2,6 +2,8 @@
 
 #include <utility>
 
+namespace dab::common {
+
 template <class T>
 class Ptr {
   public:
@@ -46,3 +48,5 @@ class Ptr {
   private:
   T* Data = nullptr;
 };
+
+}  // namespace dab::common

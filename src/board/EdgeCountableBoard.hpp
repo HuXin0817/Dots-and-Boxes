@@ -6,37 +6,39 @@
 #include "../model/Square.hpp"
 #include "BasicBoard.hpp"
 
+namespace dab::board {
+
 template <int BoardSize>
 class EdgeCountableBoard {
   public:
   EdgeCountableBoard() = default;
 
   int
-  Add(Edge<BoardSize> edge) {
+  Add(const model::Edge<BoardSize> edge) {
     BasicBoard.Add(edge);
     return EdgeCountOfBox.Add(edge);
   }
 
-  Edge<BoardSize>
-  FindNotContainsEdgeInBox(Box<BoardSize> box) const {
+  model::Edge<BoardSize>
+  FindNotContainsEdgeInBox(const model::Box<BoardSize> box) const {
     assert(EdgeCountOfBox.EdgeCount(box) == 3);
-    for (auto edge : NearEdges(box)) {
+    for (const model::Edge<BoardSize> edge : model::NearEdges(box)) {
       if (BasicBoard.NotContains(edge)) {
         return edge;
       }
     }
     assert(false);
-    return -1;
+    return model::InvalidEdge<BoardSize>();
   }
 
-  Edge<BoardSize>
+  model::Edge<BoardSize>
   FindScoreableEdge() const {
-    for (Box<BoardSize> box = 0; box.Int() < Box<BoardSize>::Max; ++box) {
+    for (model::Box<BoardSize> box = 0; box.Value() < model::Box<BoardSize>::Max; ++box) {
       if (EdgeCountOfBox.EdgeCount(box) == 3) {
         return FindNotContainsEdgeInBox(box);
       }
     }
-    return -1;
+    return model::InvalidEdge<BoardSize>();
   }
 
   const BasicBoard<BoardSize>&
@@ -44,22 +46,14 @@ class EdgeCountableBoard {
     return BasicBoard;
   }
 
-  BasicBoard<BoardSize>&
-  GetBasicBoard() {
-    return BasicBoard;
-  }
-
-  const EdgeCountOfBox<BoardSize>&
+  const model::EdgeCountOfBox<BoardSize>&
   GetEdgeCountOfBox() const {
-    return EdgeCountOfBox;
-  }
-
-  EdgeCountOfBox<BoardSize>&
-  GetEdgeCountOfBox() {
     return EdgeCountOfBox;
   }
 
   private:
   BasicBoard<BoardSize> BasicBoard;
-  EdgeCountOfBox<BoardSize> EdgeCountOfBox;
+  model::EdgeCountOfBox<BoardSize> EdgeCountOfBox;
 };
+
+}  // namespace dab::board

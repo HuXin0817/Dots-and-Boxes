@@ -2,6 +2,8 @@
 
 #include "Macro.hpp"
 
+namespace dab::common {
+
 template <class T>
 class Span {
   public:
@@ -10,7 +12,7 @@ class Span {
   Span(const T* begin, const T* end) : Begin(begin), End(end) {
   }
 
-  I(Begin, End, End - Begin);
+  IterableObject(Begin, End, End - Begin);
 
   private:
   const T* Begin = nullptr;
@@ -22,3 +24,5 @@ auto
 Export(const T& arr) {
   return Span(arr.begin(), arr.end());
 }
+
+}  // namespace dab::common

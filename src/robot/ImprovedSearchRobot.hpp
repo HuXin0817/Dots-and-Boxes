@@ -4,29 +4,31 @@
 #include "../common/Span.hpp"
 #include "BasicSearchRobot.hpp"
 
+namespace dab::robot {
+
 template <int BoardSize>
 class ImprovedSearchRobot final : public Robot<BoardSize> {
   public:
   ImprovedSearchRobot() = default;
 
-  Span<Edge<BoardSize>>
-  BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override {
-    if (auto edges = SubRobot.BestCandidateEdges(board);
-        !SubRobot.GetSubRobot().GetEnemyUnscoreableEdges().Empty()) {
+  common::Span<model::Edge<BoardSize>>
+  BestCandidateEdges(const board::ScoreCountableBoard<BoardSize>& board) override {
+    if (common::Span<model::Edge<BoardSize>> edges = SubRobot.BestCandidateEdges(board);
+        !SubRobot.SubRobot.EnemyUnscoreableEdges.Empty()) {
       return edges;
     }
 
     SearchEdges.Clear();
-    int maxScore = -Box<BoardSize>::Max;
-    for (auto emptyEdge : board.GetEdgeCountableBoard().GetBasicBoard().EmptyEdges()) {
+    int maxScore = -model::Box<BoardSize>::Max;
+    for (model::Edge<BoardSize> emptyEdge : board.GetEdgeCountableBoard().GetBasicBoard().EmptyEdges()) {
       SimulationBoard.Reset(board.GetEdgeCountableBoard());
       SimulationBoard.Add(emptyEdge);
       while (SimulationBoard.Gaming()) {
-        auto edge = SubRobot.BestCandidateEdges(SimulationBoard).At(0);
-        assert(board.GetEdgeCountableBoard().GetEdgeCountOfBox().MaxCount(edge.Int()) > 1);
+        model::Edge<BoardSize> edge = SubRobot.BestCandidateEdges(SimulationBoard).At(0);
+        assert(board.GetEdgeCountableBoard().GetEdgeCountOfBox().MaxCount(edge.Value()) > 1);
         SimulationBoard.Add(edge);
       }
-      if (int score = SimulationBoard.GetScoreMap().Score(); score > maxScore) {
+      if (const int score = SimulationBoard.GetScoreMap().Score(); score > maxScore) {
         maxScore = score;
         SearchEdges.Reset(emptyEdge);
       } else if (score == maxScore) {
@@ -34,11 +36,13 @@ class ImprovedSearchRobot final : public Robot<BoardSize> {
       }
     }
 
-    return Export(SearchEdges);
+    return common::Export(SearchEdges);
   }
 
   private:
   BasicSearchRobot<BoardSize> SubRobot;
-  ScoreCountableBoard<BoardSize> SimulationBoard;
-  List<Edge<BoardSize>, Edge<BoardSize>::Max> SearchEdges;
+  board::ScoreCountableBoard<BoardSize> SimulationBoard;
+  common::List<model::Edge<BoardSize>, model::Edge<BoardSize>::Max> SearchEdges;
 };
+
+}  // namespace dab::robot

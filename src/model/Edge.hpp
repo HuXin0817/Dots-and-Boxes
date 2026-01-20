@@ -2,20 +2,22 @@
 
 #include "Square.hpp"
 
+namespace dab::model {
+
 template <int BoardSize>
 class Edge {
   public:
   static constexpr int Max = 2 * BoardSize * (BoardSize + 1);
 
-  Edge(Dot<BoardSize> dot1, Dot<BoardSize> dot2) {
-    if (dot2.Int() - dot1.Int() == 1) {
-      v = 2 * (dot1.Int() - dot1.Int() / (BoardSize + 1)) + 1;
+  Edge(const Dot<BoardSize> dot1, const Dot<BoardSize> dot2) {
+    if (dot2.Value() - dot1.Value() == 1) {
+      v = 2 * (dot1.Value() - dot1.Value() / (BoardSize + 1)) + 1;
     } else {
-      v = 2 * dot1.Int();
+      v = 2 * dot1.Value();
     }
 
-    assert(Dot1().Int() == dot1.Int());
-    assert(Dot2().Int() == dot2.Int());
+    assert(Dot1().Value() == dot1.Value());
+    assert(Dot2().Value() == dot2.Value());
   }
 
   Dot<BoardSize>
@@ -43,11 +45,20 @@ class Edge {
     return v & 1;
   }
 
+  explicit
   operator std::string() const {
     std::stringstream ss;
     ss << std::string(Dot1()) << " -> " << std::string(Dot2());
     return ss.str();
   }
 
-  V(Edge<BoardSize>)
+  IntValueObject(Edge<BoardSize>)
 };
+
+template <int BoardSize>
+Edge<BoardSize>
+InvalidEdge() {
+  return -1;
+}
+
+}  // namespace dab::model

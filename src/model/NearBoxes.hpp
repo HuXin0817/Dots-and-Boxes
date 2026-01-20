@@ -8,43 +8,46 @@
 #include "Edge.hpp"
 #include "Square.hpp"
 
+namespace dab::model {
+
 template <int BoardSize>
-inline const Span<Box<BoardSize>>&
-NearBoxes(Edge<BoardSize> edge);
+const common::Span<Box<BoardSize>>&
+NearBoxes(const Edge<BoardSize> edge);
 
 template <int BoardSize>
 class NearBoxesMapper {
   public:
   NearBoxesMapper() {
-    Array<List<Box<BoardSize>, 2>, Edge<BoardSize>::Max> edgeNearBoxes;
-    for (Edge<BoardSize> edge = 0; edge.Int() < Edge<BoardSize>::Max; ++edge) {
-      edgeNearBoxes.At(edge.Int()) = GetNearBoxes(edge);
+    common::Array<common::List<Box<BoardSize>, 2>, Edge<BoardSize>::Max> edgeNearBoxes;
+    for (Edge<BoardSize> edge = 0; edge.Value() < Edge<BoardSize>::Max; ++edge) {
+      edgeNearBoxes.At(edge.Value()) = GetNearBoxes(edge);
     }
 
-    Array<Array<int, Box<BoardSize>::Max>, Box<BoardSize>::Max> adjacencyMatrix = {};
-    Array<int, Box<BoardSize>::Max> boxDegrees = {};
+    common::Array<common::Array<int, Box<BoardSize>::Max>, Box<BoardSize>::Max> adjacencyMatrix = {};
+    common::Array<int, Box<BoardSize>::Max> boxDegrees = {};
 
-    for (Edge<BoardSize> edge = 0; edge.Int() < Edge<BoardSize>::Max; ++edge) {
-      if (edgeNearBoxes.At(edge.Int()).Size() == 2) {
-        int firstBox = edgeNearBoxes.At(edge.Int()).At(0).Int();
-        int secondBox = edgeNearBoxes.At(edge.Int()).At(1).Int();
-        adjacencyMatrix.At(firstBox).At(secondBox)++;
-        adjacencyMatrix.At(secondBox).At(firstBox)++;
-        boxDegrees.At(firstBox)++;
-        boxDegrees.At(secondBox)++;
+    for (Edge<BoardSize> edge = 0; edge.Value() < Edge<BoardSize>::Max; ++edge) {
+      if (edgeNearBoxes.At(edge.Value()).Size() == 2) {
+        int firstBox = edgeNearBoxes.At(edge.Value()).At(0).Value();
+        int secondBox = edgeNearBoxes.At(edge.Value()).At(1).Value();
+        ++adjacencyMatrix.At(firstBox).At(secondBox);
+        ++adjacencyMatrix.At(secondBox).At(firstBox);
+        ++boxDegrees.At(firstBox);
+        ++boxDegrees.At(secondBox);
       }
     }
 
-    List<int, Box<BoardSize>::Max> oddDegreeBoxes;
+    common::List<int, Box<BoardSize>::Max> oddDegreeBoxes;
     for (int box = 0; box < Box<BoardSize>::Max; ++box) {
       if (boxDegrees.At(box) % 2 == 1) {
         oddDegreeBoxes.Append(box);
       }
     }
 
-    auto findEulerianPath = [&](int startBox) -> List<int, Edge<BoardSize>::Max> {
-      List<int, Edge<BoardSize>::Max> eulerianPath;
-      Array<int, Edge<BoardSize>::Max> pathStack;
+    std::function<common::List<int, Edge<BoardSize>::Max>(int)> findEulerianPath =
+        [&](int startBox) -> common::List<int, Edge<BoardSize>::Max> {
+      common::List<int, Edge<BoardSize>::Max> eulerianPath;
+      common::Array<int, Edge<BoardSize>::Max> pathStack;
       int stackSize = 0;
       pathStack.At(stackSize++) = startBox;
 
@@ -56,10 +59,10 @@ class NearBoxesMapper {
           if (adjacencyMatrix.At(currentBox).At(nextBox) > 0) {
             found = true;
             pathStack.At(stackSize++) = nextBox;
-            adjacencyMatrix.At(currentBox).At(nextBox)--;
-            adjacencyMatrix.At(nextBox).At(currentBox)--;
-            boxDegrees.At(currentBox)--;
-            boxDegrees.At(nextBox)--;
+            --adjacencyMatrix.At(currentBox).At(nextBox);
+            --adjacencyMatrix.At(nextBox).At(currentBox);
+            --boxDegrees.At(currentBox);
+            --boxDegrees.At(nextBox);
             break;
           }
         }
@@ -70,7 +73,7 @@ class NearBoxesMapper {
         }
       }
 
-      int pathLength = eulerianPath.Size();
+      const int pathLength = eulerianPath.Size();
       for (int i = 0; i < pathLength / 2; i++) {
         int swappedBox = eulerianPath.At(i);
         eulerianPath.At(i) = eulerianPath.At(pathLength - 1 - i);
@@ -80,8 +83,8 @@ class NearBoxesMapper {
     };
 
     int nearBoxesBufferIndex = 0;
-    Array<List<int, Edge<BoardSize>::Max>, Box<BoardSize>::Max> boxToIndices;
-    Array<Array<int, Box<BoardSize>::Max>, Box<BoardSize>::Max> boxPairToIndex;
+    common::Array<common::List<int, Edge<BoardSize>::Max>, Box<BoardSize>::Max> boxToIndices;
+    common::Array<common::Array<int, Box<BoardSize>::Max>, Box<BoardSize>::Max> boxPairToIndex;
     for (int i = 0; i < Box<BoardSize>::Max; i++) {
       for (int j = 0; j < Box<BoardSize>::Max; j++) {
         boxPairToIndex.At(i).At(j) = NearBoxesBufferSize;
@@ -105,7 +108,7 @@ class NearBoxesMapper {
         break;
       }
 
-      auto eulerianPath = findEulerianPath(startBox);
+      common::List<int, Edge<BoardSize>::Max> eulerianPath = findEulerianPath(startBox);
       if (eulerianPath.Empty()) {
         continue;
       }
@@ -113,12 +116,12 @@ class NearBoxesMapper {
       for (int i = 0; i < eulerianPath.Size(); i++) {
         Box<BoardSize> box = eulerianPath.At(i);
         NearBoxesBuffer.At(nearBoxesBufferIndex++) = box;
-        boxToIndices.At(box.Int()).Append(nearBoxesBufferIndex - 1);
+        boxToIndices.At(box.Value()).Append(nearBoxesBufferIndex - 1);
 
         if (i > 0) {
-          int prevBox = eulerianPath.At(i - 1);
-          int minBox = prevBox < box.Int() ? prevBox : box.Int();
-          int maxBox = prevBox < box.Int() ? box.Int() : prevBox;
+          const int prevBox = eulerianPath.At(i - 1);
+          const int minBox = prevBox < box.Value() ? prevBox : box.Value();
+          const int maxBox = prevBox < box.Value() ? box.Value() : prevBox;
           if (boxPairToIndex.At(minBox).At(maxBox) == NearBoxesBufferSize) {
             boxPairToIndex.At(minBox).At(maxBox) = nearBoxesBufferIndex - 2;
           }
@@ -126,9 +129,9 @@ class NearBoxesMapper {
       }
     }
 
-    for (Edge<BoardSize> edge = 0; edge.Int() < Edge<BoardSize>::Max; ++edge) {
-      if (edgeNearBoxes.At(edge.Int()).Size() == 1) {
-        int box = edgeNearBoxes.At(edge.Int()).At(0).Int();
+    for (Edge<BoardSize> edge = 0; edge.Value() < Edge<BoardSize>::Max; ++edge) {
+      if (edgeNearBoxes.At(edge.Value()).Size() == 1) {
+        int box = edgeNearBoxes.At(edge.Value()).At(0).Value();
         if (boxToIndices.At(box).Empty()) {
           NearBoxesBuffer.At(nearBoxesBufferIndex++) = box;
           boxToIndices.At(box).Append(nearBoxesBufferIndex - 1);
@@ -136,46 +139,44 @@ class NearBoxesMapper {
       }
     }
 
-    Array<bool, Edge<BoardSize>::Max> edgeProcessed = {};
-    for (Edge<BoardSize> edge = 0; edge.Int() < Edge<BoardSize>::Max; ++edge) {
-      if (edgeNearBoxes.At(edge.Int()).Size() == 2) {
-        int firstBox = edgeNearBoxes.At(edge.Int()).At(0).Int();
-        int secondBox = edgeNearBoxes.At(edge.Int()).At(1).Int();
+    common::Array<bool, Edge<BoardSize>::Max> edgeProcessed = {};
+    for (Edge<BoardSize> edge = 0; edge.Value() < Edge<BoardSize>::Max; ++edge) {
+      if (edgeNearBoxes.At(edge.Value()).Size() == 2) {
+        int firstBox = edgeNearBoxes.At(edge.Value()).At(0).Value();
+        int secondBox = edgeNearBoxes.At(edge.Value()).At(1).Value();
         int minBox = firstBox < secondBox ? firstBox : secondBox;
         int maxBox = firstBox < secondBox ? secondBox : firstBox;
 
         int foundIndex = boxPairToIndex.At(minBox).At(maxBox);
         if (foundIndex < NearBoxesBufferSize && foundIndex < nearBoxesBufferIndex - 1) {
-          if ((NearBoxesBuffer.At(foundIndex).Int() == firstBox &&
-               NearBoxesBuffer.At(foundIndex + 1).Int() == secondBox) ||
-              (NearBoxesBuffer.At(foundIndex).Int() == secondBox &&
-               NearBoxesBuffer.At(foundIndex + 1).Int() == firstBox)) {
-            EdgeNearBoxes.At(edge.Int()) = {
+          if ((NearBoxesBuffer.At(foundIndex).Value() == firstBox &&
+               NearBoxesBuffer.At(foundIndex + 1).Value() == secondBox) ||
+              (NearBoxesBuffer.At(foundIndex).Value() == secondBox &&
+               NearBoxesBuffer.At(foundIndex + 1).Value() == firstBox)) {
+            EdgeNearBoxes.At(edge.Value()) = {
                 NearBoxesBuffer.begin() + foundIndex,
                 NearBoxesBuffer.begin() + foundIndex + 2,
             };
-            edgeProcessed.At(edge.Int()) = true;
+            edgeProcessed.At(edge.Value()) = true;
             continue;
           }
         }
 
         bool found = false;
-        int firstBoxIndicesSize = boxToIndices.At(firstBox).Size();
-        int secondBoxIndicesSize = boxToIndices.At(secondBox).Size();
+        const int firstBoxIndicesSize = boxToIndices.At(firstBox).Size();
+        const int secondBoxIndicesSize = boxToIndices.At(secondBox).Size();
 
         if (firstBoxIndicesSize <= secondBoxIndicesSize) {
           for (int idx = 0; idx < firstBoxIndicesSize; idx++) {
             int i = boxToIndices.At(firstBox).At(idx);
             if (i < nearBoxesBufferIndex - 1) {
-              if ((NearBoxesBuffer.At(i).Int() == firstBox &&
-                   NearBoxesBuffer.At(i + 1).Int() == secondBox) ||
-                  (NearBoxesBuffer.At(i).Int() == secondBox &&
-                   NearBoxesBuffer.At(i + 1).Int() == firstBox)) {
-                EdgeNearBoxes.At(edge.Int()) = {
+              if ((NearBoxesBuffer.At(i).Value() == firstBox && NearBoxesBuffer.At(i + 1).Value() == secondBox) ||
+                  (NearBoxesBuffer.At(i).Value() == secondBox && NearBoxesBuffer.At(i + 1).Value() == firstBox)) {
+                EdgeNearBoxes.At(edge.Value()) = {
                     NearBoxesBuffer.begin() + i,
                     NearBoxesBuffer.begin() + i + 2,
                 };
-                edgeProcessed.At(edge.Int()) = true;
+                edgeProcessed.At(edge.Value()) = true;
                 boxPairToIndex.At(minBox).At(maxBox) = i;
                 found = true;
                 break;
@@ -183,15 +184,13 @@ class NearBoxesMapper {
             }
 
             if (i > 0 && i - 1 < nearBoxesBufferIndex - 1) {
-              if ((NearBoxesBuffer.At(i - 1).Int() == firstBox &&
-                   NearBoxesBuffer.At(i).Int() == secondBox) ||
-                  (NearBoxesBuffer.At(i - 1).Int() == secondBox &&
-                   NearBoxesBuffer.At(i).Int() == firstBox)) {
-                EdgeNearBoxes.At(edge.Int()) = {
+              if ((NearBoxesBuffer.At(i - 1).Value() == firstBox && NearBoxesBuffer.At(i).Value() == secondBox) ||
+                  (NearBoxesBuffer.At(i - 1).Value() == secondBox && NearBoxesBuffer.At(i).Value() == firstBox)) {
+                EdgeNearBoxes.At(edge.Value()) = {
                     NearBoxesBuffer.begin() + (i - 1),
                     NearBoxesBuffer.begin() + (i + 1),
                 };
-                edgeProcessed.At(edge.Int()) = true;
+                edgeProcessed.At(edge.Value()) = true;
                 boxPairToIndex.At(minBox).At(maxBox) = i - 1;
                 found = true;
                 break;
@@ -202,30 +201,26 @@ class NearBoxesMapper {
           for (int idx = 0; idx < secondBoxIndicesSize; idx++) {
             int i = boxToIndices.At(secondBox).At(idx);
             if (i < nearBoxesBufferIndex - 1) {
-              if ((NearBoxesBuffer.At(i).Int() == firstBox &&
-                   NearBoxesBuffer.At(i + 1).Int() == secondBox) ||
-                  (NearBoxesBuffer.At(i).Int() == secondBox &&
-                   NearBoxesBuffer.At(i + 1).Int() == firstBox)) {
-                EdgeNearBoxes.At(edge.Int()) = {
+              if ((NearBoxesBuffer.At(i).Value() == firstBox && NearBoxesBuffer.At(i + 1).Value() == secondBox) ||
+                  (NearBoxesBuffer.At(i).Value() == secondBox && NearBoxesBuffer.At(i + 1).Value() == firstBox)) {
+                EdgeNearBoxes.At(edge.Value()) = {
                     NearBoxesBuffer.begin() + i,
                     NearBoxesBuffer.begin() + i + 2,
                 };
-                edgeProcessed.At(edge.Int()) = true;
+                edgeProcessed.At(edge.Value()) = true;
                 boxPairToIndex.At(minBox).At(maxBox) = i;
                 found = true;
                 break;
               }
             }
             if (i > 0 && i - 1 < nearBoxesBufferIndex - 1) {
-              if ((NearBoxesBuffer.At(i - 1).Int() == firstBox &&
-                   NearBoxesBuffer.At(i).Int() == secondBox) ||
-                  (NearBoxesBuffer.At(i - 1).Int() == secondBox &&
-                   NearBoxesBuffer.At(i).Int() == firstBox)) {
-                EdgeNearBoxes.At(edge.Int()) = {
+              if ((NearBoxesBuffer.At(i - 1).Value() == firstBox && NearBoxesBuffer.At(i).Value() == secondBox) ||
+                  (NearBoxesBuffer.At(i - 1).Value() == secondBox && NearBoxesBuffer.At(i).Value() == firstBox)) {
+                EdgeNearBoxes.At(edge.Value()) = {
                     NearBoxesBuffer.begin() + (i - 1),
                     NearBoxesBuffer.begin() + (i + 1),
                 };
-                edgeProcessed.At(edge.Int()) = true;
+                edgeProcessed.At(edge.Value()) = true;
                 boxPairToIndex.At(minBox).At(maxBox) = i - 1;
                 found = true;
                 break;
@@ -236,42 +231,40 @@ class NearBoxesMapper {
 
         if (!found) {
           for (int i = 0; i < nearBoxesBufferIndex - 1; i++) {
-            if ((NearBoxesBuffer.At(i).Int() == firstBox &&
-                 NearBoxesBuffer.At(i + 1).Int() == secondBox) ||
-                (NearBoxesBuffer.At(i).Int() == secondBox &&
-                 NearBoxesBuffer.At(i + 1).Int() == firstBox)) {
-              EdgeNearBoxes.At(edge.Int()) = {
+            if ((NearBoxesBuffer.At(i).Value() == firstBox && NearBoxesBuffer.At(i + 1).Value() == secondBox) ||
+                (NearBoxesBuffer.At(i).Value() == secondBox && NearBoxesBuffer.At(i + 1).Value() == firstBox)) {
+              EdgeNearBoxes.At(edge.Value()) = {
                   NearBoxesBuffer.begin() + i,
                   NearBoxesBuffer.begin() + i + 2,
               };
-              edgeProcessed.At(edge.Int()) = true;
+              edgeProcessed.At(edge.Value()) = true;
               boxPairToIndex.At(minBox).At(maxBox) = i;
               break;
             }
           }
         }
-      } else if (edgeNearBoxes.At(edge.Int()).Size() == 1) {
-        int box = edgeNearBoxes.At(edge.Int()).At(0).Int();
+      } else if (edgeNearBoxes.At(edge.Value()).Size() == 1) {
+        int box = edgeNearBoxes.At(edge.Value()).At(0).Value();
         int index = boxToIndices.At(box).At(0);
-        EdgeNearBoxes.At(edge.Int()) = {
+        EdgeNearBoxes.At(edge.Value()) = {
             NearBoxesBuffer.begin() + index,
             NearBoxesBuffer.begin() + index + 1,
         };
-        edgeProcessed.At(edge.Int()) = true;
+        edgeProcessed.At(edge.Value()) = true;
       }
     }
 
-    for (Edge<BoardSize> edge = 0; edge.Int() < Edge<BoardSize>::Max; ++edge) {
-      if (!edgeProcessed.At(edge.Int()) && edgeNearBoxes.At(edge.Int()).Size() == 2) {
-        int firstBox = edgeNearBoxes.At(edge.Int()).At(0).Int();
-        int secondBox = edgeNearBoxes.At(edge.Int()).At(1).Int();
+    for (Edge<BoardSize> edge = 0; edge.Value() < Edge<BoardSize>::Max; ++edge) {
+      if (!edgeProcessed.At(edge.Value()) && edgeNearBoxes.At(edge.Value()).Size() == 2) {
+        int firstBox = edgeNearBoxes.At(edge.Value()).At(0).Value();
+        int secondBox = edgeNearBoxes.At(edge.Value()).At(1).Value();
 
         int startIndex = nearBoxesBufferIndex;
         NearBoxesBuffer.At(nearBoxesBufferIndex++) = firstBox;
         NearBoxesBuffer.At(nearBoxesBufferIndex++) = secondBox;
         int endIndex = nearBoxesBufferIndex;
 
-        EdgeNearBoxes.At(edge.Int()) = {
+        EdgeNearBoxes.At(edge.Value()) = {
             NearBoxesBuffer.begin() + startIndex,
             NearBoxesBuffer.begin() + endIndex,
         };
@@ -281,9 +274,9 @@ class NearBoxesMapper {
     assert(CheckBoxNearBoxes());
   }
 
-  List<Box<BoardSize>, 2>
-  GetNearBoxes(Edge<BoardSize> edge) {
-    List<Box<BoardSize>, 2> result;
+  common::List<Box<BoardSize>, 2>
+  GetNearBoxes(const Edge<BoardSize> edge) {
+    common::List<Box<BoardSize>, 2> result;
 
     int x = edge.Dot2().X() - 1;
     int y = edge.Dot2().Y() - 1;
@@ -302,25 +295,25 @@ class NearBoxesMapper {
 
   bool
   CheckBoxNearBoxes() {
-    for (Edge<BoardSize> edge = 0; edge.Int() < Edge<BoardSize>::Max; ++edge) {
-      auto expectedNearBoxes = GetNearBoxes(edge);
-      if (EdgeNearBoxes.At(edge.Int()).Size() != expectedNearBoxes.Size()) {
+    for (Edge<BoardSize> edge = 0; edge.Value() < Edge<BoardSize>::Max; ++edge) {
+      common::List<Box<BoardSize>, 2> expectedNearBoxes = GetNearBoxes(edge);
+      if (EdgeNearBoxes.At(edge.Value()).Size() != expectedNearBoxes.Size()) {
         return false;
       }
 
-      if (EdgeNearBoxes.At(edge.Int()).Size() == 1) {
-        if (EdgeNearBoxes.At(edge.Int()).At(0).Int() != expectedNearBoxes.At(0).Int()) {
+      if (EdgeNearBoxes.At(edge.Value()).Size() == 1) {
+        if (EdgeNearBoxes.At(edge.Value()).At(0).Value() != expectedNearBoxes.At(0).Value()) {
           return false;
         }
       } else {
         bool isEqual = false;
-        if (EdgeNearBoxes.At(edge.Int()).At(0).Int() == expectedNearBoxes.At(0).Int() &&
-            EdgeNearBoxes.At(edge.Int()).At(1).Int() == expectedNearBoxes.At(1).Int()) {
+        if (EdgeNearBoxes.At(edge.Value()).At(0).Value() == expectedNearBoxes.At(0).Value() &&
+            EdgeNearBoxes.At(edge.Value()).At(1).Value() == expectedNearBoxes.At(1).Value()) {
           isEqual = true;
         }
 
-        if (EdgeNearBoxes.At(edge.Int()).At(0).Int() == expectedNearBoxes.At(1).Int() &&
-            EdgeNearBoxes.At(edge.Int()).At(1).Int() == expectedNearBoxes.At(0).Int()) {
+        if (EdgeNearBoxes.At(edge.Value()).At(0).Value() == expectedNearBoxes.At(1).Value() &&
+            EdgeNearBoxes.At(edge.Value()).At(1).Value() == expectedNearBoxes.At(0).Value()) {
           isEqual = true;
         }
 
@@ -335,18 +328,20 @@ class NearBoxesMapper {
 
   private:
   static constexpr int NearBoxesBufferSize = 4 * BoardSize * BoardSize - 8 * BoardSize + 3;
-  Array<Box<BoardSize>, NearBoxesBufferSize> NearBoxesBuffer;
+  common::Array<Box<BoardSize>, NearBoxesBufferSize> NearBoxesBuffer;
 
-  Array<Span<Box<BoardSize>>, Edge<BoardSize>::Max> EdgeNearBoxes;
+  common::Array<common::Span<Box<BoardSize>>, Edge<BoardSize>::Max> EdgeNearBoxes;
 
-  friend const Span<Box<BoardSize>>&
-  NearBoxes<BoardSize>(Edge<BoardSize> edge);
+  friend const common::Span<Box<BoardSize>>&
+  NearBoxes<BoardSize>(const Edge<BoardSize> edge);
 };
 
 template <int BoardSize>
-inline const Span<Box<BoardSize>>&
-NearBoxes(Edge<BoardSize> edge) {
+const common::Span<Box<BoardSize>>&
+NearBoxes(const Edge<BoardSize> edge) {
   static NearBoxesMapper<BoardSize> NearBoxesMapperInstance;
 
-  return NearBoxesMapperInstance.EdgeNearBoxes.At(edge.Int());
+  return NearBoxesMapperInstance.EdgeNearBoxes.At(edge.Value());
 }
+
+}  // namespace dab::model

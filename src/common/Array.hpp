@@ -5,6 +5,8 @@
 
 #include "Macro.hpp"
 
+namespace dab::common {
+
 template <class T, int Length>
 class Array {
   public:
@@ -17,13 +19,15 @@ class Array {
   }
 
   Array&
-  operator=(std::initializer_list<T> init) {
+  operator=(const std::initializer_list<T>& init) {
     std::memcpy(Data, init.begin(), Length * sizeof(T));
     return *this;
   }
 
-  I(Data, Data + Length, Length);
+  IterableObject(Data, Data + Length, Length);
 
   private:
   T Data[Length] = {};
 };
+
+}  // namespace dab::common
