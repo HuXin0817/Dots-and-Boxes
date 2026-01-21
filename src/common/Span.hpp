@@ -4,7 +4,7 @@
 
 namespace dab::common {
 
-template <class T>
+template <typename T>
 class Span {
   public:
   Span() = default;

@@ -8,7 +8,7 @@
 
 namespace dab::frontend::layer {
 
-template <int BoardSize, class Canvas>
+template <int BoardSize, typename Canvas>
 class EdgeLayer : public BaseCanvasLayer<BoardSize> {
   public:
   explicit EdgeLayer(QWidget* parent) : BaseCanvasLayer<BoardSize>(parent) {

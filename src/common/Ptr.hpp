@@ -4,7 +4,7 @@
 
 namespace dab::common {
 
-template <class T>
+template <typename T>
 class Ptr {
   public:
   Ptr() = default;
@@ -21,7 +21,7 @@ class Ptr {
   Ptr&
   operator=(Ptr&&) = delete;
 
-  template <class... Args>
+  template <typename... Args>
   void
   New(Args&&... args) {
     assert(Data == nullptr);

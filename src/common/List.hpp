@@ -6,7 +6,7 @@
 
 namespace dab::common {
 
-template <class T, int Cap>
+template <typename T, int Cap>
 class List {
   public:
   void

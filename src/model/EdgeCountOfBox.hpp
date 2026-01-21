@@ -1,7 +1,7 @@
 #pragma once
 
-#include <cassert>
 #include <algorithm>
+#include <cassert>
 
 #include "../common/Array.hpp"
 #include "NearBoxes.hpp"

@@ -5,7 +5,7 @@
 
 namespace dab::common {
 
-template <class T>
+template <typename T>
 const auto&
 RandomChoice(const T& data) {
   assert(!data.Empty());

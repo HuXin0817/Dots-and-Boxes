@@ -7,7 +7,7 @@
 
 namespace dab::common {
 
-template <class T, int Length>
+template <typename T, int Length>
 class Array {
   public:
   Array() = default;
