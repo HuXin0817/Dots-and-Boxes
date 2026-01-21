@@ -115,7 +115,7 @@ class MainWindow final : public layer::BaseCanvasLayer<BoardSize> {
             std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
         const double seconds = static_cast<double>(duration.count()) / 1000000.0;
 
-        qDebug("| Step %d | Player %d Move Edge(%d) | Score %d : %d | Time: %.2fs |",
+        qDebug("Info: {\"Step\":%d,\"Player\":%d,\"Move\":%d,\"Score\":{\"Player1\":%d,\"Player2\":%d},\"Time\":%.3f}",
                Board.GetEdgeCountableBoard().GetBasicBoard().GetStep().NowStep(),
                Board.GetScoreMap().GetTurn().Value() == model::Player1Turn.Value() ? 1 : 2,
                PlayerMoveEdge.Value(),
@@ -125,11 +125,11 @@ class MainWindow final : public layer::BaseCanvasLayer<BoardSize> {
       }
 
       if (Board.GetScoreMap().GetPlayer1Score() > Board.GetScoreMap().GetPlayer2Score()) {
-        qDebug("| Player 1 Win! |\n");
+        qDebug("Info: {\"Winner\":\"Player1\"}");
       } else if (Board.GetScoreMap().GetPlayer2Score() > Board.GetScoreMap().GetPlayer1Score()) {
-        qDebug("| Player 2 Win! |\n");
+        qDebug("Info: \"Winner\":\"Player2\"");
       } else {
-        qDebug("| Draw! |\n");
+        qDebug("Info: \"Winner\":\"Draw\"");
       }
 
       std::this_thread::sleep_for(std::chrono::seconds(2));
@@ -146,12 +146,12 @@ class MainWindow final : public layer::BaseCanvasLayer<BoardSize> {
   const PlayerType Player2Type;
   robot::ParallelSearchRobot<BoardSize> Robot;
   model::Edge<BoardSize> PlayerMoveEdge;
+  model::Edge<BoardSize> LastEdge;
   board::ScoreCountableBoard<BoardSize> Board;
   common::Ptr<layer::BoxCanvasLayer<BoardSize>> BoxCanvasLayer;
   common::Ptr<layer::EdgeCanvasLayer<BoardSize>> EdgeCanvasLayer;
   common::Ptr<layer::DotCanvasLayer<BoardSize>> DotCanvasLayer;
   common::Ptr<layer::EdgeButtonLayer<BoardSize>> EdgeButtonLayer;
-  model::Edge<BoardSize> LastEdge;
 
   void
   setPlayerMoveEdge(const model::Edge<BoardSize> edge) {
