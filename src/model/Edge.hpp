@@ -45,13 +45,6 @@ class Edge {
     return v & 1;
   }
 
-  explicit
-  operator std::string() const {
-    std::stringstream ss;
-    ss << std::string(Dot1()) << " -> " << std::string(Dot2());
-    return ss.str();
-  }
-
   IntValueObject(Edge<BoardSize>)
 };
 

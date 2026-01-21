@@ -33,7 +33,7 @@ class EdgeCountableBoard {
 
   model::Edge<BoardSize>
   FindScoreableEdge() const {
-    for (model::Box<BoardSize> box = 0; box.Value() < model::Box<BoardSize>::Max; ++box) {
+    for (const model::Box<BoardSize> box : model::ValueIterator<model::Box<BoardSize>>()) {
       if (EdgeCountOfBox.EdgeCount(box) == 3) {
         return FindNotContainsEdgeInBox(box);
       }

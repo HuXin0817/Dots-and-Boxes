@@ -7,6 +7,7 @@
 #include "../common/Span.hpp"
 #include "Edge.hpp"
 #include "Square.hpp"
+#include "ValueIterator.hpp"
 
 namespace dab::model {
 
@@ -19,7 +20,7 @@ class NearBoxesMapper {
   public:
   NearBoxesMapper() {
     int i = 0;
-    for (Edge<BoardSize> edge = 0; edge.Value() < Edge<BoardSize>::Max; ++edge) {
+    for (const Edge<BoardSize> edge : ValueIterator<Edge<BoardSize>>()) {
       const int begin = i;
       for (const Box<BoardSize> box : GetNearBoxes(edge)) {
         NearBoxesBuffer.At(i++) = box;

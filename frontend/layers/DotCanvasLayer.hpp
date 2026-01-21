@@ -5,6 +5,7 @@
 #include "../../src/common/Array.hpp"
 #include "../../src/common/Ptr.hpp"
 #include "../../src/model/Square.hpp"
+#include "../../src/model/ValueIterator.hpp"
 #include "../canvases/DotCanvas.hpp"
 #include "../canvases/EdgeCanvas.hpp"
 #include "BaseCanvasLayer.hpp"
@@ -16,7 +17,7 @@ class DotCanvasLayer final : public BaseCanvasLayer<BoardSize> {
   public:
   explicit DotCanvasLayer(QWidget* parent) : BaseCanvasLayer<BoardSize>(parent) {
     BaseCanvasLayer<BoardSize>::resize(BaseCanvasLayer<BoardSize>::WindowSize, BaseCanvasLayer<BoardSize>::WindowSize);
-    for (model::Dot<BoardSize> dot = 0; dot.Value() < model::Dot<BoardSize>::Max; ++dot) {
+    for (const model::Dot<BoardSize> dot : model::ValueIterator<model::Dot<BoardSize>>()) {
       DotCanvases.At(dot.Value()).New(this);
     }
   }

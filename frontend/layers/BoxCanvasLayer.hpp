@@ -3,6 +3,7 @@
 #include "../../src/common/Array.hpp"
 #include "../../src/common/Ptr.hpp"
 #include "../../src/model/Square.hpp"
+#include "../../src/model/ValueIterator.hpp"
 #include "../canvases/BoxCanvas.hpp"
 #include "../canvases/EdgeCanvas.hpp"
 #include "BaseCanvasLayer.hpp"
@@ -14,7 +15,7 @@ class BoxCanvasLayer final : public BaseCanvasLayer<BoardSize> {
   public:
   explicit BoxCanvasLayer(QWidget* parent) : BaseCanvasLayer<BoardSize>(parent) {
     BaseCanvasLayer<BoardSize>::resize(BaseCanvasLayer<BoardSize>::WindowSize, BaseCanvasLayer<BoardSize>::WindowSize);
-    for (model::Box<BoardSize> box = 0; box.Value() < model::Box<BoardSize>::Max; ++box) {
+    for (const model::Box<BoardSize> box : model::ValueIterator<model::Box<BoardSize>>()) {
       BoxCanvases.At(box.Value()).New(this);
     }
   }

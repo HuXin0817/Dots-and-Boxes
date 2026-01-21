@@ -16,7 +16,7 @@ class EdgeButtonLayer final : public EdgeLayer<BoardSize, canvas::EdgeButtonCanv
         EdgeLayer<BoardSize, canvas::EdgeButtonCanvas<BoardSize>>::WindowSize,
         EdgeLayer<BoardSize, canvas::EdgeButtonCanvas<BoardSize>>::WindowSize);
 
-    for (model::Edge<BoardSize> edge = 0; edge.Value() < model::Edge<BoardSize>::Max; ++edge) {
+    for (const model::Edge<BoardSize> edge : model::ValueIterator<model::Edge<BoardSize>>()) {
       EdgeLayer<BoardSize, canvas::EdgeButtonCanvas<BoardSize>>::At(edge).New(
           edge.Rotate(), callBackFactory(edge), this);
     }

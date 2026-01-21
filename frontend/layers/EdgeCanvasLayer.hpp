@@ -14,7 +14,7 @@ class EdgeCanvasLayer final : public EdgeLayer<BoardSize, canvas::EdgeCanvas<Boa
         EdgeLayer<BoardSize, canvas::EdgeCanvas<BoardSize>>::WindowSize,
         EdgeLayer<BoardSize, canvas::EdgeCanvas<BoardSize>>::WindowSize);
 
-    for (model::Edge<BoardSize> edge = 0; edge.Value() < model::Edge<BoardSize>::Max; ++edge) {
+    for (const model::Edge<BoardSize> edge : model::ValueIterator<model::Edge<BoardSize>>()) {
       EdgeLayer<BoardSize, canvas::EdgeCanvas<BoardSize>>::At(edge).New(edge.Rotate(), this);
     }
   }

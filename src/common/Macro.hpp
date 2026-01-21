@@ -10,10 +10,6 @@
   int Value() const {         \
     return v;                 \
   }                           \
-  Class& operator++() {       \
-    v++;                      \
-    return *this;             \
-  }                           \
                               \
   private:                    \
   int v = 0;

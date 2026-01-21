@@ -1,8 +1,5 @@
 #pragma once
 
-#include <sstream>
-#include <string>
-
 #include "../common/Macro.hpp"
 
 namespace dab::model {
@@ -20,12 +17,6 @@ public:                                               \
     constexpr int                                     \
     Y() const {                                       \
       return v % Size;                                \
-    }                                                 \
-    explicit                                          \
-    operator std::string() const {                    \
-      std::stringstream ss;                           \
-      ss << "(" << X() << ", " << Y() << ")";         \
-      return ss.str();                                \
     }                                                 \
     static constexpr int Size = SizeExpr;             \
     static constexpr int Max = Size * Size;           \

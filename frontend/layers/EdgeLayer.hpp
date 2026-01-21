@@ -3,6 +3,7 @@
 #include "../../src/common/Array.hpp"
 #include "../../src/common/Ptr.hpp"
 #include "../../src/model/Edge.hpp"
+#include "../../src/model/ValueIterator.hpp"
 #include "BaseCanvasLayer.hpp"
 
 namespace dab::frontend::layer {
@@ -28,7 +29,7 @@ class EdgeLayer : public BaseCanvasLayer<BoardSize> {
     const int y0 = (BaseCanvasLayer<BoardSize>::height() - BaseCanvasLayer<BoardSize>::BoardWidth) / 2 -
                    BaseCanvasLayer<BoardSize>::UnitSize;
 
-    for (model::Edge<BoardSize> edge = 0; edge.Value() < model::Edge<BoardSize>::Max; ++edge) {
+    for (const model::Edge<BoardSize> edge : model::ValueIterator<model::Edge<BoardSize>>()) {
       int x = x0 + edge.Dot1().X() * canvas::EdgeCanvas<BoardSize>::Height;
       int y = y0 + edge.Dot1().Y() * canvas::EdgeCanvas<BoardSize>::Height;
       if (edge.Dot1().X() == edge.Dot2().X()) {

@@ -1,9 +1,12 @@
 #pragma once
 
+#include <utility>
+
 #include "../common/Array.hpp"
 #include "../common/Span.hpp"
 #include "../model/Edge.hpp"
 #include "../model/Step.hpp"
+#include "../model/ValueIterator.hpp"
 
 namespace dab::board {
 
@@ -11,7 +14,7 @@ template <int BoardSize>
 class BasicBoard {
   public:
   BasicBoard() {
-    for (model::Edge<BoardSize> edge = 0; edge.Value() < model::Edge<BoardSize>::Max; ++edge) {
+    for (const model::Edge<BoardSize> edge : model::ValueIterator<model::Edge<BoardSize>>()) {
       EdgeIndexes.At(edge.Value()) = edge.Value();
       Edges.At(edge.Value()) = edge;
     }

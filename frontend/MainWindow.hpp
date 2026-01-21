@@ -115,10 +115,10 @@ class MainWindow final : public layer::BaseCanvasLayer<BoardSize> {
             std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
         const double seconds = static_cast<double>(duration.count()) / 1000000.0;
 
-        qDebug("| Step %d | Player %d Move %s | Score %d : %d | Time: %.2fs |",
+        qDebug("| Step %d | Player %d Move Edge(%d) | Score %d : %d | Time: %.2fs |",
                Board.GetEdgeCountableBoard().GetBasicBoard().GetStep().NowStep(),
                Board.GetScoreMap().GetTurn().Value() == model::Player1Turn.Value() ? 1 : 2,
-               std::string(PlayerMoveEdge).c_str(),
+               PlayerMoveEdge.Value(),
                Board.GetScoreMap().GetPlayer1Score(),
                Board.GetScoreMap().GetPlayer2Score(),
                seconds);
