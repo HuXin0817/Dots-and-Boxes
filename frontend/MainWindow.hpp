@@ -29,8 +29,8 @@ class MainWindow final : public layer::BaseCanvasLayer<BoardSize> {
     BoxCanvasLayer.New(this);
     EdgeCanvasLayer.New(this);
     DotCanvasLayer.New(this);
-    std::function<std::function<void()>(model::Edge<BoardSize>)> CallBackFactory =
-        [this](model::Edge<BoardSize> edge) -> std::function<void()> {
+    std::function<std::function<void()>(const model::Edge<BoardSize>)> CallBackFactory =
+        [this](const model::Edge<BoardSize> edge) -> std::function<void()> {
       return [edge, this]() -> void { setPlayerMoveEdge(edge); };
     };
     EdgeButtonLayer.New(CallBackFactory, this);
@@ -54,7 +54,7 @@ class MainWindow final : public layer::BaseCanvasLayer<BoardSize> {
 
     for (const model::Box<BoardSize> box : NearBoxes(edge)) {
       int count = 0;
-      for (model::Edge<BoardSize> nearEdge : NearEdges(box)) {
+      for (const model::Edge<BoardSize> nearEdge : NearEdges(box)) {
         if (Board.GetEdgeCountableBoard().GetBasicBoard().Contains(nearEdge)) {
           count++;
         }

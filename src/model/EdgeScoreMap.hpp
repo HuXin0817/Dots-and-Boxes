@@ -20,7 +20,7 @@ class EdgeScoreMap {
   }
 
   void
-  Add(Edge<BoardSize> edge, int score) {
+  Add(const Edge<BoardSize> edge, const int score) {
     ++Time.At(edge.Value());
     Score.At(edge.Value()) += score;
   }

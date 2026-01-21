@@ -9,7 +9,7 @@ namespace dab::frontend::layer {
 template <int BoardSize>
 class EdgeButtonLayer final : public EdgeLayer<BoardSize, canvas::EdgeButtonCanvas<BoardSize>> {
   public:
-  explicit EdgeButtonLayer(const std::function<std::function<void()>(model::Edge<BoardSize>)>& callBackFactory,
+  explicit EdgeButtonLayer(const std::function<std::function<void()>(const model::Edge<BoardSize>)>& callBackFactory,
                            QWidget* parent)
       : EdgeLayer<BoardSize, canvas::EdgeButtonCanvas<BoardSize>>(parent) {
     EdgeLayer<BoardSize, canvas::EdgeButtonCanvas<BoardSize>>::resize(

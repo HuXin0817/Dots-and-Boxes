@@ -20,11 +20,11 @@ class ImprovedSearchRobot final : public Robot<BoardSize> {
 
     SearchEdges.Clear();
     int maxScore = -model::Box<BoardSize>::Max;
-    for (model::Edge<BoardSize> emptyEdge : board.GetEdgeCountableBoard().GetBasicBoard().EmptyEdges()) {
+    for (const model::Edge<BoardSize> emptyEdge : board.GetEdgeCountableBoard().GetBasicBoard().EmptyEdges()) {
       SimulationBoard.Reset(board.GetEdgeCountableBoard());
       SimulationBoard.Add(emptyEdge);
       while (SimulationBoard.Gaming()) {
-        model::Edge<BoardSize> edge = SubRobot.BestCandidateEdges(SimulationBoard).At(0);
+        const model::Edge<BoardSize> edge = SubRobot.BestCandidateEdges(SimulationBoard).At(0);
         assert(board.GetEdgeCountableBoard().GetEdgeCountOfBox().MaxCount(edge.Value()) > 1);
         SimulationBoard.Add(edge);
       }

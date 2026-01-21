@@ -33,14 +33,14 @@ class ScoreableEdgeBoard {
     int score = 0;
     while (EdgeCountableBoard.GetBasicBoard().GetStep().Gaming()) {
       if (ScoreableEdges.Empty()) {
-        if (model::Edge<BoardSize> edge = EdgeCountableBoard.FindScoreableEdge();
+        if (const model::Edge<BoardSize> edge = EdgeCountableBoard.FindScoreableEdge();
             edge.Value() != model::InvalidEdge<BoardSize>().Value()) {
           ScoreableEdges.Append(edge);
         } else {
           break;
         }
       }
-      model::Edge<BoardSize> edge = ScoreableEdges.Pop();
+      const model::Edge<BoardSize> edge = ScoreableEdges.Pop();
       if (EdgeCountableBoard.GetBasicBoard().Contains(edge)) {
         continue;
       }
