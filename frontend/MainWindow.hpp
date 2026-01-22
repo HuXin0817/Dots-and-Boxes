@@ -106,7 +106,7 @@ class MainWindow final : public layer::BaseCanvasLayer<BoardSize, SizeType> {
 
         if ((Player1Type == PlayerType::Robot && Board.GetScoreMap().GetTurn().Value() == model::Player1Turn.Value()) ||
             (Player2Type == PlayerType::Robot && Board.GetScoreMap().GetTurn().Value() == model::Player2Turn.Value())) {
-          PlayerMoveEdge = common::RandomChoice<common::Span<model::Edge<BoardSize, SizeType>, int>, int>(
+          PlayerMoveEdge = common::RandomChoice<common::Span<model::Edge<BoardSize, SizeType>, SizeType>, SizeType>(
               Robot.BestCandidateEdges(Board));
         } else {
           PlayerMoveEdge = model::InvalidEdge<BoardSize, SizeType>();
@@ -121,13 +121,18 @@ class MainWindow final : public layer::BaseCanvasLayer<BoardSize, SizeType> {
             std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
         const double seconds = static_cast<double>(duration.count()) / 1000000.0;
 
-        qDebug("Info: {\"Step\":%d,\"Player\":%d,\"Move\":%d,\"Score\":{\"Player1\":%d,\"Player2\":%d},\"Time\":%.3f}",
-               Board.GetEdgeCountableBoard().GetBasicBoard().GetStep().NowStep(),
-               Board.GetScoreMap().GetTurn().Value() == model::Player1Turn.Value() ? 1 : 2,
-               PlayerMoveEdge.Value(),
-               Board.GetScoreMap().GetPlayer1Score(),
-               Board.GetScoreMap().GetPlayer2Score(),
-               seconds);
+        qDebug(
+            "%s",
+            QString(
+                "Info: {\"Step\":%1,\"Player\":%2,\"Move\":%3,\"Score\":{\"Player1\":%4,\"Player2\":%5},\"Time\":%6}")
+                .arg(Board.GetEdgeCountableBoard().GetBasicBoard().GetStep().NowStep())
+                .arg(Board.GetScoreMap().GetTurn().Value() == model::Player1Turn.Value() ? 1 : 2)
+                .arg(PlayerMoveEdge.Value())
+                .arg(Board.GetScoreMap().GetPlayer1Score())
+                .arg(Board.GetScoreMap().GetPlayer2Score())
+                .arg(seconds, 0, 'f', 3)
+                .toLocal8Bit()
+                .constData());
       }
 
       if (Board.GetScoreMap().GetPlayer1Score() > Board.GetScoreMap().GetPlayer2Score()) {

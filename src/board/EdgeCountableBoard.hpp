@@ -13,7 +13,7 @@ class EdgeCountableBoard {
   public:
   EdgeCountableBoard() = default;
 
-  int
+  SizeType
   Add(const model::Edge<BoardSize, SizeType> edge) {
     BasicBoard.Add(edge);
     return EdgeCountOfBox.Add(edge);
@@ -33,7 +33,8 @@ class EdgeCountableBoard {
 
   model::Edge<BoardSize, SizeType>
   FindScoreableEdge() const {
-    for (const model::Box<BoardSize, SizeType> box : model::ValueIterator<model::Box<BoardSize, SizeType>>()) {
+    for (const model::Box<BoardSize, SizeType> box :
+         model::ValueIterator<model::Box<BoardSize, SizeType>, SizeType>()) {
       if (EdgeCountOfBox.EdgeCount(box) == 3) {
         return FindNotContainsEdgeInBox(box);
       }

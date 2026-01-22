@@ -14,7 +14,8 @@ template <int BoardSize, typename SizeType>
 class BasicBoard {
   public:
   BasicBoard() {
-    for (const model::Edge<BoardSize, SizeType> edge : model::ValueIterator<model::Edge<BoardSize, SizeType>>()) {
+    for (const model::Edge<BoardSize, SizeType> edge :
+         model::ValueIterator<model::Edge<BoardSize, SizeType>, SizeType>()) {
       EdgeIndexes.At(edge.Value()) = edge.Value();
       Edges.At(edge.Value()) = edge;
     }
@@ -24,7 +25,7 @@ class BasicBoard {
   Add(const model::Edge<BoardSize, SizeType> edge) {
     assert(NotContains(edge));
     const model::Edge<BoardSize, SizeType> nowEdge = Edges.At(Step.NowStep());
-    const int edgeIndex = EdgeIndexes.At(edge.Value());
+    const SizeType edgeIndex = EdgeIndexes.At(edge.Value());
     std::swap(Edges.At(edgeIndex), Edges.At(Step.NowStep()));
     EdgeIndexes.At(edge.Value()) = Step.NowStep();
     EdgeIndexes.At(nowEdge.Value()) = edgeIndex;
@@ -41,12 +42,12 @@ class BasicBoard {
     return EdgeIndexes.At(edge.Value()) >= Step.NowStep();
   }
 
-  common::Span<model::Edge<BoardSize, SizeType>, int>
+  common::Span<model::Edge<BoardSize, SizeType>, SizeType>
   EmptyEdges() const {
     return {Edges.begin() + Step.NowStep(), Edges.begin() + model::Edge<BoardSize, SizeType>::Max};
   }
 
-  common::Span<model::Edge<BoardSize, SizeType>, int>
+  common::Span<model::Edge<BoardSize, SizeType>, SizeType>
   MoveRecord() const {
     return {Edges.begin(), Edges.begin() + Step.NowStep()};
   }
@@ -58,8 +59,8 @@ class BasicBoard {
 
   private:
   model::Step<BoardSize, SizeType> Step;
-  common::Array<model::Edge<BoardSize, SizeType>, model::Edge<BoardSize, SizeType>::Max, int> Edges;
-  common::Array<int, model::Edge<BoardSize, SizeType>::Max, int> EdgeIndexes;
+  common::Array<model::Edge<BoardSize, SizeType>, model::Edge<BoardSize, SizeType>::Max, SizeType> Edges;
+  common::Array<SizeType, model::Edge<BoardSize, SizeType>::Max, SizeType> EdgeIndexes;
 };
 
 }  // namespace dab::board

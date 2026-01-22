@@ -19,9 +19,9 @@ class MonteCarloSearchRobot final : public Robot<BoardSize, SizeType> {
   public:
   MonteCarloSearchRobot() = default;
 
-  common::Span<model::Edge<BoardSize, SizeType>, int>
+  common::Span<model::Edge<BoardSize, SizeType>, SizeType>
   BestCandidateEdges(const board::ScoreCountableBoard<BoardSize, SizeType>& board) override {
-    if (const common::Span<model::Edge<BoardSize, SizeType>, int> edges = SubRobot.BestCandidateEdges(board);
+    if (const common::Span<model::Edge<BoardSize, SizeType>, SizeType> edges = SubRobot.BestCandidateEdges(board);
         edges.Size() == 1) {
       return edges;
     }
@@ -31,11 +31,11 @@ class MonteCarloSearchRobot final : public Robot<BoardSize, SizeType> {
     while (times--) {
       SimulationBoard.Reset(board.GetEdgeCountableBoard());
       const model::Edge<BoardSize, SizeType> edge =
-          common::RandomChoice<common::Span<model::Edge<BoardSize, SizeType>, int>, int>(
+          common::RandomChoice<common::Span<model::Edge<BoardSize, SizeType>, SizeType>, SizeType>(
               SubRobot.BestCandidateEdges(SimulationBoard));
       SimulationBoard.Add(edge);
       while (SimulationBoard.Gaming()) {
-        SimulationBoard.Add(common::RandomChoice<common::Span<model::Edge<BoardSize, SizeType>, int>, int>(
+        SimulationBoard.Add(common::RandomChoice<common::Span<model::Edge<BoardSize, SizeType>, SizeType>, SizeType>(
             SubRobot.BestCandidateEdges(SimulationBoard)));
       }
       SearchResult.Add(edge, SimulationBoard.GetScoreMap().Score());

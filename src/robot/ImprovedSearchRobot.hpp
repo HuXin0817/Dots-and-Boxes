@@ -11,15 +11,15 @@ class ImprovedSearchRobot final : public Robot<BoardSize, SizeType> {
   public:
   ImprovedSearchRobot() = default;
 
-  common::Span<model::Edge<BoardSize, SizeType>, int>
+  common::Span<model::Edge<BoardSize, SizeType>, SizeType>
   BestCandidateEdges(const board::ScoreCountableBoard<BoardSize, SizeType>& board) override {
-    if (common::Span<model::Edge<BoardSize, SizeType>, int> edges = SubRobot.BestCandidateEdges(board);
+    if (common::Span<model::Edge<BoardSize, SizeType>, SizeType> edges = SubRobot.BestCandidateEdges(board);
         !SubRobot.SubRobot.EnemyUnscoreableEdges.Empty()) {
       return edges;
     }
 
     SearchEdges.Clear();
-    int maxScore = -model::Box<BoardSize, SizeType>::Max;
+    SizeType maxScore = -model::Box<BoardSize, SizeType>::Max;
     for (const model::Edge<BoardSize, SizeType> emptyEdge :
          board.GetEdgeCountableBoard().GetBasicBoard().EmptyEdges()) {
       SimulationBoard.Reset(board.GetEdgeCountableBoard());
@@ -29,7 +29,7 @@ class ImprovedSearchRobot final : public Robot<BoardSize, SizeType> {
         assert(board.GetEdgeCountableBoard().GetEdgeCountOfBox().MaxCount(edge.Value()) > 1);
         SimulationBoard.Add(edge);
       }
-      if (const int score = SimulationBoard.GetScoreMap().Score(); score > maxScore) {
+      if (const SizeType score = SimulationBoard.GetScoreMap().Score(); score > maxScore) {
         maxScore = score;
         SearchEdges.Reset(emptyEdge);
       } else if (score == maxScore) {
@@ -37,14 +37,15 @@ class ImprovedSearchRobot final : public Robot<BoardSize, SizeType> {
       }
     }
 
-    return common::Export<common::List<model::Edge<BoardSize, SizeType>, model::Edge<BoardSize, SizeType>::Max, int>,
-                          int>(SearchEdges);
+    return common::Export<
+        common::List<model::Edge<BoardSize, SizeType>, model::Edge<BoardSize, SizeType>::Max, SizeType>,
+        SizeType>(SearchEdges);
   }
 
   private:
   BasicSearchRobot<BoardSize, SizeType> SubRobot;
   board::ScoreCountableBoard<BoardSize, SizeType> SimulationBoard;
-  common::List<model::Edge<BoardSize, SizeType>, model::Edge<BoardSize, SizeType>::Max, int> SearchEdges;
+  common::List<model::Edge<BoardSize, SizeType>, model::Edge<BoardSize, SizeType>::Max, SizeType> SearchEdges;
 };
 
 }  // namespace dab::robot

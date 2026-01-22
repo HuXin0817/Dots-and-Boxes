@@ -7,7 +7,7 @@ namespace dab::model {
 template <int BoardSize, typename SizeType>
 class Edge {
   public:
-  static constexpr int Max = 2 * BoardSize * (BoardSize + 1);
+  static constexpr SizeType Max = 2 * BoardSize * (BoardSize + 1);
 
   Edge(const Dot<BoardSize, SizeType> dot1, const Dot<BoardSize, SizeType> dot2) {
     if (dot2.Value() - dot1.Value() == 1) {
@@ -22,7 +22,7 @@ class Edge {
 
   Dot<BoardSize, SizeType>
   Dot1() const {
-    int dot = v >> 1;
+    SizeType dot = v >> 1;
     if (v & 1) {
       dot += dot / BoardSize;
     }
@@ -31,7 +31,7 @@ class Edge {
 
   Dot<BoardSize, SizeType>
   Dot2() const {
-    int dot = v >> 1;
+    SizeType dot = v >> 1;
     if (v & 1) {
       dot += dot / BoardSize + 1;
     } else {

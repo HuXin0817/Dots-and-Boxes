@@ -17,9 +17,9 @@ class ScoreableEdgeBoard {
     ScoreableEdges.Clear();
   }
 
-  int
+  SizeType
   Add(const model::Edge<BoardSize, SizeType> edge) {
-    const int score = EdgeCountableBoard.Add(edge);
+    const SizeType score = EdgeCountableBoard.Add(edge);
     for (const model::Box<BoardSize, SizeType> box : NearBoxes(edge)) {
       if (EdgeCountableBoard.GetEdgeCountOfBox().EdgeCount(box) == 3) {
         ScoreableEdges.Append(EdgeCountableBoard.FindNotContainsEdgeInBox(box));
@@ -28,9 +28,9 @@ class ScoreableEdgeBoard {
     return score;
   }
 
-  int
-  MaxObtainableScore(const int minScore) {
-    int score = 0;
+  SizeType
+  MaxObtainableScore(const SizeType minScore) {
+    SizeType score = 0;
     while (EdgeCountableBoard.GetBasicBoard().GetStep().Gaming()) {
       if (ScoreableEdges.Empty()) {
         if (const model::Edge<BoardSize, SizeType> edge = EdgeCountableBoard.FindScoreableEdge();
@@ -44,7 +44,7 @@ class ScoreableEdgeBoard {
       if (EdgeCountableBoard.GetBasicBoard().Contains(edge)) {
         continue;
       }
-      const int addScore = Add(edge);
+      const SizeType addScore = Add(edge);
       assert(addScore > 0);
       score += addScore;
       if (score >= minScore) {
@@ -56,7 +56,7 @@ class ScoreableEdgeBoard {
 
   private:
   EdgeCountableBoard<BoardSize, SizeType> EdgeCountableBoard;
-  common::Queue<model::Edge<BoardSize, SizeType>, model::Edge<BoardSize, SizeType>::Max, int> ScoreableEdges;
+  common::Queue<model::Edge<BoardSize, SizeType>, model::Edge<BoardSize, SizeType>::Max, SizeType> ScoreableEdges;
 };
 
 }  // namespace dab::board

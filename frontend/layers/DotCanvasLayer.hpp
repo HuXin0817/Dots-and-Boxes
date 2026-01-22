@@ -18,7 +18,8 @@ class DotCanvasLayer final : public BaseCanvasLayer<BoardSize, SizeType> {
   explicit DotCanvasLayer(QWidget* parent) : BaseCanvasLayer<BoardSize, SizeType>(parent) {
     BaseCanvasLayer<BoardSize, SizeType>::resize(BaseCanvasLayer<BoardSize, SizeType>::WindowSize,
                                                  BaseCanvasLayer<BoardSize, SizeType>::WindowSize);
-    for (const model::Dot<BoardSize, SizeType> dot : model::ValueIterator<model::Dot<BoardSize, SizeType>>()) {
+    for (const model::Dot<BoardSize, SizeType> dot :
+         model::ValueIterator<model::Dot<BoardSize, SizeType>, SizeType>()) {
       DotCanvases.At(dot.Value()).New(this);
     }
   }
@@ -50,7 +51,7 @@ class DotCanvasLayer final : public BaseCanvasLayer<BoardSize, SizeType> {
   }
 
   private:
-  common::Array<common::Ptr<canvas::DotCanvas<BoardSize, SizeType>>, model::Dot<BoardSize, SizeType>::Max, int>
+  common::Array<common::Ptr<canvas::DotCanvas<BoardSize, SizeType>>, model::Dot<BoardSize, SizeType>::Max, SizeType>
       DotCanvases;
 };
 

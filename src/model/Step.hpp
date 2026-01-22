@@ -17,12 +17,12 @@ class Step {
     return v < Edge<BoardSize, SizeType>::Max;
   }
 
-  int
+  SizeType
   RemainStep() const {
     return Edge<BoardSize, SizeType>::Max - v;
   }
 
-  int
+  SizeType
   NowStep() const {
     return v;
   }
@@ -33,7 +33,7 @@ class Step {
   }
 
   private:
-  int v = 0;
+  SizeType v = 0;
 };
 
 }  // namespace dab::model

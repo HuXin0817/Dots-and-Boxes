@@ -31,7 +31,8 @@ class EdgeLayer : public BaseCanvasLayer<BoardSize, SizeType> {
         (BaseCanvasLayer<BoardSize, SizeType>::height() - BaseCanvasLayer<BoardSize, SizeType>::BoardWidth) / 2 -
         BaseCanvasLayer<BoardSize, SizeType>::UnitSize;
 
-    for (const model::Edge<BoardSize, SizeType> edge : model::ValueIterator<model::Edge<BoardSize, SizeType>>()) {
+    for (const model::Edge<BoardSize, SizeType> edge :
+         model::ValueIterator<model::Edge<BoardSize, SizeType>, SizeType>()) {
       int x = x0 + edge.Dot1().X() * canvas::EdgeCanvas<BoardSize, SizeType>::Height;
       int y = y0 + edge.Dot1().Y() * canvas::EdgeCanvas<BoardSize, SizeType>::Height;
       if (edge.Dot1().X() == edge.Dot2().X()) {
@@ -44,7 +45,7 @@ class EdgeLayer : public BaseCanvasLayer<BoardSize, SizeType> {
   }
 
   private:
-  common::Array<common::Ptr<Canvas>, model::Edge<BoardSize, SizeType>::Max, int> Canvases;
+  common::Array<common::Ptr<Canvas>, model::Edge<BoardSize, SizeType>::Max, SizeType> Canvases;
 };
 
 }  // namespace dab::frontend::layer

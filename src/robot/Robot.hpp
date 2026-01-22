@@ -11,7 +11,7 @@ class Robot {
   public:
   virtual ~Robot() = default;
 
-  virtual common::Span<model::Edge<BoardSize, SizeType>, int>
+  virtual common::Span<model::Edge<BoardSize, SizeType>, SizeType>
   BestCandidateEdges(const board::ScoreCountableBoard<BoardSize, SizeType>& board) = 0;
 };
 

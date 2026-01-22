@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 #include "../common/Array.hpp"
 #include "../common/List.hpp"
 #include "../common/Span.hpp"
@@ -21,23 +23,23 @@ class EdgeScoreMap {
   }
 
   void
-  Add(const Edge<BoardSize, SizeType> edge, const int score) {
+  Add(const Edge<BoardSize, SizeType> edge, const SizeType score) {
     ++Time.At(edge.Value());
     Score.At(edge.Value()) += score;
   }
 
   void
   Add(const EdgeScoreMap& other) {
-    for (int i = 0; i < Edge<BoardSize, SizeType>::Max; i++) {
+    for (SizeType i = 0; i < Edge<BoardSize, SizeType>::Max; i++) {
       Time.At(i) += other.Time.At(i);
       Score.At(i) += other.Score.At(i);
     }
   }
 
-  common::Span<Edge<BoardSize, SizeType>, int>
+  common::Span<Edge<BoardSize, SizeType>, SizeType>
   Export() {
     float maxScore = 0.0;
-    for (const Edge<BoardSize, SizeType> edge : ValueIterator<Edge<BoardSize, SizeType>>()) {
+    for (const Edge<BoardSize, SizeType> edge : ValueIterator<Edge<BoardSize, SizeType>, SizeType>()) {
       if (Time.At(edge.Value()) > 0) {
         if (float score = static_cast<float>(Score.At(edge.Value())) / static_cast<float>(Time.At(edge.Value()));
             score > maxScore || BestEdges.Empty()) {
@@ -48,13 +50,14 @@ class EdgeScoreMap {
         }
       }
     }
-    return common::Export<common::List<Edge<BoardSize, SizeType>, Edge<BoardSize, SizeType>::Max, int>, int>(BestEdges);
+    return common::Export<common::List<Edge<BoardSize, SizeType>, Edge<BoardSize, SizeType>::Max, SizeType>, SizeType>(
+        BestEdges);
   }
 
   private:
-  common::Array<int, Edge<BoardSize, SizeType>::Max, int> Time;
-  common::Array<int, Edge<BoardSize, SizeType>::Max, int> Score;
-  common::List<Edge<BoardSize, SizeType>, Edge<BoardSize, SizeType>::Max, int> BestEdges;
+  common::Array<int, Edge<BoardSize, SizeType>::Max, SizeType> Time;
+  common::Array<int, Edge<BoardSize, SizeType>::Max, SizeType> Score;
+  common::List<Edge<BoardSize, SizeType>, Edge<BoardSize, SizeType>::Max, SizeType> BestEdges;
 };
 
 }  // namespace dab::model

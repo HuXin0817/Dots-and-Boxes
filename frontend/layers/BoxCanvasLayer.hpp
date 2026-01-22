@@ -16,7 +16,8 @@ class BoxCanvasLayer final : public BaseCanvasLayer<BoardSize, SizeType> {
   explicit BoxCanvasLayer(QWidget* parent) : BaseCanvasLayer<BoardSize, SizeType>(parent) {
     BaseCanvasLayer<BoardSize, SizeType>::resize(BaseCanvasLayer<BoardSize, SizeType>::WindowSize,
                                                  BaseCanvasLayer<BoardSize, SizeType>::WindowSize);
-    for (const model::Box<BoardSize, SizeType> box : model::ValueIterator<model::Box<BoardSize, SizeType>>()) {
+    for (const model::Box<BoardSize, SizeType> box :
+         model::ValueIterator<model::Box<BoardSize, SizeType>, SizeType>()) {
       BoxCanvases.At(box.Value()).New(this);
     }
   }
@@ -48,7 +49,7 @@ class BoxCanvasLayer final : public BaseCanvasLayer<BoardSize, SizeType> {
   }
 
   private:
-  common::Array<common::Ptr<canvas::BoxCanvas<BoardSize, SizeType>>, model::Box<BoardSize, SizeType>::Max, int>
+  common::Array<common::Ptr<canvas::BoxCanvas<BoardSize, SizeType>>, model::Box<BoardSize, SizeType>::Max, SizeType>
       BoxCanvases;
 };
 

@@ -7,7 +7,7 @@ namespace dab::model {
 
 template <int BoardSize, typename SizeType>
 class ScoreMap {
-  static constexpr int MinWinnerScore = Box<BoardSize, SizeType>::Max / 2 + 1;
+  static constexpr SizeType MinWinnerScore = Box<BoardSize, SizeType>::Max / 2 + 1;
 
   public:
   ScoreMap() {
@@ -22,7 +22,7 @@ class ScoreMap {
   }
 
   void
-  Add(const int score) {
+  Add(const SizeType score) {
     if (score == 0) {
       Turn.Change();
       return;
@@ -34,14 +34,9 @@ class ScoreMap {
     }
   }
 
-  int
+  SizeType
   Score() const {
     return Player1Score - Player2Score;
-  }
-
-  int
-  GetScore(const int player) const {
-    return player == 0 ? Player1Score : Player2Score;
   }
 
   bool
@@ -49,12 +44,12 @@ class ScoreMap {
     return Player1Score < MinWinnerScore && Player2Score < MinWinnerScore;
   }
 
-  int
+  SizeType
   GetPlayer1Score() const {
     return Player1Score;
   }
 
-  int
+  SizeType
   GetPlayer2Score() const {
     return Player2Score;
   }
@@ -65,8 +60,8 @@ class ScoreMap {
   }
 
   private:
-  int Player1Score = 0;
-  int Player2Score = 0;
+  SizeType Player1Score = 0;
+  SizeType Player2Score = 0;
   PlayerTurn Turn = Player1Turn;
 };
 

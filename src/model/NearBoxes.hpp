@@ -11,28 +11,28 @@
 namespace dab::model {
 
 template <int BoardSize, typename SizeType>
-const common::List<Box<BoardSize, SizeType>, 2, int>&
+const common::List<Box<BoardSize, SizeType>, 2, SizeType>&
 NearBoxes(const Edge<BoardSize, SizeType> edge);
 
 template <int BoardSize, typename SizeType>
 class NearBoxesMapper {
   public:
   NearBoxesMapper() {
-    int i = 0;
-    for (const Edge<BoardSize, SizeType> edge : ValueIterator<Edge<BoardSize, SizeType>>()) {
+    for (const Edge<BoardSize, SizeType> edge : ValueIterator<Edge<BoardSize, SizeType>, SizeType>()) {
       EdgeNearBoxes.At(edge.Value()) = GetNearBoxes(edge);
     }
   }
 
   private:
-  common::Array<common::List<Box<BoardSize, SizeType>, 2, int>, Edge<BoardSize, SizeType>::Max, int> EdgeNearBoxes;
+  common::Array<common::List<Box<BoardSize, SizeType>, 2, SizeType>, Edge<BoardSize, SizeType>::Max, SizeType>
+      EdgeNearBoxes;
 
-  static common::List<Box<BoardSize, SizeType>, 2, int>
+  static common::List<Box<BoardSize, SizeType>, 2, SizeType>
   GetNearBoxes(const Edge<BoardSize, SizeType> edge) {
-    common::List<Box<BoardSize, SizeType>, 2, int> result;
+    common::List<Box<BoardSize, SizeType>, 2, SizeType> result;
 
-    int x = edge.Dot2().X() - 1;
-    int y = edge.Dot2().Y() - 1;
+    SizeType x = edge.Dot2().X() - 1;
+    SizeType y = edge.Dot2().Y() - 1;
     if (x >= 0 && y >= 0) {
       result.Append(Box<BoardSize, SizeType>(x, y));
     }
@@ -46,12 +46,12 @@ class NearBoxesMapper {
     return result;
   }
 
-  friend const common::List<Box<BoardSize, SizeType>, 2, int>&
+  friend const common::List<Box<BoardSize, SizeType>, 2, SizeType>&
   NearBoxes<BoardSize, SizeType>(const Edge<BoardSize, SizeType> edge);
 };
 
 template <int BoardSize, typename SizeType>
-const common::List<Box<BoardSize, SizeType>, 2, int>&
+const common::List<Box<BoardSize, SizeType>, 2, SizeType>&
 NearBoxes(const Edge<BoardSize, SizeType> edge) {
   static NearBoxesMapper<BoardSize, SizeType> NearBoxesMapperInstance;
 

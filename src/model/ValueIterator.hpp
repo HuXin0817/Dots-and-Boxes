@@ -2,10 +2,10 @@
 
 namespace dab::model {
 
-template <typename Model>
+template <typename Model, typename SizeType>
 class ValueIterator {
   struct iterator {
-    iterator(int v) : v(v) {
+    iterator(SizeType v) : v(v) {
     }
     Model
     operator*() {
@@ -21,7 +21,7 @@ class ValueIterator {
       return v != o.v;
     }
 
-    int v;
+    SizeType v;
   };
 
   public:

@@ -21,15 +21,15 @@ class SimpleStrategyRobot final : public Robot<BoardSize, SizeType> {
   public:
   SimpleStrategyRobot() = default;
 
-  common::Span<model::Edge<BoardSize, SizeType>, int>
+  common::Span<model::Edge<BoardSize, SizeType>, SizeType>
   BestCandidateEdges(const board::ScoreCountableBoard<BoardSize, SizeType>& board) override {
     EnemyUnscoreableEdges.Clear();
     ScoreableEdges.Clear();
-    const common::Span<model::Edge<BoardSize, SizeType>, int> emptyEdges =
+    const common::Span<model::Edge<BoardSize, SizeType>, SizeType> emptyEdges =
         board.GetEdgeCountableBoard().GetBasicBoard().EmptyEdges();
 
     for (const model::Edge<BoardSize, SizeType> edge : emptyEdges) {
-      if (const int maxCount = board.GetEdgeCountableBoard().GetEdgeCountOfBox().MaxCount(edge); maxCount == 3) {
+      if (const SizeType maxCount = board.GetEdgeCountableBoard().GetEdgeCountOfBox().MaxCount(edge); maxCount == 3) {
         ScoreableEdges.Append(edge);
       } else if (maxCount < 2) {
         EnemyUnscoreableEdges.Append(edge);
@@ -37,20 +37,22 @@ class SimpleStrategyRobot final : public Robot<BoardSize, SizeType> {
     }
 
     if (!ScoreableEdges.Empty()) {
-      return common::Export<common::List<model::Edge<BoardSize, SizeType>, model::Edge<BoardSize, SizeType>::Max, int>,
-                            int>(ScoreableEdges);
+      return common::Export<
+          common::List<model::Edge<BoardSize, SizeType>, model::Edge<BoardSize, SizeType>::Max, SizeType>,
+          SizeType>(ScoreableEdges);
     }
     if (!EnemyUnscoreableEdges.Empty()) {
-      return common::Export<common::List<model::Edge<BoardSize, SizeType>, model::Edge<BoardSize, SizeType>::Max, int>,
-                            int>(EnemyUnscoreableEdges);
+      return common::Export<
+          common::List<model::Edge<BoardSize, SizeType>, model::Edge<BoardSize, SizeType>::Max, SizeType>,
+          SizeType>(EnemyUnscoreableEdges);
     }
 
     return {emptyEdges.begin(), emptyEdges.end()};
   }
 
   private:
-  common::List<model::Edge<BoardSize, SizeType>, model::Edge<BoardSize, SizeType>::Max, int> EnemyUnscoreableEdges;
-  common::List<model::Edge<BoardSize, SizeType>, model::Edge<BoardSize, SizeType>::Max, int> ScoreableEdges;
+  common::List<model::Edge<BoardSize, SizeType>, model::Edge<BoardSize, SizeType>::Max, SizeType> EnemyUnscoreableEdges;
+  common::List<model::Edge<BoardSize, SizeType>, model::Edge<BoardSize, SizeType>::Max, SizeType> ScoreableEdges;
 };
 
 }  // namespace dab::robot

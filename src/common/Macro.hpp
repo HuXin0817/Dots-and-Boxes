@@ -5,14 +5,14 @@
 #define IntValueObject(Class) \
   public:                     \
   Class() = default;          \
-  Class(int v) : v(v) {       \
+  Class(SizeType v) : v(v) {  \
   }                           \
-  int Value() const {         \
+  SizeType Value() const {    \
     return v;                 \
   }                           \
                               \
   private:                    \
-  int v = 0;
+  SizeType v = 0;
 
 #define IterableObject(_Begin, _End, _Size) \
   public:                                   \

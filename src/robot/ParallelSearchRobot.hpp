@@ -12,9 +12,9 @@ class ParallelSearchRobot final : public Robot<BoardSize, SizeType> {
   public:
   ParallelSearchRobot() = default;
 
-  common::Span<model::Edge<BoardSize, SizeType>, int>
+  common::Span<model::Edge<BoardSize, SizeType>, SizeType>
   BestCandidateEdges(const board::ScoreCountableBoard<BoardSize, SizeType>& board) override {
-    if (const common::Span<model::Edge<BoardSize, SizeType>, int> edges =
+    if (const common::Span<model::Edge<BoardSize, SizeType>, SizeType> edges =
             SubRobots.At(0).SubRobot.BestCandidateEdges(board);
         edges.Size() == 1) {
       return edges;
