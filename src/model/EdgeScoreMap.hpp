@@ -46,7 +46,7 @@ class EdgeScoreMap {
         }
       }
     }
-    return Export<List<Edge<BoardSize, SizeType>, Edge<BoardSize, SizeType>::Max, SizeType>, SizeType>(BestEdges);
+    return ::Export<List<Edge<BoardSize, SizeType>, Edge<BoardSize, SizeType>::Max, SizeType>, SizeType>(BestEdges);
   }
 
   private:
