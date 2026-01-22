@@ -7,11 +7,13 @@ namespace dab::frontend::canvas {
 
 template <int BoardSize, typename SizeType>
 class BoxCanvas final : public BaseCanvas<BoardSize, SizeType> {
-  public:
-  static constexpr int Width = EdgeCanvas<BoardSize, SizeType>::Height - 2 * BaseCanvas<BoardSize, SizeType>::UnitSize;
+  using Base = BaseCanvas<BoardSize, SizeType>;
 
-  explicit BoxCanvas(QWidget* parent) : BaseCanvas<BoardSize, SizeType>(parent) {
-    BaseCanvas<BoardSize, SizeType>::resize(QSize(Width, Width));
+  public:
+  static constexpr int Width = EdgeCanvas<BoardSize, SizeType>::Height - 2 * Base::UnitSize;
+
+  explicit BoxCanvas(QWidget* parent) : Base(parent) {
+    Base::resize(QSize(Width, Width));
   }
 
   QColor
@@ -19,10 +21,10 @@ class BoxCanvas final : public BaseCanvas<BoardSize, SizeType> {
     static QColor Player1OccupyColor = {64, 64, 255, 64};
     static QColor Player2OccupyColor = {255, 64, 64, 64};
 
-    if (BaseCanvas<BoardSize, SizeType>::State == BaseCanvas<BoardSize, SizeType>::State::Player1Occupy) {
+    if (Base::State == Base::State::Player1Occupy) {
       return Player1OccupyColor;
     }
-    if (BaseCanvas<BoardSize, SizeType>::State == BaseCanvas<BoardSize, SizeType>::State::Player2Occupy) {
+    if (Base::State == Base::State::Player2Occupy) {
       return Player2OccupyColor;
     }
     return {0, 0, 0, 0};
@@ -31,15 +33,15 @@ class BoxCanvas final : public BaseCanvas<BoardSize, SizeType> {
   protected:
   void
   paintEvent(QPaintEvent* event) override {
-    BaseCanvas<BoardSize, SizeType>::paintEvent(event);
+    Base::paintEvent(event);
 
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setPen(Qt::NoPen);
     painter.setBrush(QBrush(Color()));
 
-    const int x = BaseCanvas<BoardSize, SizeType>::width() / 2 - Width / 2;
-    const int y = BaseCanvas<BoardSize, SizeType>::height() / 2 - Width / 2;
+    const int x = Base::width() / 2 - Width / 2;
+    const int y = Base::height() / 2 - Width / 2;
 
     painter.drawRect(x, y, Width, Width);
   }

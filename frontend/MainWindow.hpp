@@ -11,14 +11,13 @@ namespace dab::frontend {
 
 template <int BoardSize, typename SizeType>
 class MainWindow final : public layer::BaseCanvasLayer<BoardSize, SizeType> {
+  using Base = layer::BaseCanvasLayer<BoardSize, SizeType>;
+
   public:
   explicit MainWindow(const PlayerType player1Type, const PlayerType player2Type, QWidget* parent = nullptr)
-      : layer::BaseCanvasLayer<BoardSize, SizeType>(parent), Player1Type(player1Type), Player2Type(player2Type) {
-    layer::BaseCanvasLayer<BoardSize, SizeType>::resize(layer::BaseCanvasLayer<BoardSize, SizeType>::WindowSize,
-                                                        layer::BaseCanvasLayer<BoardSize, SizeType>::WindowSize);
-    layer::BaseCanvasLayer<BoardSize, SizeType>::setMinimumSize(
-        layer::BaseCanvasLayer<BoardSize, SizeType>::WindowSize,
-        layer::BaseCanvasLayer<BoardSize, SizeType>::WindowSize);
+      : Base(parent), Player1Type(player1Type), Player2Type(player2Type) {
+    Base::resize(Base::WindowSize, Base::WindowSize);
+    Base::setMinimumSize(Base::WindowSize, Base::WindowSize);
 
     BoxCanvasLayer.New(this);
     EdgeCanvasLayer.New(this);
@@ -35,7 +34,7 @@ class MainWindow final : public layer::BaseCanvasLayer<BoardSize, SizeType> {
     static QColor DarkThemeColor = {43, 43, 43, 255};
     static QColor LightThemeColor = {242, 242, 242, 255};
 
-    return layer::BaseCanvasLayer<BoardSize, SizeType>::isDarkTheme() ? DarkThemeColor : LightThemeColor;
+    return Base::isDarkTheme() ? DarkThemeColor : LightThemeColor;
   }
 
   void
@@ -60,29 +59,25 @@ class MainWindow final : public layer::BaseCanvasLayer<BoardSize, SizeType> {
 
     Board.Add(edge);
     LastEdge = edge;
-    layer::BaseCanvasLayer<BoardSize, SizeType>::update();
+    Base::update();
     QApplication::beep();
   }
 
   protected:
   void
   paintEvent(QPaintEvent* event) override {
-    layer::BaseCanvasLayer<BoardSize, SizeType>::paintEvent(event);
+    Base::paintEvent(event);
 
     QPainter painter(this);
-    painter.fillRect(layer::BaseCanvasLayer<BoardSize, SizeType>::rect(), Color());
+    painter.fillRect(Base::rect(), Color());
   }
 
   void
   resizeEvent(QResizeEvent* event) override {
-    layer::BaseCanvasLayer<BoardSize, SizeType>::resizeEvent(event);
+    Base::resizeEvent(event);
 
-    const int x = (layer::BaseCanvasLayer<BoardSize, SizeType>::width() -
-                   layer::BaseCanvasLayer<BoardSize, SizeType>::WindowSize) /
-                  2;
-    const int y = (layer::BaseCanvasLayer<BoardSize, SizeType>::height() -
-                   layer::BaseCanvasLayer<BoardSize, SizeType>::WindowSize) /
-                  2;
+    const int x = (Base::width() - Base::WindowSize) / 2;
+    const int y = (Base::height() - Base::WindowSize) / 2;
 
     BoxCanvasLayer->move(x, y);
     EdgeCanvasLayer->move(x, y);
@@ -91,7 +86,7 @@ class MainWindow final : public layer::BaseCanvasLayer<BoardSize, SizeType> {
 
   void
   showEvent(QShowEvent* event) override {
-    layer::BaseCanvasLayer<BoardSize, SizeType>::showEvent(event);
+    Base::showEvent(event);
 
     QThreadPool::globalInstance()->start([this] {
       while (Board.GetEdgeCountableBoard().GetBasicBoard().GetStep().Gaming()) {
@@ -134,10 +129,10 @@ class MainWindow final : public layer::BaseCanvasLayer<BoardSize, SizeType> {
 
       QThread::sleep(2);
       EdgeCanvasLayer->At(LastEdge)->SetHighLight(false);
-      layer::BaseCanvasLayer<BoardSize, SizeType>::update();
+      Base::update();
 
       QThread::sleep(2);
-      layer::BaseCanvasLayer<BoardSize, SizeType>::close();
+      Base::close();
     });
   }
 

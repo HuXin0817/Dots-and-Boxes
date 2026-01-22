@@ -12,10 +12,11 @@ namespace dab::frontend::layer {
 
 template <int BoardSize, typename SizeType>
 class BoxCanvasLayer final : public BaseCanvasLayer<BoardSize, SizeType> {
+  using Base = BaseCanvasLayer<BoardSize, SizeType>;
+
   public:
-  explicit BoxCanvasLayer(QWidget* parent) : BaseCanvasLayer<BoardSize, SizeType>(parent) {
-    BaseCanvasLayer<BoardSize, SizeType>::resize(BaseCanvasLayer<BoardSize, SizeType>::WindowSize,
-                                                 BaseCanvasLayer<BoardSize, SizeType>::WindowSize);
+  explicit BoxCanvasLayer(QWidget* parent) : Base(parent) {
+    Base::resize(Base::WindowSize, Base::WindowSize);
     for (const model::Box<BoardSize, SizeType> box :
          model::ValueIterator<model::Box<BoardSize, SizeType>, SizeType>()) {
       BoxCanvases.At(box.Value()).New(this);
@@ -30,14 +31,10 @@ class BoxCanvasLayer final : public BaseCanvasLayer<BoardSize, SizeType> {
   protected:
   void
   resizeEvent(QResizeEvent* event) override {
-    BaseCanvasLayer<BoardSize, SizeType>::resizeEvent(event);
+    Base::resizeEvent(event);
 
-    const int x0 =
-        (BaseCanvasLayer<BoardSize, SizeType>::width() - BaseCanvasLayer<BoardSize, SizeType>::BoardWidth) / 2 +
-        BaseCanvasLayer<BoardSize, SizeType>::UnitSize;
-    const int y0 =
-        (BaseCanvasLayer<BoardSize, SizeType>::height() - BaseCanvasLayer<BoardSize, SizeType>::BoardWidth) / 2 +
-        BaseCanvasLayer<BoardSize, SizeType>::UnitSize;
+    const int x0 = (Base::width() - Base::BoardWidth) / 2 + Base::UnitSize;
+    const int y0 = (Base::height() - Base::BoardWidth) / 2 + Base::UnitSize;
 
     for (int i = 0; i < model::Box<BoardSize, SizeType>::Size; i++) {
       for (int j = 0; j < model::Box<BoardSize, SizeType>::Size; j++) {

@@ -8,16 +8,15 @@ namespace dab::frontend::layer {
 
 template <int BoardSize, typename SizeType>
 class EdgeCanvasLayer final : public EdgeLayer<BoardSize, SizeType, canvas::EdgeCanvas<BoardSize, SizeType>> {
+  using Base = EdgeLayer<BoardSize, SizeType, canvas::EdgeCanvas<BoardSize, SizeType>>;
+
   public:
-  explicit EdgeCanvasLayer(QWidget* parent)
-      : EdgeLayer<BoardSize, SizeType, canvas::EdgeCanvas<BoardSize, SizeType>>(parent) {
-    EdgeLayer<BoardSize, SizeType, canvas::EdgeCanvas<BoardSize, SizeType>>::resize(
-        EdgeLayer<BoardSize, SizeType, canvas::EdgeCanvas<BoardSize, SizeType>>::WindowSize,
-        EdgeLayer<BoardSize, SizeType, canvas::EdgeCanvas<BoardSize, SizeType>>::WindowSize);
+  explicit EdgeCanvasLayer(QWidget* parent) : Base(parent) {
+    Base::resize(Base::WindowSize, Base::WindowSize);
 
     for (const model::Edge<BoardSize, SizeType> edge :
          model::ValueIterator<model::Edge<BoardSize, SizeType>, SizeType>()) {
-      EdgeLayer<BoardSize, SizeType, canvas::EdgeCanvas<BoardSize, SizeType>>::At(edge).New(edge.Rotate(), this);
+      Base::At(edge).New(edge.Rotate(), this);
     }
   }
 };

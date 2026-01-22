@@ -6,9 +6,11 @@ namespace dab::frontend::canvas {
 
 template <int BoardSize, typename SizeType>
 class EdgeButtonCanvas final : public BaseEdgeCanvas<BoardSize, SizeType> {
+  using Base = BaseEdgeCanvas<BoardSize, SizeType>;
+
   public:
   explicit EdgeButtonCanvas(const bool rotate, std::function<void()> callBack, QWidget* parent)
-      : BaseEdgeCanvas<BoardSize, SizeType>(rotate, parent), CallBack(std::move(callBack)) {
+      : Base(rotate, parent), CallBack(std::move(callBack)) {
   }
 
   protected:

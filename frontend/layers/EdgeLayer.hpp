@@ -10,8 +10,10 @@ namespace dab::frontend::layer {
 
 template <int BoardSize, typename SizeType, typename Canvas>
 class EdgeLayer : public BaseCanvasLayer<BoardSize, SizeType> {
+  using Base = BaseCanvasLayer<BoardSize, SizeType>;
+
   public:
-  explicit EdgeLayer(QWidget* parent) : BaseCanvasLayer<BoardSize, SizeType>(parent) {
+  explicit EdgeLayer(QWidget* parent) : Base(parent) {
   }
 
   common::Ptr<Canvas>&
@@ -22,23 +24,19 @@ class EdgeLayer : public BaseCanvasLayer<BoardSize, SizeType> {
   protected:
   void
   resizeEvent(QResizeEvent* event) override {
-    BaseCanvasLayer<BoardSize, SizeType>::resizeEvent(event);
+    Base::resizeEvent(event);
 
-    const int x0 =
-        (BaseCanvasLayer<BoardSize, SizeType>::width() - BaseCanvasLayer<BoardSize, SizeType>::BoardWidth) / 2 -
-        BaseCanvasLayer<BoardSize, SizeType>::UnitSize;
-    const int y0 =
-        (BaseCanvasLayer<BoardSize, SizeType>::height() - BaseCanvasLayer<BoardSize, SizeType>::BoardWidth) / 2 -
-        BaseCanvasLayer<BoardSize, SizeType>::UnitSize;
+    const int x0 = (Base::width() - Base::BoardWidth) / 2 - Base::UnitSize;
+    const int y0 = (Base::height() - Base::BoardWidth) / 2 - Base::UnitSize;
 
     for (const model::Edge<BoardSize, SizeType> edge :
          model::ValueIterator<model::Edge<BoardSize, SizeType>, SizeType>()) {
       int x = x0 + edge.Dot1().X() * canvas::EdgeCanvas<BoardSize, SizeType>::Height;
       int y = y0 + edge.Dot1().Y() * canvas::EdgeCanvas<BoardSize, SizeType>::Height;
       if (edge.Dot1().X() == edge.Dot2().X()) {
-        y += BaseCanvasLayer<BoardSize, SizeType>::UnitSize;
+        y += Base::UnitSize;
       } else {
-        x += BaseCanvasLayer<BoardSize, SizeType>::UnitSize;
+        x += Base::UnitSize;
       }
       Canvases.At(edge.Value())->move(x, y);
     }

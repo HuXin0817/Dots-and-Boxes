@@ -7,8 +7,10 @@ namespace dab::frontend::canvas {
 
 template <int BoardSize, typename SizeType>
 class EdgeCanvas final : public BaseEdgeCanvas<BoardSize, SizeType> {
+  using Base = BaseEdgeCanvas<BoardSize, SizeType>;
+
   public:
-  explicit EdgeCanvas(const bool rotate, QWidget* parent) : BaseEdgeCanvas<BoardSize, SizeType>(rotate, parent) {
+  explicit EdgeCanvas(const bool rotate, QWidget* parent) : Base(rotate, parent) {
   }
 
   QColor
@@ -18,14 +20,14 @@ class EdgeCanvas final : public BaseEdgeCanvas<BoardSize, SizeType> {
     static QColor Player1OccupyColor = {64, 64, 255, 255};
     static QColor Player2OccupyColor = {255, 64, 64, 255};
 
-    if (BaseCanvas<BoardSize, SizeType>::State == BaseEdgeCanvas<BoardSize, SizeType>::State::Free) {
-      return BaseEdgeCanvas<BoardSize, SizeType>::isDarkTheme() ? DarkThemeColor : LightThemeColor;
+    if (BaseCanvas<BoardSize, SizeType>::State == Base::State::Free) {
+      return Base::isDarkTheme() ? DarkThemeColor : LightThemeColor;
     }
 
     QColor color;
-    if (BaseCanvas<BoardSize, SizeType>::State == BaseEdgeCanvas<BoardSize, SizeType>::State::Player1Occupy) {
+    if (BaseCanvas<BoardSize, SizeType>::State == Base::State::Player1Occupy) {
       color = Player1OccupyColor;
-    } else if (BaseCanvas<BoardSize, SizeType>::State == BaseEdgeCanvas<BoardSize, SizeType>::State::Player2Occupy) {
+    } else if (BaseCanvas<BoardSize, SizeType>::State == Base::State::Player2Occupy) {
       color = Player2OccupyColor;
     }
 
@@ -46,18 +48,17 @@ class EdgeCanvas final : public BaseEdgeCanvas<BoardSize, SizeType> {
   protected:
   void
   paintEvent(QPaintEvent* event) override {
-    BaseEdgeCanvas<BoardSize, SizeType>::paintEvent(event);
+    Base::paintEvent(event);
 
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setPen(Qt::NoPen);
     painter.setBrush(QBrush(Color()));
 
-    painter.drawRect(
-        BaseEdgeCanvas<BoardSize, SizeType>::width() / 2 - BaseEdgeCanvas<BoardSize, SizeType>::RotateWidth() / 2,
-        BaseEdgeCanvas<BoardSize, SizeType>::height() / 2 - BaseEdgeCanvas<BoardSize, SizeType>::RotateHeight() / 2,
-        BaseEdgeCanvas<BoardSize, SizeType>::RotateWidth(),
-        BaseEdgeCanvas<BoardSize, SizeType>::RotateHeight());
+    painter.drawRect(Base::width() / 2 - Base::RotateWidth() / 2,
+                     Base::height() / 2 - Base::RotateHeight() / 2,
+                     Base::RotateWidth(),
+                     Base::RotateHeight());
   }
 
   private:
