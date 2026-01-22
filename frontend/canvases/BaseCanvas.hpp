@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QApplication>
-#include <QColor>
 #include <QWidget>
 
 #include "../../src/model/Turn.hpp"

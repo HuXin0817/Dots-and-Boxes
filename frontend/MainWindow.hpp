@@ -1,11 +1,8 @@
 #pragma once
 
-#include <QApplication>
-#include <QColor>
-#include <QTimer>
-#include <chrono>
+#include <QThreadPool>
+#include <QTime>
 #include <functional>
-#include <thread>
 
 #include "../src/robot/ParallelSearchRobot.hpp"
 #include "PlayerConfig.hpp"
@@ -100,9 +97,9 @@ class MainWindow final : public layer::BaseCanvasLayer<BoardSize, SizeType> {
   showEvent(QShowEvent* event) override {
     layer::BaseCanvasLayer<BoardSize, SizeType>::showEvent(event);
 
-    std::thread([this] {
+    QThreadPool::globalInstance()->start([this] {
       while (Board.GetEdgeCountableBoard().GetBasicBoard().GetStep().Gaming()) {
-        const std::chrono::time_point startTime = std::chrono::high_resolution_clock::now();
+        const QTime startTime = QTime::currentTime();
 
         if ((Player1Type == PlayerType::Robot && Board.GetScoreMap().GetTurn().Value() == model::Player1Turn.Value()) ||
             (Player2Type == PlayerType::Robot && Board.GetScoreMap().GetTurn().Value() == model::Player2Turn.Value())) {
@@ -116,10 +113,7 @@ class MainWindow final : public layer::BaseCanvasLayer<BoardSize, SizeType> {
         }
         Add(PlayerMoveEdge);
 
-        const std::chrono::time_point endTime = std::chrono::high_resolution_clock::now();
-        const std::chrono::microseconds duration =
-            std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
-        const double seconds = static_cast<double>(duration.count()) / 1000000.0;
+        const double seconds = static_cast<double>(startTime.msecsTo(QTime::currentTime())) / 1000.0;
 
         qInfo("%s",
               QString(
@@ -142,13 +136,13 @@ class MainWindow final : public layer::BaseCanvasLayer<BoardSize, SizeType> {
         qInfo("Info: \"Winner\":\"Draw\"");
       }
 
-      std::this_thread::sleep_for(std::chrono::seconds(2));
+      QThread::sleep(2);
       EdgeCanvasLayer->At(LastEdge)->SetHighLight(false);
       layer::BaseCanvasLayer<BoardSize, SizeType>::update();
 
-      std::this_thread::sleep_for(std::chrono::seconds(2));
+      QThread::sleep(2);
       layer::BaseCanvasLayer<BoardSize, SizeType>::close();
-    }).detach();
+    });
   }
 
   private:

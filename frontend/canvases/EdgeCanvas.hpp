@@ -1,6 +1,6 @@
 #pragma once
 
-#include <qpainter.h>
+#include <QPainter>
 
 #include "BaseCanvas.hpp"
 #include "BaseEdgeCanvas.hpp"
