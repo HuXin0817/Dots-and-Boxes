@@ -18,12 +18,12 @@ GetPlayerTypeString(const PlayerType type) {
   return "";
 }
 
-static std::optional<dab::frontend::PlayerType>
+static std::optional<PlayerType>
 parsePlayerType(const QString& str) {
   if (str.compare("human", Qt::CaseInsensitive) == 0) {
-    return dab::frontend::PlayerType::Human;
+    return PlayerType::Human;
   } else if (str.compare("robot", Qt::CaseInsensitive) == 0) {
-    return dab::frontend::PlayerType::Robot;
+    return PlayerType::Robot;
   }
   return std::nullopt;
 }
