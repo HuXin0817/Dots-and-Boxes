@@ -1,14 +1,11 @@
 #pragma once
 
 #include "../../src/common/Array.hpp"
-#include "../../src/common/Ptr.hpp"
 #include "../../src/model/Square.hpp"
 #include "../../src/model/ValueIterator.hpp"
 #include "../canvases/BoxCanvas.hpp"
 #include "../canvases/EdgeCanvas.hpp"
 #include "BaseCanvasLayer.hpp"
-
-namespace dab::frontend::layer {
 
 template <int BoardSize, typename SizeType>
 class BoxCanvasLayer final : public BaseCanvasLayer<BoardSize, SizeType> {
@@ -17,14 +14,13 @@ class BoxCanvasLayer final : public BaseCanvasLayer<BoardSize, SizeType> {
   public:
   explicit BoxCanvasLayer(QWidget* parent) : Base(parent) {
     Base::resize(Base::WindowSize, Base::WindowSize);
-    for (const model::Box<BoardSize, SizeType> box :
-         model::ValueIterator<model::Box<BoardSize, SizeType>, SizeType>()) {
-      BoxCanvases.At(box.Value()).New(this);
+    for (const Box<BoardSize, SizeType> box : ValueIterator<Box<BoardSize, SizeType>, SizeType>()) {
+      BoxCanvases.At(box.Value()) = std::make_unique<BoxCanvas<BoardSize, SizeType>>(this);
     }
   }
 
-  common::Ptr<canvas::BoxCanvas<BoardSize, SizeType>>&
-  At(const model::Box<BoardSize, SizeType> box) {
+  std::unique_ptr<BoxCanvas<BoardSize, SizeType>>&
+  At(const Box<BoardSize, SizeType> box) {
     return BoxCanvases.At(box.Value());
   }
 
@@ -36,18 +32,15 @@ class BoxCanvasLayer final : public BaseCanvasLayer<BoardSize, SizeType> {
     const int x0 = (Base::width() - Base::BoardWidth) / 2 + Base::UnitSize;
     const int y0 = (Base::height() - Base::BoardWidth) / 2 + Base::UnitSize;
 
-    for (int i = 0; i < model::Box<BoardSize, SizeType>::Size; i++) {
-      for (int j = 0; j < model::Box<BoardSize, SizeType>::Size; j++) {
-        int x = x0 + i * canvas::EdgeCanvas<BoardSize, SizeType>::Height;
-        int y = y0 + j * canvas::EdgeCanvas<BoardSize, SizeType>::Height;
-        BoxCanvases.At(model::Box<BoardSize, SizeType>(i, j).Value())->move(x, y);
+    for (int i = 0; i < Box<BoardSize, SizeType>::Size; i++) {
+      for (int j = 0; j < Box<BoardSize, SizeType>::Size; j++) {
+        int x = x0 + i * EdgeCanvas<BoardSize, SizeType>::Height;
+        int y = y0 + j * EdgeCanvas<BoardSize, SizeType>::Height;
+        BoxCanvases.At(Box<BoardSize, SizeType>(i, j).Value())->move(x, y);
       }
     }
   }
 
   private:
-  common::Array<common::Ptr<canvas::BoxCanvas<BoardSize, SizeType>>, model::Box<BoardSize, SizeType>::Max, SizeType>
-      BoxCanvases;
+  Array<std::unique_ptr<BoxCanvas<BoardSize, SizeType>>, Box<BoardSize, SizeType>::Max, SizeType> BoxCanvases;
 };
-
-}  // namespace dab::frontend::layer

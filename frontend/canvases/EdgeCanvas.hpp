@@ -3,8 +3,6 @@
 #include "BaseCanvas.hpp"
 #include "BaseEdgeCanvas.hpp"
 
-namespace dab::frontend::canvas {
-
 template <int BoardSize, typename SizeType>
 class EdgeCanvas final : public BaseEdgeCanvas<BoardSize, SizeType> {
   using Base = BaseEdgeCanvas<BoardSize, SizeType>;
@@ -64,5 +62,3 @@ class EdgeCanvas final : public BaseEdgeCanvas<BoardSize, SizeType> {
   private:
   bool HighLight = true;
 };
-
-}  // namespace dab::frontend::canvas

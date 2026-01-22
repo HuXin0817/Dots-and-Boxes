@@ -2,8 +2,6 @@
 
 #include "Macro.hpp"
 
-namespace dab::common {
-
 template <typename T, typename SizeType>
 class Span {
   public:
@@ -25,5 +23,3 @@ Export(const T& arr) {
   auto ele = arr.At(0);
   return Span<decltype(ele), SizeType>(arr.begin(), arr.end());
 }
-
-}  // namespace dab::common

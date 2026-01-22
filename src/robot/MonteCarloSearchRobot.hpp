@@ -5,8 +5,6 @@
 #include "../model/EdgeScoreMap.hpp"
 #include "ImprovedSearchRobot.hpp"
 
-namespace dab::robot {
-
 template <int BoardSize, typename SizeType>
 class ParallelSearchRobot;
 
@@ -19,10 +17,9 @@ class MonteCarloSearchRobot final : public Robot<BoardSize, SizeType> {
   public:
   MonteCarloSearchRobot() = default;
 
-  common::Span<model::Edge<BoardSize, SizeType>, SizeType>
-  BestCandidateEdges(const board::ScoreCountableBoard<BoardSize, SizeType>& board) override {
-    if (const common::Span<model::Edge<BoardSize, SizeType>, SizeType> edges = SubRobot.BestCandidateEdges(board);
-        edges.Size() == 1) {
+  Span<Edge<BoardSize, SizeType>, SizeType>
+  BestCandidateEdges(const ScoreCountableBoard<BoardSize, SizeType>& board) override {
+    if (const Span<Edge<BoardSize, SizeType>, SizeType> edges = SubRobot.BestCandidateEdges(board); edges.Size() == 1) {
       return edges;
     }
 
@@ -30,12 +27,11 @@ class MonteCarloSearchRobot final : public Robot<BoardSize, SizeType> {
     int times = SearchTime / board.GetEdgeCountableBoard().GetBasicBoard().GetStep().RemainStep() + 1;
     while (times--) {
       SimulationBoard.Reset(board.GetEdgeCountableBoard());
-      const model::Edge<BoardSize, SizeType> edge =
-          common::RandomChoice<common::Span<model::Edge<BoardSize, SizeType>, SizeType>, SizeType>(
-              SubRobot.BestCandidateEdges(SimulationBoard));
+      const Edge<BoardSize, SizeType> edge = RandomChoice<Span<Edge<BoardSize, SizeType>, SizeType>, SizeType>(
+          SubRobot.BestCandidateEdges(SimulationBoard));
       SimulationBoard.Add(edge);
       while (SimulationBoard.Gaming()) {
-        SimulationBoard.Add(common::RandomChoice<common::Span<model::Edge<BoardSize, SizeType>, SizeType>, SizeType>(
+        SimulationBoard.Add(RandomChoice<Span<Edge<BoardSize, SizeType>, SizeType>, SizeType>(
             SubRobot.BestCandidateEdges(SimulationBoard)));
       }
       SearchResult.Add(edge, SimulationBoard.GetScoreMap().Score());
@@ -46,8 +42,6 @@ class MonteCarloSearchRobot final : public Robot<BoardSize, SizeType> {
 
   private:
   ImprovedSearchRobot<BoardSize, SizeType> SubRobot;
-  board::ScoreCountableBoard<BoardSize, SizeType> SimulationBoard;
-  model::EdgeScoreMap<BoardSize, SizeType> SearchResult;
+  ScoreCountableBoard<BoardSize, SizeType> SimulationBoard;
+  EdgeScoreMap<BoardSize, SizeType> SearchResult;
 };
-
-}  // namespace dab::robot

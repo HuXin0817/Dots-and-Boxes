@@ -2,8 +2,6 @@
 
 #include "BaseEdgeCanvas.hpp"
 
-namespace dab::frontend::canvas {
-
 template <int BoardSize, typename SizeType>
 class EdgeButtonCanvas final : public BaseEdgeCanvas<BoardSize, SizeType> {
   using Base = BaseEdgeCanvas<BoardSize, SizeType>;
@@ -24,5 +22,3 @@ class EdgeButtonCanvas final : public BaseEdgeCanvas<BoardSize, SizeType> {
   private:
   const std::function<void()> CallBack;
 };
-
-}  // namespace dab::frontend::canvas

@@ -3,8 +3,6 @@
 #include "Square.hpp"
 #include "Turn.hpp"
 
-namespace dab::model {
-
 template <int BoardSize, typename SizeType>
 class ScoreMap {
   static constexpr SizeType MinWinnerScore = Box<BoardSize, SizeType>::Max / 2 + 1;
@@ -64,5 +62,3 @@ class ScoreMap {
   SizeType Player2Score = 0;
   Turn Turn = Player1Turn;
 };
-
-}  // namespace dab::model

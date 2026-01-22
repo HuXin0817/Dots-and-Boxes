@@ -2,8 +2,6 @@
 
 #include "Square.hpp"
 
-namespace dab::model {
-
 template <int BoardSize, typename SizeType>
 class Edge {
   public:
@@ -53,5 +51,3 @@ Edge<BoardSize, SizeType>
 InvalidEdge() {
   return -1;
 }
-
-}  // namespace dab::model

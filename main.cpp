@@ -2,6 +2,66 @@
 
 static constexpr int DefaultBoardSize = 6;
 
+QCommandLineOption
+BoardSizeOption() {
+  return QCommandLineOption(QStringList() << "s" << "size",
+                            QString("Set board size ranging from [%1, %2] (default: %3).")
+                                .arg(MainWindowCreator::MinBoardSize)
+                                .arg(MainWindowCreator::MaxBoardSize)
+                                .arg(DefaultBoardSize),
+                            "BoardSize",
+                            QString::number(DefaultBoardSize));
+}
+
+QCommandLineOption
+PlayerTypeOption(int player) {
+  const char* discription =
+      "Set type of player %1. Accepts: 'human', 'robot', 'robot:easy', 'robot:medium', 'robot:hard', 'robot:expert',"
+      " or 'robot:master' (default: robot). Note: 'robot' is equivalent to 'robot:master'.";
+
+  return QCommandLineOption(QStringList() << QString("p%1").arg(player) << QString("player%1").arg(player),
+                            QString(discription).arg(player),
+                            "Type",
+                            "robot");
+}
+
+int
+ParseBoardSize(const QString& str) {
+  bool conversionOk = false;
+  int boardSize = str.toInt(&conversionOk);
+
+  if (!conversionOk || boardSize < MainWindowCreator::MinBoardSize || boardSize > MainWindowCreator::MaxBoardSize) {
+    std::fprintf(stderr,
+                 "Error: Invalid board size. Must be an integer in range [%d, %d].\n",
+                 MainWindowCreator::MinBoardSize,
+                 MainWindowCreator::MaxBoardSize);
+    exit(EXIT_FAILURE);
+  }
+
+  return boardSize;
+}
+
+PlayerType
+ParsePlayerType(const QString& str) {
+  if (str.compare("human", Qt::CaseInsensitive) == 0) {
+    return PlayerType::Human;
+  } else if (str.compare("robot", Qt::CaseInsensitive) == 0) {
+    return PlayerType::ParallelSearchRobot;
+  } else if (str.compare("robot:easy", Qt::CaseInsensitive) == 0) {
+    return PlayerType::SimpleStrategyRobot;
+  } else if (str.compare("robot:medium", Qt::CaseInsensitive) == 0) {
+    return PlayerType::BasicSearchRobot;
+  } else if (str.compare("robot:hard", Qt::CaseInsensitive) == 0) {
+    return PlayerType::ImprovedSearchRobot;
+  } else if (str.compare("robot:expert", Qt::CaseInsensitive) == 0) {
+    return PlayerType::MonteCarloSearchRobot;
+  } else if (str.compare("robot:master", Qt::CaseInsensitive) == 0) {
+    return PlayerType::ParallelSearchRobot;
+  }
+  std::fprintf(stderr, "Error: Invalid player type '%s'.\n", str.toLocal8Bit().constData());
+  exit(EXIT_FAILURE);
+}
+
 int
 main(int argc, char* argv[]) {
   QApplication application(argc, argv);
@@ -14,57 +74,27 @@ main(int argc, char* argv[]) {
   parser.addHelpOption();
   parser.addVersionOption();
 
-  QCommandLineOption boardSizeOption(QStringList() << "s" << "size",
-                                     QString("Set board size ranging from [%1, %2] (default: %3).")
-                                         .arg(dab::frontend::MainWindowCreator::MinBoardSize)
-                                         .arg(dab::frontend::MainWindowCreator::MaxBoardSize)
-                                         .arg(DefaultBoardSize),
-                                     "BoardSize",
-                                     QString::number(DefaultBoardSize));
+  QCommandLineOption boardSizeOption = BoardSizeOption();
   parser.addOption(boardSizeOption);
 
-  QCommandLineOption player1Option(
-      QStringList() << "p1" << "player1", "Set player1 type: 'human' or 'robot' (default: 'robot').", "Type", "robot");
+  QCommandLineOption player1Option = PlayerTypeOption(1);
   parser.addOption(player1Option);
 
-  QCommandLineOption player2Option(
-      QStringList() << "p2" << "player2", "Set player2 type: 'human' or 'robot' (default: 'robot').", "Type", "robot");
+  QCommandLineOption player2Option = PlayerTypeOption(2);
   parser.addOption(player2Option);
 
   parser.process(application);
 
-  bool conversionOk = false;
-  int boardSize = parser.value(boardSizeOption).toInt(&conversionOk);
-
-  if (!conversionOk || boardSize < dab::frontend::MainWindowCreator::MinBoardSize ||
-      boardSize > dab::frontend::MainWindowCreator::MaxBoardSize) {
-    std::fprintf(stderr,
-                 "Error: Invalid board size. Must be an integer in range [%d, %d].\n",
-                 dab::frontend::MainWindowCreator::MinBoardSize,
-                 dab::frontend::MainWindowCreator::MaxBoardSize);
-    return EXIT_FAILURE;
-  }
-
-  std::optional<dab::frontend::PlayerType> player1TypeOpt = dab::frontend::parsePlayerType(parser.value(player1Option));
-  if (!player1TypeOpt.has_value()) {
-    std::fprintf(stderr, "Error: Invalid player1 type. Use 'human' or 'robot'.\n");
-    return EXIT_FAILURE;
-  }
-  dab::frontend::PlayerType player1Type = player1TypeOpt.value();
-
-  std::optional<dab::frontend::PlayerType> player2TypeOpt = dab::frontend::parsePlayerType(parser.value(player2Option));
-  if (!player2TypeOpt.has_value()) {
-    std::fprintf(stderr, "Error: Invalid player2 type. Use 'human' or 'robot'.\n");
-    return EXIT_FAILURE;
-  }
-  dab::frontend::PlayerType player2Type = player2TypeOpt.value();
+  int boardSize = ParseBoardSize(parser.value(boardSizeOption));
+  PlayerType player1Type = ParsePlayerType(parser.value(player1Option));
+  PlayerType player2Type = ParsePlayerType(parser.value(player2Option));
 
   qInfo("Config: {\"BoardSize\":%d,\"Player1\":\"%s\",\"Player2\":\"%s\"}",
         boardSize,
-        dab::frontend::GetPlayerTypeString(player1Type),
-        dab::frontend::GetPlayerTypeString(player2Type));
+        GetPlayerTypeString(player1Type),
+        GetPlayerTypeString(player2Type));
 
-  if (QWidget* mainWindow = dab::frontend::MainWindowCreator().CreateMainWindow(boardSize, player1Type, player2Type)) {
+  if (QWidget* mainWindow = MainWindowCreator().CreateMainWindow(boardSize, player1Type, player2Type)) {
     mainWindow->show();
   }
 

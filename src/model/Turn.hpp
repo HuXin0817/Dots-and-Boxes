@@ -1,7 +1,5 @@
 #pragma once
 
-namespace dab::model {
-
 class Turn {
   public:
   Turn() = default;
@@ -25,5 +23,3 @@ class Turn {
 
 static const Turn Player1Turn = true;
 static const Turn Player2Turn = !Player1Turn.Value();
-
-}  // namespace dab::model

@@ -1,7 +1,5 @@
 #pragma once
 
-namespace dab::common {
-
 template <typename T, typename SizeType>
 const auto&
 RandomChoice(const T& data) {
@@ -14,5 +12,3 @@ RandomChoice(const T& data) {
   std::uniform_int_distribution<SizeType> dist(0, data.Size() - 1);
   return data.At(dist(rng));
 }
-
-}  // namespace dab::common

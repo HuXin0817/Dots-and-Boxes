@@ -4,10 +4,8 @@
 #include "Edge.hpp"
 #include "Square.hpp"
 
-namespace dab::model {
-
 template <int BoardSize, typename SizeType>
-const common::Array<Edge<BoardSize, SizeType>, 4, SizeType>&
+const Array<Edge<BoardSize, SizeType>, 4, SizeType>&
 NearEdges(const Box<BoardSize, SizeType> box);
 
 template <int BoardSize, typename SizeType>
@@ -30,19 +28,16 @@ class NearEdgesMapper {
   }
 
   private:
-  common::Array<common::Array<Edge<BoardSize, SizeType>, 4, SizeType>, Box<BoardSize, SizeType>::Max, SizeType>
-      BoxNearEdges;
+  Array<Array<Edge<BoardSize, SizeType>, 4, SizeType>, Box<BoardSize, SizeType>::Max, SizeType> BoxNearEdges;
 
-  friend const common::Array<Edge<BoardSize, SizeType>, 4, SizeType>&
+  friend const Array<Edge<BoardSize, SizeType>, 4, SizeType>&
   NearEdges<BoardSize, SizeType>(const Box<BoardSize, SizeType> box);
 };
 
 template <int BoardSize, typename SizeType>
-const common::Array<Edge<BoardSize, SizeType>, 4, SizeType>&
+const Array<Edge<BoardSize, SizeType>, 4, SizeType>&
 NearEdges(const Box<BoardSize, SizeType> box) {
   static NearEdgesMapper<BoardSize, SizeType> NearEdgesMapperInstance;
 
   return NearEdgesMapperInstance.BoxNearEdges.At(box.Value());
 }
-
-}  // namespace dab::model

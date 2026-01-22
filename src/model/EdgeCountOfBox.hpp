@@ -4,8 +4,6 @@
 #include "NearBoxes.hpp"
 #include "Square.hpp"
 
-namespace dab::model {
-
 template <int BoardSize, typename SizeType>
 class EdgeCountOfBox {
   public:
@@ -40,7 +38,5 @@ class EdgeCountOfBox {
   }
 
   private:
-  common::Array<SizeType, Box<BoardSize, SizeType>::Max, SizeType> Map;
+  Array<SizeType, Box<BoardSize, SizeType>::Max, SizeType> Map;
 };
-
-}  // namespace dab::model

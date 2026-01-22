@@ -5,8 +5,6 @@
 #include "Robot.hpp"
 #include "SimpleStrategyRobot.hpp"
 
-namespace dab::robot {
-
 template <int BoardSize, typename SizeType>
 class ImprovedSearchRobot;
 
@@ -15,19 +13,19 @@ class BasicSearchRobot final : public Robot<BoardSize, SizeType> {
   friend class ImprovedSearchRobot<BoardSize, SizeType>;
 
   public:
-  common::Span<model::Edge<BoardSize, SizeType>, SizeType>
-  BestCandidateEdges(const board::ScoreCountableBoard<BoardSize, SizeType>& board) override {
-    if (common::Span<model::Edge<BoardSize, SizeType>, SizeType> edges = SubRobot.BestCandidateEdges(board);
+  Span<Edge<BoardSize, SizeType>, SizeType>
+  BestCandidateEdges(const ScoreCountableBoard<BoardSize, SizeType>& board) override {
+    if (Span<Edge<BoardSize, SizeType>, SizeType> edges = SubRobot.BestCandidateEdges(board);
         !SubRobot.EnemyUnscoreableEdges.Empty() || !SubRobot.ScoreableEdges.Empty()) {
       return edges;
     }
 
-    SizeType minScore = model::Box<BoardSize, SizeType>::Max + 1;
-    common::List<model::Edge<BoardSize, SizeType>, model::Edge<BoardSize, SizeType>::Max, SizeType>& candidateEdges =
+    SizeType minScore = Box<BoardSize, SizeType>::Max + 1;
+    List<Edge<BoardSize, SizeType>, Edge<BoardSize, SizeType>::Max, SizeType>& candidateEdges =
         SubRobot.EnemyUnscoreableEdges;
     assert(candidateEdges.Empty());
 
-    for (const model::Edge<BoardSize, SizeType> edge : board.GetEdgeCountableBoard().GetBasicBoard().EmptyEdges()) {
+    for (const Edge<BoardSize, SizeType> edge : board.GetEdgeCountableBoard().GetBasicBoard().EmptyEdges()) {
       SimulationBoard.Reset(board.GetEdgeCountableBoard());
       SimulationBoard.Add(edge);
       if (const SizeType score = SimulationBoard.MaxObtainableScore(minScore); score < minScore) {
@@ -38,14 +36,10 @@ class BasicSearchRobot final : public Robot<BoardSize, SizeType> {
       }
     }
 
-    return common::Export<
-        common::List<model::Edge<BoardSize, SizeType>, model::Edge<BoardSize, SizeType>::Max, SizeType>,
-        SizeType>(candidateEdges);
+    return Export<List<Edge<BoardSize, SizeType>, Edge<BoardSize, SizeType>::Max, SizeType>, SizeType>(candidateEdges);
   }
 
   private:
   SimpleStrategyRobot<BoardSize, SizeType> SubRobot;
-  board::ScoreableEdgeBoard<BoardSize, SizeType> SimulationBoard;
+  ScoreableEdgeBoard<BoardSize, SizeType> SimulationBoard;
 };
-
-}  // namespace dab::robot

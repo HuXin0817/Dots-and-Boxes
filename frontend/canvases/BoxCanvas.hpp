@@ -3,8 +3,6 @@
 #include "BaseCanvas.hpp"
 #include "EdgeCanvas.hpp"
 
-namespace dab::frontend::canvas {
-
 template <int BoardSize, typename SizeType>
 class BoxCanvas final : public BaseCanvas<BoardSize, SizeType> {
   using Base = BaseCanvas<BoardSize, SizeType>;
@@ -46,5 +44,3 @@ class BoxCanvas final : public BaseCanvas<BoardSize, SizeType> {
     painter.drawRect(x, y, Width, Width);
   }
 };
-
-}  // namespace dab::frontend::canvas

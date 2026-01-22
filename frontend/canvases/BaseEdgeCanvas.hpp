@@ -2,8 +2,6 @@
 
 #include "BaseCanvas.hpp"
 
-namespace dab::frontend::canvas {
-
 template <int BoardSize, typename SizeType>
 class BaseEdgeCanvas : public BaseCanvas<BoardSize, SizeType> {
   using Base = BaseCanvas<BoardSize, SizeType>;
@@ -29,5 +27,3 @@ class BaseEdgeCanvas : public BaseCanvas<BoardSize, SizeType> {
   private:
   const bool Rotate = false;
 };
-
-}  // namespace dab::frontend::canvas

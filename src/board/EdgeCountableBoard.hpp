@@ -6,40 +6,37 @@
 #include "../model/Square.hpp"
 #include "BasicBoard.hpp"
 
-namespace dab::board {
-
 template <int BoardSize, typename SizeType>
 class EdgeCountableBoard {
   public:
   EdgeCountableBoard() = default;
 
   SizeType
-  Add(const model::Edge<BoardSize, SizeType> edge) {
+  Add(const Edge<BoardSize, SizeType> edge) {
     BasicBoard.Add(edge);
     return EdgeCountOfBox.Add(edge);
   }
 
-  model::Edge<BoardSize, SizeType>
-  FindNotContainsEdgeInBox(const model::Box<BoardSize, SizeType> box) const {
+  Edge<BoardSize, SizeType>
+  FindNotContainsEdgeInBox(const Box<BoardSize, SizeType> box) const {
     assert(EdgeCountOfBox.EdgeCount(box) == 3);
-    for (const model::Edge<BoardSize, SizeType> edge : model::NearEdges(box)) {
+    for (const Edge<BoardSize, SizeType> edge : NearEdges(box)) {
       if (BasicBoard.NotContains(edge)) {
         return edge;
       }
     }
     assert(false);
-    return model::InvalidEdge<BoardSize, SizeType>();
+    return InvalidEdge<BoardSize, SizeType>();
   }
 
-  model::Edge<BoardSize, SizeType>
+  Edge<BoardSize, SizeType>
   FindScoreableEdge() const {
-    for (const model::Box<BoardSize, SizeType> box :
-         model::ValueIterator<model::Box<BoardSize, SizeType>, SizeType>()) {
+    for (const Box<BoardSize, SizeType> box : ValueIterator<Box<BoardSize, SizeType>, SizeType>()) {
       if (EdgeCountOfBox.EdgeCount(box) == 3) {
         return FindNotContainsEdgeInBox(box);
       }
     }
-    return model::InvalidEdge<BoardSize, SizeType>();
+    return InvalidEdge<BoardSize, SizeType>();
   }
 
   const BasicBoard<BoardSize, SizeType>&
@@ -47,14 +44,12 @@ class EdgeCountableBoard {
     return BasicBoard;
   }
 
-  const model::EdgeCountOfBox<BoardSize, SizeType>&
+  const EdgeCountOfBox<BoardSize, SizeType>&
   GetEdgeCountOfBox() const {
     return EdgeCountOfBox;
   }
 
   private:
   BasicBoard<BoardSize, SizeType> BasicBoard;
-  model::EdgeCountOfBox<BoardSize, SizeType> EdgeCountOfBox;
+  EdgeCountOfBox<BoardSize, SizeType> EdgeCountOfBox;
 };
-
-}  // namespace dab::board

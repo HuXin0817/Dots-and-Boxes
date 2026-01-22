@@ -2,8 +2,6 @@
 
 #include "Array.hpp"
 
-namespace dab::common {
-
 template <typename T, size_t Cap, typename SizeType>
 class List {
   public:
@@ -30,5 +28,3 @@ class List {
   Array<T, Cap, SizeType> Data;
   SizeType Length = 0;
 };
-
-}  // namespace dab::common

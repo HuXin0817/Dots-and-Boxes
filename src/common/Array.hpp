@@ -2,8 +2,6 @@
 
 #include "Macro.hpp"
 
-namespace dab::common {
-
 template <typename T, size_t Length, typename SizeType>
 class Array {
   public:
@@ -20,5 +18,3 @@ class Array {
   private:
   T Data[Length] = {};
 };
-
-}  // namespace dab::common

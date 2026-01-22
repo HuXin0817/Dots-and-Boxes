@@ -6,8 +6,6 @@
 #include "Edge.hpp"
 #include "ValueIterator.hpp"
 
-namespace dab::model {
-
 template <int BoardSize, typename SizeType>
 class EdgeScoreMap {
   public:
@@ -34,7 +32,7 @@ class EdgeScoreMap {
     }
   }
 
-  common::Span<Edge<BoardSize, SizeType>, SizeType>
+  Span<Edge<BoardSize, SizeType>, SizeType>
   Export() {
     float maxScore = 0.0;
     for (const Edge<BoardSize, SizeType> edge : ValueIterator<Edge<BoardSize, SizeType>, SizeType>()) {
@@ -48,14 +46,11 @@ class EdgeScoreMap {
         }
       }
     }
-    return common::Export<common::List<Edge<BoardSize, SizeType>, Edge<BoardSize, SizeType>::Max, SizeType>, SizeType>(
-        BestEdges);
+    return Export<List<Edge<BoardSize, SizeType>, Edge<BoardSize, SizeType>::Max, SizeType>, SizeType>(BestEdges);
   }
 
   private:
-  common::Array<int, Edge<BoardSize, SizeType>::Max, SizeType> Time;
-  common::Array<int, Edge<BoardSize, SizeType>::Max, SizeType> Score;
-  common::List<Edge<BoardSize, SizeType>, Edge<BoardSize, SizeType>::Max, SizeType> BestEdges;
+  Array<int, Edge<BoardSize, SizeType>::Max, SizeType> Time;
+  Array<int, Edge<BoardSize, SizeType>::Max, SizeType> Score;
+  List<Edge<BoardSize, SizeType>, Edge<BoardSize, SizeType>::Max, SizeType> BestEdges;
 };
-
-}  // namespace dab::model

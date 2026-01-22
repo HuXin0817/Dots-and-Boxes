@@ -3,8 +3,6 @@
 #include "MonteCarloSearchRobot.hpp"
 #include "Robot.hpp"
 
-namespace dab::robot {
-
 template <int BoardSize, typename SizeType>
 class ParallelSearchRobot final : public Robot<BoardSize, SizeType> {
   static constexpr int ParallelNumber = CPU_COUNT;
@@ -12,10 +10,9 @@ class ParallelSearchRobot final : public Robot<BoardSize, SizeType> {
   public:
   ParallelSearchRobot() = default;
 
-  common::Span<model::Edge<BoardSize, SizeType>, SizeType>
-  BestCandidateEdges(const board::ScoreCountableBoard<BoardSize, SizeType>& board) override {
-    if (const common::Span<model::Edge<BoardSize, SizeType>, SizeType> edges =
-            SubRobots.At(0).SubRobot.BestCandidateEdges(board);
+  Span<Edge<BoardSize, SizeType>, SizeType>
+  BestCandidateEdges(const ScoreCountableBoard<BoardSize, SizeType>& board) override {
+    if (const Span<Edge<BoardSize, SizeType>, SizeType> edges = SubRobots.At(0).SubRobot.BestCandidateEdges(board);
         edges.Size() == 1) {
       return edges;
     }
@@ -35,8 +32,6 @@ class ParallelSearchRobot final : public Robot<BoardSize, SizeType> {
   }
 
   private:
-  common::Array<MonteCarloSearchRobot<BoardSize, SizeType>, ParallelNumber, int> SubRobots;
-  model::EdgeScoreMap<BoardSize, SizeType> SearchResult;
+  Array<MonteCarloSearchRobot<BoardSize, SizeType>, ParallelNumber, int> SubRobots;
+  EdgeScoreMap<BoardSize, SizeType> SearchResult;
 };
-
-}  // namespace dab::robot

@@ -2,8 +2,6 @@
 
 #include "BaseCanvas.hpp"
 
-namespace dab::frontend::canvas {
-
 template <int BoardSize, typename SizeType>
 class DotCanvas final : public BaseCanvas<BoardSize, SizeType> {
   using Base = BaseCanvas<BoardSize, SizeType>;
@@ -39,5 +37,3 @@ class DotCanvas final : public BaseCanvas<BoardSize, SizeType> {
     painter.drawEllipse(QPoint(x, y), Base::UnitSize, Base::UnitSize);
   }
 };
-
-}  // namespace dab::frontend::canvas

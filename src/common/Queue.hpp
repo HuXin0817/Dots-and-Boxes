@@ -2,8 +2,6 @@
 
 #include "Array.hpp"
 
-namespace dab::common {
-
 template <typename T, size_t Cap, typename SizeType>
 class Queue {
   public:
@@ -32,5 +30,3 @@ class Queue {
   SizeType Begin = 0;
   SizeType End = 0;
 };
-
-}  // namespace dab::common

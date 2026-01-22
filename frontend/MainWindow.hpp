@@ -1,17 +1,15 @@
 #pragma once
 
-#include "../src/robot/ParallelSearchRobot.hpp"
-#include "PlayerConfig.hpp"
+#include "../src/robot/PlayerType.hpp"
+#include "../src/robot/Robot.hpp"
 #include "layers/BoxCanvasLayer.hpp"
 #include "layers/DotCanvasLayer.hpp"
 #include "layers/EdgeButtonLayer.hpp"
 #include "layers/EdgeCanvasLayer.hpp"
 
-namespace dab::frontend {
-
 template <int BoardSize, typename SizeType>
-class MainWindow final : public layer::BaseCanvasLayer<BoardSize, SizeType> {
-  using Base = layer::BaseCanvasLayer<BoardSize, SizeType>;
+class MainWindow final : public BaseCanvasLayer<BoardSize, SizeType> {
+  using Base = BaseCanvasLayer<BoardSize, SizeType>;
 
   public:
   explicit MainWindow(const PlayerType player1Type, const PlayerType player2Type, QWidget* parent = nullptr)
@@ -19,14 +17,20 @@ class MainWindow final : public layer::BaseCanvasLayer<BoardSize, SizeType> {
     Base::resize(Base::WindowSize, Base::WindowSize);
     Base::setMinimumSize(Base::WindowSize, Base::WindowSize);
 
-    BoxCanvasLayer.New(this);
-    EdgeCanvasLayer.New(this);
-    DotCanvasLayer.New(this);
-    std::function<std::function<void()>(const model::Edge<BoardSize, SizeType>)> CallBackFactory =
-        [this](const model::Edge<BoardSize, SizeType> edge) -> std::function<void()> {
+    BoxCanvasLayer = std::make_unique<typename BoxCanvasLayer<BoardSize, SizeType>>(this);
+    EdgeCanvasLayer = std::make_unique<typename EdgeCanvasLayer<BoardSize, SizeType>>(this);
+    DotCanvasLayer = std::make_unique<typename DotCanvasLayer<BoardSize, SizeType>>(this);
+    std::function<std::function<void()>(const Edge<BoardSize, SizeType>)> CallBackFactory =
+        [this](const Edge<BoardSize, SizeType> edge) -> std::function<void()> {
       return [edge, this]() -> void { setPlayerMoveEdge(edge); };
     };
-    EdgeButtonLayer.New(CallBackFactory, this);
+    EdgeButtonLayer = std::make_unique<typename EdgeButtonLayer<BoardSize, SizeType>>(CallBackFactory, this);
+    if (PlayerTypeIsRobot(Player1Type)) {
+      Robot1 = CreateRobot<BoardSize, SizeType>(Player1Type);
+    }
+    if (PlayerTypeIsRobot(Player2Type)) {
+      Robot2 = CreateRobot<BoardSize, SizeType>(Player2Type);
+    }
   }
 
   QColor
@@ -38,16 +42,16 @@ class MainWindow final : public layer::BaseCanvasLayer<BoardSize, SizeType> {
   }
 
   void
-  Add(const model::Edge<BoardSize, SizeType> edge) {
+  Add(const Edge<BoardSize, SizeType> edge) {
     if (Board.GetEdgeCountableBoard().GetBasicBoard().GetStep().NowStep() > 0) {
       EdgeCanvasLayer->At(LastEdge)->SetHighLight(false);
     }
     EdgeCanvasLayer->At(edge)->SetState(Board.GetScoreMap().GetTurn());
     EdgeCanvasLayer->At(edge)->raise();
 
-    for (const model::Box<BoardSize, SizeType> box : NearBoxes(edge)) {
+    for (const Box<BoardSize, SizeType> box : NearBoxes(edge)) {
       int count = 0;
-      for (const model::Edge<BoardSize, SizeType> nearEdge : NearEdges(box)) {
+      for (const Edge<BoardSize, SizeType> nearEdge : NearEdges(box)) {
         if (Board.GetEdgeCountableBoard().GetBasicBoard().Contains(nearEdge)) {
           count++;
         }
@@ -92,13 +96,15 @@ class MainWindow final : public layer::BaseCanvasLayer<BoardSize, SizeType> {
       while (Board.GetEdgeCountableBoard().GetBasicBoard().GetStep().Gaming()) {
         const QTime startTime = QTime::currentTime();
 
-        if ((Player1Type == PlayerType::Robot && Board.GetScoreMap().GetTurn().Value() == model::Player1Turn.Value()) ||
-            (Player2Type == PlayerType::Robot && Board.GetScoreMap().GetTurn().Value() == model::Player2Turn.Value())) {
-          PlayerMoveEdge = common::RandomChoice<common::Span<model::Edge<BoardSize, SizeType>, SizeType>, SizeType>(
-              Robot.BestCandidateEdges(Board));
+        if ((PlayerTypeIsRobot(Player1Type) && Board.GetScoreMap().GetTurn().Value() == Player1Turn.Value())) {
+          PlayerMoveEdge =
+              RandomChoice<Span<Edge<BoardSize, SizeType>, SizeType>, SizeType>(Robot1->BestCandidateEdges(Board));
+        } else if (PlayerTypeIsRobot(Player2Type) && Board.GetScoreMap().GetTurn().Value() == Player2Turn.Value()) {
+          PlayerMoveEdge =
+              RandomChoice<Span<Edge<BoardSize, SizeType>, SizeType>, SizeType>(Robot2->BestCandidateEdges(Board));
         } else {
-          PlayerMoveEdge = model::InvalidEdge<BoardSize, SizeType>();
-          while (PlayerMoveEdge.Value() == model::InvalidEdge<BoardSize, SizeType>().Value()) {
+          PlayerMoveEdge = InvalidEdge<BoardSize, SizeType>();
+          while (PlayerMoveEdge.Value() == InvalidEdge<BoardSize, SizeType>().Value()) {
             std::this_thread::yield();
           }
         }
@@ -110,7 +116,7 @@ class MainWindow final : public layer::BaseCanvasLayer<BoardSize, SizeType> {
               QString(
                   "Info: {\"Step\":%1,\"Player\":%2,\"Move\":%3,\"Score\":{\"Player1\":%4,\"Player2\":%5},\"Time\":%6}")
                   .arg(Board.GetEdgeCountableBoard().GetBasicBoard().GetStep().NowStep())
-                  .arg(Board.GetScoreMap().GetTurn().Value() == model::Player1Turn.Value() ? 1 : 2)
+                  .arg(Board.GetScoreMap().GetTurn().Value() == Player1Turn.Value() ? 1 : 2)
                   .arg(PlayerMoveEdge.Value())
                   .arg(Board.GetScoreMap().GetPlayer1Score())
                   .arg(Board.GetScoreMap().GetPlayer2Score())
@@ -139,28 +145,27 @@ class MainWindow final : public layer::BaseCanvasLayer<BoardSize, SizeType> {
   private:
   const PlayerType Player1Type;
   const PlayerType Player2Type;
-  robot::ParallelSearchRobot<BoardSize, SizeType> Robot;
-  model::Edge<BoardSize, SizeType> PlayerMoveEdge;
-  model::Edge<BoardSize, SizeType> LastEdge;
-  board::ScoreCountableBoard<BoardSize, SizeType> Board;
-  common::Ptr<layer::BoxCanvasLayer<BoardSize, SizeType>> BoxCanvasLayer;
-  common::Ptr<layer::EdgeCanvasLayer<BoardSize, SizeType>> EdgeCanvasLayer;
-  common::Ptr<layer::DotCanvasLayer<BoardSize, SizeType>> DotCanvasLayer;
-  common::Ptr<layer::EdgeButtonLayer<BoardSize, SizeType>> EdgeButtonLayer;
+  std::unique_ptr<Robot<BoardSize, SizeType>> Robot1;
+  std::unique_ptr<Robot<BoardSize, SizeType>> Robot2;
+  Edge<BoardSize, SizeType> PlayerMoveEdge;
+  Edge<BoardSize, SizeType> LastEdge;
+  ScoreCountableBoard<BoardSize, SizeType> Board;
+  std::unique_ptr<BoxCanvasLayer<BoardSize, SizeType>> BoxCanvasLayer;
+  std::unique_ptr<EdgeCanvasLayer<BoardSize, SizeType>> EdgeCanvasLayer;
+  std::unique_ptr<DotCanvasLayer<BoardSize, SizeType>> DotCanvasLayer;
+  std::unique_ptr<EdgeButtonLayer<BoardSize, SizeType>> EdgeButtonLayer;
 
   void
-  setPlayerMoveEdge(const model::Edge<BoardSize, SizeType> edge) {
+  setPlayerMoveEdge(const Edge<BoardSize, SizeType> edge) {
     if (Board.GetEdgeCountableBoard().GetBasicBoard().Contains(edge)) {
       return;
     }
-    if (Player1Type == PlayerType::Robot && Board.GetScoreMap().GetTurn().Value() == model::Player1Turn.Value()) {
+    if (PlayerTypeIsRobot(Player1Type) && Board.GetScoreMap().GetTurn().Value() == Player1Turn.Value()) {
       return;
     }
-    if (Player2Type == PlayerType::Robot && Board.GetScoreMap().GetTurn().Value() == model::Player2Turn.Value()) {
+    if (PlayerTypeIsRobot(Player2Type) && Board.GetScoreMap().GetTurn().Value() == Player2Turn.Value()) {
       return;
     }
     PlayerMoveEdge = edge;
   }
 };
-
-}  // namespace dab::frontend

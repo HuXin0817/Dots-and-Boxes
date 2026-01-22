@@ -2,8 +2,6 @@
 
 #include "../../src/model/Turn.hpp"
 
-namespace dab::frontend::canvas {
-
 template <int BoardSize, typename SizeType>
 class BaseCanvas : public QWidget {
   public:
@@ -29,8 +27,8 @@ class BaseCanvas : public QWidget {
   }
 
   void
-  SetState(const model::Turn turn) {
-    if (turn.Value() == model::Player1Turn.Value()) {
+  SetState(const Turn turn) {
+    if (turn.Value() == Player1Turn.Value()) {
       State = State::Player1Occupy;
     } else {
       State = State::Player2Occupy;
@@ -40,5 +38,3 @@ class BaseCanvas : public QWidget {
   protected:
   State State = State::Free;
 };
-
-}  // namespace dab::frontend::canvas

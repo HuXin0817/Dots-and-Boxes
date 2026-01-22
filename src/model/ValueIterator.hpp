@@ -1,7 +1,5 @@
 #pragma once
 
-namespace dab::model {
-
 template <typename Model, typename SizeType>
 class ValueIterator {
   struct iterator {
@@ -46,5 +44,3 @@ class ValueIterator {
     return Model::Max;
   }
 };
-
-}  // namespace dab::model

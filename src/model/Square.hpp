@@ -2,8 +2,6 @@
 
 #include "../common/Macro.hpp"
 
-namespace dab::model {
-
 #define DefSquareClass(Class, SizeExpr)                         \
   template <int BoardSize, typename SizeType>                   \
   class Class {                                                 \
@@ -25,5 +23,3 @@ public:                                                         \
 
 DefSquareClass(Dot, BoardSize + 1);
 DefSquareClass(Box, BoardSize);
-
-}  // namespace dab::model
