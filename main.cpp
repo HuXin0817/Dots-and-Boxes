@@ -30,7 +30,7 @@ main(int argc, char* argv[]) {
   parser.addOption(boardSizeOption);
 
   QCommandLineOption player1Option(
-      QStringList() << "p1" << "player1", "Set player 1 type: 'human' or 'robot' (default: 'robot').", "Type", "human");
+      QStringList() << "p1" << "player1", "Set player 1 type: 'human' or 'robot' (default: 'robot').", "Type", "robot");
   parser.addOption(player1Option);
 
   QCommandLineOption player2Option(
