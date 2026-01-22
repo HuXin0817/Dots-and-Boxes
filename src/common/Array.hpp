@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cstring>
-#include <initializer_list>
 
 #include "Macro.hpp"
 

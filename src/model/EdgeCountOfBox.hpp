@@ -18,7 +18,7 @@ class EdgeCountOfBox {
   Add(const Edge<BoardSize, SizeType> edge) {
     SizeType score = 0;
     for (const Box<BoardSize, SizeType> box : NearBoxes(edge)) {
-      ++Map.At(box.Value());
+      Map.At(box.Value())++;
       const SizeType num = Map.At(box.Value());
       assert(num <= 4);
       if (num == 4) {

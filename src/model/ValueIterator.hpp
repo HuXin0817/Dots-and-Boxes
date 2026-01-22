@@ -11,10 +11,9 @@ class ValueIterator {
     operator*() {
       return v;
     }
-    iterator&
+    void
     operator++() {
       v++;
-      return *this;
     }
     bool
     operator!=(iterator o) {
