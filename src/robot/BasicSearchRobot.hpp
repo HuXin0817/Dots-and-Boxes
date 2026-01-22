@@ -15,15 +15,15 @@ class BasicSearchRobot final : public Robot<BoardSize> {
   friend class ImprovedSearchRobot<BoardSize>;
 
   public:
-  common::Span<model::Edge<BoardSize>>
+  common::Span<model::Edge<BoardSize>, int>
   BestCandidateEdges(const board::ScoreCountableBoard<BoardSize>& board) override {
-    if (common::Span<model::Edge<BoardSize>> edges = SubRobot.BestCandidateEdges(board);
+    if (common::Span<model::Edge<BoardSize>, int> edges = SubRobot.BestCandidateEdges(board);
         !SubRobot.EnemyUnscoreableEdges.Empty() || !SubRobot.ScoreableEdges.Empty()) {
       return edges;
     }
 
     int minScore = model::Box<BoardSize>::Max + 1;
-    common::List<model::Edge<BoardSize>, model::Edge<BoardSize>::Max>& candidateEdges = SubRobot.EnemyUnscoreableEdges;
+    common::List<model::Edge<BoardSize>, model::Edge<BoardSize>::Max, int>& candidateEdges = SubRobot.EnemyUnscoreableEdges;
     assert(candidateEdges.Empty());
 
     for (const model::Edge<BoardSize> edge : board.GetEdgeCountableBoard().GetBasicBoard().EmptyEdges()) {
@@ -37,7 +37,7 @@ class BasicSearchRobot final : public Robot<BoardSize> {
       }
     }
 
-    return common::Export(candidateEdges);
+    return common::Export<common::List<model::Edge<BoardSize>, model::Edge<BoardSize>::Max, int>, int>(candidateEdges);
   }
 
   private:

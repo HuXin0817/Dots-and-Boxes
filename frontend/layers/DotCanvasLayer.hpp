@@ -47,7 +47,7 @@ class DotCanvasLayer final : public BaseCanvasLayer<BoardSize> {
   }
 
   private:
-  common::Array<common::Ptr<canvas::DotCanvas<BoardSize>>, model::Dot<BoardSize>::Max> DotCanvases;
+  common::Array<common::Ptr<canvas::DotCanvas<BoardSize>>, model::Dot<BoardSize>::Max, int> DotCanvases;
 };
 
 }  // namespace dab::frontend::layer

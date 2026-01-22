@@ -42,7 +42,7 @@ class EdgeLayer : public BaseCanvasLayer<BoardSize> {
   }
 
   private:
-  common::Array<common::Ptr<Canvas>, model::Edge<BoardSize>::Max> Canvases;
+  common::Array<common::Ptr<Canvas>, model::Edge<BoardSize>::Max, int> Canvases;
 };
 
 }  // namespace dab::frontend::layer

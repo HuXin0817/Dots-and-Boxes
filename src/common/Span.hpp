@@ -4,7 +4,7 @@
 
 namespace dab::common {
 
-template <typename T>
+template <typename T, typename SizeType>
 class Span {
   public:
   Span() = default;
@@ -19,10 +19,11 @@ class Span {
   const T* End = nullptr;
 };
 
-template <typename T>
+template <typename T, typename SizeType>
 auto
 Export(const T& arr) {
-  return Span(arr.begin(), arr.end());
+  auto ele = arr.At(0);
+  return Span<decltype(ele), SizeType>(arr.begin(), arr.end());
 }
 
 }  // namespace dab::common

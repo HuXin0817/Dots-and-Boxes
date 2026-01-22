@@ -41,12 +41,12 @@ class BasicBoard {
     return EdgeIndexes.At(edge.Value()) >= Step.NowStep();
   }
 
-  common::Span<model::Edge<BoardSize>>
+  common::Span<model::Edge<BoardSize>, int>
   EmptyEdges() const {
     return {Edges.begin() + Step.NowStep(), Edges.begin() + model::Edge<BoardSize>::Max};
   }
 
-  common::Span<model::Edge<BoardSize>>
+  common::Span<model::Edge<BoardSize>, int>
   MoveRecord() const {
     return {Edges.begin(), Edges.begin() + Step.NowStep()};
   }
@@ -58,8 +58,8 @@ class BasicBoard {
 
   private:
   model::Step<BoardSize> Step;
-  common::Array<model::Edge<BoardSize>, model::Edge<BoardSize>::Max> Edges;
-  common::Array<int, model::Edge<BoardSize>::Max> EdgeIndexes;
+  common::Array<model::Edge<BoardSize>, model::Edge<BoardSize>::Max, int> Edges;
+  common::Array<int, model::Edge<BoardSize>::Max, int> EdgeIndexes;
 };
 
 }  // namespace dab::board

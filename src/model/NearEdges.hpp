@@ -7,7 +7,7 @@
 namespace dab::model {
 
 template <int BoardSize>
-const common::Array<Edge<BoardSize>, 4>&
+const common::Array<Edge<BoardSize>, 4, int>&
 NearEdges(const Box<BoardSize> box);
 
 template <int BoardSize>
@@ -31,14 +31,14 @@ class NearEdgesMapper {
   }
 
   private:
-  common::Array<common::Array<Edge<BoardSize>, 4>, Box<BoardSize>::Max> BoxNearEdges;
+  common::Array<common::Array<Edge<BoardSize>, 4, int>, Box<BoardSize>::Max, int> BoxNearEdges;
 
-  friend const common::Array<Edge<BoardSize>, 4>&
+  friend const common::Array<Edge<BoardSize>, 4, int>&
   NearEdges<BoardSize>(const Box<BoardSize> box);
 };
 
 template <int BoardSize>
-const common::Array<Edge<BoardSize>, 4>&
+const common::Array<Edge<BoardSize>, 4, int>&
 NearEdges(const Box<BoardSize> box) {
   static NearEdgesMapper<BoardSize> NearEdgesMapperInstance;
 

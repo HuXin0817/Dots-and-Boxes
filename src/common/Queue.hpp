@@ -6,7 +6,7 @@
 
 namespace dab::common {
 
-template <typename T, int Cap>
+template <typename T, size_t Cap, typename SizeType>
 class Queue {
   public:
   void
@@ -30,9 +30,9 @@ class Queue {
   IterableObject(Data.begin() + Begin, Data.begin() + End, End - Begin);
 
   private:
-  Array<T, Cap> Data;
-  int Begin = 0;
-  int End = 0;
+  Array<T, Cap, SizeType> Data;
+  SizeType Begin = 0;
+  SizeType End = 0;
 };
 
 }  // namespace dab::common

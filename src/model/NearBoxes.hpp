@@ -11,7 +11,7 @@
 namespace dab::model {
 
 template <int BoardSize>
-const common::List<Box<BoardSize>, 2>&
+const common::List<Box<BoardSize>, 2, int>&
 NearBoxes(const Edge<BoardSize> edge);
 
 template <int BoardSize>
@@ -25,11 +25,11 @@ class NearBoxesMapper {
   }
 
   private:
-  common::Array<common::List<Box<BoardSize>, 2>, Edge<BoardSize>::Max> EdgeNearBoxes;
+  common::Array<common::List<Box<BoardSize>, 2, int>, Edge<BoardSize>::Max, int> EdgeNearBoxes;
 
-  static common::List<Box<BoardSize>, 2>
+  static common::List<Box<BoardSize>, 2, int>
   GetNearBoxes(const Edge<BoardSize> edge) {
-    common::List<Box<BoardSize>, 2> result;
+    common::List<Box<BoardSize>, 2, int> result;
 
     int x = edge.Dot2().X() - 1;
     int y = edge.Dot2().Y() - 1;
@@ -46,12 +46,12 @@ class NearBoxesMapper {
     return result;
   }
 
-  friend const common::List<Box<BoardSize>, 2>&
+  friend const common::List<Box<BoardSize>, 2, int>&
   NearBoxes<BoardSize>(const Edge<BoardSize> edge);
 };
 
 template <int BoardSize>
-const common::List<Box<BoardSize>, 2>&
+const common::List<Box<BoardSize>, 2, int>&
 NearBoxes(const Edge<BoardSize> edge) {
   static NearBoxesMapper<BoardSize> NearBoxesMapperInstance;
 

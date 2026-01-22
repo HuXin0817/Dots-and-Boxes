@@ -21,11 +21,11 @@ class SimpleStrategyRobot final : public Robot<BoardSize> {
   public:
   SimpleStrategyRobot() = default;
 
-  common::Span<model::Edge<BoardSize>>
+  common::Span<model::Edge<BoardSize>, int>
   BestCandidateEdges(const board::ScoreCountableBoard<BoardSize>& board) override {
     EnemyUnscoreableEdges.Clear();
     ScoreableEdges.Clear();
-    const common::Span<model::Edge<BoardSize>> emptyEdges = board.GetEdgeCountableBoard().GetBasicBoard().EmptyEdges();
+    const common::Span<model::Edge<BoardSize>, int> emptyEdges = board.GetEdgeCountableBoard().GetBasicBoard().EmptyEdges();
 
     for (const model::Edge<BoardSize> edge : emptyEdges) {
       if (const int maxCount = board.GetEdgeCountableBoard().GetEdgeCountOfBox().MaxCount(edge); maxCount == 3) {
@@ -36,18 +36,18 @@ class SimpleStrategyRobot final : public Robot<BoardSize> {
     }
 
     if (!ScoreableEdges.Empty()) {
-      return common::Export(ScoreableEdges);
+      return common::Export<common::List<model::Edge<BoardSize>, model::Edge<BoardSize>::Max, int>, int>(ScoreableEdges);
     }
     if (!EnemyUnscoreableEdges.Empty()) {
-      return common::Export(EnemyUnscoreableEdges);
+      return common::Export<common::List<model::Edge<BoardSize>, model::Edge<BoardSize>::Max, int>, int>(EnemyUnscoreableEdges);
     }
 
     return {emptyEdges.begin(), emptyEdges.end()};
   }
 
   private:
-  common::List<model::Edge<BoardSize>, model::Edge<BoardSize>::Max> EnemyUnscoreableEdges;
-  common::List<model::Edge<BoardSize>, model::Edge<BoardSize>::Max> ScoreableEdges;
+  common::List<model::Edge<BoardSize>, model::Edge<BoardSize>::Max, int> EnemyUnscoreableEdges;
+  common::List<model::Edge<BoardSize>, model::Edge<BoardSize>::Max, int> ScoreableEdges;
 };
 
 }  // namespace dab::robot

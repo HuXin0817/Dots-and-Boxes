@@ -43,7 +43,7 @@ class EdgeCountOfBox {
   }
 
   private:
-  common::Array<int, Box<BoardSize>::Max> Map;
+  common::Array<int, Box<BoardSize>::Max, int> Map;
 };
 
 }  // namespace dab::model

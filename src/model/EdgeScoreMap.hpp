@@ -34,7 +34,7 @@ class EdgeScoreMap {
     }
   }
 
-  common::Span<Edge<BoardSize>>
+  common::Span<Edge<BoardSize>, int>
   Export() {
     float maxScore = 0.0;
     for (const Edge<BoardSize> edge : ValueIterator<Edge<BoardSize>>()) {
@@ -48,13 +48,13 @@ class EdgeScoreMap {
         }
       }
     }
-    return common::Export(BestEdges);
+    return common::Export<common::List<Edge<BoardSize>, Edge<BoardSize>::Max, int>, int>(BestEdges);
   }
 
   private:
-  common::Array<int, Edge<BoardSize>::Max> Time;
-  common::Array<int, Edge<BoardSize>::Max> Score;
-  common::List<Edge<BoardSize>, Edge<BoardSize>::Max> BestEdges;
+  common::Array<int, Edge<BoardSize>::Max, int> Time;
+  common::Array<int, Edge<BoardSize>::Max, int> Score;
+  common::List<Edge<BoardSize>, Edge<BoardSize>::Max, int> BestEdges;
 };
 
 }  // namespace dab::model

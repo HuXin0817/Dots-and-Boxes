@@ -56,7 +56,7 @@ class ScoreableEdgeBoard {
 
   private:
   EdgeCountableBoard<BoardSize> EdgeCountableBoard;
-  common::Queue<model::Edge<BoardSize>, model::Edge<BoardSize>::Max> ScoreableEdges;
+  common::Queue<model::Edge<BoardSize>, model::Edge<BoardSize>::Max, int> ScoreableEdges;
 };
 
 }  // namespace dab::board

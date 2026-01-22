@@ -6,7 +6,7 @@
 
 namespace dab::common {
 
-template <typename T, int Cap>
+template <typename T, size_t Cap, typename SizeType>
 class List {
   public:
   void
@@ -29,8 +29,8 @@ class List {
   IterableObject(Data.begin(), Data.begin() + Length, Length);
 
   private:
-  Array<T, Cap> Data;
-  int Length = 0;
+  Array<T, Cap, SizeType> Data;
+  SizeType Length = 0;
 };
 
 }  // namespace dab::common

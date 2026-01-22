@@ -101,7 +101,7 @@ class MainWindow final : public layer::BaseCanvasLayer<BoardSize> {
 
         if ((Player1Type == PlayerType::Robot && Board.GetScoreMap().GetTurn().Value() == model::Player1Turn.Value()) ||
             (Player2Type == PlayerType::Robot && Board.GetScoreMap().GetTurn().Value() == model::Player2Turn.Value())) {
-          PlayerMoveEdge = common::RandomChoice(Robot.BestCandidateEdges(Board));
+          PlayerMoveEdge = common::RandomChoice<common::Span<model::Edge<BoardSize>, int>, int>(Robot.BestCandidateEdges(Board));
         } else {
           PlayerMoveEdge = model::InvalidEdge<BoardSize>();
           while (PlayerMoveEdge.Value() == model::InvalidEdge<BoardSize>().Value()) {

@@ -45,7 +45,7 @@ class BoxCanvasLayer final : public BaseCanvasLayer<BoardSize> {
   }
 
   private:
-  common::Array<common::Ptr<canvas::BoxCanvas<BoardSize>>, model::Box<BoardSize>::Max> BoxCanvases;
+  common::Array<common::Ptr<canvas::BoxCanvas<BoardSize>>, model::Box<BoardSize>::Max, int> BoxCanvases;
 };
 
 }  // namespace dab::frontend::layer

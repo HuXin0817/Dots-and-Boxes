@@ -11,9 +11,9 @@ class ImprovedSearchRobot final : public Robot<BoardSize> {
   public:
   ImprovedSearchRobot() = default;
 
-  common::Span<model::Edge<BoardSize>>
+  common::Span<model::Edge<BoardSize>, int>
   BestCandidateEdges(const board::ScoreCountableBoard<BoardSize>& board) override {
-    if (common::Span<model::Edge<BoardSize>> edges = SubRobot.BestCandidateEdges(board);
+    if (common::Span<model::Edge<BoardSize>, int> edges = SubRobot.BestCandidateEdges(board);
         !SubRobot.SubRobot.EnemyUnscoreableEdges.Empty()) {
       return edges;
     }
@@ -36,13 +36,13 @@ class ImprovedSearchRobot final : public Robot<BoardSize> {
       }
     }
 
-    return common::Export(SearchEdges);
+    return common::Export<common::List<model::Edge<BoardSize>, model::Edge<BoardSize>::Max, int>, int>(SearchEdges);
   }
 
   private:
   BasicSearchRobot<BoardSize> SubRobot;
   board::ScoreCountableBoard<BoardSize> SimulationBoard;
-  common::List<model::Edge<BoardSize>, model::Edge<BoardSize>::Max> SearchEdges;
+  common::List<model::Edge<BoardSize>, model::Edge<BoardSize>::Max, int> SearchEdges;
 };
 
 }  // namespace dab::robot
