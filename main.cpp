@@ -15,7 +15,7 @@ main(int argc, char* argv[]) {
   parser.addVersionOption();
 
   QCommandLineOption boardSizeOption(QStringList() << "s" << "size",
-                                     QString("Set board size, ranging from [%1, %2] with a default of %3.")
+                                     QString("Set board size ranging from [%1, %2] (default: %3).")
                                          .arg(dab::frontend::MainWindowCreator::MinBoardSize)
                                          .arg(dab::frontend::MainWindowCreator::MaxBoardSize)
                                          .arg(DefaultBoardSize),
@@ -24,11 +24,11 @@ main(int argc, char* argv[]) {
   parser.addOption(boardSizeOption);
 
   QCommandLineOption player1Option(
-      QStringList() << "p1" << "player1", "Set player 1 type: 'human' or 'robot' (default: 'robot').", "Type", "robot");
+      QStringList() << "p1" << "player1", "Set player1 type: 'human' or 'robot' (default: 'robot').", "Type", "robot");
   parser.addOption(player1Option);
 
   QCommandLineOption player2Option(
-      QStringList() << "p2" << "player2", "Set player 2 type: 'human' or 'robot' (default: 'robot').", "Type", "robot");
+      QStringList() << "p2" << "player2", "Set player2 type: 'human' or 'robot' (default: 'robot').", "Type", "robot");
   parser.addOption(player2Option);
 
   parser.process(application);
@@ -39,7 +39,7 @@ main(int argc, char* argv[]) {
   if (!conversionOk || boardSize < dab::frontend::MainWindowCreator::MinBoardSize ||
       boardSize > dab::frontend::MainWindowCreator::MaxBoardSize) {
     std::fprintf(stderr,
-                 "Error: Invalid board size. Must be an integer in range [%d, %d].",
+                 "Error: Invalid board size. Must be an integer in range [%d, %d].\n",
                  dab::frontend::MainWindowCreator::MinBoardSize,
                  dab::frontend::MainWindowCreator::MaxBoardSize);
     return EXIT_FAILURE;
