@@ -1,7 +1,5 @@
 #pragma once
 
-#include <QWidget>
-
 #include "../../src/common/Array.hpp"
 #include "../../src/common/Ptr.hpp"
 #include "../../src/model/Square.hpp"

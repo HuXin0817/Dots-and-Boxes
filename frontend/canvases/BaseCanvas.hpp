@@ -1,8 +1,5 @@
 #pragma once
 
-#include <QApplication>
-#include <QWidget>
-
 #include "../../src/model/Turn.hpp"
 
 namespace dab::frontend::canvas {

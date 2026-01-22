@@ -1,8 +1,5 @@
 #pragma once
 
-#include <QString>
-#include <optional>
-
 namespace dab::frontend {
 
 enum class PlayerType {

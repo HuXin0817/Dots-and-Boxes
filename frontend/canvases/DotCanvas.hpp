@@ -1,8 +1,5 @@
 #pragma once
 
-#include <QPaintEvent>
-#include <QPainter>
-
 #include "BaseCanvas.hpp"
 
 namespace dab::frontend::canvas {

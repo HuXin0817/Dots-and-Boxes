@@ -1,7 +1,5 @@
 #pragma once
 
-#include <QPainter>
-
 #include "BaseCanvas.hpp"
 #include "BaseEdgeCanvas.hpp"
 

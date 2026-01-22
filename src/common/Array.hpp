@@ -1,7 +1,5 @@
 #pragma once
 
-#include <cstring>
-
 #include "Macro.hpp"
 
 namespace dab::common {

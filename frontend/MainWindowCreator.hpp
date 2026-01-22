@@ -1,8 +1,5 @@
 #pragma once
 
-#include <cstdint>
-#include <limits>
-
 #include "MainWindow.hpp"
 
 namespace dab::frontend {

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <cassert>
-
 #include "../common/Array.hpp"
 #include "../common/List.hpp"
 #include "Edge.hpp"

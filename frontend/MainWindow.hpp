@@ -1,9 +1,5 @@
 #pragma once
 
-#include <QThreadPool>
-#include <QTime>
-#include <functional>
-
 #include "../src/robot/ParallelSearchRobot.hpp"
 #include "PlayerConfig.hpp"
 #include "layers/BoxCanvasLayer.hpp"

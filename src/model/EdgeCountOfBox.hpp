@@ -1,8 +1,5 @@
 #pragma once
 
-#include <algorithm>
-#include <cassert>
-
 #include "../common/Array.hpp"
 #include "NearBoxes.hpp"
 #include "Square.hpp"

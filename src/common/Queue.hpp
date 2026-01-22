@@ -1,7 +1,5 @@
 #pragma once
 
-#include <cassert>
-
 #include "Array.hpp"
 
 namespace dab::common {

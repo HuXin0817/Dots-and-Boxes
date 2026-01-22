@@ -1,7 +1,5 @@
 #pragma once
 
-#include <cassert>
-
 #define IntValueObject(Class) \
   public:                     \
   Class() = default;          \
