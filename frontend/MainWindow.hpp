@@ -17,14 +17,14 @@ class MainWindow final : public BaseCanvasLayer<BoardSize, SizeType> {
     Base::resize(Base::WindowSize, Base::WindowSize);
     Base::setMinimumSize(Base::WindowSize, Base::WindowSize);
 
-    BoxCanvasLayer = std::make_unique<typename BoxCanvasLayer<BoardSize, SizeType>>(this);
-    EdgeCanvasLayer = std::make_unique<typename EdgeCanvasLayer<BoardSize, SizeType>>(this);
-    DotCanvasLayer = std::make_unique<typename DotCanvasLayer<BoardSize, SizeType>>(this);
+    BoxCanvasLayer = std::make_unique<typename ::BoxCanvasLayer<BoardSize, SizeType>>(this);
+    EdgeCanvasLayer = std::make_unique<typename ::EdgeCanvasLayer<BoardSize, SizeType>>(this);
+    DotCanvasLayer = std::make_unique<typename ::DotCanvasLayer<BoardSize, SizeType>>(this);
     std::function<std::function<void()>(const Edge<BoardSize, SizeType>)> CallBackFactory =
         [this](const Edge<BoardSize, SizeType> edge) -> std::function<void()> {
       return [edge, this]() -> void { setPlayerMoveEdge(edge); };
     };
-    EdgeButtonLayer = std::make_unique<typename EdgeButtonLayer<BoardSize, SizeType>>(CallBackFactory, this);
+    EdgeButtonLayer = std::make_unique<typename ::EdgeButtonLayer<BoardSize, SizeType>>(CallBackFactory, this);
     if (PlayerTypeIsRobot(Player1Type)) {
       Robot1 = CreateRobot<BoardSize, SizeType>(Player1Type);
     }
