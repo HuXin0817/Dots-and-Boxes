@@ -5,7 +5,7 @@
 namespace dab::model {
 
 #define DefSquareClass(Class, SizeExpr)               \
-  template <int BoardSize>                            \
+  template <int BoardSize, typename SizeType>         \
   class Class {                                       \
 public:                                               \
     constexpr Class(int x, int y) : v(x * Size + y) { \

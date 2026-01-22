@@ -6,13 +6,13 @@
 
 namespace dab::robot {
 
-template <int BoardSize>
+template <int BoardSize, typename SizeType>
 class Robot {
   public:
   virtual ~Robot() = default;
 
-  virtual common::Span<model::Edge<BoardSize>, int>
-  BestCandidateEdges(const board::ScoreCountableBoard<BoardSize>& board) = 0;
+  virtual common::Span<model::Edge<BoardSize, SizeType>, int>
+  BestCandidateEdges(const board::ScoreCountableBoard<BoardSize, SizeType>& board) = 0;
 };
 
 }  // namespace dab::robot

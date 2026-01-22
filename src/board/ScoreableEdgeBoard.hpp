@@ -6,21 +6,21 @@
 
 namespace dab::board {
 
-template <int BoardSize>
+template <int BoardSize, typename SizeType>
 class ScoreableEdgeBoard {
   public:
   ScoreableEdgeBoard() = default;
 
   void
-  Reset(const EdgeCountableBoard<BoardSize>& newBoard) {
+  Reset(const EdgeCountableBoard<BoardSize, SizeType>& newBoard) {
     EdgeCountableBoard = newBoard;
     ScoreableEdges.Clear();
   }
 
   int
-  Add(const model::Edge<BoardSize> edge) {
+  Add(const model::Edge<BoardSize, SizeType> edge) {
     const int score = EdgeCountableBoard.Add(edge);
-    for (const model::Box<BoardSize> box : NearBoxes(edge)) {
+    for (const model::Box<BoardSize, SizeType> box : NearBoxes(edge)) {
       if (EdgeCountableBoard.GetEdgeCountOfBox().EdgeCount(box) == 3) {
         ScoreableEdges.Append(EdgeCountableBoard.FindNotContainsEdgeInBox(box));
       }
@@ -33,14 +33,14 @@ class ScoreableEdgeBoard {
     int score = 0;
     while (EdgeCountableBoard.GetBasicBoard().GetStep().Gaming()) {
       if (ScoreableEdges.Empty()) {
-        if (const model::Edge<BoardSize> edge = EdgeCountableBoard.FindScoreableEdge();
-            edge.Value() != model::InvalidEdge<BoardSize>().Value()) {
+        if (const model::Edge<BoardSize, SizeType> edge = EdgeCountableBoard.FindScoreableEdge();
+            edge.Value() != model::InvalidEdge<BoardSize, SizeType>().Value()) {
           ScoreableEdges.Append(edge);
         } else {
           break;
         }
       }
-      const model::Edge<BoardSize> edge = ScoreableEdges.Pop();
+      const model::Edge<BoardSize, SizeType> edge = ScoreableEdges.Pop();
       if (EdgeCountableBoard.GetBasicBoard().Contains(edge)) {
         continue;
       }
@@ -55,8 +55,8 @@ class ScoreableEdgeBoard {
   }
 
   private:
-  EdgeCountableBoard<BoardSize> EdgeCountableBoard;
-  common::Queue<model::Edge<BoardSize>, model::Edge<BoardSize>::Max, int> ScoreableEdges;
+  EdgeCountableBoard<BoardSize, SizeType> EdgeCountableBoard;
+  common::Queue<model::Edge<BoardSize, SizeType>, model::Edge<BoardSize, SizeType>::Max, int> ScoreableEdges;
 };
 
 }  // namespace dab::board

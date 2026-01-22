@@ -6,18 +6,19 @@
 
 namespace dab::frontend::layer {
 
-template <int BoardSize>
-class EdgeButtonLayer final : public EdgeLayer<BoardSize, canvas::EdgeButtonCanvas<BoardSize>> {
+template <int BoardSize, typename SizeType>
+class EdgeButtonLayer final : public EdgeLayer<BoardSize, SizeType, canvas::EdgeButtonCanvas<BoardSize, SizeType>> {
   public:
-  explicit EdgeButtonLayer(const std::function<std::function<void()>(const model::Edge<BoardSize>)>& callBackFactory,
-                           QWidget* parent)
-      : EdgeLayer<BoardSize, canvas::EdgeButtonCanvas<BoardSize>>(parent) {
-    EdgeLayer<BoardSize, canvas::EdgeButtonCanvas<BoardSize>>::resize(
-        EdgeLayer<BoardSize, canvas::EdgeButtonCanvas<BoardSize>>::WindowSize,
-        EdgeLayer<BoardSize, canvas::EdgeButtonCanvas<BoardSize>>::WindowSize);
+  explicit EdgeButtonLayer(
+      const std::function<std::function<void()>(const model::Edge<BoardSize, SizeType>)>& callBackFactory,
+      QWidget* parent)
+      : EdgeLayer<BoardSize, SizeType, canvas::EdgeButtonCanvas<BoardSize, SizeType>>(parent) {
+    EdgeLayer<BoardSize, SizeType, canvas::EdgeButtonCanvas<BoardSize, SizeType>>::resize(
+        EdgeLayer<BoardSize, SizeType, canvas::EdgeButtonCanvas<BoardSize, SizeType>>::WindowSize,
+        EdgeLayer<BoardSize, SizeType, canvas::EdgeButtonCanvas<BoardSize, SizeType>>::WindowSize);
 
-    for (const model::Edge<BoardSize> edge : model::ValueIterator<model::Edge<BoardSize>>()) {
-      EdgeLayer<BoardSize, canvas::EdgeButtonCanvas<BoardSize>>::At(edge).New(
+    for (const model::Edge<BoardSize, SizeType> edge : model::ValueIterator<model::Edge<BoardSize, SizeType>>()) {
+      EdgeLayer<BoardSize, SizeType, canvas::EdgeButtonCanvas<BoardSize, SizeType>>::At(edge).New(
           edge.Rotate(), callBackFactory(edge), this);
     }
   }

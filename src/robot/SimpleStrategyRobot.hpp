@@ -7,27 +7,28 @@
 
 namespace dab::robot {
 
-template <int BoardSize>
+template <int BoardSize, typename SizeType>
 class BasicSearchRobot;
 
-template <int BoardSize>
+template <int BoardSize, typename SizeType>
 class ImprovedSearchRobot;
 
-template <int BoardSize>
-class SimpleStrategyRobot final : public Robot<BoardSize> {
-  friend class BasicSearchRobot<BoardSize>;
-  friend class ImprovedSearchRobot<BoardSize>;
+template <int BoardSize, typename SizeType>
+class SimpleStrategyRobot final : public Robot<BoardSize, SizeType> {
+  friend class BasicSearchRobot<BoardSize, SizeType>;
+  friend class ImprovedSearchRobot<BoardSize, SizeType>;
 
   public:
   SimpleStrategyRobot() = default;
 
-  common::Span<model::Edge<BoardSize>, int>
-  BestCandidateEdges(const board::ScoreCountableBoard<BoardSize>& board) override {
+  common::Span<model::Edge<BoardSize, SizeType>, int>
+  BestCandidateEdges(const board::ScoreCountableBoard<BoardSize, SizeType>& board) override {
     EnemyUnscoreableEdges.Clear();
     ScoreableEdges.Clear();
-    const common::Span<model::Edge<BoardSize>, int> emptyEdges = board.GetEdgeCountableBoard().GetBasicBoard().EmptyEdges();
+    const common::Span<model::Edge<BoardSize, SizeType>, int> emptyEdges =
+        board.GetEdgeCountableBoard().GetBasicBoard().EmptyEdges();
 
-    for (const model::Edge<BoardSize> edge : emptyEdges) {
+    for (const model::Edge<BoardSize, SizeType> edge : emptyEdges) {
       if (const int maxCount = board.GetEdgeCountableBoard().GetEdgeCountOfBox().MaxCount(edge); maxCount == 3) {
         ScoreableEdges.Append(edge);
       } else if (maxCount < 2) {
@@ -36,18 +37,20 @@ class SimpleStrategyRobot final : public Robot<BoardSize> {
     }
 
     if (!ScoreableEdges.Empty()) {
-      return common::Export<common::List<model::Edge<BoardSize>, model::Edge<BoardSize>::Max, int>, int>(ScoreableEdges);
+      return common::Export<common::List<model::Edge<BoardSize, SizeType>, model::Edge<BoardSize, SizeType>::Max, int>,
+                            int>(ScoreableEdges);
     }
     if (!EnemyUnscoreableEdges.Empty()) {
-      return common::Export<common::List<model::Edge<BoardSize>, model::Edge<BoardSize>::Max, int>, int>(EnemyUnscoreableEdges);
+      return common::Export<common::List<model::Edge<BoardSize, SizeType>, model::Edge<BoardSize, SizeType>::Max, int>,
+                            int>(EnemyUnscoreableEdges);
     }
 
     return {emptyEdges.begin(), emptyEdges.end()};
   }
 
   private:
-  common::List<model::Edge<BoardSize>, model::Edge<BoardSize>::Max, int> EnemyUnscoreableEdges;
-  common::List<model::Edge<BoardSize>, model::Edge<BoardSize>::Max, int> ScoreableEdges;
+  common::List<model::Edge<BoardSize, SizeType>, model::Edge<BoardSize, SizeType>::Max, int> EnemyUnscoreableEdges;
+  common::List<model::Edge<BoardSize, SizeType>, model::Edge<BoardSize, SizeType>::Max, int> ScoreableEdges;
 };
 
 }  // namespace dab::robot

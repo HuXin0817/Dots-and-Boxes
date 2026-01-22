@@ -4,12 +4,12 @@
 
 namespace dab::model {
 
-template <int BoardSize>
+template <int BoardSize, typename SizeType>
 class Edge {
   public:
   static constexpr int Max = 2 * BoardSize * (BoardSize + 1);
 
-  Edge(const Dot<BoardSize> dot1, const Dot<BoardSize> dot2) {
+  Edge(const Dot<BoardSize, SizeType> dot1, const Dot<BoardSize, SizeType> dot2) {
     if (dot2.Value() - dot1.Value() == 1) {
       v = 2 * (dot1.Value() - dot1.Value() / (BoardSize + 1)) + 1;
     } else {
@@ -20,7 +20,7 @@ class Edge {
     assert(Dot2().Value() == dot2.Value());
   }
 
-  Dot<BoardSize>
+  Dot<BoardSize, SizeType>
   Dot1() const {
     int dot = v >> 1;
     if (v & 1) {
@@ -29,7 +29,7 @@ class Edge {
     return dot;
   }
 
-  Dot<BoardSize>
+  Dot<BoardSize, SizeType>
   Dot2() const {
     int dot = v >> 1;
     if (v & 1) {
@@ -45,11 +45,11 @@ class Edge {
     return v & 1;
   }
 
-  IntValueObject(Edge<BoardSize>)
+  IntValueObject(Edge)
 };
 
-template <int BoardSize>
-Edge<BoardSize>
+template <int BoardSize, typename SizeType>
+Edge<BoardSize, SizeType>
 InvalidEdge() {
   return -1;
 }

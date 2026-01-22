@@ -28,17 +28,17 @@
   const auto end() const {                  \
     return (_End);                          \
   }                                         \
-  SizeType Size() const {                        \
+  SizeType Size() const {                   \
     return (_Size);                         \
   }                                         \
-  bool Empty() const {                       \
+  bool Empty() const {                      \
     return (_Size) == 0;                    \
   }                                         \
-  auto& At(SizeType i) {                         \
+  auto& At(SizeType i) {                    \
     assert(i >= 0 && i < (_Size));          \
     return *((_Begin) + i);                 \
   }                                         \
-  const auto& At(SizeType i) const {             \
+  const auto& At(SizeType i) const {        \
     assert(i >= 0 && i < (_Size));          \
     return *((_Begin) + i);                 \
   }

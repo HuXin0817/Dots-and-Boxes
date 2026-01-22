@@ -10,50 +10,50 @@
 
 namespace dab::model {
 
-template <int BoardSize>
-const common::List<Box<BoardSize>, 2, int>&
-NearBoxes(const Edge<BoardSize> edge);
+template <int BoardSize, typename SizeType>
+const common::List<Box<BoardSize, SizeType>, 2, int>&
+NearBoxes(const Edge<BoardSize, SizeType> edge);
 
-template <int BoardSize>
+template <int BoardSize, typename SizeType>
 class NearBoxesMapper {
   public:
   NearBoxesMapper() {
     int i = 0;
-    for (const Edge<BoardSize> edge : ValueIterator<Edge<BoardSize>>()) {
+    for (const Edge<BoardSize, SizeType> edge : ValueIterator<Edge<BoardSize, SizeType>>()) {
       EdgeNearBoxes.At(edge.Value()) = GetNearBoxes(edge);
     }
   }
 
   private:
-  common::Array<common::List<Box<BoardSize>, 2, int>, Edge<BoardSize>::Max, int> EdgeNearBoxes;
+  common::Array<common::List<Box<BoardSize, SizeType>, 2, int>, Edge<BoardSize, SizeType>::Max, int> EdgeNearBoxes;
 
-  static common::List<Box<BoardSize>, 2, int>
-  GetNearBoxes(const Edge<BoardSize> edge) {
-    common::List<Box<BoardSize>, 2, int> result;
+  static common::List<Box<BoardSize, SizeType>, 2, int>
+  GetNearBoxes(const Edge<BoardSize, SizeType> edge) {
+    common::List<Box<BoardSize, SizeType>, 2, int> result;
 
     int x = edge.Dot2().X() - 1;
     int y = edge.Dot2().Y() - 1;
     if (x >= 0 && y >= 0) {
-      result.Append(Box<BoardSize>(x, y));
+      result.Append(Box<BoardSize, SizeType>(x, y));
     }
 
     x = edge.Dot1().X();
     y = edge.Dot1().Y();
     if (x < BoardSize && y < BoardSize) {
-      result.Append(Box<BoardSize>(x, y));
+      result.Append(Box<BoardSize, SizeType>(x, y));
     }
 
     return result;
   }
 
-  friend const common::List<Box<BoardSize>, 2, int>&
-  NearBoxes<BoardSize>(const Edge<BoardSize> edge);
+  friend const common::List<Box<BoardSize, SizeType>, 2, int>&
+  NearBoxes<BoardSize, SizeType>(const Edge<BoardSize, SizeType> edge);
 };
 
-template <int BoardSize>
-const common::List<Box<BoardSize>, 2, int>&
-NearBoxes(const Edge<BoardSize> edge) {
-  static NearBoxesMapper<BoardSize> NearBoxesMapperInstance;
+template <int BoardSize, typename SizeType>
+const common::List<Box<BoardSize, SizeType>, 2, int>&
+NearBoxes(const Edge<BoardSize, SizeType> edge) {
+  static NearBoxesMapper<BoardSize, SizeType> NearBoxesMapperInstance;
 
   return NearBoxesMapperInstance.EdgeNearBoxes.At(edge.Value());
 }

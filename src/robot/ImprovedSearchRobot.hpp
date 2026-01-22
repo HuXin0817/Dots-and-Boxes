@@ -6,25 +6,26 @@
 
 namespace dab::robot {
 
-template <int BoardSize>
-class ImprovedSearchRobot final : public Robot<BoardSize> {
+template <int BoardSize, typename SizeType>
+class ImprovedSearchRobot final : public Robot<BoardSize, SizeType> {
   public:
   ImprovedSearchRobot() = default;
 
-  common::Span<model::Edge<BoardSize>, int>
-  BestCandidateEdges(const board::ScoreCountableBoard<BoardSize>& board) override {
-    if (common::Span<model::Edge<BoardSize>, int> edges = SubRobot.BestCandidateEdges(board);
+  common::Span<model::Edge<BoardSize, SizeType>, int>
+  BestCandidateEdges(const board::ScoreCountableBoard<BoardSize, SizeType>& board) override {
+    if (common::Span<model::Edge<BoardSize, SizeType>, int> edges = SubRobot.BestCandidateEdges(board);
         !SubRobot.SubRobot.EnemyUnscoreableEdges.Empty()) {
       return edges;
     }
 
     SearchEdges.Clear();
-    int maxScore = -model::Box<BoardSize>::Max;
-    for (const model::Edge<BoardSize> emptyEdge : board.GetEdgeCountableBoard().GetBasicBoard().EmptyEdges()) {
+    int maxScore = -model::Box<BoardSize, SizeType>::Max;
+    for (const model::Edge<BoardSize, SizeType> emptyEdge :
+         board.GetEdgeCountableBoard().GetBasicBoard().EmptyEdges()) {
       SimulationBoard.Reset(board.GetEdgeCountableBoard());
       SimulationBoard.Add(emptyEdge);
       while (SimulationBoard.Gaming()) {
-        const model::Edge<BoardSize> edge = SubRobot.BestCandidateEdges(SimulationBoard).At(0);
+        const model::Edge<BoardSize, SizeType> edge = SubRobot.BestCandidateEdges(SimulationBoard).At(0);
         assert(board.GetEdgeCountableBoard().GetEdgeCountOfBox().MaxCount(edge.Value()) > 1);
         SimulationBoard.Add(edge);
       }
@@ -36,13 +37,14 @@ class ImprovedSearchRobot final : public Robot<BoardSize> {
       }
     }
 
-    return common::Export<common::List<model::Edge<BoardSize>, model::Edge<BoardSize>::Max, int>, int>(SearchEdges);
+    return common::Export<common::List<model::Edge<BoardSize, SizeType>, model::Edge<BoardSize, SizeType>::Max, int>,
+                          int>(SearchEdges);
   }
 
   private:
-  BasicSearchRobot<BoardSize> SubRobot;
-  board::ScoreCountableBoard<BoardSize> SimulationBoard;
-  common::List<model::Edge<BoardSize>, model::Edge<BoardSize>::Max, int> SearchEdges;
+  BasicSearchRobot<BoardSize, SizeType> SubRobot;
+  board::ScoreCountableBoard<BoardSize, SizeType> SimulationBoard;
+  common::List<model::Edge<BoardSize, SizeType>, model::Edge<BoardSize, SizeType>::Max, int> SearchEdges;
 };
 
 }  // namespace dab::robot

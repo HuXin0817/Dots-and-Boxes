@@ -9,15 +9,15 @@
 
 namespace dab::model {
 
-template <int BoardSize>
+template <int BoardSize, typename SizeType>
 class EdgeCountOfBox {
   public:
   EdgeCountOfBox() = default;
 
   int
-  Add(const Edge<BoardSize> edge) {
+  Add(const Edge<BoardSize, SizeType> edge) {
     int score = 0;
-    for (const Box<BoardSize> box : NearBoxes(edge)) {
+    for (const Box<BoardSize, SizeType> box : NearBoxes(edge)) {
       ++Map.At(box.Value());
       const int num = Map.At(box.Value());
       assert(num <= 4);
@@ -29,21 +29,21 @@ class EdgeCountOfBox {
   }
 
   int
-  EdgeCount(const Box<BoardSize> box) const {
+  EdgeCount(const Box<BoardSize, SizeType> box) const {
     return Map.At(box.Value());
   }
 
   int
-  MaxCount(const Edge<BoardSize> edge) const {
+  MaxCount(const Edge<BoardSize, SizeType> edge) const {
     int maxCount = 0;
-    for (const Box<BoardSize> box : NearBoxes(edge)) {
+    for (const Box<BoardSize, SizeType> box : NearBoxes(edge)) {
       maxCount = std::max(maxCount, Map.At(box.Value()));
     }
     return maxCount;
   }
 
   private:
-  common::Array<int, Box<BoardSize>::Max, int> Map;
+  common::Array<int, Box<BoardSize, SizeType>::Max, int> Map;
 };
 
 }  // namespace dab::model

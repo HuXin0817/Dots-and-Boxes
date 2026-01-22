@@ -5,16 +5,17 @@
 
 namespace dab::robot {
 
-template <int BoardSize>
-class ParallelSearchRobot final : public Robot<BoardSize> {
+template <int BoardSize, typename SizeType>
+class ParallelSearchRobot final : public Robot<BoardSize, SizeType> {
   static constexpr int ParallelNumber = CPU_COUNT;
 
   public:
   ParallelSearchRobot() = default;
 
-  common::Span<model::Edge<BoardSize>, int>
-  BestCandidateEdges(const board::ScoreCountableBoard<BoardSize>& board) override {
-    if (const common::Span<model::Edge<BoardSize>, int> edges = SubRobots.At(0).SubRobot.BestCandidateEdges(board);
+  common::Span<model::Edge<BoardSize, SizeType>, int>
+  BestCandidateEdges(const board::ScoreCountableBoard<BoardSize, SizeType>& board) override {
+    if (const common::Span<model::Edge<BoardSize, SizeType>, int> edges =
+            SubRobots.At(0).SubRobot.BestCandidateEdges(board);
         edges.Size() == 1) {
       return edges;
     }
@@ -22,11 +23,11 @@ class ParallelSearchRobot final : public Robot<BoardSize> {
     SearchResult.Reset();
 
 #pragma omp parallel for
-    for (MonteCarloSearchRobot<BoardSize>& model : SubRobots) {
+    for (MonteCarloSearchRobot<BoardSize, SizeType>& model : SubRobots) {
       model.BestCandidateEdges(board);
     }
 
-    for (const MonteCarloSearchRobot<BoardSize>& model : SubRobots) {
+    for (const MonteCarloSearchRobot<BoardSize, SizeType>& model : SubRobots) {
       SearchResult.Add(model.SearchResult);
     }
 
@@ -34,8 +35,8 @@ class ParallelSearchRobot final : public Robot<BoardSize> {
   }
 
   private:
-  common::Array<MonteCarloSearchRobot<BoardSize>, ParallelNumber, int> SubRobots;
-  model::EdgeScoreMap<BoardSize> SearchResult;
+  common::Array<MonteCarloSearchRobot<BoardSize, SizeType>, ParallelNumber, int> SubRobots;
+  model::EdgeScoreMap<BoardSize, SizeType> SearchResult;
 };
 
 }  // namespace dab::robot

@@ -4,7 +4,7 @@
 
 namespace dab::model {
 
-template <int BoardSize>
+template <int BoardSize, typename SizeType>
 class Step {
   public:
   void
@@ -14,12 +14,12 @@ class Step {
 
   bool
   Gaming() const {
-    return v < Edge<BoardSize>::Max;
+    return v < Edge<BoardSize, SizeType>::Max;
   }
 
   int
   RemainStep() const {
-    return Edge<BoardSize>::Max - v;
+    return Edge<BoardSize, SizeType>::Max - v;
   }
 
   int

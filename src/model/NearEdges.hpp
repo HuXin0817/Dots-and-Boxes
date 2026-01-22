@@ -6,21 +6,21 @@
 
 namespace dab::model {
 
-template <int BoardSize>
-const common::Array<Edge<BoardSize>, 4, int>&
-NearEdges(const Box<BoardSize> box);
+template <int BoardSize, typename SizeType>
+const common::Array<Edge<BoardSize, SizeType>, 4, int>&
+NearEdges(const Box<BoardSize, SizeType> box);
 
-template <int BoardSize>
+template <int BoardSize, typename SizeType>
 class NearEdgesMapper {
   public:
   NearEdgesMapper() {
-    for (int x = 0; x < Box<BoardSize>::Size; x++) {
-      for (int y = 0; y < Box<BoardSize>::Size; y++) {
-        const Dot<BoardSize> topLeft(x, y);
-        const Dot<BoardSize> topRight(x + 1, y);
-        const Dot<BoardSize> bottomLeft(x, y + 1);
-        const Dot<BoardSize> bottomRight(x + 1, y + 1);
-        BoxNearEdges.At(Box<BoardSize>(x, y).Value()) = {
+    for (int x = 0; x < Box<BoardSize, SizeType>::Size; x++) {
+      for (int y = 0; y < Box<BoardSize, SizeType>::Size; y++) {
+        const Dot<BoardSize, SizeType> topLeft(x, y);
+        const Dot<BoardSize, SizeType> topRight(x + 1, y);
+        const Dot<BoardSize, SizeType> bottomLeft(x, y + 1);
+        const Dot<BoardSize, SizeType> bottomRight(x + 1, y + 1);
+        BoxNearEdges.At(Box<BoardSize, SizeType>(x, y).Value()) = {
             Edge(topLeft, topRight),
             Edge(topLeft, bottomLeft),
             Edge(bottomLeft, bottomRight),
@@ -31,16 +31,16 @@ class NearEdgesMapper {
   }
 
   private:
-  common::Array<common::Array<Edge<BoardSize>, 4, int>, Box<BoardSize>::Max, int> BoxNearEdges;
+  common::Array<common::Array<Edge<BoardSize, SizeType>, 4, int>, Box<BoardSize, SizeType>::Max, int> BoxNearEdges;
 
-  friend const common::Array<Edge<BoardSize>, 4, int>&
-  NearEdges<BoardSize>(const Box<BoardSize> box);
+  friend const common::Array<Edge<BoardSize, SizeType>, 4, int>&
+  NearEdges<BoardSize, SizeType>(const Box<BoardSize, SizeType> box);
 };
 
-template <int BoardSize>
-const common::Array<Edge<BoardSize>, 4, int>&
-NearEdges(const Box<BoardSize> box) {
-  static NearEdgesMapper<BoardSize> NearEdgesMapperInstance;
+template <int BoardSize, typename SizeType>
+const common::Array<Edge<BoardSize, SizeType>, 4, int>&
+NearEdges(const Box<BoardSize, SizeType> box) {
+  static NearEdgesMapper<BoardSize, SizeType> NearEdgesMapperInstance;
 
   return NearEdgesMapperInstance.BoxNearEdges.At(box.Value());
 }

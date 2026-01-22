@@ -7,21 +7,22 @@
 
 namespace dab::robot {
 
-template <int BoardSize>
+template <int BoardSize, typename SizeType>
 class ParallelSearchRobot;
 
-template <int BoardSize>
-class MonteCarloSearchRobot final : public Robot<BoardSize> {
-  friend class ParallelSearchRobot<BoardSize>;
+template <int BoardSize, typename SizeType>
+class MonteCarloSearchRobot final : public Robot<BoardSize, SizeType> {
+  friend class ParallelSearchRobot<BoardSize, SizeType>;
 
   static constexpr int SearchTime = 1 << 14;
 
   public:
   MonteCarloSearchRobot() = default;
 
-  common::Span<model::Edge<BoardSize>, int>
-  BestCandidateEdges(const board::ScoreCountableBoard<BoardSize>& board) override {
-    if (const common::Span<model::Edge<BoardSize>, int> edges = SubRobot.BestCandidateEdges(board); edges.Size() == 1) {
+  common::Span<model::Edge<BoardSize, SizeType>, int>
+  BestCandidateEdges(const board::ScoreCountableBoard<BoardSize, SizeType>& board) override {
+    if (const common::Span<model::Edge<BoardSize, SizeType>, int> edges = SubRobot.BestCandidateEdges(board);
+        edges.Size() == 1) {
       return edges;
     }
 
@@ -29,10 +30,13 @@ class MonteCarloSearchRobot final : public Robot<BoardSize> {
     int times = SearchTime / board.GetEdgeCountableBoard().GetBasicBoard().GetStep().RemainStep() + 1;
     while (times--) {
       SimulationBoard.Reset(board.GetEdgeCountableBoard());
-      const model::Edge<BoardSize> edge = common::RandomChoice<common::Span<model::Edge<BoardSize>, int>, int>(SubRobot.BestCandidateEdges(SimulationBoard));
+      const model::Edge<BoardSize, SizeType> edge =
+          common::RandomChoice<common::Span<model::Edge<BoardSize, SizeType>, int>, int>(
+              SubRobot.BestCandidateEdges(SimulationBoard));
       SimulationBoard.Add(edge);
       while (SimulationBoard.Gaming()) {
-        SimulationBoard.Add(common::RandomChoice<common::Span<model::Edge<BoardSize>, int>, int>(SubRobot.BestCandidateEdges(SimulationBoard)));
+        SimulationBoard.Add(common::RandomChoice<common::Span<model::Edge<BoardSize, SizeType>, int>, int>(
+            SubRobot.BestCandidateEdges(SimulationBoard)));
       }
       SearchResult.Add(edge, SimulationBoard.GetScoreMap().Score());
     }
@@ -41,9 +45,9 @@ class MonteCarloSearchRobot final : public Robot<BoardSize> {
   }
 
   private:
-  ImprovedSearchRobot<BoardSize> SubRobot;
-  board::ScoreCountableBoard<BoardSize> SimulationBoard;
-  model::EdgeScoreMap<BoardSize> SearchResult;
+  ImprovedSearchRobot<BoardSize, SizeType> SubRobot;
+  board::ScoreCountableBoard<BoardSize, SizeType> SimulationBoard;
+  model::EdgeScoreMap<BoardSize, SizeType> SearchResult;
 };
 
 }  // namespace dab::robot

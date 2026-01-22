@@ -5,9 +5,9 @@
 
 namespace dab::model {
 
-template <int BoardSize>
+template <int BoardSize, typename SizeType>
 class ScoreMap {
-  static constexpr int MinWinnerScore = Box<BoardSize>::Max / 2 + 1;
+  static constexpr int MinWinnerScore = Box<BoardSize, SizeType>::Max / 2 + 1;
 
   public:
   ScoreMap() {

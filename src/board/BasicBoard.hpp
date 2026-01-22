@@ -10,20 +10,20 @@
 
 namespace dab::board {
 
-template <int BoardSize>
+template <int BoardSize, typename SizeType>
 class BasicBoard {
   public:
   BasicBoard() {
-    for (const model::Edge<BoardSize> edge : model::ValueIterator<model::Edge<BoardSize>>()) {
+    for (const model::Edge<BoardSize, SizeType> edge : model::ValueIterator<model::Edge<BoardSize, SizeType>>()) {
       EdgeIndexes.At(edge.Value()) = edge.Value();
       Edges.At(edge.Value()) = edge;
     }
   }
 
   void
-  Add(const model::Edge<BoardSize> edge) {
+  Add(const model::Edge<BoardSize, SizeType> edge) {
     assert(NotContains(edge));
-    const model::Edge<BoardSize> nowEdge = Edges.At(Step.NowStep());
+    const model::Edge<BoardSize, SizeType> nowEdge = Edges.At(Step.NowStep());
     const int edgeIndex = EdgeIndexes.At(edge.Value());
     std::swap(Edges.At(edgeIndex), Edges.At(Step.NowStep()));
     EdgeIndexes.At(edge.Value()) = Step.NowStep();
@@ -32,34 +32,34 @@ class BasicBoard {
   }
 
   bool
-  Contains(const model::Edge<BoardSize> edge) const {
+  Contains(const model::Edge<BoardSize, SizeType> edge) const {
     return EdgeIndexes.At(edge.Value()) < Step.NowStep();
   }
 
   bool
-  NotContains(const model::Edge<BoardSize> edge) const {
+  NotContains(const model::Edge<BoardSize, SizeType> edge) const {
     return EdgeIndexes.At(edge.Value()) >= Step.NowStep();
   }
 
-  common::Span<model::Edge<BoardSize>, int>
+  common::Span<model::Edge<BoardSize, SizeType>, int>
   EmptyEdges() const {
-    return {Edges.begin() + Step.NowStep(), Edges.begin() + model::Edge<BoardSize>::Max};
+    return {Edges.begin() + Step.NowStep(), Edges.begin() + model::Edge<BoardSize, SizeType>::Max};
   }
 
-  common::Span<model::Edge<BoardSize>, int>
+  common::Span<model::Edge<BoardSize, SizeType>, int>
   MoveRecord() const {
     return {Edges.begin(), Edges.begin() + Step.NowStep()};
   }
 
-  model::Step<BoardSize>
+  model::Step<BoardSize, SizeType>
   GetStep() const {
     return Step;
   }
 
   private:
-  model::Step<BoardSize> Step;
-  common::Array<model::Edge<BoardSize>, model::Edge<BoardSize>::Max, int> Edges;
-  common::Array<int, model::Edge<BoardSize>::Max, int> EdgeIndexes;
+  model::Step<BoardSize, SizeType> Step;
+  common::Array<model::Edge<BoardSize, SizeType>, model::Edge<BoardSize, SizeType>::Max, int> Edges;
+  common::Array<int, model::Edge<BoardSize, SizeType>::Max, int> EdgeIndexes;
 };
 
 }  // namespace dab::board

@@ -4,14 +4,15 @@
 
 namespace dab::frontend::canvas {
 
-template <int BoardSize>
-class BaseEdgeCanvas : public BaseCanvas<BoardSize> {
+template <int BoardSize, typename SizeType>
+class BaseEdgeCanvas : public BaseCanvas<BoardSize, SizeType> {
   public:
-  static constexpr int Width = BaseCanvas<BoardSize>::UnitSize * 2;
+  static constexpr int Width = BaseCanvas<BoardSize, SizeType>::UnitSize * 2;
   static constexpr int Height = Width * 5;
 
-  explicit BaseEdgeCanvas(const bool rotate, QWidget* parent) : BaseCanvas<BoardSize>(parent), Rotate(rotate) {
-    BaseCanvas<BoardSize>::resize(QSize(RotateWidth(), RotateHeight()));
+  explicit BaseEdgeCanvas(const bool rotate, QWidget* parent)
+      : BaseCanvas<BoardSize, SizeType>(parent), Rotate(rotate) {
+    BaseCanvas<BoardSize, SizeType>::resize(QSize(RotateWidth(), RotateHeight()));
   }
 
   int

@@ -6,13 +6,14 @@
 
 namespace dab::frontend::layer {
 
-template <int BoardSize>
-class BaseCanvasLayer : public canvas::BaseCanvas<BoardSize> {
+template <int BoardSize, typename SizeType>
+class BaseCanvasLayer : public canvas::BaseCanvas<BoardSize, SizeType> {
   public:
-  static constexpr int BoardWidth = model::Box<BoardSize>::Size * canvas::EdgeCanvas<BoardSize>::Height;
-  static constexpr int WindowSize = BoardWidth + 2 * canvas::BoxCanvas<BoardSize>::Width;
+  static constexpr int BoardWidth =
+      model::Box<BoardSize, SizeType>::Size * canvas::EdgeCanvas<BoardSize, SizeType>::Height;
+  static constexpr int WindowSize = BoardWidth + 2 * canvas::BoxCanvas<BoardSize, SizeType>::Width;
 
-  explicit BaseCanvasLayer(QWidget* parent) : canvas::BaseCanvas<BoardSize>(parent) {
+  explicit BaseCanvasLayer(QWidget* parent) : canvas::BaseCanvas<BoardSize, SizeType>(parent) {
   }
 };
 

@@ -16,21 +16,22 @@
 
 namespace dab::frontend {
 
-template <int BoardSize>
-class MainWindow final : public layer::BaseCanvasLayer<BoardSize> {
+template <int BoardSize, typename SizeType>
+class MainWindow final : public layer::BaseCanvasLayer<BoardSize, SizeType> {
   public:
   explicit MainWindow(const PlayerType player1Type, const PlayerType player2Type, QWidget* parent = nullptr)
-      : layer::BaseCanvasLayer<BoardSize>(parent), Player1Type(player1Type), Player2Type(player2Type) {
-    layer::BaseCanvasLayer<BoardSize>::resize(layer::BaseCanvasLayer<BoardSize>::WindowSize,
-                                              layer::BaseCanvasLayer<BoardSize>::WindowSize);
-    layer::BaseCanvasLayer<BoardSize>::setMinimumSize(layer::BaseCanvasLayer<BoardSize>::WindowSize,
-                                                      layer::BaseCanvasLayer<BoardSize>::WindowSize);
+      : layer::BaseCanvasLayer<BoardSize, SizeType>(parent), Player1Type(player1Type), Player2Type(player2Type) {
+    layer::BaseCanvasLayer<BoardSize, SizeType>::resize(layer::BaseCanvasLayer<BoardSize, SizeType>::WindowSize,
+                                                        layer::BaseCanvasLayer<BoardSize, SizeType>::WindowSize);
+    layer::BaseCanvasLayer<BoardSize, SizeType>::setMinimumSize(
+        layer::BaseCanvasLayer<BoardSize, SizeType>::WindowSize,
+        layer::BaseCanvasLayer<BoardSize, SizeType>::WindowSize);
 
     BoxCanvasLayer.New(this);
     EdgeCanvasLayer.New(this);
     DotCanvasLayer.New(this);
-    std::function<std::function<void()>(const model::Edge<BoardSize>)> CallBackFactory =
-        [this](const model::Edge<BoardSize> edge) -> std::function<void()> {
+    std::function<std::function<void()>(const model::Edge<BoardSize, SizeType>)> CallBackFactory =
+        [this](const model::Edge<BoardSize, SizeType> edge) -> std::function<void()> {
       return [edge, this]() -> void { setPlayerMoveEdge(edge); };
     };
     EdgeButtonLayer.New(CallBackFactory, this);
@@ -41,20 +42,20 @@ class MainWindow final : public layer::BaseCanvasLayer<BoardSize> {
     static QColor DarkThemeColor = {43, 43, 43, 255};
     static QColor LightThemeColor = {242, 242, 242, 255};
 
-    return layer::BaseCanvasLayer<BoardSize>::isDarkTheme() ? DarkThemeColor : LightThemeColor;
+    return layer::BaseCanvasLayer<BoardSize, SizeType>::isDarkTheme() ? DarkThemeColor : LightThemeColor;
   }
 
   void
-  Add(const model::Edge<BoardSize> edge) {
+  Add(const model::Edge<BoardSize, SizeType> edge) {
     if (Board.GetEdgeCountableBoard().GetBasicBoard().GetStep().NowStep() > 0) {
       EdgeCanvasLayer->At(LastEdge)->SetHighLight(false);
     }
     EdgeCanvasLayer->At(edge)->SetState(Board.GetScoreMap().GetTurn());
     EdgeCanvasLayer->At(edge)->raise();
 
-    for (const model::Box<BoardSize> box : NearBoxes(edge)) {
+    for (const model::Box<BoardSize, SizeType> box : NearBoxes(edge)) {
       int count = 0;
-      for (const model::Edge<BoardSize> nearEdge : NearEdges(box)) {
+      for (const model::Edge<BoardSize, SizeType> nearEdge : NearEdges(box)) {
         if (Board.GetEdgeCountableBoard().GetBasicBoard().Contains(nearEdge)) {
           count++;
         }
@@ -66,25 +67,29 @@ class MainWindow final : public layer::BaseCanvasLayer<BoardSize> {
 
     Board.Add(edge);
     LastEdge = edge;
-    layer::BaseCanvasLayer<BoardSize>::update();
+    layer::BaseCanvasLayer<BoardSize, SizeType>::update();
     QApplication::beep();
   }
 
   protected:
   void
   paintEvent(QPaintEvent* event) override {
-    layer::BaseCanvasLayer<BoardSize>::paintEvent(event);
+    layer::BaseCanvasLayer<BoardSize, SizeType>::paintEvent(event);
 
     QPainter painter(this);
-    painter.fillRect(layer::BaseCanvasLayer<BoardSize>::rect(), Color());
+    painter.fillRect(layer::BaseCanvasLayer<BoardSize, SizeType>::rect(), Color());
   }
 
   void
   resizeEvent(QResizeEvent* event) override {
-    layer::BaseCanvasLayer<BoardSize>::resizeEvent(event);
+    layer::BaseCanvasLayer<BoardSize, SizeType>::resizeEvent(event);
 
-    const int x = (layer::BaseCanvasLayer<BoardSize>::width() - layer::BaseCanvasLayer<BoardSize>::WindowSize) / 2;
-    const int y = (layer::BaseCanvasLayer<BoardSize>::height() - layer::BaseCanvasLayer<BoardSize>::WindowSize) / 2;
+    const int x = (layer::BaseCanvasLayer<BoardSize, SizeType>::width() -
+                   layer::BaseCanvasLayer<BoardSize, SizeType>::WindowSize) /
+                  2;
+    const int y = (layer::BaseCanvasLayer<BoardSize, SizeType>::height() -
+                   layer::BaseCanvasLayer<BoardSize, SizeType>::WindowSize) /
+                  2;
 
     BoxCanvasLayer->move(x, y);
     EdgeCanvasLayer->move(x, y);
@@ -93,7 +98,7 @@ class MainWindow final : public layer::BaseCanvasLayer<BoardSize> {
 
   void
   showEvent(QShowEvent* event) override {
-    layer::BaseCanvasLayer<BoardSize>::showEvent(event);
+    layer::BaseCanvasLayer<BoardSize, SizeType>::showEvent(event);
 
     std::thread([this] {
       while (Board.GetEdgeCountableBoard().GetBasicBoard().GetStep().Gaming()) {
@@ -101,10 +106,11 @@ class MainWindow final : public layer::BaseCanvasLayer<BoardSize> {
 
         if ((Player1Type == PlayerType::Robot && Board.GetScoreMap().GetTurn().Value() == model::Player1Turn.Value()) ||
             (Player2Type == PlayerType::Robot && Board.GetScoreMap().GetTurn().Value() == model::Player2Turn.Value())) {
-          PlayerMoveEdge = common::RandomChoice<common::Span<model::Edge<BoardSize>, int>, int>(Robot.BestCandidateEdges(Board));
+          PlayerMoveEdge = common::RandomChoice<common::Span<model::Edge<BoardSize, SizeType>, int>, int>(
+              Robot.BestCandidateEdges(Board));
         } else {
-          PlayerMoveEdge = model::InvalidEdge<BoardSize>();
-          while (PlayerMoveEdge.Value() == model::InvalidEdge<BoardSize>().Value()) {
+          PlayerMoveEdge = model::InvalidEdge<BoardSize, SizeType>();
+          while (PlayerMoveEdge.Value() == model::InvalidEdge<BoardSize, SizeType>().Value()) {
             std::this_thread::yield();
           }
         }
@@ -134,27 +140,27 @@ class MainWindow final : public layer::BaseCanvasLayer<BoardSize> {
 
       std::this_thread::sleep_for(std::chrono::seconds(2));
       EdgeCanvasLayer->At(LastEdge)->SetHighLight(false);
-      layer::BaseCanvasLayer<BoardSize>::update();
+      layer::BaseCanvasLayer<BoardSize, SizeType>::update();
 
       std::this_thread::sleep_for(std::chrono::seconds(2));
-      layer::BaseCanvasLayer<BoardSize>::close();
+      layer::BaseCanvasLayer<BoardSize, SizeType>::close();
     }).detach();
   }
 
   private:
   const PlayerType Player1Type;
   const PlayerType Player2Type;
-  robot::ParallelSearchRobot<BoardSize> Robot;
-  model::Edge<BoardSize> PlayerMoveEdge;
-  model::Edge<BoardSize> LastEdge;
-  board::ScoreCountableBoard<BoardSize> Board;
-  common::Ptr<layer::BoxCanvasLayer<BoardSize>> BoxCanvasLayer;
-  common::Ptr<layer::EdgeCanvasLayer<BoardSize>> EdgeCanvasLayer;
-  common::Ptr<layer::DotCanvasLayer<BoardSize>> DotCanvasLayer;
-  common::Ptr<layer::EdgeButtonLayer<BoardSize>> EdgeButtonLayer;
+  robot::ParallelSearchRobot<BoardSize, SizeType> Robot;
+  model::Edge<BoardSize, SizeType> PlayerMoveEdge;
+  model::Edge<BoardSize, SizeType> LastEdge;
+  board::ScoreCountableBoard<BoardSize, SizeType> Board;
+  common::Ptr<layer::BoxCanvasLayer<BoardSize, SizeType>> BoxCanvasLayer;
+  common::Ptr<layer::EdgeCanvasLayer<BoardSize, SizeType>> EdgeCanvasLayer;
+  common::Ptr<layer::DotCanvasLayer<BoardSize, SizeType>> DotCanvasLayer;
+  common::Ptr<layer::EdgeButtonLayer<BoardSize, SizeType>> EdgeButtonLayer;
 
   void
-  setPlayerMoveEdge(const model::Edge<BoardSize> edge) {
+  setPlayerMoveEdge(const model::Edge<BoardSize, SizeType> edge) {
     if (Board.GetEdgeCountableBoard().GetBasicBoard().Contains(edge)) {
       return;
     }

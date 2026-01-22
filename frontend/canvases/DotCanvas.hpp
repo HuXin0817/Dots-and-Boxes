@@ -7,13 +7,13 @@
 
 namespace dab::frontend::canvas {
 
-template <int BoardSize>
-class DotCanvas final : public BaseCanvas<BoardSize> {
+template <int BoardSize, typename SizeType>
+class DotCanvas final : public BaseCanvas<BoardSize, SizeType> {
   public:
-  static constexpr int Width = 2 * BaseCanvas<BoardSize>::UnitSize;
+  static constexpr int Width = 2 * BaseCanvas<BoardSize, SizeType>::UnitSize;
 
-  explicit DotCanvas(QWidget* parent) : BaseCanvas<BoardSize>(parent) {
-    BaseCanvas<BoardSize>::setFixedSize(Width, Width);
+  explicit DotCanvas(QWidget* parent) : BaseCanvas<BoardSize, SizeType>(parent) {
+    BaseCanvas<BoardSize, SizeType>::setFixedSize(Width, Width);
   }
 
   QColor
@@ -21,12 +21,12 @@ class DotCanvas final : public BaseCanvas<BoardSize> {
     static QColor DarkThemeColor = {202, 202, 202, 255};
     static QColor LightThemeColor = {255, 255, 255, 255};
 
-    return BaseCanvas<BoardSize>::isDarkTheme() ? DarkThemeColor : LightThemeColor;
+    return BaseCanvas<BoardSize, SizeType>::isDarkTheme() ? DarkThemeColor : LightThemeColor;
   }
 
   void
   paintEvent(QPaintEvent* event) override {
-    BaseCanvas<BoardSize>::paintEvent(event);
+    BaseCanvas<BoardSize, SizeType>::paintEvent(event);
 
     QPainter painter(this);
 
@@ -34,10 +34,11 @@ class DotCanvas final : public BaseCanvas<BoardSize> {
     painter.setBrush(QBrush(Color()));
     painter.setPen(Qt::NoPen);
 
-    const int x = BaseCanvas<BoardSize>::width() / 2;
-    const int y = BaseCanvas<BoardSize>::height() / 2;
+    const int x = BaseCanvas<BoardSize, SizeType>::width() / 2;
+    const int y = BaseCanvas<BoardSize, SizeType>::height() / 2;
 
-    painter.drawEllipse(QPoint(x, y), BaseCanvas<BoardSize>::UnitSize, BaseCanvas<BoardSize>::UnitSize);
+    painter.drawEllipse(
+        QPoint(x, y), BaseCanvas<BoardSize, SizeType>::UnitSize, BaseCanvas<BoardSize, SizeType>::UnitSize);
   }
 };
 

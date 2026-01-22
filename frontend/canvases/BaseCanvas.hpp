@@ -8,7 +8,7 @@
 
 namespace dab::frontend::canvas {
 
-template <int BoardSize>
+template <int BoardSize, typename SizeType>
 class BaseCanvas : public QWidget {
   public:
   static constexpr int UnitSize = 6 + 16 / BoardSize;
@@ -42,7 +42,7 @@ class BaseCanvas : public QWidget {
   }
 
   protected:
-  typename BaseCanvas<BoardSize>::CanvasState State = BaseCanvas<BoardSize>::CanvasState::Free;
+  typename BaseCanvas<BoardSize, SizeType>::CanvasState State = BaseCanvas<BoardSize, SizeType>::CanvasState::Free;
 };
 
 }  // namespace dab::frontend::canvas
