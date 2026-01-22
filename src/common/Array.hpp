@@ -18,12 +18,6 @@ class Array {
     return *this;
   }
 
-  Array&
-  operator=(const std::initializer_list<T>& init) {
-    std::memcpy(Data, init.begin(), Length * sizeof(T));
-    return *this;
-  }
-
   IterableObject(Data, Data + Length, Length);
 
   private:

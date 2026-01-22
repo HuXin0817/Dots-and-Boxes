@@ -20,12 +20,11 @@ class NearEdgesMapper {
         const Dot<BoardSize, SizeType> topRight(x + 1, y);
         const Dot<BoardSize, SizeType> bottomLeft(x, y + 1);
         const Dot<BoardSize, SizeType> bottomRight(x + 1, y + 1);
-        BoxNearEdges.At(Box<BoardSize, SizeType>(x, y).Value()) = {
-            Edge(topLeft, topRight),
-            Edge(topLeft, bottomLeft),
-            Edge(bottomLeft, bottomRight),
-            Edge(topRight, bottomRight),
-        };
+        const Box<BoardSize, SizeType> box(x, y);
+        BoxNearEdges.At(box.Value()).At(0) = Edge(topLeft, topRight);
+        BoxNearEdges.At(box.Value()).At(1) = Edge(topLeft, bottomLeft);
+        BoxNearEdges.At(box.Value()).At(2) = Edge(bottomLeft, bottomRight);
+        BoxNearEdges.At(box.Value()).At(3) = Edge(topRight, bottomRight);
       }
     }
   }
