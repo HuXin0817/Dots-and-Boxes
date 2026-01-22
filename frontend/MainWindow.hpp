@@ -121,26 +121,25 @@ class MainWindow final : public layer::BaseCanvasLayer<BoardSize, SizeType> {
             std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
         const double seconds = static_cast<double>(duration.count()) / 1000000.0;
 
-        qDebug(
-            "%s",
-            QString(
-                "Info: {\"Step\":%1,\"Player\":%2,\"Move\":%3,\"Score\":{\"Player1\":%4,\"Player2\":%5},\"Time\":%6}")
-                .arg(Board.GetEdgeCountableBoard().GetBasicBoard().GetStep().NowStep())
-                .arg(Board.GetScoreMap().GetTurn().Value() == model::Player1Turn.Value() ? 1 : 2)
-                .arg(PlayerMoveEdge.Value())
-                .arg(Board.GetScoreMap().GetPlayer1Score())
-                .arg(Board.GetScoreMap().GetPlayer2Score())
-                .arg(seconds, 0, 'f', 3)
-                .toLocal8Bit()
-                .constData());
+        qInfo("%s",
+              QString(
+                  "Info: {\"Step\":%1,\"Player\":%2,\"Move\":%3,\"Score\":{\"Player1\":%4,\"Player2\":%5},\"Time\":%6}")
+                  .arg(Board.GetEdgeCountableBoard().GetBasicBoard().GetStep().NowStep())
+                  .arg(Board.GetScoreMap().GetTurn().Value() == model::Player1Turn.Value() ? 1 : 2)
+                  .arg(PlayerMoveEdge.Value())
+                  .arg(Board.GetScoreMap().GetPlayer1Score())
+                  .arg(Board.GetScoreMap().GetPlayer2Score())
+                  .arg(seconds, 0, 'f', 3)
+                  .toLocal8Bit()
+                  .constData());
       }
 
       if (Board.GetScoreMap().GetPlayer1Score() > Board.GetScoreMap().GetPlayer2Score()) {
-        qDebug("Info: {\"Winner\":\"Player1\"}");
+        qInfo("Info: {\"Winner\":\"Player1\"}");
       } else if (Board.GetScoreMap().GetPlayer2Score() > Board.GetScoreMap().GetPlayer1Score()) {
-        qDebug("Info: \"Winner\":\"Player2\"");
+        qInfo("Info: \"Winner\":\"Player2\"");
       } else {
-        qDebug("Info: \"Winner\":\"Draw\"");
+        qInfo("Info: \"Winner\":\"Draw\"");
       }
 
       std::this_thread::sleep_for(std::chrono::seconds(2));

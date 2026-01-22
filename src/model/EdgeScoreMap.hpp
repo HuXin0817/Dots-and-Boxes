@@ -1,7 +1,5 @@
 #pragma once
 
-#include <cstdint>
-
 #include "../common/Array.hpp"
 #include "../common/List.hpp"
 #include "../common/Span.hpp"
