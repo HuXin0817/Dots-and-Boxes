@@ -19,10 +19,10 @@ class BoxCanvas final : public BaseCanvas<BoardSize, SizeType> {
     static QColor Player1OccupyColor = {64, 64, 255, 64};
     static QColor Player2OccupyColor = {255, 64, 64, 64};
 
-    if (BaseCanvas<BoardSize, SizeType>::State == BaseCanvas<BoardSize, SizeType>::CanvasState::Player1Occupy) {
+    if (BaseCanvas<BoardSize, SizeType>::State == BaseCanvas<BoardSize, SizeType>::State::Player1Occupy) {
       return Player1OccupyColor;
     }
-    if (BaseCanvas<BoardSize, SizeType>::State == BaseCanvas<BoardSize, SizeType>::CanvasState::Player2Occupy) {
+    if (BaseCanvas<BoardSize, SizeType>::State == BaseCanvas<BoardSize, SizeType>::State::Player2Occupy) {
       return Player2OccupyColor;
     }
     return {0, 0, 0, 0};

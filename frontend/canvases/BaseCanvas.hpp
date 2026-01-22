@@ -20,7 +20,7 @@ class BaseCanvas : public QWidget {
     return {};
   }
 
-  enum class CanvasState {
+  enum class State {
     Free,
     Player1Occupy,
     Player2Occupy,
@@ -32,16 +32,16 @@ class BaseCanvas : public QWidget {
   }
 
   void
-  SetState(const model::PlayerTurn turn) {
+  SetState(const model::Turn turn) {
     if (turn.Value() == model::Player1Turn.Value()) {
-      State = CanvasState::Player1Occupy;
+      State = State::Player1Occupy;
     } else {
-      State = CanvasState::Player2Occupy;
+      State = State::Player2Occupy;
     }
   }
 
   protected:
-  typename BaseCanvas<BoardSize, SizeType>::CanvasState State = BaseCanvas<BoardSize, SizeType>::CanvasState::Free;
+  State State = State::Free;
 };
 
 }  // namespace dab::frontend::canvas

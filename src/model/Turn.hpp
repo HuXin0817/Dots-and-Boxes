@@ -2,11 +2,11 @@
 
 namespace dab::model {
 
-class PlayerTurn {
+class Turn {
   public:
-  PlayerTurn() = default;
+  Turn() = default;
 
-  PlayerTurn(const bool v) : v(v) {
+  Turn(const bool v) : v(v) {
   }
 
   void
@@ -23,7 +23,7 @@ class PlayerTurn {
   bool v = true;
 };
 
-static const PlayerTurn Player1Turn = true;
-static const PlayerTurn Player2Turn = !Player1Turn.Value();
+static const Turn Player1Turn = true;
+static const Turn Player2Turn = !Player1Turn.Value();
 
 }  // namespace dab::model

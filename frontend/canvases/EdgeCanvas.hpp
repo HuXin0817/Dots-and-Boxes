@@ -20,15 +20,14 @@ class EdgeCanvas final : public BaseEdgeCanvas<BoardSize, SizeType> {
     static QColor Player1OccupyColor = {64, 64, 255, 255};
     static QColor Player2OccupyColor = {255, 64, 64, 255};
 
-    if (BaseCanvas<BoardSize, SizeType>::State == BaseEdgeCanvas<BoardSize, SizeType>::CanvasState::Free) {
+    if (BaseCanvas<BoardSize, SizeType>::State == BaseEdgeCanvas<BoardSize, SizeType>::State::Free) {
       return BaseEdgeCanvas<BoardSize, SizeType>::isDarkTheme() ? DarkThemeColor : LightThemeColor;
     }
 
     QColor color;
-    if (BaseCanvas<BoardSize, SizeType>::State == BaseEdgeCanvas<BoardSize, SizeType>::CanvasState::Player1Occupy) {
+    if (BaseCanvas<BoardSize, SizeType>::State == BaseEdgeCanvas<BoardSize, SizeType>::State::Player1Occupy) {
       color = Player1OccupyColor;
-    } else if (BaseCanvas<BoardSize, SizeType>::State ==
-               BaseEdgeCanvas<BoardSize, SizeType>::CanvasState::Player2Occupy) {
+    } else if (BaseCanvas<BoardSize, SizeType>::State == BaseEdgeCanvas<BoardSize, SizeType>::State::Player2Occupy) {
       color = Player2OccupyColor;
     }
 

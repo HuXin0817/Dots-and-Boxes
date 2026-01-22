@@ -54,7 +54,7 @@ class ScoreMap {
     return Player2Score;
   }
 
-  PlayerTurn
+  Turn
   GetTurn() const {
     return Turn;
   }
@@ -62,7 +62,7 @@ class ScoreMap {
   private:
   SizeType Player1Score = 0;
   SizeType Player2Score = 0;
-  PlayerTurn Turn = Player1Turn;
+  Turn Turn = Player1Turn;
 };
 
 }  // namespace dab::model
