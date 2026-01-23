@@ -10,11 +10,6 @@ class BaseCanvas : public QWidget {
   explicit BaseCanvas(QWidget* parent) : QWidget(parent) {
   }
 
-  virtual QColor
-  Color() const {
-    return {};
-  }
-
   enum class State {
     Free,
     Player1Occupy,

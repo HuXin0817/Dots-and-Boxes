@@ -15,7 +15,7 @@ class BoxCanvas final : public BaseCanvas<BoardSize> {
   }
 
   QColor
-  Color() const override {
+  Color() const {
     static QColor Player1OccupyColor = {64, 64, 255, 64};
     static QColor Player2OccupyColor = {255, 64, 64, 64};
 
@@ -38,9 +38,6 @@ class BoxCanvas final : public BaseCanvas<BoardSize> {
     painter.setPen(Qt::NoPen);
     painter.setBrush(QBrush(Color()));
 
-    const int x = Base::width() / 2 - Width / 2;
-    const int y = Base::height() / 2 - Width / 2;
-
-    painter.drawRect(x, y, Width, Width);
+    painter.drawRect(Base::rect());
   }
 };

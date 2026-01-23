@@ -14,7 +14,7 @@ class DotCanvas final : public BaseCanvas<BoardSize> {
   }
 
   QColor
-  Color() const override {
+  Color() const {
     static QColor DarkThemeColor = {202, 202, 202, 255};
     static QColor LightThemeColor = {255, 255, 255, 255};
 

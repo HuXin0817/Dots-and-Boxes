@@ -11,18 +11,8 @@ class EdgeCanvas : public BaseCanvas<BoardSize> {
   static constexpr int Height = Width * 5;
 
   explicit EdgeCanvas(const bool rotate, const std::function<void()>& callBack, QWidget* parent)
-      : Base(parent), Rotate(rotate), CallBack(callBack) {
-    Base::resize(QSize(RotateWidth(), RotateHeight()));
-  }
-
-  int
-  RotateWidth() const {
-    return Rotate ? Width : Height;
-  }
-
-  int
-  RotateHeight() const {
-    return Rotate ? Height : Width;
+      : Base(parent), CallBack(callBack) {
+    Base::resize(QSize(rotate ? Width : Height, rotate ? Height : Width));
   }
 
   void
@@ -33,7 +23,7 @@ class EdgeCanvas : public BaseCanvas<BoardSize> {
   }
 
   QColor
-  Color() const override {
+  Color() const {
     static QColor DarkThemeColor = {65, 65, 65, 255};
     static QColor LightThemeColor = {217, 217, 217, 255};
     static QColor Player1OccupyColor = {64, 64, 255, 255};
@@ -74,16 +64,10 @@ class EdgeCanvas : public BaseCanvas<BoardSize> {
     painter.setPen(Qt::NoPen);
     painter.setBrush(QBrush(Color()));
 
-    painter.drawRect(
-        Base::width() / 2 - RotateWidth() / 2, Base::height() / 2 - RotateHeight() / 2, RotateWidth(), RotateHeight());
+    painter.drawRect(Base::rect());
   }
 
   private:
   bool HighLight = true;
-
-  private:
   const std::function<void()> CallBack;
-
-  private:
-  const bool Rotate = false;
 };

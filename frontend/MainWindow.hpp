@@ -39,7 +39,7 @@ class MainWindow final : public BaseCanvas<BoardSize> {
   }
 
   QColor
-  Color() const override {
+  Color() const {
     static QColor DarkThemeColor = {43, 43, 43, 255};
     static QColor LightThemeColor = {242, 242, 242, 255};
 
