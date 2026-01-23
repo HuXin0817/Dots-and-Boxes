@@ -5,12 +5,15 @@
 class MainWindowCreator {
   template <int64_t N>
   QWidget*
-  CreateMainWindowImpl(const int64_t boardSize, const PlayerType player1Type, const PlayerType player2Type) {
+  CreateMainWindowImpl(const int64_t boardSize,
+                       const PlayerType player1Type,
+                       const PlayerType player2Type,
+                       QWidget* parent) {
     if (boardSize == N) {
-      return new MainWindow<N>(player1Type, player2Type);
+      return new MainWindow<N>(player1Type, player2Type, parent);
     }
     if constexpr (N > MinBoardSize) {
-      return CreateMainWindowImpl<N - 1>(boardSize, player1Type, player2Type);
+      return CreateMainWindowImpl<N - 1>(boardSize, player1Type, player2Type, parent);
     }
     return nullptr;
   }
@@ -20,10 +23,13 @@ class MainWindowCreator {
   static constexpr int64_t MaxBoardSize = 36;
 
   QWidget*
-  CreateMainWindow(const int64_t boardSize, const PlayerType player1Type, const PlayerType player2Type) {
+  CreateMainWindow(const int64_t boardSize,
+                   const PlayerType player1Type,
+                   const PlayerType player2Type,
+                   QWidget* parent = nullptr) {
     if (boardSize < MinBoardSize || boardSize > MaxBoardSize) {
       return nullptr;
     }
-    return CreateMainWindowImpl<MaxBoardSize>(boardSize, player1Type, player2Type);
+    return CreateMainWindowImpl<MaxBoardSize>(boardSize, player1Type, player2Type, parent);
   }
 };

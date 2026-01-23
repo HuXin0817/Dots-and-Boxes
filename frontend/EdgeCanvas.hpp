@@ -1,23 +1,21 @@
 #pragma once
 
-#include "BaseCanvas.hpp"
+#include "Common.hpp"
 
 template <int64_t BoardSize>
-class EdgeCanvas : public BaseCanvas<BoardSize> {
-  using Base = BaseCanvas<BoardSize>;
-
+class EdgeCanvas : public QWidget {
   public:
-  static constexpr int Width = Base::UnitSize * 2;
+  static constexpr int Width = UnitSize<BoardSize> * 2;
   static constexpr int Height = Width * 5;
 
   explicit EdgeCanvas(const bool rotate, const std::function<void()>& callBack, QWidget* parent)
-      : Base(parent), CallBack(callBack) {
-    Base::resize(QSize(rotate ? Width : Height, rotate ? Height : Width));
+      : QWidget(parent), CallBack(callBack) {
+    setFixedSize(QSize(rotate ? Width : Height, rotate ? Height : Width));
   }
 
   void
   mousePressEvent(QMouseEvent* event) override {
-    BaseCanvas<BoardSize>::mousePressEvent(event);
+    QWidget::mousePressEvent(event);
 
     CallBack();
   }
@@ -31,22 +29,24 @@ class EdgeCanvas : public BaseCanvas<BoardSize> {
     static QColor Player1OccupyColor = {64, 64, 255, 255};
     static QColor Player2OccupyColor = {255, 64, 64, 255};
 
-    if (BaseCanvas<BoardSize>::State == Base::State::Free) {
-      if (Base::Hovered) {
-        return Base::isDarkTheme() ? DarkThemeHoveredColor : LightThemeHoveredColor;
+    if (State == State::Free) {
+      if (Hovered) {
+        return isDarkTheme() ? DarkThemeHoveredColor : LightThemeHoveredColor;
       }
-      return Base::isDarkTheme() ? DarkThemeColor : LightThemeColor;
+      return isDarkTheme() ? DarkThemeColor : LightThemeColor;
     }
 
     QColor color;
-    if (BaseCanvas<BoardSize>::State == Base::State::Player1Occupy) {
+    if (State == State::Player1Occupy) {
       color = Player1OccupyColor;
-    } else if (BaseCanvas<BoardSize>::State == Base::State::Player2Occupy) {
+    } else if (State == State::Player2Occupy) {
       color = Player2OccupyColor;
     }
 
     if (HighLight) {
       color.setAlpha(255);
+    } else if (Hovered) {
+      color.setAlpha(144);
     } else {
       color.setAlpha(128);
     }
@@ -62,17 +62,33 @@ class EdgeCanvas : public BaseCanvas<BoardSize> {
   protected:
   void
   paintEvent(QPaintEvent* event) override {
-    Base::paintEvent(event);
+    QWidget::paintEvent(event);
 
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setPen(Qt::NoPen);
     painter.setBrush(QBrush(Color()));
 
-    painter.drawRect(Base::rect());
+    painter.drawRect(rect());
+  }
+
+  void
+  enterEvent(QEnterEvent* event) override {
+    QWidget::enterEvent(event);
+    Hovered = true;
+    update();
+  }
+
+  void
+  leaveEvent(QEvent* event) override {
+    QWidget::leaveEvent(event);
+    Hovered = false;
+    update();
   }
 
   private:
+  bool Hovered = false;
   bool HighLight = true;
+  State State = State::Free;
   const std::function<void()> CallBack;
 };

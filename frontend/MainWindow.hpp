@@ -7,17 +7,15 @@
 #include "EdgeCanvas.hpp"
 
 template <int64_t BoardSize>
-class MainWindow final : public BaseCanvas<BoardSize> {
-  using Base = BaseCanvas<BoardSize>;
-
+class MainWindow final : public QWidget {
   static constexpr int BoardWidth = Box<BoardSize>::Size * EdgeCanvas<BoardSize>::Height;
   static constexpr int WindowSize = BoardWidth + 2 * BoxCanvas<BoardSize>::Width;
 
   public:
-  explicit MainWindow(const PlayerType player1Type, const PlayerType player2Type, QWidget* parent = nullptr)
-      : Base(parent), Player1Type(player1Type), Player2Type(player2Type) {
-    Base::resize(WindowSize, WindowSize);
-    Base::setMinimumSize(WindowSize, WindowSize);
+  explicit MainWindow(const PlayerType player1Type, const PlayerType player2Type, QWidget* parent)
+      : QWidget(parent), Player1Type(player1Type), Player2Type(player2Type) {
+    resize(WindowSize, WindowSize);
+    setMinimumSize(WindowSize, WindowSize);
 
     for (const int i : std::views::iota(0, Box<BoardSize>::Max)) {
       BoxCanvases.emplace_back(new BoxCanvas<BoardSize>(this));
@@ -43,7 +41,7 @@ class MainWindow final : public BaseCanvas<BoardSize> {
     static QColor DarkThemeColor = {43, 43, 43, 255};
     static QColor LightThemeColor = {242, 242, 242, 255};
 
-    return Base::isDarkTheme() ? DarkThemeColor : LightThemeColor;
+    return isDarkTheme() ? DarkThemeColor : LightThemeColor;
   }
 
   void
@@ -71,30 +69,30 @@ class MainWindow final : public BaseCanvas<BoardSize> {
 
     Board.Add(edge);
     LastEdge = edge;
-    Base::update();
+    update();
     QApplication::beep();
   }
 
   protected:
   void
   paintEvent(QPaintEvent* event) override {
-    Base::paintEvent(event);
+    QWidget::paintEvent(event);
 
     QPainter painter(this);
-    painter.fillRect(Base::rect(), Color());
+    painter.fillRect(rect(), Color());
   }
 
   void
   resizeEvent(QResizeEvent* event) override {
-    Base::resizeEvent(event);
+    QWidget::resizeEvent(event);
 
-    const int x0 = (Base::width() - BoardWidth) / 2 - Base::UnitSize;
-    const int y0 = (Base::height() - BoardWidth) / 2 - Base::UnitSize;
+    const int x0 = (width() - BoardWidth) / 2 - UnitSize<BoardSize>;
+    const int y0 = (height() - BoardWidth) / 2 - UnitSize<BoardSize>;
 
     for (const int i : std::views::iota(0, Box<BoardSize>::Size)) {
       for (const int j : std::views::iota(0, Box<BoardSize>::Size)) {
-        const int x = x0 + i * EdgeCanvas<BoardSize>::Height + 2 * Base::UnitSize;
-        const int y = y0 + j * EdgeCanvas<BoardSize>::Height + 2 * Base::UnitSize;
+        const int x = x0 + i * EdgeCanvas<BoardSize>::Height + 2 * UnitSize<BoardSize>;
+        const int y = y0 + j * EdgeCanvas<BoardSize>::Height + 2 * UnitSize<BoardSize>;
         BoxCanvases[Box<BoardSize>(i, j).Value()]->move(x, y);
       }
     }
@@ -103,9 +101,9 @@ class MainWindow final : public BaseCanvas<BoardSize> {
       int x = x0 + edge.Dot1().X() * EdgeCanvas<BoardSize>::Height;
       int y = y0 + edge.Dot1().Y() * EdgeCanvas<BoardSize>::Height;
       if (edge.Dot1().X() == edge.Dot2().X()) {
-        y += Base::UnitSize;
+        y += UnitSize<BoardSize>;
       } else {
-        x += Base::UnitSize;
+        x += UnitSize<BoardSize>;
       }
       EdgeCanvases[edge.Value()]->move(x, y);
     }
@@ -121,7 +119,7 @@ class MainWindow final : public BaseCanvas<BoardSize> {
 
   void
   showEvent(QShowEvent* event) override {
-    Base::showEvent(event);
+    QWidget::showEvent(event);
 
     QThreadPool::globalInstance()->start([this] {
       while (Board.GetEdgeCountableBoard().GetBasicBoard().GetStep().Gaming()) {
@@ -166,10 +164,10 @@ class MainWindow final : public BaseCanvas<BoardSize> {
 
       QThread::sleep(2);
       EdgeCanvases[LastEdge.Value()]->SetHighLight(false);
-      Base::update();
+      update();
 
       QThread::sleep(2);
-      Base::close();
+      close();
     });
   }
 
