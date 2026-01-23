@@ -2,7 +2,6 @@
 
 #include "../board/ScoreableEdgeBoard.hpp"
 #include "../common/Span.hpp"
-#include "Robot.hpp"
 #include "SimpleStrategyRobot.hpp"
 
 template <int64_t BoardSize>

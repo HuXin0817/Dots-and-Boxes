@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Common.hpp"
 #include "EdgeCanvas.hpp"
 
 template <int64_t BoardSize>

@@ -37,7 +37,7 @@
     return Len;                         \
   }                                     \
   bool Empty() const {                  \
-    return Len == 0;                    \
+    return (Len) == 0;                  \
   }                                     \
   auto& At(size_t i) {                  \
     assert(i >= 0 && i < (Len));        \

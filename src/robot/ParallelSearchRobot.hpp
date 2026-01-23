@@ -1,7 +1,6 @@
 #pragma once
 
 #include "MonteCarloSearchRobot.hpp"
-#include "Robot.hpp"
 
 template <int64_t BoardSize>
 class ParallelSearchRobot final : public Robot<BoardSize> {

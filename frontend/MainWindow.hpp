@@ -3,7 +3,6 @@
 #include "../src/robot/PlayerType.hpp"
 #include "../src/robot/Robot.hpp"
 #include "BoxCanvas.hpp"
-#include "Common.hpp"
 #include "DotCanvas.hpp"
 #include "EdgeCanvas.hpp"
 
