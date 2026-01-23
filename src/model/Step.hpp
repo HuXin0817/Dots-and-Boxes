@@ -15,12 +15,12 @@ class Step {
     return v < Edge<BoardSize>::Max;
   }
 
-  SizeType<BoardSize>
+  SizeType
   RemainStep() const {
     return Edge<BoardSize>::Max - v;
   }
 
-  SizeType<BoardSize>
+  SizeType
   NowStep() const {
     return v;
   }
@@ -31,5 +31,5 @@ class Step {
   }
 
   private:
-  SizeType<BoardSize> v = 0;
+  SizeType v = 0;
 };

@@ -5,15 +5,15 @@
 #include "Square.hpp"
 
 template <int64_t BoardSize>
-const Array<Edge<BoardSize>, 4, SizeType<BoardSize>>&
+const Array<Edge<BoardSize>, 4>&
 NearEdges(const Box<BoardSize> box);
 
 template <int64_t BoardSize>
 class NearEdgesMapper {
   public:
   NearEdgesMapper() {
-    for (const SizeType<BoardSize> x : std::views::iota(0, Box<BoardSize>::Size)) {
-      for (const SizeType<BoardSize> y : std::views::iota(0, Box<BoardSize>::Size)) {
+    for (const SizeType x : std::views::iota(0, Box<BoardSize>::Size)) {
+      for (const SizeType y : std::views::iota(0, Box<BoardSize>::Size)) {
         const Dot<BoardSize> topLeft(x, y);
         const Dot<BoardSize> topRight(x + 1, y);
         const Dot<BoardSize> bottomLeft(x, y + 1);
@@ -28,14 +28,14 @@ class NearEdgesMapper {
   }
 
   private:
-  Array<Array<Edge<BoardSize>, 4, SizeType<BoardSize>>, Box<BoardSize>::Max, SizeType<BoardSize>> BoxNearEdges;
+  Array<Array<Edge<BoardSize>, 4>, Box<BoardSize>::Max> BoxNearEdges;
 
-  friend const Array<Edge<BoardSize>, 4, SizeType<BoardSize>>&
+  friend const Array<Edge<BoardSize>, 4>&
   NearEdges<BoardSize>(const Box<BoardSize> box);
 };
 
 template <int64_t BoardSize>
-const Array<Edge<BoardSize>, 4, SizeType<BoardSize>>&
+const Array<Edge<BoardSize>, 4>&
 NearEdges(const Box<BoardSize> box) {
   static NearEdgesMapper<BoardSize> NearEdgesMapperInstance;
 

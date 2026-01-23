@@ -19,7 +19,7 @@ class BasicBoard {
   Add(const Edge<BoardSize> edge) {
     assert(NotContains(edge));
     const Edge<BoardSize> nowEdge = Edges.At(Step.NowStep());
-    const SizeType<BoardSize> edgeIndex = EdgeIndexes.At(edge.Value());
+    const SizeType edgeIndex = EdgeIndexes.At(edge.Value());
     std::swap(Edges.At(edgeIndex), Edges.At(Step.NowStep()));
     EdgeIndexes.At(edge.Value()) = Step.NowStep();
     EdgeIndexes.At(nowEdge.Value()) = edgeIndex;
@@ -36,12 +36,12 @@ class BasicBoard {
     return EdgeIndexes.At(edge.Value()) >= Step.NowStep();
   }
 
-  Span<Edge<BoardSize>, SizeType<BoardSize>>
+  Span<Edge<BoardSize>>
   EmptyEdges() const {
     return {Edges.begin() + Step.NowStep(), Edges.begin() + Edge<BoardSize>::Max};
   }
 
-  Span<Edge<BoardSize>, SizeType<BoardSize>>
+  Span<Edge<BoardSize>>
   MoveRecord() const {
     return {Edges.begin(), Edges.begin() + Step.NowStep()};
   }
@@ -53,6 +53,6 @@ class BasicBoard {
 
   private:
   Step<BoardSize> Step;
-  Array<Edge<BoardSize>, Edge<BoardSize>::Max, SizeType<BoardSize>> Edges;
-  Array<SizeType<BoardSize>, Edge<BoardSize>::Max, SizeType<BoardSize>> EdgeIndexes;
+  Array<Edge<BoardSize>, Edge<BoardSize>::Max> Edges;
+  Array<SizeType, Edge<BoardSize>::Max> EdgeIndexes;
 };

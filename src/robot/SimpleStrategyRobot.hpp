@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include "../board/ScoreCountableBoard.hpp"
 #include "../common/List.hpp"
 #include "../common/Span.hpp"
@@ -19,16 +20,14 @@ class SimpleStrategyRobot final : public Robot<BoardSize> {
   public:
   SimpleStrategyRobot() = default;
 
-  Span<Edge<BoardSize>, SizeType<BoardSize>>
+  Span<Edge<BoardSize>>
   BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override {
     EnemyUnscoreableEdges.Clear();
     ScoreableEdges.Clear();
-    const Span<Edge<BoardSize>, SizeType<BoardSize>> emptyEdges =
-        board.GetEdgeCountableBoard().GetBasicBoard().EmptyEdges();
+    const Span<Edge<BoardSize>> emptyEdges = board.GetEdgeCountableBoard().GetBasicBoard().EmptyEdges();
 
     for (const Edge<BoardSize> edge : emptyEdges) {
-      if (const SizeType<BoardSize> maxCount = board.GetEdgeCountableBoard().GetEdgeCountOfBox().MaxCount(edge);
-          maxCount == 3) {
+      if (const uint8_t maxCount = board.GetEdgeCountableBoard().GetEdgeCountOfBox().MaxCount(edge); maxCount == 3) {
         ScoreableEdges.Append(edge);
       } else if (maxCount < 2) {
         EnemyUnscoreableEdges.Append(edge);
@@ -36,18 +35,16 @@ class SimpleStrategyRobot final : public Robot<BoardSize> {
     }
 
     if (!ScoreableEdges.Empty()) {
-      return Export<List<Edge<BoardSize>, Edge<BoardSize>::Max, SizeType<BoardSize>>, SizeType<BoardSize>>(
-          ScoreableEdges);
+      return Export(ScoreableEdges);
     }
     if (!EnemyUnscoreableEdges.Empty()) {
-      return Export<List<Edge<BoardSize>, Edge<BoardSize>::Max, SizeType<BoardSize>>, SizeType<BoardSize>>(
-          EnemyUnscoreableEdges);
+      return Export(EnemyUnscoreableEdges);
     }
 
     return {emptyEdges.begin(), emptyEdges.end()};
   }
 
   private:
-  List<Edge<BoardSize>, Edge<BoardSize>::Max, SizeType<BoardSize>> EnemyUnscoreableEdges;
-  List<Edge<BoardSize>, Edge<BoardSize>::Max, SizeType<BoardSize>> ScoreableEdges;
+  List<Edge<BoardSize>, Edge<BoardSize>::Max> EnemyUnscoreableEdges;
+  List<Edge<BoardSize>, Edge<BoardSize>::Max> ScoreableEdges;
 };

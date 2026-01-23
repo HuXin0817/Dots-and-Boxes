@@ -9,6 +9,6 @@ class Robot {
   public:
   virtual ~Robot() = default;
 
-  virtual Span<Edge<BoardSize>, SizeType<BoardSize>>
+  virtual Span<Edge<BoardSize>>
   BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) = 0;
 };

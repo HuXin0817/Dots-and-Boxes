@@ -2,7 +2,7 @@
 
 #include "Array.hpp"
 
-template <typename T, size_t Cap, typename SizeType>
+template <typename T, size_t Cap>
 class List {
   public:
   void
@@ -25,6 +25,6 @@ class List {
   IterableObject(Data.begin(), Data.begin() + Length, Length);
 
   private:
-  Array<T, Cap, SizeType> Data;
-  SizeType Length = 0;
+  Array<T, Cap> Data;
+  size_t Length = 0;
 };

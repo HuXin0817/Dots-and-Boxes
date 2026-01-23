@@ -6,7 +6,7 @@
 #include "Square.hpp"
 
 template <int64_t BoardSize>
-const List<Box<BoardSize>, 2, SizeType<BoardSize>>&
+const List<Box<BoardSize>, 2>&
 NearBoxes(const Edge<BoardSize> edge);
 
 template <int64_t BoardSize>
@@ -19,14 +19,14 @@ class NearBoxesMapper {
   }
 
   private:
-  Array<List<Box<BoardSize>, 2, SizeType<BoardSize>>, Edge<BoardSize>::Max, SizeType<BoardSize>> EdgeNearBoxes;
+  Array<List<Box<BoardSize>, 2>, Edge<BoardSize>::Max> EdgeNearBoxes;
 
-  static List<Box<BoardSize>, 2, SizeType<BoardSize>>
+  static List<Box<BoardSize>, 2>
   GetNearBoxes(const Edge<BoardSize> edge) {
-    List<Box<BoardSize>, 2, SizeType<BoardSize>> result;
+    List<Box<BoardSize>, 2> result;
 
-    SizeType<BoardSize> x = edge.Dot2().X() - 1;
-    SizeType<BoardSize> y = edge.Dot2().Y() - 1;
+    SizeType x = edge.Dot2().X() - 1;
+    SizeType y = edge.Dot2().Y() - 1;
     if (x >= 0 && y >= 0) {
       result.Append(Box<BoardSize>(x, y));
     }
@@ -40,12 +40,12 @@ class NearBoxesMapper {
     return result;
   }
 
-  friend const List<Box<BoardSize>, 2, SizeType<BoardSize>>&
+  friend const List<Box<BoardSize>, 2>&
   NearBoxes<BoardSize>(const Edge<BoardSize> edge);
 };
 
 template <int64_t BoardSize>
-const List<Box<BoardSize>, 2, SizeType<BoardSize>>&
+const List<Box<BoardSize>, 2>&
 NearBoxes(const Edge<BoardSize> edge) {
   static NearBoxesMapper<BoardSize> NearBoxesMapperInstance;
 

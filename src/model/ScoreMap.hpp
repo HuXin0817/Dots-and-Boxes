@@ -5,7 +5,7 @@
 
 template <int64_t BoardSize>
 class ScoreMap {
-  static constexpr SizeType<BoardSize> MinWinnerScore = Box<BoardSize>::Max / 2 + 1;
+  static constexpr SizeType MinWinnerScore = Box<BoardSize>::Max / 2 + 1;
 
   public:
   ScoreMap() {
@@ -20,7 +20,7 @@ class ScoreMap {
   }
 
   void
-  Add(const SizeType<BoardSize> score) {
+  Add(const SizeType score) {
     if (score == 0) {
       Turn.Change();
       return;
@@ -32,7 +32,7 @@ class ScoreMap {
     }
   }
 
-  SizeType<BoardSize>
+  SizeType
   Score() const {
     return Player1Score - Player2Score;
   }
@@ -42,12 +42,12 @@ class ScoreMap {
     return Player1Score < MinWinnerScore && Player2Score < MinWinnerScore;
   }
 
-  SizeType<BoardSize>
+  SizeType
   GetPlayer1Score() const {
     return Player1Score;
   }
 
-  SizeType<BoardSize>
+  SizeType
   GetPlayer2Score() const {
     return Player2Score;
   }
@@ -58,7 +58,7 @@ class ScoreMap {
   }
 
   private:
-  SizeType<BoardSize> Player1Score = 0;
-  SizeType<BoardSize> Player2Score = 0;
+  SizeType Player1Score = 0;
+  SizeType Player2Score = 0;
   Turn Turn = Player1Turn;
 };

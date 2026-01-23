@@ -18,20 +18,20 @@ class EdgeScoreMap {
   }
 
   void
-  Add(const Edge<BoardSize> edge, const SizeType<BoardSize> score) {
+  Add(const Edge<BoardSize> edge, const SizeType score) {
     Time.At(edge.Value())++;
     Score.At(edge.Value()) += score;
   }
 
   void
   Add(const EdgeScoreMap& other) {
-    for (const SizeType<BoardSize> i : std::views::iota(0, Edge<BoardSize>::Max)) {
+    for (const SizeType i : std::views::iota(0, Edge<BoardSize>::Max)) {
       Time.At(i) += other.Time.At(i);
       Score.At(i) += other.Score.At(i);
     }
   }
 
-  Span<Edge<BoardSize>, SizeType<BoardSize>>
+  Span<Edge<BoardSize>>
   Export() {
     float maxScore = 0.0;
     for (const Edge<BoardSize> edge : std::views::iota(0, Edge<BoardSize>::Max)) {
@@ -45,11 +45,11 @@ class EdgeScoreMap {
         }
       }
     }
-    return ::Export<List<Edge<BoardSize>, Edge<BoardSize>::Max, SizeType<BoardSize>>, SizeType<BoardSize>>(BestEdges);
+    return ::Export(BestEdges);
   }
 
   private:
-  Array<int, Edge<BoardSize>::Max, SizeType<BoardSize>> Time;
-  Array<int, Edge<BoardSize>::Max, SizeType<BoardSize>> Score;
-  List<Edge<BoardSize>, Edge<BoardSize>::Max, SizeType<BoardSize>> BestEdges;
+  Array<int, Edge<BoardSize>::Max> Time;
+  Array<int, Edge<BoardSize>::Max> Score;
+  List<Edge<BoardSize>, Edge<BoardSize>::Max> BestEdges;
 };

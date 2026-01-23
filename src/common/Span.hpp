@@ -2,7 +2,7 @@
 
 #include "Macro.hpp"
 
-template <typename T, typename SizeType>
+template <typename T>
 class Span {
   public:
   Span() = default;
@@ -17,9 +17,8 @@ class Span {
   const T* End = nullptr;
 };
 
-template <typename T, typename SizeType>
+template <typename T>
 auto
 Export(const T& arr) {
-  auto ele = arr.At(0);
-  return Span<decltype(ele), SizeType>(arr.begin(), arr.end());
+  return Span(arr.begin(), arr.end());
 }

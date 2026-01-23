@@ -2,7 +2,7 @@
 
 #include "Macro.hpp"
 
-template <typename T, size_t Length, typename SizeType>
+template <typename T, size_t Length>
 class Array {
   public:
   Array() = default;

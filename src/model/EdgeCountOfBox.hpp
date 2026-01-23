@@ -9,12 +9,12 @@ class EdgeCountOfBox {
   public:
   EdgeCountOfBox() = default;
 
-  SizeType<BoardSize>
+  SizeType
   Add(const Edge<BoardSize> edge) {
-    SizeType<BoardSize> score = 0;
+    SizeType score = 0;
     for (const Box<BoardSize> box : NearBoxes(edge)) {
       Map.At(box.Value())++;
-      const SizeType<BoardSize> num = Map.At(box.Value());
+      const int8_t num = Map.At(box.Value());
       assert(num <= 4);
       if (num == 4) {
         score++;
@@ -23,14 +23,14 @@ class EdgeCountOfBox {
     return score;
   }
 
-  SizeType<BoardSize>
+  int8_t
   EdgeCount(const Box<BoardSize> box) const {
     return Map.At(box.Value());
   }
 
-  SizeType<BoardSize>
+  int8_t
   MaxCount(const Edge<BoardSize> edge) const {
-    SizeType<BoardSize> maxCount = 0;
+    int8_t maxCount = 0;
     for (const Box<BoardSize> box : NearBoxes(edge)) {
       maxCount = std::max(maxCount, Map.At(box.Value()));
     }
@@ -38,5 +38,5 @@ class EdgeCountOfBox {
   }
 
   private:
-  Array<SizeType<BoardSize>, Box<BoardSize>::Max, SizeType<BoardSize>> Map;
+  Array<int8_t, Box<BoardSize>::Max> Map;
 };

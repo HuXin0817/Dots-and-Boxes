@@ -15,10 +15,9 @@ class MonteCarloSearchRobot final : public Robot<BoardSize> {
   public:
   MonteCarloSearchRobot() = default;
 
-  Span<Edge<BoardSize>, SizeType<BoardSize>>
+  Span<Edge<BoardSize>>
   BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override {
-    if (const Span<Edge<BoardSize>, SizeType<BoardSize>> edges = SubRobot.BestCandidateEdges(board);
-        edges.Size() == 1) {
+    if (const Span<Edge<BoardSize>> edges = SubRobot.BestCandidateEdges(board); edges.Size() == 1) {
       return edges;
     }
 
@@ -26,12 +25,10 @@ class MonteCarloSearchRobot final : public Robot<BoardSize> {
     int times = SearchTime / board.GetEdgeCountableBoard().GetBasicBoard().GetStep().RemainStep() + 1;
     while (times--) {
       SimulationBoard.Reset(board.GetEdgeCountableBoard());
-      const Edge<BoardSize> edge = RandomChoice<Span<Edge<BoardSize>, SizeType<BoardSize>>, SizeType<BoardSize>>(
-          SubRobot.BestCandidateEdges(SimulationBoard));
+      const Edge<BoardSize> edge = RandomChoice(SubRobot.BestCandidateEdges(SimulationBoard));
       SimulationBoard.Add(edge);
       while (SimulationBoard.Gaming()) {
-        SimulationBoard.Add(RandomChoice<Span<Edge<BoardSize>, SizeType<BoardSize>>, SizeType<BoardSize>>(
-            SubRobot.BestCandidateEdges(SimulationBoard)));
+        SimulationBoard.Add(RandomChoice(SubRobot.BestCandidateEdges(SimulationBoard)));
       }
       SearchResult.Add(edge, SimulationBoard.GetScoreMap().Score());
     }

@@ -127,11 +127,9 @@ class MainWindow final : public QWidget {
         const QTime startTime = QTime::currentTime();
 
         if ((PlayerTypeIsRobot(Player1Type) && Board.GetScoreMap().GetTurn().Value() == Player1Turn.Value())) {
-          PlayerMoveEdge = RandomChoice<Span<Edge<BoardSize>, SizeType<BoardSize>>, SizeType<BoardSize>>(
-              Robot1->BestCandidateEdges(Board));
+          PlayerMoveEdge = RandomChoice(Robot1->BestCandidateEdges(Board));
         } else if (PlayerTypeIsRobot(Player2Type) && Board.GetScoreMap().GetTurn().Value() == Player2Turn.Value()) {
-          PlayerMoveEdge = RandomChoice<Span<Edge<BoardSize>, SizeType<BoardSize>>, SizeType<BoardSize>>(
-              Robot2->BestCandidateEdges(Board));
+          PlayerMoveEdge = RandomChoice(Robot2->BestCandidateEdges(Board));
         } else {
           PlayerMoveEdge = InvalidEdge<BoardSize>();
           while (PlayerMoveEdge.Value() == InvalidEdge<BoardSize>().Value()) {

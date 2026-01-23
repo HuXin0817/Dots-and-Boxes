@@ -2,7 +2,7 @@
 
 #include "Array.hpp"
 
-template <typename T, size_t Cap, typename SizeType>
+template <typename T, size_t Cap>
 class Queue {
   public:
   void
@@ -26,7 +26,7 @@ class Queue {
   IterableObject(Data.begin() + Begin, Data.begin() + End, End - Begin);
 
   private:
-  Array<T, Cap, SizeType> Data;
-  SizeType Begin = 0;
-  SizeType End = 0;
+  Array<T, Cap> Data;
+  size_t Begin = 0;
+  size_t End = 0;
 };

@@ -1,6 +1,6 @@
 #include "frontend/MainWindowCreator.hpp"
 
-static constexpr int DefaultBoardSize = 6;
+static constexpr int64_t DefaultBoardSize = 6;
 
 QCommandLineOption
 BoardSizeOption() {

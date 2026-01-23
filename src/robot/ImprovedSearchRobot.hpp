@@ -9,15 +9,15 @@ class ImprovedSearchRobot final : public Robot<BoardSize> {
   public:
   ImprovedSearchRobot() = default;
 
-  Span<Edge<BoardSize>, SizeType<BoardSize>>
+  Span<Edge<BoardSize>>
   BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override {
-    if (Span<Edge<BoardSize>, SizeType<BoardSize>> edges = SubRobot.BestCandidateEdges(board);
+    if (Span<Edge<BoardSize>> edges = SubRobot.BestCandidateEdges(board);
         !SubRobot.SubRobot.EnemyUnscoreableEdges.Empty()) {
       return edges;
     }
 
     SearchEdges.Clear();
-    SizeType<BoardSize> maxScore = -Box<BoardSize>::Max;
+    SizeType maxScore = -Box<BoardSize>::Max;
     for (const Edge<BoardSize> emptyEdge : board.GetEdgeCountableBoard().GetBasicBoard().EmptyEdges()) {
       SimulationBoard.Reset(board.GetEdgeCountableBoard());
       SimulationBoard.Add(emptyEdge);
@@ -26,7 +26,7 @@ class ImprovedSearchRobot final : public Robot<BoardSize> {
         assert(board.GetEdgeCountableBoard().GetEdgeCountOfBox().MaxCount(edge.Value()) > 1);
         SimulationBoard.Add(edge);
       }
-      if (const SizeType<BoardSize> score = SimulationBoard.GetScoreMap().Score(); score > maxScore) {
+      if (const SizeType score = SimulationBoard.GetScoreMap().Score(); score > maxScore) {
         maxScore = score;
         SearchEdges.Reset(emptyEdge);
       } else if (score == maxScore) {
@@ -34,11 +34,11 @@ class ImprovedSearchRobot final : public Robot<BoardSize> {
       }
     }
 
-    return Export<List<Edge<BoardSize>, Edge<BoardSize>::Max, SizeType<BoardSize>>, SizeType<BoardSize>>(SearchEdges);
+    return Export(SearchEdges);
   }
 
   private:
   BasicSearchRobot<BoardSize> SubRobot;
   ScoreCountableBoard<BoardSize> SimulationBoard;
-  List<Edge<BoardSize>, Edge<BoardSize>::Max, SizeType<BoardSize>> SearchEdges;
+  List<Edge<BoardSize>, Edge<BoardSize>::Max> SearchEdges;
 };
