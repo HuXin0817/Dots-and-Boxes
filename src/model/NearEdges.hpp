@@ -4,11 +4,11 @@
 #include "Edge.hpp"
 #include "Square.hpp"
 
-template <int64_t BoardSize>
+template <int BoardSize>
 const Array<Edge<BoardSize>, 4>&
 NearEdges(const Box<BoardSize> box);
 
-template <int64_t BoardSize>
+template <int BoardSize>
 class NearEdgesMapper {
   public:
   NearEdgesMapper() {
@@ -34,7 +34,7 @@ class NearEdgesMapper {
   NearEdges<BoardSize>(const Box<BoardSize> box);
 };
 
-template <int64_t BoardSize>
+template <int BoardSize>
 const Array<Edge<BoardSize>, 4>&
 NearEdges(const Box<BoardSize> box) {
   static NearEdgesMapper<BoardSize> Instance;

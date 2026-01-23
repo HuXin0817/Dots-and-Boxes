@@ -16,7 +16,7 @@ PlayerTypeIsRobot(const PlayerType PlayerType) {
   return PlayerType != PlayerType::Human;
 }
 
-template <int64_t BoardSize>
+template <int BoardSize>
 static Robot<BoardSize>*
 CreateRobot(const PlayerType PlayerType) {
   switch (PlayerType) {

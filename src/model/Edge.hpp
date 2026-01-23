@@ -2,7 +2,7 @@
 
 #include "Square.hpp"
 
-template <int64_t BoardSize>
+template <int BoardSize>
 class Edge {
   public:
   static constexpr SizeType Max = 2 * BoardSize * (BoardSize + 1);
@@ -46,7 +46,7 @@ class Edge {
   IntValueObject(Edge)
 };
 
-template <int64_t BoardSize>
+template <int BoardSize>
 Edge<BoardSize>
 InvalidEdge() {
   return -1;

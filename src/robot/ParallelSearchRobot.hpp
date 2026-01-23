@@ -2,7 +2,7 @@
 
 #include "MonteCarloSearchRobot.hpp"
 
-template <int64_t BoardSize>
+template <int BoardSize>
 class ParallelSearchRobot final : public Robot<BoardSize> {
   using SubRobotType = MonteCarloSearchRobot<BoardSize, Edge<BoardSize>::Max << 5>;
 

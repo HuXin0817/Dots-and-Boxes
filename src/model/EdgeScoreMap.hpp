@@ -5,7 +5,7 @@
 #include "../common/Span.hpp"
 #include "Edge.hpp"
 
-template <int64_t BoardSize>
+template <int BoardSize>
 class EdgeScoreMap {
   public:
   EdgeScoreMap() = default;

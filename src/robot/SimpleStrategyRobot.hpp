@@ -5,13 +5,13 @@
 #include "../common/Span.hpp"
 #include "Robot.hpp"
 
-template <int64_t BoardSize>
+template <int BoardSize>
 class BasicSearchRobot;
 
-template <int64_t BoardSize>
+template <int BoardSize>
 class ImprovedSearchRobot;
 
-template <int64_t BoardSize>
+template <int BoardSize>
 class SimpleStrategyRobot final : public Robot<BoardSize> {
   friend class BasicSearchRobot<BoardSize>;
   friend class ImprovedSearchRobot<BoardSize>;

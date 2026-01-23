@@ -4,10 +4,10 @@
 #include "../common/Span.hpp"
 #include "SimpleStrategyRobot.hpp"
 
-template <int64_t BoardSize>
+template <int BoardSize>
 class ImprovedSearchRobot;
 
-template <int64_t BoardSize>
+template <int BoardSize>
 class BasicSearchRobot final : public Robot<BoardSize> {
   friend class ImprovedSearchRobot<BoardSize>;
 

@@ -4,7 +4,7 @@
 #include "../common/Span.hpp"
 #include "../model/Edge.hpp"
 
-template <int64_t BoardSize>
+template <int BoardSize>
 class Robot {
   public:
   virtual ~Robot() = default;

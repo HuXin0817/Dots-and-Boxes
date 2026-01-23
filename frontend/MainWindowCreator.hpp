@@ -3,9 +3,9 @@
 #include "MainWindow.hpp"
 
 class MainWindowCreator {
-  template <int64_t N>
+  template <int N>
   QWidget*
-  CreateMainWindowImpl(const int64_t boardSize,
+  CreateMainWindowImpl(const int boardSize,
                        const PlayerType player1Type,
                        const PlayerType player2Type,
                        QWidget* parent) {
@@ -19,11 +19,11 @@ class MainWindowCreator {
   }
 
   public:
-  static constexpr int64_t MinBoardSize = 2;
-  static constexpr int64_t MaxBoardSize = 36;
+  static constexpr int MinBoardSize = 2;
+  static constexpr int MaxBoardSize = 36;
 
   QWidget*
-  CreateMainWindow(const int64_t boardSize,
+  CreateMainWindow(const int boardSize,
                    const PlayerType player1Type,
                    const PlayerType player2Type,
                    QWidget* parent = nullptr) {

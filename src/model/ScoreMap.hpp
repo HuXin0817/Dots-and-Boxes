@@ -3,7 +3,7 @@
 #include "Square.hpp"
 #include "Turn.hpp"
 
-template <int64_t BoardSize>
+template <int BoardSize>
 class ScoreMap {
   static constexpr SizeType MinWinnerScore = Box<BoardSize>::Max / 2 + 1;
 

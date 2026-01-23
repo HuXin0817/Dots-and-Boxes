@@ -6,7 +6,7 @@
 #include "DotCanvas.hpp"
 #include "EdgeCanvas.hpp"
 
-template <int64_t BoardSize>
+template <int BoardSize>
 class MainWindow final : public QWidget {
   static constexpr int BoardWidth = Box<BoardSize>::Size * EdgeCanvas<BoardSize>::Height;
   static constexpr int WindowSize = BoardWidth + 2 * BoxCanvas<BoardSize>::Width;

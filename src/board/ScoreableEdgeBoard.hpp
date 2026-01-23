@@ -4,7 +4,7 @@
 #include "../model/Edge.hpp"
 #include "EdgeCountableBoard.hpp"
 
-template <int64_t BoardSize>
+template <int BoardSize>
 class ScoreableEdgeBoard {
   public:
   ScoreableEdgeBoard() = default;

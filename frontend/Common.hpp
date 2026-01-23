@@ -22,5 +22,5 @@ isDarkTheme() {
   return QApplication::palette().color(QPalette::Window).lightness() < 128;
 }
 
-template <int64_t BoardSize>
+template <int BoardSize>
 static constexpr int UnitSize = 6 + 16 / BoardSize;

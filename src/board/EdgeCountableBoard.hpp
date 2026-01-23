@@ -6,7 +6,7 @@
 #include "../model/Square.hpp"
 #include "BasicBoard.hpp"
 
-template <int64_t BoardSize>
+template <int BoardSize>
 class EdgeCountableBoard {
   public:
   EdgeCountableBoard() = default;

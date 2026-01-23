@@ -2,7 +2,7 @@
 
 #include "Edge.hpp"
 
-template <int64_t BoardSize>
+template <int BoardSize>
 class Step {
   public:
   void

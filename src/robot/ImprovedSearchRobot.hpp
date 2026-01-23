@@ -4,7 +4,7 @@
 #include "../common/Span.hpp"
 #include "BasicSearchRobot.hpp"
 
-template <int64_t BoardSize>
+template <int BoardSize>
 class ImprovedSearchRobot final : public Robot<BoardSize> {
   public:
   ImprovedSearchRobot() = default;

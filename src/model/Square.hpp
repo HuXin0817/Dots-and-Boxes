@@ -3,7 +3,7 @@
 #include "../common/Macro.hpp"
 
 #define DefSquareClass(Class, SizeExpr)                         \
-  template <int64_t BoardSize>                                  \
+  template <int BoardSize>                                      \
   class Class {                                                 \
 public:                                                         \
     constexpr Class(SizeType x, SizeType y) : v(x * Size + y) { \

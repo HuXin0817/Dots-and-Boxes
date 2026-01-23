@@ -5,10 +5,10 @@
 #include "../model/EdgeScoreMap.hpp"
 #include "ImprovedSearchRobot.hpp"
 
-template <int64_t BoardSize>
+template <int BoardSize>
 class ParallelSearchRobot;
 
-template <int64_t BoardSize, int SearchTime = Edge<BoardSize>::Max << 8>
+template <int BoardSize, int SearchTime = Edge<BoardSize>::Max << 8>
 class MonteCarloSearchRobot final : public Robot<BoardSize> {
   friend class ParallelSearchRobot<BoardSize>;
 

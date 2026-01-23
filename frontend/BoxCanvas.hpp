@@ -2,10 +2,10 @@
 
 #include "EdgeCanvas.hpp"
 
-template <int64_t BoardSize>
+template <int BoardSize>
 class MainWindow;
 
-template <int64_t BoardSize>
+template <int BoardSize>
 class BoxCanvas final : public QWidget {
   friend class MainWindow<BoardSize>;
 

@@ -5,7 +5,7 @@
 #include "../model/Edge.hpp"
 #include "../model/Step.hpp"
 
-template <int64_t BoardSize>
+template <int BoardSize>
 class BasicBoard {
   public:
   BasicBoard() {

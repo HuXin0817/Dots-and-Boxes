@@ -4,7 +4,7 @@
 #include "NearBoxes.hpp"
 #include "Square.hpp"
 
-template <int64_t BoardSize>
+template <int BoardSize>
 class EdgeCountOfBox {
   public:
   EdgeCountOfBox() = default;
