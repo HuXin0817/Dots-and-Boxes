@@ -18,7 +18,7 @@ class Span {
 };
 
 template <typename T>
-auto
+Span<std::remove_const_t<std::remove_reference_t<decltype(T().At(0))>>>
 Export(const T& arr) {
   return Span(arr.begin(), arr.end());
 }

@@ -7,10 +7,9 @@ class Array {
   public:
   Array() = default;
 
-  Array&
+  void
   operator=(const Array& other) {
     std::memcpy(Data, other.Data, Length * sizeof(T));
-    return *this;
   }
 
   IterableObject(Data, Data + Length, Length);

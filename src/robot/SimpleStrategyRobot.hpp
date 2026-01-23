@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cstdint>
 #include "../board/ScoreCountableBoard.hpp"
 #include "../common/List.hpp"
 #include "../common/Span.hpp"

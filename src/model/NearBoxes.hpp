@@ -47,7 +47,7 @@ class NearBoxesMapper {
 template <int64_t BoardSize>
 const List<Box<BoardSize>, 2>&
 NearBoxes(const Edge<BoardSize> edge) {
-  static NearBoxesMapper<BoardSize> NearBoxesMapperInstance;
+  static NearBoxesMapper<BoardSize> Instance;
 
-  return NearBoxesMapperInstance.EdgeNearBoxes.At(edge.Value());
+  return Instance.EdgeNearBoxes.At(edge.Value());
 }

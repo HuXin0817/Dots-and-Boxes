@@ -13,6 +13,8 @@ class BasicSearchRobot final : public Robot<BoardSize> {
   friend class ImprovedSearchRobot<BoardSize>;
 
   public:
+  BasicSearchRobot() = default;
+
   Span<Edge<BoardSize>>
   BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override {
     if (Span<Edge<BoardSize>> edges = SubRobot.BestCandidateEdges(board);

@@ -37,7 +37,7 @@ class NearEdgesMapper {
 template <int64_t BoardSize>
 const Array<Edge<BoardSize>, 4>&
 NearEdges(const Box<BoardSize> box) {
-  static NearEdgesMapper<BoardSize> NearEdgesMapperInstance;
+  static NearEdgesMapper<BoardSize> Instance;
 
-  return NearEdgesMapperInstance.BoxNearEdges.At(box.Value());
+  return Instance.BoxNearEdges.At(box.Value());
 }

@@ -1,7 +1,7 @@
 #pragma once
 
 template <typename T>
-const auto&
+const std::remove_const_t<std::remove_reference_t<decltype(T().At(0))>>&
 RandomChoice(const T& data) {
   assert(!data.Empty());
   if (data.Size() == 1) {
