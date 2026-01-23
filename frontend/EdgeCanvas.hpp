@@ -1,14 +1,35 @@
 #pragma once
 
 #include "BaseCanvas.hpp"
-#include "BaseEdgeCanvas.hpp"
 
 template <int64_t BoardSize>
-class EdgeCanvas final : public BaseEdgeCanvas<BoardSize> {
-  using Base = BaseEdgeCanvas<BoardSize>;
+class EdgeCanvas : public BaseCanvas<BoardSize> {
+  using Base = BaseCanvas<BoardSize>;
 
   public:
-  explicit EdgeCanvas(const bool rotate, QWidget* parent) : Base(rotate, parent) {
+  static constexpr int Width = Base::UnitSize * 2;
+  static constexpr int Height = Width * 5;
+
+  explicit EdgeCanvas(const bool rotate, const std::function<void()>& callBack, QWidget* parent)
+      : Base(parent), Rotate(rotate), CallBack(callBack) {
+    Base::resize(QSize(RotateWidth(), RotateHeight()));
+  }
+
+  int
+  RotateWidth() const {
+    return Rotate ? Width : Height;
+  }
+
+  int
+  RotateHeight() const {
+    return Rotate ? Height : Width;
+  }
+
+  void
+  mousePressEvent(QMouseEvent* event) override {
+    BaseCanvas<BoardSize>::mousePressEvent(event);
+
+    CallBack();
   }
 
   QColor
@@ -53,12 +74,16 @@ class EdgeCanvas final : public BaseEdgeCanvas<BoardSize> {
     painter.setPen(Qt::NoPen);
     painter.setBrush(QBrush(Color()));
 
-    painter.drawRect(Base::width() / 2 - Base::RotateWidth() / 2,
-                     Base::height() / 2 - Base::RotateHeight() / 2,
-                     Base::RotateWidth(),
-                     Base::RotateHeight());
+    painter.drawRect(
+        Base::width() / 2 - RotateWidth() / 2, Base::height() / 2 - RotateHeight() / 2, RotateWidth(), RotateHeight());
   }
 
   private:
   bool HighLight = true;
+
+  private:
+  const std::function<void()> CallBack;
+
+  private:
+  const bool Rotate = false;
 };

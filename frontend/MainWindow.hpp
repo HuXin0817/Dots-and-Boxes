@@ -2,29 +2,34 @@
 
 #include "../src/robot/PlayerType.hpp"
 #include "../src/robot/Robot.hpp"
-#include "layers/BoxCanvasLayer.hpp"
-#include "layers/DotCanvasLayer.hpp"
-#include "layers/EdgeButtonLayer.hpp"
-#include "layers/EdgeCanvasLayer.hpp"
+#include "BoxCanvas.hpp"
+#include "DotCanvas.hpp"
+#include "EdgeCanvas.hpp"
 
 template <int64_t BoardSize>
-class MainWindow final : public BaseCanvasLayer<BoardSize> {
-  using Base = BaseCanvasLayer<BoardSize>;
+class MainWindow final : public BaseCanvas<BoardSize> {
+  using Base = BaseCanvas<BoardSize>;
+
+  static constexpr int BoardWidth = Box<BoardSize>::Size * EdgeCanvas<BoardSize>::Height;
+  static constexpr int WindowSize = BoardWidth + 2 * BoxCanvas<BoardSize>::Width;
 
   public:
   explicit MainWindow(const PlayerType player1Type, const PlayerType player2Type, QWidget* parent = nullptr)
       : Base(parent), Player1Type(player1Type), Player2Type(player2Type) {
-    Base::resize(Base::WindowSize, Base::WindowSize);
-    Base::setMinimumSize(Base::WindowSize, Base::WindowSize);
+    Base::resize(WindowSize, WindowSize);
+    Base::setMinimumSize(WindowSize, WindowSize);
 
-    BoxCanvasLayer = new typename ::BoxCanvasLayer<BoardSize>(this);
-    EdgeCanvasLayer = new typename ::EdgeCanvasLayer<BoardSize>(this);
-    DotCanvasLayer = new typename ::DotCanvasLayer<BoardSize>(this);
-    std::function<std::function<void()>(const Edge<BoardSize>)> CallBackFactory =
-        [this](const Edge<BoardSize> edge) -> std::function<void()> {
-      return [edge, this]() -> void { setPlayerMoveEdge(edge); };
-    };
-    EdgeButtonLayer = new typename ::EdgeButtonLayer<BoardSize>(CallBackFactory, this);
+    for (const int i : std::views::iota(0, Box<BoardSize>::Max)) {
+      BoxCanvases.emplace_back(new BoxCanvas<BoardSize>(this));
+    }
+    for (const Edge<BoardSize> edge : std::views::iota(0, Edge<BoardSize>::Max)) {
+      EdgeCanvases.emplace_back(
+          new EdgeCanvas<BoardSize>(edge.Rotate(), [edge, this]() -> void { setPlayerMoveEdge(edge); }, this));
+    }
+    for (const int i : std::views::iota(0, Dot<BoardSize>::Max)) {
+      DotCanvases.emplace_back(new DotCanvas<BoardSize>(this));
+    }
+
     if (PlayerTypeIsRobot(Player1Type)) {
       Robot1.reset(CreateRobot<BoardSize>(Player1Type));
     }
@@ -44,10 +49,13 @@ class MainWindow final : public BaseCanvasLayer<BoardSize> {
   void
   Add(const Edge<BoardSize> edge) {
     if (Board.GetEdgeCountableBoard().GetBasicBoard().GetStep().NowStep() > 0) {
-      EdgeCanvasLayer->At(LastEdge)->SetHighLight(false);
+      EdgeCanvases[LastEdge.Value()]->SetHighLight(false);
     }
-    EdgeCanvasLayer->At(edge)->SetState(Board.GetScoreMap().GetTurn());
-    EdgeCanvasLayer->At(edge)->raise();
+    EdgeCanvases[edge.Value()]->SetState(Board.GetScoreMap().GetTurn());
+    EdgeCanvases[edge.Value()]->raise();
+    for (const int i : std::views::iota(0, Dot<BoardSize>::Max)) {
+      DotCanvases[i]->raise();
+    }
 
     for (const Box<BoardSize> box : NearBoxes(edge)) {
       int count = 0;
@@ -57,7 +65,7 @@ class MainWindow final : public BaseCanvasLayer<BoardSize> {
         }
       }
       if (count == 3) {
-        BoxCanvasLayer->At(box)->SetState(Board.GetScoreMap().GetTurn());
+        BoxCanvases[box.Value()]->SetState(Board.GetScoreMap().GetTurn());
       }
     }
 
@@ -80,12 +88,35 @@ class MainWindow final : public BaseCanvasLayer<BoardSize> {
   resizeEvent(QResizeEvent* event) override {
     Base::resizeEvent(event);
 
-    const int x = (Base::width() - Base::WindowSize) / 2;
-    const int y = (Base::height() - Base::WindowSize) / 2;
+    const int x0 = (Base::width() - BoardWidth) / 2 - Base::UnitSize;
+    const int y0 = (Base::height() - BoardWidth) / 2 - Base::UnitSize;
 
-    BoxCanvasLayer->move(x, y);
-    EdgeCanvasLayer->move(x, y);
-    DotCanvasLayer->move(x, y);
+    for (const int i : std::views::iota(0, Box<BoardSize>::Size)) {
+      for (const int j : std::views::iota(0, Box<BoardSize>::Size)) {
+        const int x = x0 + i * EdgeCanvas<BoardSize>::Height;
+        const int y = y0 + j * EdgeCanvas<BoardSize>::Height;
+        BoxCanvases[Box<BoardSize>(i, j).Value()]->move(x, y);
+      }
+    }
+
+    for (const Edge<BoardSize> edge : std::views::iota(0, Edge<BoardSize>::Max)) {
+      int x = x0 + edge.Dot1().X() * EdgeCanvas<BoardSize>::Height;
+      int y = y0 + edge.Dot1().Y() * EdgeCanvas<BoardSize>::Height;
+      if (edge.Dot1().X() == edge.Dot2().X()) {
+        y += Base::UnitSize;
+      } else {
+        x += Base::UnitSize;
+      }
+      EdgeCanvases[edge.Value()]->move(x, y);
+    }
+
+    for (const int i : std::views::iota(0, Dot<BoardSize>::Size)) {
+      for (const int j : std::views::iota(0, Dot<BoardSize>::Size)) {
+        const int x = x0 + i * EdgeCanvas<BoardSize>::Height;
+        const int y = y0 + j * EdgeCanvas<BoardSize>::Height;
+        DotCanvases[Dot<BoardSize>(i, j).Value()]->move(x, y);
+      }
+    }
   }
 
   void
@@ -134,7 +165,7 @@ class MainWindow final : public BaseCanvasLayer<BoardSize> {
       }
 
       QThread::sleep(2);
-      EdgeCanvasLayer->At(LastEdge)->SetHighLight(false);
+      EdgeCanvases[LastEdge.Value()]->SetHighLight(false);
       Base::update();
 
       QThread::sleep(2);
@@ -150,10 +181,9 @@ class MainWindow final : public BaseCanvasLayer<BoardSize> {
   Edge<BoardSize> PlayerMoveEdge;
   Edge<BoardSize> LastEdge;
   ScoreCountableBoard<BoardSize> Board;
-  QPointer<BoxCanvasLayer<BoardSize>> BoxCanvasLayer;
-  QPointer<EdgeCanvasLayer<BoardSize>> EdgeCanvasLayer;
-  QPointer<DotCanvasLayer<BoardSize>> DotCanvasLayer;
-  QPointer<EdgeButtonLayer<BoardSize>> EdgeButtonLayer;
+  QList<QPointer<BoxCanvas<BoardSize>>> BoxCanvases;
+  QList<QPointer<DotCanvas<BoardSize>>> DotCanvases;
+  QList<QPointer<EdgeCanvas<BoardSize>>> EdgeCanvases;
 
   void
   setPlayerMoveEdge(const Edge<BoardSize> edge) {

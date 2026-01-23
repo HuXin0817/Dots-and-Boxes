@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../src/model/Turn.hpp"
+#include "../src/model/Turn.hpp"
 
 template <int64_t BoardSize>
 class BaseCanvas : public QWidget {
