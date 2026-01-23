@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../../src/common/Array.hpp"
 #include "../../src/model/Edge.hpp"
 #include "BaseCanvasLayer.hpp"
 
@@ -12,9 +11,9 @@ class EdgeLayer : public BaseCanvasLayer<BoardSize> {
   explicit EdgeLayer(QWidget* parent) : Base(parent) {
   }
 
-  std::unique_ptr<Canvas>&
+  QPointer<Canvas>&
   At(const Edge<BoardSize> Edge) {
-    return Canvases.At(Edge.Value());
+    return Canvases[Edge.Value()];
   }
 
   protected:
@@ -33,10 +32,10 @@ class EdgeLayer : public BaseCanvasLayer<BoardSize> {
       } else {
         x += Base::UnitSize;
       }
-      Canvases.At(edge.Value())->move(x, y);
+      Canvases[edge.Value()]->move(x, y);
     }
   }
 
-  private:
-  Array<std::unique_ptr<Canvas>, Edge<BoardSize>::Max, SizeType<BoardSize>> Canvases;
+  protected:
+  QList<QPointer<Canvas>> Canvases;
 };

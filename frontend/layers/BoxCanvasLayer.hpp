@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../../src/common/Array.hpp"
 #include "../../src/model/Square.hpp"
 #include "../canvases/BoxCanvas.hpp"
 #include "../canvases/EdgeCanvas.hpp"
@@ -13,14 +12,14 @@ class BoxCanvasLayer final : public BaseCanvasLayer<BoardSize> {
   public:
   explicit BoxCanvasLayer(QWidget* parent) : Base(parent) {
     Base::resize(Base::WindowSize, Base::WindowSize);
-    for (const Box<BoardSize> box : std::views::iota(0, Box<BoardSize>::Max)) {
-      BoxCanvases.At(box.Value()) = std::make_unique<BoxCanvas<BoardSize>>(this);
+    for (const int i : std::views::iota(0, Box<BoardSize>::Max)) {
+      BoxCanvases.emplace_back(new BoxCanvas<BoardSize>(this));
     }
   }
 
-  std::unique_ptr<BoxCanvas<BoardSize>>&
+  QPointer<BoxCanvas<BoardSize>>&
   At(const Box<BoardSize> box) {
-    return BoxCanvases.At(box.Value());
+    return BoxCanvases[box.Value()];
   }
 
   protected:
@@ -35,11 +34,11 @@ class BoxCanvasLayer final : public BaseCanvasLayer<BoardSize> {
       for (const int j : std::views::iota(0, Box<BoardSize>::Size)) {
         const int x = x0 + i * EdgeCanvas<BoardSize>::Height;
         const int y = y0 + j * EdgeCanvas<BoardSize>::Height;
-        BoxCanvases.At(Box<BoardSize>(i, j).Value())->move(x, y);
+        BoxCanvases[Box<BoardSize>(i, j).Value()]->move(x, y);
       }
     }
   }
 
   private:
-  Array<std::unique_ptr<BoxCanvas<BoardSize>>, Box<BoardSize>::Max, SizeType<BoardSize>> BoxCanvases;
+  QList<QPointer<BoxCanvas<BoardSize>>> BoxCanvases;
 };

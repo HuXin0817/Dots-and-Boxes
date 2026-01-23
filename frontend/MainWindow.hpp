@@ -17,19 +17,19 @@ class MainWindow final : public BaseCanvasLayer<BoardSize> {
     Base::resize(Base::WindowSize, Base::WindowSize);
     Base::setMinimumSize(Base::WindowSize, Base::WindowSize);
 
-    BoxCanvasLayer = std::make_unique<typename ::BoxCanvasLayer<BoardSize>>(this);
-    EdgeCanvasLayer = std::make_unique<typename ::EdgeCanvasLayer<BoardSize>>(this);
-    DotCanvasLayer = std::make_unique<typename ::DotCanvasLayer<BoardSize>>(this);
+    BoxCanvasLayer = new typename ::BoxCanvasLayer<BoardSize>(this);
+    EdgeCanvasLayer = new typename ::EdgeCanvasLayer<BoardSize>(this);
+    DotCanvasLayer = new typename ::DotCanvasLayer<BoardSize>(this);
     std::function<std::function<void()>(const Edge<BoardSize>)> CallBackFactory =
         [this](const Edge<BoardSize> edge) -> std::function<void()> {
       return [edge, this]() -> void { setPlayerMoveEdge(edge); };
     };
-    EdgeButtonLayer = std::make_unique<typename ::EdgeButtonLayer<BoardSize>>(CallBackFactory, this);
+    EdgeButtonLayer = new typename ::EdgeButtonLayer<BoardSize>(CallBackFactory, this);
     if (PlayerTypeIsRobot(Player1Type)) {
-      Robot1 = CreateRobot<BoardSize>(Player1Type);
+      Robot1.reset(CreateRobot<BoardSize>(Player1Type));
     }
     if (PlayerTypeIsRobot(Player2Type)) {
-      Robot2 = CreateRobot<BoardSize>(Player2Type);
+      Robot2.reset(CreateRobot<BoardSize>(Player2Type));
     }
   }
 
@@ -105,7 +105,7 @@ class MainWindow final : public BaseCanvasLayer<BoardSize> {
         } else {
           PlayerMoveEdge = InvalidEdge<BoardSize>();
           while (PlayerMoveEdge.Value() == InvalidEdge<BoardSize>().Value()) {
-            std::this_thread::yield();
+            QThread::yieldCurrentThread();
           }
         }
         Add(PlayerMoveEdge);
@@ -145,15 +145,15 @@ class MainWindow final : public BaseCanvasLayer<BoardSize> {
   private:
   const PlayerType Player1Type;
   const PlayerType Player2Type;
-  std::unique_ptr<Robot<BoardSize>> Robot1;
-  std::unique_ptr<Robot<BoardSize>> Robot2;
+  QScopedPointer<Robot<BoardSize>> Robot1;
+  QScopedPointer<Robot<BoardSize>> Robot2;
   Edge<BoardSize> PlayerMoveEdge;
   Edge<BoardSize> LastEdge;
   ScoreCountableBoard<BoardSize> Board;
-  std::unique_ptr<BoxCanvasLayer<BoardSize>> BoxCanvasLayer;
-  std::unique_ptr<EdgeCanvasLayer<BoardSize>> EdgeCanvasLayer;
-  std::unique_ptr<DotCanvasLayer<BoardSize>> DotCanvasLayer;
-  std::unique_ptr<EdgeButtonLayer<BoardSize>> EdgeButtonLayer;
+  QPointer<BoxCanvasLayer<BoardSize>> BoxCanvasLayer;
+  QPointer<EdgeCanvasLayer<BoardSize>> EdgeCanvasLayer;
+  QPointer<DotCanvasLayer<BoardSize>> DotCanvasLayer;
+  QPointer<EdgeButtonLayer<BoardSize>> EdgeButtonLayer;
 
   void
   setPlayerMoveEdge(const Edge<BoardSize> edge) {

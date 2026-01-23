@@ -17,19 +17,19 @@ PlayerTypeIsRobot(const PlayerType PlayerType) {
 }
 
 template <int64_t BoardSize>
-static std::unique_ptr<Robot<BoardSize>>
+static Robot<BoardSize>*
 CreateRobot(const PlayerType PlayerType) {
   switch (PlayerType) {
     case PlayerType::SimpleStrategyRobot:
-      return std::make_unique<SimpleStrategyRobot<BoardSize>>();
+      return new SimpleStrategyRobot<BoardSize>();
     case PlayerType::BasicSearchRobot:
-      return std::make_unique<BasicSearchRobot<BoardSize>>();
+      return new BasicSearchRobot<BoardSize>();
     case PlayerType::ImprovedSearchRobot:
-      return std::make_unique<ImprovedSearchRobot<BoardSize>>();
+      return new ImprovedSearchRobot<BoardSize>();
     case PlayerType::MonteCarloSearchRobot:
-      return std::make_unique<MonteCarloSearchRobot<BoardSize>>();
+      return new MonteCarloSearchRobot<BoardSize>();
     case PlayerType::ParallelSearchRobot:
-      return std::make_unique<ParallelSearchRobot<BoardSize>>();
+      return new ParallelSearchRobot<BoardSize>();
     case PlayerType::Human:
       break;
   }
