@@ -3,7 +3,12 @@
 #include "Common.hpp"
 
 template <int64_t BoardSize>
-class EdgeCanvas : public QWidget {
+class MainWindow;
+
+template <int64_t BoardSize>
+class EdgeCanvas final : public QWidget {
+  friend class MainWindow<BoardSize>;
+
   public:
   static constexpr int Width = UnitSize<BoardSize> * 2;
   static constexpr int Height = Width * 5;
@@ -52,11 +57,6 @@ class EdgeCanvas : public QWidget {
     }
 
     return color;
-  }
-
-  void
-  SetHighLight(const bool highLight) {
-    HighLight = highLight;
   }
 
   protected:

@@ -4,7 +4,12 @@
 #include "EdgeCanvas.hpp"
 
 template <int64_t BoardSize>
+class MainWindow;
+
+template <int64_t BoardSize>
 class BoxCanvas final : public QWidget {
+  friend class MainWindow<BoardSize>;
+
   public:
   static constexpr int Width = EdgeCanvas<BoardSize>::Height - 2 * UnitSize<BoardSize>;
 

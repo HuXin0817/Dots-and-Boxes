@@ -3,6 +3,7 @@
 #include "../src/robot/PlayerType.hpp"
 #include "../src/robot/Robot.hpp"
 #include "BoxCanvas.hpp"
+#include "Common.hpp"
 #include "DotCanvas.hpp"
 #include "EdgeCanvas.hpp"
 
@@ -47,9 +48,9 @@ class MainWindow final : public QWidget {
   void
   Add(const Edge<BoardSize> edge) {
     if (Board.GetEdgeCountableBoard().GetBasicBoard().GetStep().NowStep() > 0) {
-      EdgeCanvases[LastEdge.Value()]->SetHighLight(false);
+      EdgeCanvases[LastEdge.Value()]->HighLight = false;
     }
-    EdgeCanvases[edge.Value()]->SetState(Board.GetScoreMap().GetTurn());
+    EdgeCanvases[edge.Value()]->State = StateFromTurn(Board.GetScoreMap().GetTurn());
     EdgeCanvases[edge.Value()]->raise();
     for (const int i : std::views::iota(0, Dot<BoardSize>::Max)) {
       DotCanvases[i]->raise();
@@ -63,7 +64,7 @@ class MainWindow final : public QWidget {
         }
       }
       if (count == 3) {
-        BoxCanvases[box.Value()]->SetState(Board.GetScoreMap().GetTurn());
+        BoxCanvases[box.Value()]->State = StateFromTurn(Board.GetScoreMap().GetTurn());
       }
     }
 
@@ -163,7 +164,7 @@ class MainWindow final : public QWidget {
       }
 
       QThread::sleep(2);
-      EdgeCanvases[LastEdge.Value()]->SetHighLight(false);
+      EdgeCanvases[LastEdge.Value()]->HighLight = false;
       update();
 
       QThread::sleep(2);

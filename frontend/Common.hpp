@@ -8,12 +8,12 @@ enum class State {
   Player2Occupy,
 };
 
-static void
-SetState(State& State, const Turn turn) {
+static State
+StateFromTurn(const Turn turn) {
   if (turn.Value() == Player1Turn.Value()) {
-    State = State::Player1Occupy;
+    return State::Player1Occupy;
   } else {
-    State = State::Player2Occupy;
+    return State::Player2Occupy;
   }
 }
 
