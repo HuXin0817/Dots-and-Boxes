@@ -12,7 +12,7 @@ class EdgeCanvasLayer final : public EdgeLayer<BoardSize, EdgeCanvas<BoardSize>>
   explicit EdgeCanvasLayer(QWidget* parent) : Base(parent) {
     Base::resize(Base::WindowSize, Base::WindowSize);
 
-    for (const Edge<BoardSize> edge : ValueIterator<Edge<BoardSize>, SizeType<BoardSize>>()) {
+    for (const Edge<BoardSize> edge : std::views::iota(0, Edge<BoardSize>::Max)) {
       Base::At(edge) = std::make_unique<EdgeCanvas<BoardSize>>(edge.Rotate(), this);
     }
   }

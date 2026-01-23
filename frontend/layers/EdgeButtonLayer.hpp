@@ -14,7 +14,7 @@ class EdgeButtonLayer final : public EdgeLayer<BoardSize, EdgeButtonCanvas<Board
       : Base(parent) {
     Base::resize(Base::WindowSize, Base::WindowSize);
 
-    for (const Edge<BoardSize> edge : ValueIterator<Edge<BoardSize>, SizeType<BoardSize>>()) {
+    for (const Edge<BoardSize> edge : std::views::iota(0, Edge<BoardSize>::Max)) {
       Base::At(edge) = std::make_unique<EdgeButtonCanvas<BoardSize>>(edge.Rotate(), callBackFactory(edge), this);
     }
   }

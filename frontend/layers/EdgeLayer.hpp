@@ -2,7 +2,6 @@
 
 #include "../../src/common/Array.hpp"
 #include "../../src/model/Edge.hpp"
-#include "../../src/model/ValueIterator.hpp"
 #include "BaseCanvasLayer.hpp"
 
 template <int64_t BoardSize, typename Canvas>
@@ -26,7 +25,7 @@ class EdgeLayer : public BaseCanvasLayer<BoardSize> {
     const int x0 = (Base::width() - Base::BoardWidth) / 2 - Base::UnitSize;
     const int y0 = (Base::height() - Base::BoardWidth) / 2 - Base::UnitSize;
 
-    for (const Edge<BoardSize> edge : ValueIterator<Edge<BoardSize>, SizeType<BoardSize>>()) {
+    for (const Edge<BoardSize> edge : std::views::iota(0, Edge<BoardSize>::Max)) {
       int x = x0 + edge.Dot1().X() * EdgeCanvas<BoardSize>::Height;
       int y = y0 + edge.Dot1().Y() * EdgeCanvas<BoardSize>::Height;
       if (edge.Dot1().X() == edge.Dot2().X()) {

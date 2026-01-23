@@ -2,7 +2,6 @@
 
 #include "../../src/common/Array.hpp"
 #include "../../src/model/Square.hpp"
-#include "../../src/model/ValueIterator.hpp"
 #include "../canvases/DotCanvas.hpp"
 #include "../canvases/EdgeCanvas.hpp"
 #include "BaseCanvasLayer.hpp"
@@ -14,7 +13,7 @@ class DotCanvasLayer final : public BaseCanvasLayer<BoardSize> {
   public:
   explicit DotCanvasLayer(QWidget* parent) : Base(parent) {
     Base::resize(Base::WindowSize, Base::WindowSize);
-    for (const Dot<BoardSize> dot : ValueIterator<Dot<BoardSize>, SizeType<BoardSize>>()) {
+    for (const Dot<BoardSize> dot : std::views::iota(0, Dot<BoardSize>::Max)) {
       DotCanvases.At(dot.Value()) = std::make_unique<DotCanvas<BoardSize>>(this);
     }
   }
@@ -32,8 +31,8 @@ class DotCanvasLayer final : public BaseCanvasLayer<BoardSize> {
     const int x0 = (Base::width() - Base::BoardWidth) / 2 - Base::UnitSize;
     const int y0 = (Base::height() - Base::BoardWidth) / 2 - Base::UnitSize;
 
-    for (int i = 0; i < Dot<BoardSize>::Size; i++) {
-      for (int j = 0; j < Dot<BoardSize>::Size; j++) {
+    for (const int i : std::views::iota(0, Dot<BoardSize>::Size)) {
+      for (const int j : std::views::iota(0, Dot<BoardSize>::Size)) {
         const int x = x0 + i * EdgeCanvas<BoardSize>::Height;
         const int y = y0 + j * EdgeCanvas<BoardSize>::Height;
         DotCanvases.At(Dot<BoardSize>(i, j).Value())->move(x, y);

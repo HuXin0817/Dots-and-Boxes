@@ -4,13 +4,12 @@
 #include "../common/Span.hpp"
 #include "../model/Edge.hpp"
 #include "../model/Step.hpp"
-#include "../model/ValueIterator.hpp"
 
 template <int64_t BoardSize>
 class BasicBoard {
   public:
   BasicBoard() {
-    for (const Edge<BoardSize> edge : ValueIterator<Edge<BoardSize>, SizeType<BoardSize>>()) {
+    for (const Edge<BoardSize> edge : std::views::iota(0, Edge<BoardSize>::Max)) {
       EdgeIndexes.At(edge.Value()) = edge.Value();
       Edges.At(edge.Value()) = edge;
     }

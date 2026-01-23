@@ -4,7 +4,6 @@
 #include "../common/List.hpp"
 #include "Edge.hpp"
 #include "Square.hpp"
-#include "ValueIterator.hpp"
 
 template <int64_t BoardSize>
 const List<Box<BoardSize>, 2, SizeType<BoardSize>>&
@@ -14,7 +13,7 @@ template <int64_t BoardSize>
 class NearBoxesMapper {
   public:
   NearBoxesMapper() {
-    for (const Edge<BoardSize> edge : ValueIterator<Edge<BoardSize>, SizeType<BoardSize>>()) {
+    for (const Edge<BoardSize> edge : std::views::iota(0, Edge<BoardSize>::Max)) {
       EdgeNearBoxes.At(edge.Value()) = GetNearBoxes(edge);
     }
   }

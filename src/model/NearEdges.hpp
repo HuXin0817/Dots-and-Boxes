@@ -12,8 +12,8 @@ template <int64_t BoardSize>
 class NearEdgesMapper {
   public:
   NearEdgesMapper() {
-    for (SizeType<BoardSize> x = 0; x < Box<BoardSize>::Size; x++) {
-      for (SizeType<BoardSize> y = 0; y < Box<BoardSize>::Size; y++) {
+    for (const SizeType<BoardSize> x : std::views::iota(0, Box<BoardSize>::Size)) {
+      for (const SizeType<BoardSize> y : std::views::iota(0, Box<BoardSize>::Size)) {
         const Dot<BoardSize> topLeft(x, y);
         const Dot<BoardSize> topRight(x + 1, y);
         const Dot<BoardSize> bottomLeft(x, y + 1);

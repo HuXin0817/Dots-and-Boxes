@@ -4,7 +4,6 @@
 #include "../common/List.hpp"
 #include "../common/Span.hpp"
 #include "Edge.hpp"
-#include "ValueIterator.hpp"
 
 template <int64_t BoardSize>
 class EdgeScoreMap {
@@ -26,7 +25,7 @@ class EdgeScoreMap {
 
   void
   Add(const EdgeScoreMap& other) {
-    for (SizeType<BoardSize> i = 0; i < Edge<BoardSize>::Max; i++) {
+    for (const SizeType<BoardSize> i : std::views::iota(0, Edge<BoardSize>::Max)) {
       Time.At(i) += other.Time.At(i);
       Score.At(i) += other.Score.At(i);
     }
@@ -35,7 +34,7 @@ class EdgeScoreMap {
   Span<Edge<BoardSize>, SizeType<BoardSize>>
   Export() {
     float maxScore = 0.0;
-    for (const Edge<BoardSize> edge : ValueIterator<Edge<BoardSize>, SizeType<BoardSize>>()) {
+    for (const Edge<BoardSize> edge : std::views::iota(0, Edge<BoardSize>::Max)) {
       if (Time.At(edge.Value()) > 0) {
         if (float score = static_cast<float>(Score.At(edge.Value())) / static_cast<float>(Time.At(edge.Value()));
             score > maxScore || BestEdges.Empty()) {
