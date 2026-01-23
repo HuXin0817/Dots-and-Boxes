@@ -5,7 +5,7 @@
 #include "../common/Span.hpp"
 #include "Edge.hpp"
 
-template <int64_t BoardSize>
+template <int64_t BoardSize, typename CountType = int>
 class EdgeScoreMap {
   public:
   EdgeScoreMap() = default;
@@ -49,7 +49,7 @@ class EdgeScoreMap {
   }
 
   private:
-  Array<int, Edge<BoardSize>::Max, SizeType<BoardSize>> Time;
-  Array<int, Edge<BoardSize>::Max, SizeType<BoardSize>> Score;
+  Array<CountType, Edge<BoardSize>::Max, SizeType<BoardSize>> Time;
+  Array<CountType, Edge<BoardSize>::Max, SizeType<BoardSize>> Score;
   List<Edge<BoardSize>, Edge<BoardSize>::Max, SizeType<BoardSize>> BestEdges;
 };
