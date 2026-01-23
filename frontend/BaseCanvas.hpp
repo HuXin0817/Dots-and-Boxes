@@ -30,6 +30,21 @@ class BaseCanvas : public QWidget {
     }
   }
 
+  void
+  enterEvent(QEnterEvent* event) override {
+    QWidget::enterEvent(event);
+    Hovered = true;
+    update();
+  }
+
+  void
+  leaveEvent(QEvent* event) override {
+    QWidget::leaveEvent(event);
+    Hovered = false;
+    update();
+  }
+
   protected:
+  bool Hovered = false;
   State State = State::Free;
 };

@@ -93,8 +93,8 @@ class MainWindow final : public BaseCanvas<BoardSize> {
 
     for (const int i : std::views::iota(0, Box<BoardSize>::Size)) {
       for (const int j : std::views::iota(0, Box<BoardSize>::Size)) {
-        const int x = x0 + i * EdgeCanvas<BoardSize>::Height;
-        const int y = y0 + j * EdgeCanvas<BoardSize>::Height;
+        const int x = x0 + i * EdgeCanvas<BoardSize>::Height + 2 * Base::UnitSize;
+        const int y = y0 + j * EdgeCanvas<BoardSize>::Height + 2 * Base::UnitSize;
         BoxCanvases[Box<BoardSize>(i, j).Value()]->move(x, y);
       }
     }

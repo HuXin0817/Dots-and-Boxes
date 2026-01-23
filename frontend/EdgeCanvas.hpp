@@ -26,10 +26,15 @@ class EdgeCanvas : public BaseCanvas<BoardSize> {
   Color() const {
     static QColor DarkThemeColor = {65, 65, 65, 255};
     static QColor LightThemeColor = {217, 217, 217, 255};
+    static QColor DarkThemeHoveredColor = {90, 90, 90, 255};
+    static QColor LightThemeHoveredColor = {202, 202, 202, 255};
     static QColor Player1OccupyColor = {64, 64, 255, 255};
     static QColor Player2OccupyColor = {255, 64, 64, 255};
 
     if (BaseCanvas<BoardSize>::State == Base::State::Free) {
+      if (Base::Hovered) {
+        return Base::isDarkTheme() ? DarkThemeHoveredColor : LightThemeHoveredColor;
+      }
       return Base::isDarkTheme() ? DarkThemeColor : LightThemeColor;
     }
 
