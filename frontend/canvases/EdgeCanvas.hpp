@@ -3,9 +3,9 @@
 #include "BaseCanvas.hpp"
 #include "BaseEdgeCanvas.hpp"
 
-template <int BoardSize, typename SizeType>
-class EdgeCanvas final : public BaseEdgeCanvas<BoardSize, SizeType> {
-  using Base = BaseEdgeCanvas<BoardSize, SizeType>;
+template <int64_t BoardSize>
+class EdgeCanvas final : public BaseEdgeCanvas<BoardSize> {
+  using Base = BaseEdgeCanvas<BoardSize>;
 
   public:
   explicit EdgeCanvas(const bool rotate, QWidget* parent) : Base(rotate, parent) {
@@ -18,14 +18,14 @@ class EdgeCanvas final : public BaseEdgeCanvas<BoardSize, SizeType> {
     static QColor Player1OccupyColor = {64, 64, 255, 255};
     static QColor Player2OccupyColor = {255, 64, 64, 255};
 
-    if (BaseCanvas<BoardSize, SizeType>::State == Base::State::Free) {
+    if (BaseCanvas<BoardSize>::State == Base::State::Free) {
       return Base::isDarkTheme() ? DarkThemeColor : LightThemeColor;
     }
 
     QColor color;
-    if (BaseCanvas<BoardSize, SizeType>::State == Base::State::Player1Occupy) {
+    if (BaseCanvas<BoardSize>::State == Base::State::Player1Occupy) {
       color = Player1OccupyColor;
-    } else if (BaseCanvas<BoardSize, SizeType>::State == Base::State::Player2Occupy) {
+    } else if (BaseCanvas<BoardSize>::State == Base::State::Player2Occupy) {
       color = Player2OccupyColor;
     }
 

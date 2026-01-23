@@ -2,12 +2,12 @@
 
 #include "Square.hpp"
 
-template <int BoardSize, typename SizeType>
+template <int64_t BoardSize>
 class Edge {
   public:
-  static constexpr SizeType Max = 2 * BoardSize * (BoardSize + 1);
+  static constexpr SizeType<BoardSize> Max = 2 * BoardSize * (BoardSize + 1);
 
-  Edge(const Dot<BoardSize, SizeType> dot1, const Dot<BoardSize, SizeType> dot2) {
+  Edge(const Dot<BoardSize> dot1, const Dot<BoardSize> dot2) {
     if (dot2.Value() - dot1.Value() == 1) {
       v = 2 * (dot1.Value() - dot1.Value() / (BoardSize + 1)) + 1;
     } else {
@@ -18,18 +18,18 @@ class Edge {
     assert(Dot2().Value() == dot2.Value());
   }
 
-  Dot<BoardSize, SizeType>
+  Dot<BoardSize>
   Dot1() const {
-    SizeType dot = v >> 1;
+    SizeType<BoardSize> dot = v >> 1;
     if (v & 1) {
       dot += dot / BoardSize;
     }
     return dot;
   }
 
-  Dot<BoardSize, SizeType>
+  Dot<BoardSize>
   Dot2() const {
-    SizeType dot = v >> 1;
+    SizeType<BoardSize> dot = v >> 1;
     if (v & 1) {
       dot += dot / BoardSize + 1;
     } else {
@@ -43,11 +43,11 @@ class Edge {
     return v & 1;
   }
 
-  IntValueObject(Edge)
+  IntValueObject(Edge, SizeType<BoardSize>)
 };
 
-template <int BoardSize, typename SizeType>
-Edge<BoardSize, SizeType>
+template <int64_t BoardSize>
+Edge<BoardSize>
 InvalidEdge() {
   return -1;
 }

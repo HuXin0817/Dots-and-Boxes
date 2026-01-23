@@ -25,14 +25,14 @@ PlayerTypeOption(int player) {
                             "robot");
 }
 
-int
+int64_t
 ParseBoardSize(const QString& str) {
   bool conversionOk = false;
-  int boardSize = str.toInt(&conversionOk);
+  int64_t boardSize = str.toLongLong(&conversionOk);
 
   if (!conversionOk || boardSize < MainWindowCreator::MinBoardSize || boardSize > MainWindowCreator::MaxBoardSize) {
     std::fprintf(stderr,
-                 "Error: Invalid board size. Must be an integer in range [%d, %d].\n",
+                 "Error: Invalid board size. Must be an integer in range [%lld, %lld].\n",
                  MainWindowCreator::MinBoardSize,
                  MainWindowCreator::MaxBoardSize);
     exit(EXIT_FAILURE);
@@ -85,11 +85,11 @@ main(int argc, char* argv[]) {
 
   parser.process(application);
 
-  int boardSize = ParseBoardSize(parser.value(boardSizeOption));
+  int64_t boardSize = ParseBoardSize(parser.value(boardSizeOption));
   PlayerType player1Type = ParsePlayerType(parser.value(player1Option));
   PlayerType player2Type = ParsePlayerType(parser.value(player2Option));
 
-  qInfo("Config: {\"BoardSize\":%d,\"Player1\":\"%s\",\"Player2\":\"%s\"}",
+  qInfo("Config: {\"BoardSize\":%lld,\"Player1\":\"%s\",\"Player2\":\"%s\"}",
         boardSize,
         GetPlayerTypeString(player1Type),
         GetPlayerTypeString(player2Type));

@@ -3,12 +3,12 @@
 #include "BaseCanvas.hpp"
 #include "EdgeCanvas.hpp"
 
-template <int BoardSize, typename SizeType>
-class BoxCanvas final : public BaseCanvas<BoardSize, SizeType> {
-  using Base = BaseCanvas<BoardSize, SizeType>;
+template <int64_t BoardSize>
+class BoxCanvas final : public BaseCanvas<BoardSize> {
+  using Base = BaseCanvas<BoardSize>;
 
   public:
-  static constexpr int Width = EdgeCanvas<BoardSize, SizeType>::Height - 2 * Base::UnitSize;
+  static constexpr int Width = EdgeCanvas<BoardSize>::Height - 2 * Base::UnitSize;
 
   explicit BoxCanvas(QWidget* parent) : Base(parent) {
     Base::resize(QSize(Width, Width));

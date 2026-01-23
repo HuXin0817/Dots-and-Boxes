@@ -4,13 +4,13 @@
 #include "../canvases/BoxCanvas.hpp"
 #include "../canvases/EdgeCanvas.hpp"
 
-template <int BoardSize, typename SizeType>
-class BaseCanvasLayer : public BaseCanvas<BoardSize, SizeType> {
-  using Base = BaseCanvas<BoardSize, SizeType>;
+template <int64_t BoardSize>
+class BaseCanvasLayer : public BaseCanvas<BoardSize> {
+  using Base = BaseCanvas<BoardSize>;
 
   public:
-  static constexpr int BoardWidth = Box<BoardSize, SizeType>::Size * EdgeCanvas<BoardSize, SizeType>::Height;
-  static constexpr int WindowSize = BoardWidth + 2 * BoxCanvas<BoardSize, SizeType>::Width;
+  static constexpr int BoardWidth = Box<BoardSize>::Size * EdgeCanvas<BoardSize>::Height;
+  static constexpr int WindowSize = BoardWidth + 2 * BoxCanvas<BoardSize>::Width;
 
   explicit BaseCanvasLayer(QWidget* parent) : Base(parent) {
   }

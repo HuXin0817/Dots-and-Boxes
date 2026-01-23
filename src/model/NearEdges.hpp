@@ -4,21 +4,21 @@
 #include "Edge.hpp"
 #include "Square.hpp"
 
-template <int BoardSize, typename SizeType>
-const Array<Edge<BoardSize, SizeType>, 4, SizeType>&
-NearEdges(const Box<BoardSize, SizeType> box);
+template <int64_t BoardSize>
+const Array<Edge<BoardSize>, 4, SizeType<BoardSize>>&
+NearEdges(const Box<BoardSize> box);
 
-template <int BoardSize, typename SizeType>
+template <int64_t BoardSize>
 class NearEdgesMapper {
   public:
   NearEdgesMapper() {
-    for (SizeType x = 0; x < Box<BoardSize, SizeType>::Size; x++) {
-      for (SizeType y = 0; y < Box<BoardSize, SizeType>::Size; y++) {
-        const Dot<BoardSize, SizeType> topLeft(x, y);
-        const Dot<BoardSize, SizeType> topRight(x + 1, y);
-        const Dot<BoardSize, SizeType> bottomLeft(x, y + 1);
-        const Dot<BoardSize, SizeType> bottomRight(x + 1, y + 1);
-        const Box<BoardSize, SizeType> box(x, y);
+    for (SizeType<BoardSize> x = 0; x < Box<BoardSize>::Size; x++) {
+      for (SizeType<BoardSize> y = 0; y < Box<BoardSize>::Size; y++) {
+        const Dot<BoardSize> topLeft(x, y);
+        const Dot<BoardSize> topRight(x + 1, y);
+        const Dot<BoardSize> bottomLeft(x, y + 1);
+        const Dot<BoardSize> bottomRight(x + 1, y + 1);
+        const Box<BoardSize> box(x, y);
         BoxNearEdges.At(box.Value()).At(0) = Edge(topLeft, topRight);
         BoxNearEdges.At(box.Value()).At(1) = Edge(topLeft, bottomLeft);
         BoxNearEdges.At(box.Value()).At(2) = Edge(bottomLeft, bottomRight);
@@ -28,16 +28,16 @@ class NearEdgesMapper {
   }
 
   private:
-  Array<Array<Edge<BoardSize, SizeType>, 4, SizeType>, Box<BoardSize, SizeType>::Max, SizeType> BoxNearEdges;
+  Array<Array<Edge<BoardSize>, 4, SizeType<BoardSize>>, Box<BoardSize>::Max, SizeType<BoardSize>> BoxNearEdges;
 
-  friend const Array<Edge<BoardSize, SizeType>, 4, SizeType>&
-  NearEdges<BoardSize, SizeType>(const Box<BoardSize, SizeType> box);
+  friend const Array<Edge<BoardSize>, 4, SizeType<BoardSize>>&
+  NearEdges<BoardSize>(const Box<BoardSize> box);
 };
 
-template <int BoardSize, typename SizeType>
-const Array<Edge<BoardSize, SizeType>, 4, SizeType>&
-NearEdges(const Box<BoardSize, SizeType> box) {
-  static NearEdgesMapper<BoardSize, SizeType> NearEdgesMapperInstance;
+template <int64_t BoardSize>
+const Array<Edge<BoardSize>, 4, SizeType<BoardSize>>&
+NearEdges(const Box<BoardSize> box) {
+  static NearEdgesMapper<BoardSize> NearEdgesMapperInstance;
 
   return NearEdgesMapperInstance.BoxNearEdges.At(box.Value());
 }

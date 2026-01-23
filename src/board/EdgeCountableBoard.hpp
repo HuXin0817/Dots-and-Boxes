@@ -6,50 +6,50 @@
 #include "../model/Square.hpp"
 #include "BasicBoard.hpp"
 
-template <int BoardSize, typename SizeType>
+template <int64_t BoardSize>
 class EdgeCountableBoard {
   public:
   EdgeCountableBoard() = default;
 
-  SizeType
-  Add(const Edge<BoardSize, SizeType> edge) {
+  SizeType<BoardSize>
+  Add(const Edge<BoardSize> edge) {
     BasicBoard.Add(edge);
     return EdgeCountOfBox.Add(edge);
   }
 
-  Edge<BoardSize, SizeType>
-  FindNotContainsEdgeInBox(const Box<BoardSize, SizeType> box) const {
+  Edge<BoardSize>
+  FindNotContainsEdgeInBox(const Box<BoardSize> box) const {
     assert(EdgeCountOfBox.EdgeCount(box) == 3);
-    for (const Edge<BoardSize, SizeType> edge : NearEdges(box)) {
+    for (const Edge<BoardSize> edge : NearEdges(box)) {
       if (BasicBoard.NotContains(edge)) {
         return edge;
       }
     }
     assert(false);
-    return InvalidEdge<BoardSize, SizeType>();
+    return InvalidEdge<BoardSize>();
   }
 
-  Edge<BoardSize, SizeType>
+  Edge<BoardSize>
   FindScoreableEdge() const {
-    for (const Box<BoardSize, SizeType> box : ValueIterator<Box<BoardSize, SizeType>, SizeType>()) {
+    for (const Box<BoardSize> box : ValueIterator<Box<BoardSize>, SizeType<BoardSize>>()) {
       if (EdgeCountOfBox.EdgeCount(box) == 3) {
         return FindNotContainsEdgeInBox(box);
       }
     }
-    return InvalidEdge<BoardSize, SizeType>();
+    return InvalidEdge<BoardSize>();
   }
 
-  const BasicBoard<BoardSize, SizeType>&
+  const BasicBoard<BoardSize>&
   GetBasicBoard() const {
     return BasicBoard;
   }
 
-  const EdgeCountOfBox<BoardSize, SizeType>&
+  const EdgeCountOfBox<BoardSize>&
   GetEdgeCountOfBox() const {
     return EdgeCountOfBox;
   }
 
   private:
-  BasicBoard<BoardSize, SizeType> BasicBoard;
-  EdgeCountOfBox<BoardSize, SizeType> EdgeCountOfBox;
+  BasicBoard<BoardSize> BasicBoard;
+  EdgeCountOfBox<BoardSize> EdgeCountOfBox;
 };

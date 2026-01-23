@@ -5,29 +5,30 @@
 #include "../common/Span.hpp"
 #include "Robot.hpp"
 
-template <int BoardSize, typename SizeType>
+template <int64_t BoardSize>
 class BasicSearchRobot;
 
-template <int BoardSize, typename SizeType>
+template <int64_t BoardSize>
 class ImprovedSearchRobot;
 
-template <int BoardSize, typename SizeType>
-class SimpleStrategyRobot final : public Robot<BoardSize, SizeType> {
-  friend class BasicSearchRobot<BoardSize, SizeType>;
-  friend class ImprovedSearchRobot<BoardSize, SizeType>;
+template <int64_t BoardSize>
+class SimpleStrategyRobot final : public Robot<BoardSize> {
+  friend class BasicSearchRobot<BoardSize>;
+  friend class ImprovedSearchRobot<BoardSize>;
 
   public:
   SimpleStrategyRobot() = default;
 
-  Span<Edge<BoardSize, SizeType>, SizeType>
-  BestCandidateEdges(const ScoreCountableBoard<BoardSize, SizeType>& board) override {
+  Span<Edge<BoardSize>, SizeType<BoardSize>>
+  BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override {
     EnemyUnscoreableEdges.Clear();
     ScoreableEdges.Clear();
-    const Span<Edge<BoardSize, SizeType>, SizeType> emptyEdges =
+    const Span<Edge<BoardSize>, SizeType<BoardSize>> emptyEdges =
         board.GetEdgeCountableBoard().GetBasicBoard().EmptyEdges();
 
-    for (const Edge<BoardSize, SizeType> edge : emptyEdges) {
-      if (const SizeType maxCount = board.GetEdgeCountableBoard().GetEdgeCountOfBox().MaxCount(edge); maxCount == 3) {
+    for (const Edge<BoardSize> edge : emptyEdges) {
+      if (const SizeType<BoardSize> maxCount = board.GetEdgeCountableBoard().GetEdgeCountOfBox().MaxCount(edge);
+          maxCount == 3) {
         ScoreableEdges.Append(edge);
       } else if (maxCount < 2) {
         EnemyUnscoreableEdges.Append(edge);
@@ -35,11 +36,11 @@ class SimpleStrategyRobot final : public Robot<BoardSize, SizeType> {
     }
 
     if (!ScoreableEdges.Empty()) {
-      return Export<List<Edge<BoardSize, SizeType>, Edge<BoardSize, SizeType>::Max, SizeType>, SizeType>(
+      return Export<List<Edge<BoardSize>, Edge<BoardSize>::Max, SizeType<BoardSize>>, SizeType<BoardSize>>(
           ScoreableEdges);
     }
     if (!EnemyUnscoreableEdges.Empty()) {
-      return Export<List<Edge<BoardSize, SizeType>, Edge<BoardSize, SizeType>::Max, SizeType>, SizeType>(
+      return Export<List<Edge<BoardSize>, Edge<BoardSize>::Max, SizeType<BoardSize>>, SizeType<BoardSize>>(
           EnemyUnscoreableEdges);
     }
 
@@ -47,6 +48,6 @@ class SimpleStrategyRobot final : public Robot<BoardSize, SizeType> {
   }
 
   private:
-  List<Edge<BoardSize, SizeType>, Edge<BoardSize, SizeType>::Max, SizeType> EnemyUnscoreableEdges;
-  List<Edge<BoardSize, SizeType>, Edge<BoardSize, SizeType>::Max, SizeType> ScoreableEdges;
+  List<Edge<BoardSize>, Edge<BoardSize>::Max, SizeType<BoardSize>> EnemyUnscoreableEdges;
+  List<Edge<BoardSize>, Edge<BoardSize>::Max, SizeType<BoardSize>> ScoreableEdges;
 };

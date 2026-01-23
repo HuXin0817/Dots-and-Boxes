@@ -2,9 +2,9 @@
 
 #include "BaseEdgeCanvas.hpp"
 
-template <int BoardSize, typename SizeType>
-class EdgeButtonCanvas final : public BaseEdgeCanvas<BoardSize, SizeType> {
-  using Base = BaseEdgeCanvas<BoardSize, SizeType>;
+template <int64_t BoardSize>
+class EdgeButtonCanvas final : public BaseEdgeCanvas<BoardSize> {
+  using Base = BaseEdgeCanvas<BoardSize>;
 
   public:
   explicit EdgeButtonCanvas(const bool rotate, std::function<void()> callBack, QWidget* parent)
@@ -14,7 +14,7 @@ class EdgeButtonCanvas final : public BaseEdgeCanvas<BoardSize, SizeType> {
   protected:
   void
   mousePressEvent(QMouseEvent* event) override {
-    BaseCanvas<BoardSize, SizeType>::mousePressEvent(event);
+    BaseCanvas<BoardSize>::mousePressEvent(event);
 
     CallBack();
   }

@@ -6,49 +6,49 @@
 #include "Square.hpp"
 #include "ValueIterator.hpp"
 
-template <int BoardSize, typename SizeType>
-const List<Box<BoardSize, SizeType>, 2, SizeType>&
-NearBoxes(const Edge<BoardSize, SizeType> edge);
+template <int64_t BoardSize>
+const List<Box<BoardSize>, 2, SizeType<BoardSize>>&
+NearBoxes(const Edge<BoardSize> edge);
 
-template <int BoardSize, typename SizeType>
+template <int64_t BoardSize>
 class NearBoxesMapper {
   public:
   NearBoxesMapper() {
-    for (const Edge<BoardSize, SizeType> edge : ValueIterator<Edge<BoardSize, SizeType>, SizeType>()) {
+    for (const Edge<BoardSize> edge : ValueIterator<Edge<BoardSize>, SizeType<BoardSize>>()) {
       EdgeNearBoxes.At(edge.Value()) = GetNearBoxes(edge);
     }
   }
 
   private:
-  Array<List<Box<BoardSize, SizeType>, 2, SizeType>, Edge<BoardSize, SizeType>::Max, SizeType> EdgeNearBoxes;
+  Array<List<Box<BoardSize>, 2, SizeType<BoardSize>>, Edge<BoardSize>::Max, SizeType<BoardSize>> EdgeNearBoxes;
 
-  static List<Box<BoardSize, SizeType>, 2, SizeType>
-  GetNearBoxes(const Edge<BoardSize, SizeType> edge) {
-    List<Box<BoardSize, SizeType>, 2, SizeType> result;
+  static List<Box<BoardSize>, 2, SizeType<BoardSize>>
+  GetNearBoxes(const Edge<BoardSize> edge) {
+    List<Box<BoardSize>, 2, SizeType<BoardSize>> result;
 
-    SizeType x = edge.Dot2().X() - 1;
-    SizeType y = edge.Dot2().Y() - 1;
+    SizeType<BoardSize> x = edge.Dot2().X() - 1;
+    SizeType<BoardSize> y = edge.Dot2().Y() - 1;
     if (x >= 0 && y >= 0) {
-      result.Append(Box<BoardSize, SizeType>(x, y));
+      result.Append(Box<BoardSize>(x, y));
     }
 
     x = edge.Dot1().X();
     y = edge.Dot1().Y();
     if (x < BoardSize && y < BoardSize) {
-      result.Append(Box<BoardSize, SizeType>(x, y));
+      result.Append(Box<BoardSize>(x, y));
     }
 
     return result;
   }
 
-  friend const List<Box<BoardSize, SizeType>, 2, SizeType>&
-  NearBoxes<BoardSize, SizeType>(const Edge<BoardSize, SizeType> edge);
+  friend const List<Box<BoardSize>, 2, SizeType<BoardSize>>&
+  NearBoxes<BoardSize>(const Edge<BoardSize> edge);
 };
 
-template <int BoardSize, typename SizeType>
-const List<Box<BoardSize, SizeType>, 2, SizeType>&
-NearBoxes(const Edge<BoardSize, SizeType> edge) {
-  static NearBoxesMapper<BoardSize, SizeType> NearBoxesMapperInstance;
+template <int64_t BoardSize>
+const List<Box<BoardSize>, 2, SizeType<BoardSize>>&
+NearBoxes(const Edge<BoardSize> edge) {
+  static NearBoxesMapper<BoardSize> NearBoxesMapperInstance;
 
   return NearBoxesMapperInstance.EdgeNearBoxes.At(edge.Value());
 }

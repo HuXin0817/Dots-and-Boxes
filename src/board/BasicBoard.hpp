@@ -6,21 +6,21 @@
 #include "../model/Step.hpp"
 #include "../model/ValueIterator.hpp"
 
-template <int BoardSize, typename SizeType>
+template <int64_t BoardSize>
 class BasicBoard {
   public:
   BasicBoard() {
-    for (const Edge<BoardSize, SizeType> edge : ValueIterator<Edge<BoardSize, SizeType>, SizeType>()) {
+    for (const Edge<BoardSize> edge : ValueIterator<Edge<BoardSize>, SizeType<BoardSize>>()) {
       EdgeIndexes.At(edge.Value()) = edge.Value();
       Edges.At(edge.Value()) = edge;
     }
   }
 
   void
-  Add(const Edge<BoardSize, SizeType> edge) {
+  Add(const Edge<BoardSize> edge) {
     assert(NotContains(edge));
-    const Edge<BoardSize, SizeType> nowEdge = Edges.At(Step.NowStep());
-    const SizeType edgeIndex = EdgeIndexes.At(edge.Value());
+    const Edge<BoardSize> nowEdge = Edges.At(Step.NowStep());
+    const SizeType<BoardSize> edgeIndex = EdgeIndexes.At(edge.Value());
     std::swap(Edges.At(edgeIndex), Edges.At(Step.NowStep()));
     EdgeIndexes.At(edge.Value()) = Step.NowStep();
     EdgeIndexes.At(nowEdge.Value()) = edgeIndex;
@@ -28,32 +28,32 @@ class BasicBoard {
   }
 
   bool
-  Contains(const Edge<BoardSize, SizeType> edge) const {
+  Contains(const Edge<BoardSize> edge) const {
     return EdgeIndexes.At(edge.Value()) < Step.NowStep();
   }
 
   bool
-  NotContains(const Edge<BoardSize, SizeType> edge) const {
+  NotContains(const Edge<BoardSize> edge) const {
     return EdgeIndexes.At(edge.Value()) >= Step.NowStep();
   }
 
-  Span<Edge<BoardSize, SizeType>, SizeType>
+  Span<Edge<BoardSize>, SizeType<BoardSize>>
   EmptyEdges() const {
-    return {Edges.begin() + Step.NowStep(), Edges.begin() + Edge<BoardSize, SizeType>::Max};
+    return {Edges.begin() + Step.NowStep(), Edges.begin() + Edge<BoardSize>::Max};
   }
 
-  Span<Edge<BoardSize, SizeType>, SizeType>
+  Span<Edge<BoardSize>, SizeType<BoardSize>>
   MoveRecord() const {
     return {Edges.begin(), Edges.begin() + Step.NowStep()};
   }
 
-  Step<BoardSize, SizeType>
+  Step<BoardSize>
   GetStep() const {
     return Step;
   }
 
   private:
-  Step<BoardSize, SizeType> Step;
-  Array<Edge<BoardSize, SizeType>, Edge<BoardSize, SizeType>::Max, SizeType> Edges;
-  Array<SizeType, Edge<BoardSize, SizeType>::Max, SizeType> EdgeIndexes;
+  Step<BoardSize> Step;
+  Array<Edge<BoardSize>, Edge<BoardSize>::Max, SizeType<BoardSize>> Edges;
+  Array<SizeType<BoardSize>, Edge<BoardSize>::Max, SizeType<BoardSize>> EdgeIndexes;
 };

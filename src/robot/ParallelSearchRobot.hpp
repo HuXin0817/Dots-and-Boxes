@@ -3,16 +3,16 @@
 #include "MonteCarloSearchRobot.hpp"
 #include "Robot.hpp"
 
-template <int BoardSize, typename SizeType>
-class ParallelSearchRobot final : public Robot<BoardSize, SizeType> {
+template <int64_t BoardSize>
+class ParallelSearchRobot final : public Robot<BoardSize> {
   static constexpr int ParallelNumber = CPU_COUNT;
 
   public:
   ParallelSearchRobot() = default;
 
-  Span<Edge<BoardSize, SizeType>, SizeType>
-  BestCandidateEdges(const ScoreCountableBoard<BoardSize, SizeType>& board) override {
-    if (const Span<Edge<BoardSize, SizeType>, SizeType> edges = SubRobots.At(0).SubRobot.BestCandidateEdges(board);
+  Span<Edge<BoardSize>, SizeType<BoardSize>>
+  BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override {
+    if (const Span<Edge<BoardSize>, SizeType<BoardSize>> edges = SubRobots.At(0).SubRobot.BestCandidateEdges(board);
         edges.Size() == 1) {
       return edges;
     }
@@ -20,11 +20,11 @@ class ParallelSearchRobot final : public Robot<BoardSize, SizeType> {
     SearchResult.Reset();
 
 #pragma omp parallel for
-    for (MonteCarloSearchRobot<BoardSize, SizeType>& model : SubRobots) {
+    for (MonteCarloSearchRobot<BoardSize>& model : SubRobots) {
       model.BestCandidateEdges(board);
     }
 
-    for (const MonteCarloSearchRobot<BoardSize, SizeType>& model : SubRobots) {
+    for (const MonteCarloSearchRobot<BoardSize>& model : SubRobots) {
       SearchResult.Add(model.SearchResult);
     }
 
@@ -32,6 +32,6 @@ class ParallelSearchRobot final : public Robot<BoardSize, SizeType> {
   }
 
   private:
-  Array<MonteCarloSearchRobot<BoardSize, SizeType>, ParallelNumber, int> SubRobots;
-  EdgeScoreMap<BoardSize, SizeType> SearchResult;
+  Array<MonteCarloSearchRobot<BoardSize>, ParallelNumber, int> SubRobots;
+  EdgeScoreMap<BoardSize> SearchResult;
 };

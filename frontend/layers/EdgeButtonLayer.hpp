@@ -4,19 +4,18 @@
 #include "../canvases/EdgeButton.hpp"
 #include "EdgeLayer.hpp"
 
-template <int BoardSize, typename SizeType>
-class EdgeButtonLayer final : public EdgeLayer<BoardSize, SizeType, EdgeButtonCanvas<BoardSize, SizeType>> {
-  using Base = EdgeLayer<BoardSize, SizeType, EdgeButtonCanvas<BoardSize, SizeType>>;
+template <int64_t BoardSize>
+class EdgeButtonLayer final : public EdgeLayer<BoardSize, EdgeButtonCanvas<BoardSize>> {
+  using Base = EdgeLayer<BoardSize, EdgeButtonCanvas<BoardSize>>;
 
   public:
-  explicit EdgeButtonLayer(const std::function<std::function<void()>(const Edge<BoardSize, SizeType>)>& callBackFactory,
+  explicit EdgeButtonLayer(const std::function<std::function<void()>(const Edge<BoardSize>)>& callBackFactory,
                            QWidget* parent)
       : Base(parent) {
     Base::resize(Base::WindowSize, Base::WindowSize);
 
-    for (const Edge<BoardSize, SizeType> edge : ValueIterator<Edge<BoardSize, SizeType>, SizeType>()) {
-      Base::At(edge) =
-          std::make_unique<EdgeButtonCanvas<BoardSize, SizeType>>(edge.Rotate(), callBackFactory(edge), this);
+    for (const Edge<BoardSize> edge : ValueIterator<Edge<BoardSize>, SizeType<BoardSize>>()) {
+      Base::At(edge) = std::make_unique<EdgeButtonCanvas<BoardSize>>(edge.Rotate(), callBackFactory(edge), this);
     }
   }
 };

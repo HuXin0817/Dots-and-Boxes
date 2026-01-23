@@ -2,7 +2,7 @@
 
 #include "Edge.hpp"
 
-template <int BoardSize, typename SizeType>
+template <int64_t BoardSize>
 class Step {
   public:
   void
@@ -12,15 +12,15 @@ class Step {
 
   bool
   Gaming() const {
-    return v < Edge<BoardSize, SizeType>::Max;
+    return v < Edge<BoardSize>::Max;
   }
 
-  SizeType
+  SizeType<BoardSize>
   RemainStep() const {
-    return Edge<BoardSize, SizeType>::Max - v;
+    return Edge<BoardSize>::Max - v;
   }
 
-  SizeType
+  SizeType<BoardSize>
   NowStep() const {
     return v;
   }
@@ -31,5 +31,5 @@ class Step {
   }
 
   private:
-  SizeType v = 0;
+  SizeType<BoardSize> v = 0;
 };

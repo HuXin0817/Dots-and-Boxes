@@ -2,7 +2,7 @@
 
 #include "../../src/model/Turn.hpp"
 
-template <int BoardSize, typename SizeType>
+template <int64_t BoardSize>
 class BaseCanvas : public QWidget {
   public:
   static constexpr int UnitSize = 6 + 16 / BoardSize;

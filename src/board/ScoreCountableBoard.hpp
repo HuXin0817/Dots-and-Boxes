@@ -3,20 +3,20 @@
 #include "../model/ScoreMap.hpp"
 #include "EdgeCountableBoard.hpp"
 
-template <int BoardSize, typename SizeType>
+template <int64_t BoardSize>
 class ScoreCountableBoard {
   public:
   ScoreCountableBoard() = default;
 
   void
-  Reset(const EdgeCountableBoard<BoardSize, SizeType>& newBoard) {
+  Reset(const EdgeCountableBoard<BoardSize>& newBoard) {
     EdgeCountableBoard = newBoard;
     ScoreMap.Reset();
   }
 
-  SizeType
-  Add(const Edge<BoardSize, SizeType> edge) {
-    SizeType score = EdgeCountableBoard.Add(edge);
+  SizeType<BoardSize>
+  Add(const Edge<BoardSize> edge) {
+    SizeType<BoardSize> score = EdgeCountableBoard.Add(edge);
     ScoreMap.Add(score);
     return score;
   }
@@ -26,17 +26,17 @@ class ScoreCountableBoard {
     return ScoreMap.Gaming() && EdgeCountableBoard.GetBasicBoard().GetStep().Gaming();
   }
 
-  const EdgeCountableBoard<BoardSize, SizeType>&
+  const EdgeCountableBoard<BoardSize>&
   GetEdgeCountableBoard() const {
     return EdgeCountableBoard;
   }
 
-  const ScoreMap<BoardSize, SizeType>&
+  const ScoreMap<BoardSize>&
   GetScoreMap() const {
     return ScoreMap;
   }
 
   private:
-  EdgeCountableBoard<BoardSize, SizeType> EdgeCountableBoard;
-  ScoreMap<BoardSize, SizeType> ScoreMap;
+  EdgeCountableBoard<BoardSize> EdgeCountableBoard;
+  ScoreMap<BoardSize> ScoreMap;
 };

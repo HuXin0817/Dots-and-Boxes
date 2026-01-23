@@ -6,7 +6,7 @@
 #include "Edge.hpp"
 #include "ValueIterator.hpp"
 
-template <int BoardSize, typename SizeType>
+template <int64_t BoardSize>
 class EdgeScoreMap {
   public:
   EdgeScoreMap() = default;
@@ -19,23 +19,23 @@ class EdgeScoreMap {
   }
 
   void
-  Add(const Edge<BoardSize, SizeType> edge, const SizeType score) {
+  Add(const Edge<BoardSize> edge, const SizeType<BoardSize> score) {
     Time.At(edge.Value())++;
     Score.At(edge.Value()) += score;
   }
 
   void
   Add(const EdgeScoreMap& other) {
-    for (SizeType i = 0; i < Edge<BoardSize, SizeType>::Max; i++) {
+    for (SizeType<BoardSize> i = 0; i < Edge<BoardSize>::Max; i++) {
       Time.At(i) += other.Time.At(i);
       Score.At(i) += other.Score.At(i);
     }
   }
 
-  Span<Edge<BoardSize, SizeType>, SizeType>
+  Span<Edge<BoardSize>, SizeType<BoardSize>>
   Export() {
     float maxScore = 0.0;
-    for (const Edge<BoardSize, SizeType> edge : ValueIterator<Edge<BoardSize, SizeType>, SizeType>()) {
+    for (const Edge<BoardSize> edge : ValueIterator<Edge<BoardSize>, SizeType<BoardSize>>()) {
       if (Time.At(edge.Value()) > 0) {
         if (float score = static_cast<float>(Score.At(edge.Value())) / static_cast<float>(Time.At(edge.Value()));
             score > maxScore || BestEdges.Empty()) {
@@ -46,11 +46,11 @@ class EdgeScoreMap {
         }
       }
     }
-    return ::Export<List<Edge<BoardSize, SizeType>, Edge<BoardSize, SizeType>::Max, SizeType>, SizeType>(BestEdges);
+    return ::Export<List<Edge<BoardSize>, Edge<BoardSize>::Max, SizeType<BoardSize>>, SizeType<BoardSize>>(BestEdges);
   }
 
   private:
-  Array<int, Edge<BoardSize, SizeType>::Max, SizeType> Time;
-  Array<int, Edge<BoardSize, SizeType>::Max, SizeType> Score;
-  List<Edge<BoardSize, SizeType>, Edge<BoardSize, SizeType>::Max, SizeType> BestEdges;
+  Array<int, Edge<BoardSize>::Max, SizeType<BoardSize>> Time;
+  Array<int, Edge<BoardSize>::Max, SizeType<BoardSize>> Score;
+  List<Edge<BoardSize>, Edge<BoardSize>::Max, SizeType<BoardSize>> BestEdges;
 };

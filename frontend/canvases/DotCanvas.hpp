@@ -2,9 +2,9 @@
 
 #include "BaseCanvas.hpp"
 
-template <int BoardSize, typename SizeType>
-class DotCanvas final : public BaseCanvas<BoardSize, SizeType> {
-  using Base = BaseCanvas<BoardSize, SizeType>;
+template <int64_t BoardSize>
+class DotCanvas final : public BaseCanvas<BoardSize> {
+  using Base = BaseCanvas<BoardSize>;
 
   public:
   static constexpr int Width = 2 * Base::UnitSize;

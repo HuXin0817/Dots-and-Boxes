@@ -4,11 +4,11 @@
 #include "../common/Span.hpp"
 #include "../model/Edge.hpp"
 
-template <int BoardSize, typename SizeType>
+template <int64_t BoardSize>
 class Robot {
   public:
   virtual ~Robot() = default;
 
-  virtual Span<Edge<BoardSize, SizeType>, SizeType>
-  BestCandidateEdges(const ScoreCountableBoard<BoardSize, SizeType>& board) = 0;
+  virtual Span<Edge<BoardSize>, SizeType<BoardSize>>
+  BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) = 0;
 };
