@@ -12,8 +12,7 @@ class ParallelSearchRobot final : public Robot<BoardSize> {
 
   Span<Edge<BoardSize>, SizeType<BoardSize>>
   BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override {
-    if (const Span<Edge<BoardSize>, SizeType<BoardSize>> edges =
-            ImprovedSearchRobot<BoardSize>().BestCandidateEdges(board);
+    if (const Span<Edge<BoardSize>, SizeType<BoardSize>> edges = SubRobots.At(0).SubRobot.BestCandidateEdges(board);
         edges.Size() == 1) {
       return edges;
     }
@@ -21,13 +20,18 @@ class ParallelSearchRobot final : public Robot<BoardSize> {
     SearchResult.Reset();
 
 #pragma omp parallel for
-    for (const int i : std::views::iota(0, 64)) {
-      SubRobotType().SearchCandidateEdges(board, SearchResult);
+    for (SubRobotType& model : SubRobots) {
+      model.BestCandidateEdges(board);
+    }
+
+    for (const SubRobotType& model : SubRobots) {
+      SearchResult.Add(model.SearchResult);
     }
 
     return SearchResult.Export();
   }
 
   private:
-  EdgeScoreMap<BoardSize, std::atomic<int>> SearchResult;
+  Array<SubRobotType, 64, int> SubRobots;
+  EdgeScoreMap<BoardSize> SearchResult;
 };

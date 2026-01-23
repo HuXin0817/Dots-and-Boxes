@@ -22,15 +22,7 @@ class MonteCarloSearchRobot final : public Robot<BoardSize> {
       return edges;
     }
 
-    EdgeScoreMap<BoardSize> searchResult;
-    SearchCandidateEdges(board, searchResult);
-    return searchResult.Export();
-  }
-
-  template <typename EdgeScoreMap>
-  void
-  SearchCandidateEdges(const ScoreCountableBoard<BoardSize>& board, EdgeScoreMap& searchResult) {
-    searchResult.Reset();
+    SearchResult.Reset();
     int times = SearchTime / board.GetEdgeCountableBoard().GetBasicBoard().GetStep().RemainStep() + 1;
     while (times--) {
       SimulationBoard.Reset(board.GetEdgeCountableBoard());
@@ -41,11 +33,14 @@ class MonteCarloSearchRobot final : public Robot<BoardSize> {
         SimulationBoard.Add(RandomChoice<Span<Edge<BoardSize>, SizeType<BoardSize>>, SizeType<BoardSize>>(
             SubRobot.BestCandidateEdges(SimulationBoard)));
       }
-      searchResult.Add(edge, SimulationBoard.GetScoreMap().Score());
+      SearchResult.Add(edge, SimulationBoard.GetScoreMap().Score());
     }
+
+    return SearchResult.Export();
   }
 
   private:
   ImprovedSearchRobot<BoardSize> SubRobot;
   ScoreCountableBoard<BoardSize> SimulationBoard;
+  EdgeScoreMap<BoardSize> SearchResult;
 };
