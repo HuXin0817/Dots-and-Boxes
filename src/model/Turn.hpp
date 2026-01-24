@@ -3,12 +3,10 @@
 class Turn {
   public:
   Turn() = default;
-
   Turn(const bool v);
 
   void
   Change();
-
   bool
   Value() const;
 

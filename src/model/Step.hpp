@@ -9,16 +9,12 @@ class Step {
 
   void
   Reset();
-
   bool
   Gaming() const;
-
   SizeType<BoardSize>
   RemainStep() const;
-
   SizeType<BoardSize>
   NowStep() const;
-
   void
   Go();
 

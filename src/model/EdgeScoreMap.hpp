@@ -15,14 +15,11 @@ class EdgeScoreMap {
 
   void
   Reset();
-
   void
   Add(const Edge<BoardSize> edge, const SizeType<BoardSize> score);
-
   template <typename OtherEdgeScoreMap>
   void
   Add(const OtherEdgeScoreMap& other);
-
   Span<Edge<BoardSize>>
   Export();
 

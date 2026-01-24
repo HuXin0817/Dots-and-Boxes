@@ -12,13 +12,10 @@ class Queue {
 
   void
   Clear();
-
   void
   Append(const T item);
-
   T
   Pop();
-
   size_t
   Size() const;
   bool
@@ -28,7 +25,6 @@ class Queue {
   begin();
   const T*
   begin() const;
-
   T*
   end();
   const T*

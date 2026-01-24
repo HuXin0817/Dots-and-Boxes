@@ -21,11 +21,10 @@ class Array {
   begin();
   const T*
   begin() const;
-
-  const T*
-  end() const;
   T*
   end();
+  const T*
+  end() const;
 
   private:
   T Data[Length];
@@ -64,13 +63,13 @@ Array<T, Length>::begin() const {
 }
 
 template <typename T, size_t Length>
-const T*
-Array<T, Length>::end() const {
+T*
+Array<T, Length>::end() {
   return Data + Length;
 }
 
 template <typename T, size_t Length>
-T*
-Array<T, Length>::end() {
+const T*
+Array<T, Length>::end() const {
   return Data + Length;
 }

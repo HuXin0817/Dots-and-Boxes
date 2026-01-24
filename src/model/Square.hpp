@@ -9,17 +9,13 @@ class Square {
   static constexpr SizeType<BoardSize> Max = Size * Size;
 
   Square() = default;
-
   Square(SizeType<BoardSize> v);
-
   Square(SizeType<BoardSize> x, SizeType<BoardSize> y);
 
   SizeType<BoardSize>
   Value() const;
-
   SizeType<BoardSize>
   X() const;
-
   SizeType<BoardSize>
   Y() const;
 

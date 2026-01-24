@@ -6,20 +6,17 @@ template <typename T>
 class Span {
   public:
   Span() = default;
-
   Span(const T* begin, const T* end);
 
   size_t
   Size() const;
   bool
   Empty() const;
-
   const T&
   At(size_t i) const;
 
   const T*
   begin() const;
-
   const T*
   end() const;
 

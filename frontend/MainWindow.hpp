@@ -40,7 +40,7 @@ class MainWindow final : public QWidget {
   QList<QPointer<EdgeCanvas<BoardSize>>> EdgeCanvases;
 
   void
-  setPlayerMoveEdge(const Edge<BoardSize> edge);
+  SetPlayerMoveEdge(const Edge<BoardSize> edge);
   QColor
   Color() const;
   void
@@ -58,7 +58,7 @@ MainWindow<BoardSize>::MainWindow(const PlayerType player1Type, const PlayerType
   }
   for (const Edge<BoardSize> edge : Iota(Edge<BoardSize>::Max)) {
     EdgeCanvases.emplace_back(
-        new EdgeCanvas<BoardSize>(edge.Rotate(), [edge, this]() -> void { setPlayerMoveEdge(edge); }, this));
+        new EdgeCanvas<BoardSize>(edge.Rotate(), [edge, this]() -> void { SetPlayerMoveEdge(edge); }, this));
   }
   for (const Box<BoardSize> box : Iota(Dot<BoardSize>::Max)) {
     DotCanvases.emplace_back(new DotCanvas<BoardSize>(this));
@@ -174,7 +174,7 @@ MainWindow<BoardSize>::showEvent(QShowEvent* event) {
 
 template <int64_t BoardSize>
 void
-MainWindow<BoardSize>::setPlayerMoveEdge(const Edge<BoardSize> edge) {
+MainWindow<BoardSize>::SetPlayerMoveEdge(const Edge<BoardSize> edge) {
   if (Board.GetEdgeCountableBoard().GetBasicBoard().Contains(edge)) {
     return;
   }

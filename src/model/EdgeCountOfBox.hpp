@@ -15,10 +15,8 @@ class EdgeCountOfBox {
 
   SizeType<BoardSize>
   Add(const Edge<BoardSize> edge);
-
   uint8_t
   EdgeCount(const Box<BoardSize> box) const;
-
   uint8_t
   MaxCount(const Edge<BoardSize> edge) const;
 

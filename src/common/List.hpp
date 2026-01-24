@@ -12,18 +12,14 @@ class List {
 
   void
   Reset(const T item);
-
   void
   Clear();
-
   void
   Append(const T item);
-
   size_t
   Size() const;
   bool
   Empty() const;
-
   T&
   At(size_t i);
   const T&
@@ -33,7 +29,6 @@ class List {
   begin();
   const T*
   begin() const;
-
   T*
   end();
   const T*

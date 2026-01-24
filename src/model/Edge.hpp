@@ -10,20 +10,15 @@ class Edge {
   static constexpr SizeType<BoardSize> Max = 2 * BoardSize * (BoardSize + 1);
 
   Edge() = default;
-
   Edge(SizeType<BoardSize> v);
-
   Edge(const Dot<BoardSize> dot1, const Dot<BoardSize> dot2);
 
   SizeType<BoardSize>
   Value() const;
-
   Dot<BoardSize>
   Dot1() const;
-
   Dot<BoardSize>
   Dot2() const;
-
   bool
   Rotate() const;
 
