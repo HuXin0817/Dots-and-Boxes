@@ -5,6 +5,8 @@
 template <typename T, size_t Cap>
 class List {
   public:
+  List() = default;
+
   void
   Reset(const T item) {
     Data.At(0) = item;

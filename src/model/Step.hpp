@@ -5,6 +5,8 @@
 template <int BoardSize>
 class Step {
   public:
+  Step() = default;
+
   void
   Reset() {
     v = 0;

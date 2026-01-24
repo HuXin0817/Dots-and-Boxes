@@ -5,6 +5,8 @@
 template <typename T, size_t Cap>
 class Queue {
   public:
+  Queue() = default;
+
   void
   Clear() {
     Begin = 0;
