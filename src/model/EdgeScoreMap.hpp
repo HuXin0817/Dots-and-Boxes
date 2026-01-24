@@ -13,8 +13,8 @@ class EdgeScoreMap {
 
   void
   Reset() {
-    std::memset(Time.begin(), 0, sizeof(Time));
-    std::memset(Score.begin(), 0, sizeof(Score));
+    memset(Time.begin(), 0, sizeof(Time));
+    memset(Score.begin(), 0, sizeof(Score));
     BestEdges.Clear();
   }
 
