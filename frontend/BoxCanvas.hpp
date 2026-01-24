@@ -16,20 +16,6 @@ class BoxCanvas final : public QWidget {
     setFixedSize(QSize(Width, Width));
   }
 
-  QColor
-  Color() const {
-    static QColor Player1OccupyColor = {64, 64, 255, 64};
-    static QColor Player2OccupyColor = {255, 64, 64, 64};
-
-    if (State == State::Player1Occupy) {
-      return Player1OccupyColor;
-    }
-    if (State == State::Player2Occupy) {
-      return Player2OccupyColor;
-    }
-    return {0, 0, 0, 0};
-  }
-
   protected:
   void
   paintEvent(QPaintEvent* event) override {
@@ -44,5 +30,19 @@ class BoxCanvas final : public QWidget {
   }
 
   private:
+  QColor
+  Color() const {
+    static QColor Player1OccupyColor = {64, 64, 255, 64};
+    static QColor Player2OccupyColor = {255, 64, 64, 64};
+
+    if (State == State::Player1Occupy) {
+      return Player1OccupyColor;
+    }
+    if (State == State::Player2Occupy) {
+      return Player2OccupyColor;
+    }
+    return {0, 0, 0, 0};
+  }
+
   State State = State::Free;
 };

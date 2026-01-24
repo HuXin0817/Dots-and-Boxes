@@ -1,8 +1,5 @@
 #pragma once
 
-#include <QPainter>
-#include <QWidget>
-
 #include "Common.hpp"
 
 template <int BoardSize>
@@ -21,12 +18,45 @@ class EdgeCanvas final : public QWidget {
     setFixedSize(QSize(rotate ? Width : Height, rotate ? Height : Width));
   }
 
+  protected:
   void
   mousePressEvent(QMouseEvent* event) override {
     QWidget::mousePressEvent(event);
 
     CallBack();
   }
+
+  void
+  paintEvent(QPaintEvent* event) override {
+    QWidget::paintEvent(event);
+
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(QBrush(Color()));
+
+    painter.drawRect(rect());
+  }
+
+  void
+  enterEvent(QEnterEvent* event) override {
+    QWidget::enterEvent(event);
+    Hovered = true;
+    update();
+  }
+
+  void
+  leaveEvent(QEvent* event) override {
+    QWidget::leaveEvent(event);
+    Hovered = false;
+    update();
+  }
+
+  private:
+  bool Hovered = false;
+  bool HighLight = true;
+  State State = State::Free;
+  const std::function<void()> CallBack;
 
   QColor
   Color() const {
@@ -61,37 +91,4 @@ class EdgeCanvas final : public QWidget {
 
     return color;
   }
-
-  protected:
-  void
-  paintEvent(QPaintEvent* event) override {
-    QWidget::paintEvent(event);
-
-    QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing);
-    painter.setPen(Qt::NoPen);
-    painter.setBrush(QBrush(Color()));
-
-    painter.drawRect(rect());
-  }
-
-  void
-  enterEvent(QEnterEvent* event) override {
-    QWidget::enterEvent(event);
-    Hovered = true;
-    update();
-  }
-
-  void
-  leaveEvent(QEvent* event) override {
-    QWidget::leaveEvent(event);
-    Hovered = false;
-    update();
-  }
-
-  private:
-  bool Hovered = false;
-  bool HighLight = true;
-  State State = State::Free;
-  const std::function<void()> CallBack;
 };

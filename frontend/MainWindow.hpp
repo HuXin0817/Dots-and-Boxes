@@ -41,43 +41,6 @@ class MainWindow final : public QWidget {
     }
   }
 
-  QColor
-  Color() const {
-    static QColor DarkThemeColor = {43, 43, 43, 255};
-    static QColor LightThemeColor = {242, 242, 242, 255};
-
-    return isDarkTheme() ? DarkThemeColor : LightThemeColor;
-  }
-
-  void
-  Add(const Edge<BoardSize> edge) {
-    if (Board.GetEdgeCountableBoard().GetBasicBoard().GetStep().NowStep() > 0) {
-      EdgeCanvases[LastEdge.Value()]->HighLight = false;
-    }
-    EdgeCanvases[edge.Value()]->State = StateFromTurn(Board.GetScoreMap().GetTurn());
-    EdgeCanvases[edge.Value()]->raise();
-    for (const int i : Iota(Dot<BoardSize>::Max)) {
-      DotCanvases[i]->raise();
-    }
-
-    for (const Box<BoardSize> box : NearBoxes(edge)) {
-      int count = 0;
-      for (const Edge<BoardSize> nearEdge : NearEdges(box)) {
-        if (Board.GetEdgeCountableBoard().GetBasicBoard().Contains(nearEdge)) {
-          count++;
-        }
-      }
-      if (count == 3) {
-        BoxCanvases[box.Value()]->State = StateFromTurn(Board.GetScoreMap().GetTurn());
-      }
-    }
-
-    Board.Add(edge);
-    LastEdge = edge;
-    update();
-    QApplication::beep();
-  }
-
   protected:
   void
   paintEvent(QPaintEvent* event) override {
@@ -200,5 +163,42 @@ class MainWindow final : public QWidget {
       return;
     }
     PlayerMoveEdge = edge;
+  }
+
+  QColor
+  Color() const {
+    static QColor DarkThemeColor = {43, 43, 43, 255};
+    static QColor LightThemeColor = {242, 242, 242, 255};
+
+    return isDarkTheme() ? DarkThemeColor : LightThemeColor;
+  }
+
+  void
+  Add(const Edge<BoardSize> edge) {
+    if (Board.GetEdgeCountableBoard().GetBasicBoard().GetStep().NowStep() > 0) {
+      EdgeCanvases[LastEdge.Value()]->HighLight = false;
+    }
+    EdgeCanvases[edge.Value()]->State = StateFromTurn(Board.GetScoreMap().GetTurn());
+    EdgeCanvases[edge.Value()]->raise();
+    for (const int i : Iota(Dot<BoardSize>::Max)) {
+      DotCanvases[i]->raise();
+    }
+
+    for (const Box<BoardSize> box : NearBoxes(edge)) {
+      int count = 0;
+      for (const Edge<BoardSize> nearEdge : NearEdges(box)) {
+        if (Board.GetEdgeCountableBoard().GetBasicBoard().Contains(nearEdge)) {
+          count++;
+        }
+      }
+      if (count == 3) {
+        BoxCanvases[box.Value()]->State = StateFromTurn(Board.GetScoreMap().GetTurn());
+      }
+    }
+
+    Board.Add(edge);
+    LastEdge = edge;
+    update();
+    QApplication::beep();
   }
 };

@@ -11,14 +11,7 @@ class DotCanvas final : public QWidget {
     setFixedSize(Width, Width);
   }
 
-  QColor
-  Color() const {
-    static QColor DarkThemeColor = {202, 202, 202, 255};
-    static QColor LightThemeColor = {255, 255, 255, 255};
-
-    return isDarkTheme() ? DarkThemeColor : LightThemeColor;
-  }
-
+  protected:
   void
   paintEvent(QPaintEvent* event) override {
     QWidget::paintEvent(event);
@@ -33,5 +26,14 @@ class DotCanvas final : public QWidget {
     const int y = height() / 2;
 
     painter.drawEllipse(QPoint(x, y), UnitSize<BoardSize>, UnitSize<BoardSize>);
+  }
+
+  private:
+  QColor
+  Color() const {
+    static QColor DarkThemeColor = {202, 202, 202, 255};
+    static QColor LightThemeColor = {255, 255, 255, 255};
+
+    return isDarkTheme() ? DarkThemeColor : LightThemeColor;
   }
 };
