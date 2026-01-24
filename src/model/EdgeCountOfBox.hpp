@@ -11,9 +11,9 @@ class EdgeCountOfBox {
   public:
   EdgeCountOfBox() = default;
 
-  Int<BoardSize>
+  SizeType<BoardSize>
   Add(const Edge<BoardSize> edge) {
-    Int<BoardSize> score = 0;
+    SizeType<BoardSize> score = 0;
     for (const Box<BoardSize> box : NearBoxes(edge)) {
       Map.At(box.Value())++;
       const uint8_t num = Map.At(box.Value());

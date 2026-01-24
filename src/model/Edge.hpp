@@ -5,11 +5,11 @@
 template <int64_t BoardSize>
 class Edge {
   public:
-  static constexpr Int<BoardSize> Max = 2 * BoardSize * (BoardSize + 1);
+  static constexpr SizeType<BoardSize> Max = 2 * BoardSize * (BoardSize + 1);
 
   Edge() = default;
 
-  Edge(Int<BoardSize> v) : v(v) {
+  Edge(SizeType<BoardSize> v) : v(v) {
   }
 
   Edge(const Dot<BoardSize> dot1, const Dot<BoardSize> dot2) {
@@ -23,14 +23,14 @@ class Edge {
     assert(Dot2().Value() == dot2.Value());
   }
 
-  Int<BoardSize>
+  SizeType<BoardSize>
   Value() const {
     return v;
   }
 
   Dot<BoardSize>
   Dot1() const {
-    Int<BoardSize> dot = v >> 1;
+    SizeType<BoardSize> dot = v >> 1;
     if (v & 1) {
       dot += dot / BoardSize;
     }
@@ -39,7 +39,7 @@ class Edge {
 
   Dot<BoardSize>
   Dot2() const {
-    Int<BoardSize> dot = v >> 1;
+    SizeType<BoardSize> dot = v >> 1;
     if (v & 1) {
       dot += dot / BoardSize + 1;
     } else {
@@ -54,7 +54,7 @@ class Edge {
   }
 
   private:
-  Int<BoardSize> v;
+  SizeType<BoardSize> v;
 };
 
 template <int64_t BoardSize>

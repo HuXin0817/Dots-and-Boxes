@@ -11,7 +11,7 @@ class EdgeCountableBoard {
   public:
   EdgeCountableBoard() = default;
 
-  Int<BoardSize>
+  SizeType<BoardSize>
   Add(const Edge<BoardSize> edge) {
     BasicBoard.Add(edge);
     return EdgeCountOfBox.Add(edge);

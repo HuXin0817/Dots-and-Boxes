@@ -21,14 +21,14 @@ class BasicSearchRobot final : public Robot<BoardSize> {
       return edges;
     }
 
-    Int<BoardSize> minScore = Box<BoardSize>::Max + 1;
+    SizeType<BoardSize> minScore = Box<BoardSize>::Max + 1;
     List<Edge<BoardSize>, Edge<BoardSize>::Max>& candidateEdges = SubRobot.EnemyUnscoreableEdges;
     assert(candidateEdges.Empty());
 
     for (const Edge<BoardSize> edge : board.GetEdgeCountableBoard().GetBasicBoard().EmptyEdges()) {
       SimulationBoard.Reset(board.GetEdgeCountableBoard());
       SimulationBoard.Add(edge);
-      if (const Int<BoardSize> score = SimulationBoard.MaxObtainableScore(minScore); score < minScore) {
+      if (const SizeType<BoardSize> score = SimulationBoard.MaxObtainableScore(minScore); score < minScore) {
         minScore = score;
         candidateEdges.Reset(edge);
       } else if (score == minScore) {

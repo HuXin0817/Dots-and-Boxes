@@ -5,34 +5,34 @@
 template <int64_t BoardSize, int64_t Length>
 class Square {
   public:
-  static constexpr Int<BoardSize> Size = Length;
-  static constexpr Int<BoardSize> Max = Size * Size;
+  static constexpr SizeType<BoardSize> Size = Length;
+  static constexpr SizeType<BoardSize> Max = Size * Size;
 
   Square() = default;
 
-  Square(Int<BoardSize> v) : v(v) {
+  Square(SizeType<BoardSize> v) : v(v) {
   }
 
-  Square(Int<BoardSize> x, Int<BoardSize> y) : v(x * Size + y) {
+  Square(SizeType<BoardSize> x, SizeType<BoardSize> y) : v(x * Size + y) {
   }
 
-  Int<BoardSize>
+  SizeType<BoardSize>
   Value() const {
     return v;
   }
 
-  Int<BoardSize>
+  SizeType<BoardSize>
   X() const {
     return v / Size;
   }
 
-  Int<BoardSize>
+  SizeType<BoardSize>
   Y() const {
     return v % Size;
   }
 
   private:
-  Int<BoardSize> v;
+  SizeType<BoardSize> v;
 };
 
 template <int64_t BoardSize>

@@ -17,7 +17,7 @@ class ImprovedSearchRobot final : public Robot<BoardSize> {
     }
 
     SearchEdges.Clear();
-    Int<BoardSize> maxScore = -Box<BoardSize>::Max;
+    SizeType<BoardSize> maxScore = -Box<BoardSize>::Max;
     for (const Edge<BoardSize> emptyEdge : board.GetEdgeCountableBoard().GetBasicBoard().EmptyEdges()) {
       SimulationBoard.Reset(board.GetEdgeCountableBoard());
       SimulationBoard.Add(emptyEdge);
@@ -26,7 +26,7 @@ class ImprovedSearchRobot final : public Robot<BoardSize> {
         assert(board.GetEdgeCountableBoard().GetEdgeCountOfBox().MaxCount(edge.Value()) > 1);
         SimulationBoard.Add(edge);
       }
-      if (const Int<BoardSize> score = SimulationBoard.GetScoreMap().Score(); score > maxScore) {
+      if (const SizeType<BoardSize> score = SimulationBoard.GetScoreMap().Score(); score > maxScore) {
         maxScore = score;
         SearchEdges.Reset(emptyEdge);
       } else if (score == maxScore) {

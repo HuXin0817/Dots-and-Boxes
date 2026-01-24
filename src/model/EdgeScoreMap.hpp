@@ -19,7 +19,7 @@ class EdgeScoreMap {
   }
 
   void
-  Add(const Edge<BoardSize> edge, const Int<BoardSize> score) {
+  Add(const Edge<BoardSize> edge, const SizeType<BoardSize> score) {
     Time.At(edge.Value())++;
     Score.At(edge.Value()) += score;
   }
@@ -27,7 +27,7 @@ class EdgeScoreMap {
   template <typename OtherEdgeScoreMap>
   void
   Add(const OtherEdgeScoreMap& other) {
-    for (const Int<BoardSize> i : Iota(Edge<BoardSize>::Max)) {
+    for (const SizeType<BoardSize> i : Iota(Edge<BoardSize>::Max)) {
       Time.At(i) += other.Time.At(i);
       Score.At(i) += other.Score.At(i);
     }

@@ -14,9 +14,9 @@ class ScoreCountableBoard {
     ScoreMap.Reset();
   }
 
-  Int<BoardSize>
+  SizeType<BoardSize>
   Add(const Edge<BoardSize> edge) {
-    Int<BoardSize> score = EdgeCountableBoard.Add(edge);
+    SizeType<BoardSize> score = EdgeCountableBoard.Add(edge);
     ScoreMap.Add(score);
     return score;
   }

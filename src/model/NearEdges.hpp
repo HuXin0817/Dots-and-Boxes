@@ -13,8 +13,8 @@ template <int64_t BoardSize>
 class NearEdgesMapper {
   public:
   NearEdgesMapper() {
-    for (const Int<BoardSize> x : Iota(Box<BoardSize>::Size)) {
-      for (const Int<BoardSize> y : Iota(Box<BoardSize>::Size)) {
+    for (const SizeType<BoardSize> x : Iota(Box<BoardSize>::Size)) {
+      for (const SizeType<BoardSize> y : Iota(Box<BoardSize>::Size)) {
         const Dot<BoardSize> topLeft(x, y);
         const Dot<BoardSize> topRight(x + 1, y);
         const Dot<BoardSize> bottomLeft(x, y + 1);

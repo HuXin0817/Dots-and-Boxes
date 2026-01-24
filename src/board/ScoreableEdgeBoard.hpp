@@ -15,9 +15,9 @@ class ScoreableEdgeBoard {
     ScoreableEdges.Clear();
   }
 
-  Int<BoardSize>
+  SizeType<BoardSize>
   Add(const Edge<BoardSize> edge) {
-    const Int<BoardSize> score = EdgeCountableBoard.Add(edge);
+    const SizeType<BoardSize> score = EdgeCountableBoard.Add(edge);
     for (const Box<BoardSize> box : NearBoxes(edge)) {
       if (EdgeCountableBoard.GetEdgeCountOfBox().EdgeCount(box) == 3) {
         ScoreableEdges.Append(EdgeCountableBoard.FindNotContainsEdgeInBox(box));
@@ -26,9 +26,9 @@ class ScoreableEdgeBoard {
     return score;
   }
 
-  Int<BoardSize>
-  MaxObtainableScore(const Int<BoardSize> minScore) {
-    Int<BoardSize> score = 0;
+  SizeType<BoardSize>
+  MaxObtainableScore(const SizeType<BoardSize> minScore) {
+    SizeType<BoardSize> score = 0;
     while (EdgeCountableBoard.GetBasicBoard().GetStep().Gaming()) {
       if (ScoreableEdges.Empty()) {
         if (const Edge<BoardSize> edge = EdgeCountableBoard.FindScoreableEdge();
@@ -42,7 +42,7 @@ class ScoreableEdgeBoard {
       if (EdgeCountableBoard.GetBasicBoard().Contains(edge)) {
         continue;
       }
-      const Int<BoardSize> addScore = Add(edge);
+      const SizeType<BoardSize> addScore = Add(edge);
       assert(addScore > 0);
       score += addScore;
       if (score >= minScore) {
