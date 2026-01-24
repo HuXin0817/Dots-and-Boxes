@@ -11,7 +11,7 @@
 #include "DotCanvas.hpp"
 #include "EdgeCanvas.hpp"
 
-template <int BoardSize>
+template <int64_t BoardSize>
 class MainWindow final : public QWidget {
   static constexpr int BoardWidth = Box<BoardSize>::Size * EdgeCanvas<BoardSize>::Height;
   static constexpr int WindowSize = BoardWidth + 2 * BoxCanvas<BoardSize>::Width;
@@ -180,8 +180,8 @@ class MainWindow final : public QWidget {
     }
     EdgeCanvases[edge.Value()]->State = StateFromTurn(Board.GetScoreMap().GetTurn());
     EdgeCanvases[edge.Value()]->raise();
-    for (const int i : Iota(Dot<BoardSize>::Max)) {
-      DotCanvases[i]->raise();
+    for (const Dot<BoardSize> dot : Iota(Dot<BoardSize>::Max)) {
+      DotCanvases[dot.Value()]->raise();
     }
 
     for (const Box<BoardSize> box : NearBoxes(edge)) {

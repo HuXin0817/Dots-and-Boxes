@@ -6,12 +6,12 @@
 #include "../model/Square.hpp"
 #include "BasicBoard.hpp"
 
-template <int BoardSize>
+template <int64_t BoardSize>
 class EdgeCountableBoard {
   public:
   EdgeCountableBoard() = default;
 
-  SizeType
+  Int<BoardSize>
   Add(const Edge<BoardSize> edge) {
     BasicBoard.Add(edge);
     return EdgeCountOfBox.Add(edge);

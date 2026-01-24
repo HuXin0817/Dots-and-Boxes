@@ -2,7 +2,7 @@
 
 #include "Common.hpp"
 
-template <int BoardSize>
+template <int64_t BoardSize>
 class DotCanvas final : public QWidget {
   public:
   static constexpr int Width = 2 * UnitSize<BoardSize>;

@@ -5,7 +5,7 @@
 #include "../model/Edge.hpp"
 #include "../model/Step.hpp"
 
-template <int BoardSize>
+template <int64_t BoardSize>
 class BasicBoard {
   public:
   BasicBoard() {
@@ -19,7 +19,7 @@ class BasicBoard {
   Add(const Edge<BoardSize> edge) {
     assert(NotContains(edge));
     const Edge<BoardSize> nowEdge = Edges.At(Step.NowStep());
-    const SizeType edgeIndex = EdgeIndexes.At(edge.Value());
+    const Int<BoardSize> edgeIndex = EdgeIndexes.At(edge.Value());
     std::swap(Edges.At(edgeIndex), Edges.At(Step.NowStep()));
     EdgeIndexes.At(edge.Value()) = Step.NowStep();
     EdgeIndexes.At(nowEdge.Value()) = edgeIndex;
@@ -54,5 +54,5 @@ class BasicBoard {
   private:
   Step<BoardSize> Step;
   Array<Edge<BoardSize>, Edge<BoardSize>::Max> Edges;
-  Array<SizeType, Edge<BoardSize>::Max> EdgeIndexes;
+  Array<Int<BoardSize>, Edge<BoardSize>::Max> EdgeIndexes;
 };

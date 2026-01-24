@@ -24,7 +24,43 @@ class List {
     Data.At(Length++) = item;
   }
 
-  IterableObject(Data.begin(), Data.begin() + Length, Length);
+  size_t
+  Size() const {
+    return Length;
+  }
+  bool
+  Empty() const {
+    return Length == 0;
+  }
+
+  T&
+  At(size_t i) {
+    assert(i < Length);
+    return Data.At(i);
+  }
+  const T&
+  At(size_t i) const {
+    assert(i < Length);
+    return Data.At(i);
+  }
+
+  T*
+  begin() {
+    return Data.begin();
+  }
+  const T*
+  begin() const {
+    return Data.begin();
+  }
+
+  T*
+  end() {
+    return Data.begin() + Length;
+  }
+  const T*
+  end() const {
+    return Data.begin() + Length;
+  }
 
   private:
   Array<T, Cap> Data;

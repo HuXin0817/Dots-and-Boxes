@@ -6,11 +6,11 @@
 #include "Edge.hpp"
 #include "Square.hpp"
 
-template <int BoardSize>
+template <int64_t BoardSize>
 const List<Box<BoardSize>, 2>&
 NearBoxes(const Edge<BoardSize> edge);
 
-template <int BoardSize>
+template <int64_t BoardSize>
 class NearBoxesMapper {
   public:
   NearBoxesMapper() {
@@ -26,8 +26,8 @@ class NearBoxesMapper {
   GetNearBoxes(const Edge<BoardSize> edge) {
     List<Box<BoardSize>, 2> result;
 
-    SizeType x = edge.Dot2().X() - 1;
-    SizeType y = edge.Dot2().Y() - 1;
+    Int<BoardSize> x = edge.Dot2().X() - 1;
+    Int<BoardSize> y = edge.Dot2().Y() - 1;
     if (x >= 0 && y >= 0) {
       result.Append(Box<BoardSize>(x, y));
     }
@@ -45,7 +45,7 @@ class NearBoxesMapper {
   NearBoxes<BoardSize>(const Edge<BoardSize> edge);
 };
 
-template <int BoardSize>
+template <int64_t BoardSize>
 const List<Box<BoardSize>, 2>&
 NearBoxes(const Edge<BoardSize> edge) {
   static NearBoxesMapper<BoardSize> Instance;

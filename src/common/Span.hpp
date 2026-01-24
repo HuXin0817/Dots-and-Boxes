@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Macro.hpp"
+#include <cstddef>
 
 template <typename T>
 class Span {
@@ -10,7 +10,29 @@ class Span {
   Span(const T* begin, const T* end) : Begin(begin), End(end) {
   }
 
-  IterableObject(Begin, End, End - Begin);
+  size_t
+  Size() const {
+    return End - Begin;
+  }
+  bool
+  Empty() const {
+    return Begin == End;
+  }
+
+  const T&
+  At(size_t i) const {
+    return Begin[i];
+  }
+
+  const T*
+  begin() const {
+    return Begin;
+  }
+
+  const T*
+  end() const {
+    return End;
+  }
 
   private:
   const T* Begin = nullptr;

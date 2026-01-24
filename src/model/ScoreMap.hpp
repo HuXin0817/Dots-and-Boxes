@@ -3,9 +3,9 @@
 #include "Square.hpp"
 #include "Turn.hpp"
 
-template <int BoardSize>
+template <int64_t BoardSize>
 class ScoreMap {
-  static constexpr SizeType MinWinnerScore = Box<BoardSize>::Max / 2 + 1;
+  static constexpr Int<BoardSize> MinWinnerScore = Box<BoardSize>::Max / 2 + 1;
 
   public:
   ScoreMap() {
@@ -20,7 +20,7 @@ class ScoreMap {
   }
 
   void
-  Add(const SizeType score) {
+  Add(const Int<BoardSize> score) {
     if (score == 0) {
       Turn.Change();
       return;
@@ -32,7 +32,7 @@ class ScoreMap {
     }
   }
 
-  SizeType
+  Int<BoardSize>
   Score() const {
     return Player1Score - Player2Score;
   }
@@ -42,12 +42,12 @@ class ScoreMap {
     return Player1Score < MinWinnerScore && Player2Score < MinWinnerScore;
   }
 
-  SizeType
+  Int<BoardSize>
   GetPlayer1Score() const {
     return Player1Score;
   }
 
-  SizeType
+  Int<BoardSize>
   GetPlayer2Score() const {
     return Player2Score;
   }
@@ -58,7 +58,7 @@ class ScoreMap {
   }
 
   private:
-  SizeType Player1Score = 0;
-  SizeType Player2Score = 0;
+  Int<BoardSize> Player1Score = 0;
+  Int<BoardSize> Player2Score = 0;
   Turn Turn = Player1Turn;
 };

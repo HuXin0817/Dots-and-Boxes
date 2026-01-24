@@ -2,10 +2,10 @@
 
 #include "Common.hpp"
 
-template <int BoardSize>
+template <int64_t BoardSize>
 class MainWindow;
 
-template <int BoardSize>
+template <int64_t BoardSize>
 class EdgeCanvas final : public QWidget {
   friend class MainWindow<BoardSize>;
 

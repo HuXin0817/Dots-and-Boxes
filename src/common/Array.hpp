@@ -1,8 +1,8 @@
 #pragma once
 
+#include <cassert>
+#include <cstddef>
 #include <memory>
-
-#include "Macro.hpp"
 
 template <typename T, size_t Length>
 class Array {
@@ -14,8 +14,35 @@ class Array {
     memcpy(Data, other.Data, Length * sizeof(T));
   }
 
-  IterableObject(Data, Data + Length, Length);
+  T&
+  At(size_t i) {
+    assert(i < Length);
+    return Data[i];
+  }
+  const T&
+  At(size_t i) const {
+    assert(i < Length);
+    return Data[i];
+  }
+
+  T*
+  begin() {
+    return Data;
+  }
+  const T*
+  begin() const {
+    return Data;
+  }
+
+  const T*
+  end() const {
+    return Data + Length;
+  }
+  T*
+  end() {
+    return Data + Length;
+  }
 
   private:
-  T Data[Length] = {};
+  T Data[Length];
 };

@@ -2,9 +2,13 @@
 
 #include "MonteCarloSearchRobot.hpp"
 
-template <int BoardSize>
+template <int64_t BoardSize>
 class ParallelSearchRobot final : public Robot<BoardSize> {
-  using SubRobotType = MonteCarloSearchRobot<BoardSize, Edge<BoardSize>::Max << 5>;
+  static constexpr size_t SubRobotSearchTime = Edge<BoardSize>::Max << 5;
+  static constexpr size_t SubRobotNumber = 64;
+  static constexpr size_t SearchTime = SubRobotNumber * SubRobotSearchTime;
+
+  using SubRobotType = MonteCarloSearchRobot<BoardSize, SubRobotSearchTime>;
 
   public:
   ParallelSearchRobot() = default;
@@ -30,6 +34,6 @@ class ParallelSearchRobot final : public Robot<BoardSize> {
   }
 
   private:
-  Array<SubRobotType, 64> SubRobots;
+  Array<SubRobotType, SubRobotNumber> SubRobots;
   EdgeScoreMap<BoardSize> SearchResult;
 };

@@ -2,7 +2,7 @@
 
 #include "Edge.hpp"
 
-template <int BoardSize>
+template <int64_t BoardSize>
 class Step {
   public:
   Step() = default;
@@ -17,12 +17,12 @@ class Step {
     return v < Edge<BoardSize>::Max;
   }
 
-  SizeType
+  Int<BoardSize>
   RemainStep() const {
     return Edge<BoardSize>::Max - v;
   }
 
-  SizeType
+  Int<BoardSize>
   NowStep() const {
     return v;
   }
@@ -33,5 +33,5 @@ class Step {
   }
 
   private:
-  SizeType v = 0;
+  Int<BoardSize> v = 0;
 };

@@ -25,7 +25,32 @@ class Queue {
     return Data.At(Begin++);
   }
 
-  IterableObject(Data.begin() + Begin, Data.begin() + End, End - Begin);
+  size_t
+  Size() const {
+    return End - Begin;
+  }
+  bool
+  Empty() const {
+    return Begin == End;
+  }
+
+  T*
+  begin() {
+    return Data.begin() + Begin;
+  }
+  const T*
+  begin() const {
+    return Data.begin() + Begin;
+  }
+
+  T*
+  end() {
+    return Data.begin() + End;
+  }
+  const T*
+  end() const {
+    return Data.begin() + End;
+  }
 
   private:
   Array<T, Cap> Data;

@@ -3,7 +3,7 @@
 #include "../model/ScoreMap.hpp"
 #include "EdgeCountableBoard.hpp"
 
-template <int BoardSize>
+template <int64_t BoardSize>
 class ScoreCountableBoard {
   public:
   ScoreCountableBoard() = default;
@@ -14,9 +14,9 @@ class ScoreCountableBoard {
     ScoreMap.Reset();
   }
 
-  SizeType
+  Int<BoardSize>
   Add(const Edge<BoardSize> edge) {
-    SizeType score = EdgeCountableBoard.Add(edge);
+    Int<BoardSize> score = EdgeCountableBoard.Add(edge);
     ScoreMap.Add(score);
     return score;
   }
