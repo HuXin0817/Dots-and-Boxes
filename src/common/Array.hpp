@@ -2,7 +2,6 @@
 
 #include <cassert>
 #include <cstddef>
-#include <memory>
 
 template <typename T, size_t Length>
 class Array {
