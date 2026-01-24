@@ -6,7 +6,7 @@
 #include "../common/Span.hpp"
 #include "Edge.hpp"
 
-template <int64_t BoardSize>
+template <int64_t BoardSize, typename ScoreType>
 class EdgeScoreMap {
   public:
   EdgeScoreMap() = default;
@@ -24,8 +24,9 @@ class EdgeScoreMap {
     Score.At(edge.Value()) += score;
   }
 
+  template <typename OtherEdgeScoreMap>
   void
-  Add(const EdgeScoreMap& other) {
+  Add(const OtherEdgeScoreMap& other) {
     for (const Int<BoardSize> i : Iota(Edge<BoardSize>::Max)) {
       Time.At(i) += other.Time.At(i);
       Score.At(i) += other.Score.At(i);
@@ -49,8 +50,7 @@ class EdgeScoreMap {
     return ::Export(BestEdges);
   }
 
-  private:
-  Array<int, Edge<BoardSize>::Max> Time;
-  Array<int, Edge<BoardSize>::Max> Score;
+  Array<ScoreType, Edge<BoardSize>::Max> Time;
+  Array<ScoreType, Edge<BoardSize>::Max> Score;
   List<Edge<BoardSize>, Edge<BoardSize>::Max> BestEdges;
 };

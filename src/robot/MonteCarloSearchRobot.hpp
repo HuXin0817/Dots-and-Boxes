@@ -8,7 +8,7 @@
 template <int64_t BoardSize>
 class ParallelSearchRobot;
 
-template <int64_t BoardSize, int SearchTime = Edge<BoardSize>::Max << 8>
+template <int64_t BoardSize, int64_t SearchTime = Edge<BoardSize>::Max << 8>
 class MonteCarloSearchRobot final : public Robot<BoardSize> {
   friend class ParallelSearchRobot<BoardSize>;
 
@@ -22,7 +22,7 @@ class MonteCarloSearchRobot final : public Robot<BoardSize> {
     }
 
     SearchResult.Reset();
-    int times = SearchTime / board.GetEdgeCountableBoard().GetBasicBoard().GetStep().RemainStep() + 1;
+    int64_t times = SearchTime / board.GetEdgeCountableBoard().GetBasicBoard().GetStep().RemainStep() + 1;
     while (times--) {
       SimulationBoard.Reset(board.GetEdgeCountableBoard());
       const Edge<BoardSize> edge = RandomChoice(SubRobot.BestCandidateEdges(SimulationBoard));
@@ -39,5 +39,5 @@ class MonteCarloSearchRobot final : public Robot<BoardSize> {
   private:
   ImprovedSearchRobot<BoardSize> SubRobot;
   ScoreCountableBoard<BoardSize> SimulationBoard;
-  EdgeScoreMap<BoardSize> SearchResult;
+  EdgeScoreMap<BoardSize, Int<2 * SearchTime>> SearchResult;
 };
