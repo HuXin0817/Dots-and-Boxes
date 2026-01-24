@@ -1,5 +1,10 @@
 #pragma once
 
+#include <QPointer>
+#include <QThreadPool>
+#include <QTime>
+#include <QTimer>
+
 #include "../src/robot/PlayerType.hpp"
 #include "../src/robot/Robot.hpp"
 #include "BoxCanvas.hpp"

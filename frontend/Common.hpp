@@ -1,5 +1,8 @@
 #pragma once
 
+#include <QApplication>
+#include <QPalette>
+
 #include "../src/model/Turn.hpp"
 
 enum class State {

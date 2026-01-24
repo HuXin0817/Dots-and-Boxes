@@ -1,5 +1,10 @@
 #pragma once
 
+#include <cassert>
+#include <cstddef>
+#include <limits>
+#include <type_traits>
+
 // clang-format off
 #define SizeType                                                                                      \
   std::conditional_t<2 * BoardSize * (BoardSize + 1) <= std::numeric_limits<int8_t>::max(), int8_t,   \

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <algorithm>
+
 #include "../common/Array.hpp"
 #include "NearBoxes.hpp"
 #include "Square.hpp"

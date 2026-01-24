@@ -1,3 +1,5 @@
+#include <QCommandLineParser>
+
 #include "frontend/MainWindowCreator.hpp"
 
 static constexpr int DefaultBoardSize = 6;

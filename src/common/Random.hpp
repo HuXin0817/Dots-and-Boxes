@@ -1,5 +1,7 @@
 #pragma once
 
+#include <random>
+
 template <typename T>
 const auto&
 RandomChoice(const T& data) {

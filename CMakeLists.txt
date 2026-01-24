@@ -28,7 +28,6 @@ set_target_properties(${PROJECT_NAME}
         AUTOMOC ON
         AUTORCC ON
         AUTOUIC ON
-        PRECOMPILE_HEADERS "${CMAKE_SOURCE_DIR}/pch.hpp"
 )
 
 target_link_libraries(${PROJECT_NAME}

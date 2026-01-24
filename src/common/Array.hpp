@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "Macro.hpp"
 
 template <typename T, size_t Length>

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <QPainter>
+#include <QWidget>
+
 #include "Common.hpp"
 
 template <int BoardSize>
