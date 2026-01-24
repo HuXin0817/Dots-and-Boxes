@@ -135,7 +135,9 @@ class MainWindow final : public QWidget {
             QThread::yieldCurrentThread();
           }
         }
-        Add(PlayerMoveEdge);
+        assert(Board.GetEdgeCountableBoard().GetBasicBoard().NotContains(PlayerMoveEdge));
+        QMetaObject::invokeMethod(this, [this]() { Add(PlayerMoveEdge); }, Qt::BlockingQueuedConnection);
+        assert(Board.GetEdgeCountableBoard().GetBasicBoard().Contains(PlayerMoveEdge));
 
         const double seconds = static_cast<double>(startTime.msecsTo(QTime::currentTime())) / 1000.0;
 
@@ -160,12 +162,16 @@ class MainWindow final : public QWidget {
         qInfo("Info: \"Winner\":\"Draw\"");
       }
 
-      QThread::sleep(2);
-      EdgeCanvases[LastEdge.Value()]->HighLight = false;
-      update();
-
-      QThread::sleep(2);
-      close();
+      QMetaObject::invokeMethod(
+          this,
+          [this]() {
+            QTimer::singleShot(2000, this, [this]() {
+              EdgeCanvases[LastEdge.Value()]->HighLight = false;
+              update();
+              QTimer::singleShot(2000, this, &MainWindow::close);
+            });
+          },
+          Qt::BlockingQueuedConnection);
     });
   }
 

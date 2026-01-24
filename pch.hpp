@@ -4,5 +4,6 @@
 #include <QPointer>
 #include <QThreadPool>
 #include <QTime>
+#include <QTimer>
 #include <QWidget>
 #include <random>
