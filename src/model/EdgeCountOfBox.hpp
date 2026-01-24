@@ -1,6 +1,8 @@
 #pragma once
 
 #include <algorithm>
+#include <cassert>
+#include <cstdint>
 
 #include "../common/Array.hpp"
 #include "NearBoxes.hpp"
@@ -12,33 +14,45 @@ class EdgeCountOfBox {
   EdgeCountOfBox() = default;
 
   SizeType<BoardSize>
-  Add(const Edge<BoardSize> edge) {
-    SizeType<BoardSize> score = 0;
-    for (const Box<BoardSize> box : NearBoxes(edge)) {
-      Map.At(box.Value())++;
-      const uint8_t num = Map.At(box.Value());
-      assert(num <= 4);
-      if (num == 4) {
-        score++;
-      }
-    }
-    return score;
-  }
+  Add(const Edge<BoardSize> edge);
 
   uint8_t
-  EdgeCount(const Box<BoardSize> box) const {
-    return Map.At(box.Value());
-  }
+  EdgeCount(const Box<BoardSize> box) const;
 
   uint8_t
-  MaxCount(const Edge<BoardSize> edge) const {
-    uint8_t maxCount = 0;
-    for (const Box<BoardSize> box : NearBoxes(edge)) {
-      maxCount = std::max(maxCount, Map.At(box.Value()));
-    }
-    return maxCount;
-  }
+  MaxCount(const Edge<BoardSize> edge) const;
 
   private:
   Array<uint8_t, Box<BoardSize>::Max> Map;
 };
+
+template <int64_t BoardSize>
+SizeType<BoardSize>
+EdgeCountOfBox<BoardSize>::Add(const Edge<BoardSize> edge) {
+  SizeType<BoardSize> score = 0;
+  for (const Box<BoardSize> box : NearBoxes(edge)) {
+    Map.At(box.Value())++;
+    const uint8_t num = Map.At(box.Value());
+    assert(num <= 4);
+    if (num == 4) {
+      score++;
+    }
+  }
+  return score;
+}
+
+template <int64_t BoardSize>
+uint8_t
+EdgeCountOfBox<BoardSize>::EdgeCount(const Box<BoardSize> box) const {
+  return Map.At(box.Value());
+}
+
+template <int64_t BoardSize>
+uint8_t
+EdgeCountOfBox<BoardSize>::MaxCount(const Edge<BoardSize> edge) const {
+  uint8_t maxCount = 0;
+  for (const Box<BoardSize> box : NearBoxes(edge)) {
+    maxCount = std::max(maxCount, Map.At(box.Value()));
+  }
+  return maxCount;
+}

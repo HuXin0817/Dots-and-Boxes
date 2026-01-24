@@ -20,30 +20,34 @@ class SimpleStrategyRobot final : public Robot<BoardSize> {
   SimpleStrategyRobot() = default;
 
   Span<Edge<BoardSize>>
-  BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override {
-    EnemyUnscoreableEdges.Clear();
-    ScoreableEdges.Clear();
-    const Span<Edge<BoardSize>> emptyEdges = board.GetEdgeCountableBoard().GetBasicBoard().EmptyEdges();
-
-    for (const Edge<BoardSize> edge : emptyEdges) {
-      if (const uint8_t maxCount = board.GetEdgeCountableBoard().GetEdgeCountOfBox().MaxCount(edge); maxCount == 3) {
-        ScoreableEdges.Append(edge);
-      } else if (maxCount < 2) {
-        EnemyUnscoreableEdges.Append(edge);
-      }
-    }
-
-    if (!ScoreableEdges.Empty()) {
-      return Export(ScoreableEdges);
-    }
-    if (!EnemyUnscoreableEdges.Empty()) {
-      return Export(EnemyUnscoreableEdges);
-    }
-
-    return {emptyEdges.begin(), emptyEdges.end()};
-  }
+  BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override;
 
   private:
   List<Edge<BoardSize>, Edge<BoardSize>::Max> EnemyUnscoreableEdges;
   List<Edge<BoardSize>, Edge<BoardSize>::Max> ScoreableEdges;
 };
+
+template <int64_t BoardSize>
+Span<Edge<BoardSize>>
+SimpleStrategyRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) {
+  EnemyUnscoreableEdges.Clear();
+  ScoreableEdges.Clear();
+  const Span<Edge<BoardSize>> emptyEdges = board.GetEdgeCountableBoard().GetBasicBoard().EmptyEdges();
+
+  for (const Edge<BoardSize> edge : emptyEdges) {
+    if (const uint8_t maxCount = board.GetEdgeCountableBoard().GetEdgeCountOfBox().MaxCount(edge); maxCount == 3) {
+      ScoreableEdges.Append(edge);
+    } else if (maxCount < 2) {
+      EnemyUnscoreableEdges.Append(edge);
+    }
+  }
+
+  if (!ScoreableEdges.Empty()) {
+    return Export(ScoreableEdges);
+  }
+  if (!EnemyUnscoreableEdges.Empty()) {
+    return Export(EnemyUnscoreableEdges);
+  }
+
+  return {emptyEdges.begin(), emptyEdges.end()};
+}

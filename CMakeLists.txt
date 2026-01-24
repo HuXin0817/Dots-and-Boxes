@@ -19,9 +19,7 @@ find_package(Qt6 COMPONENTS
         REQUIRED
 )
 
-file(GLOB_RECURSE HEADERS "*.hpp")
-
-add_executable(${PROJECT_NAME} main.cpp ${HEADERS})
+add_executable(${PROJECT_NAME} main.cpp)
 
 set_target_properties(${PROJECT_NAME}
         PROPERTIES

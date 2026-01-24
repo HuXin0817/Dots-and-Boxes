@@ -11,32 +11,12 @@ enum class PlayerType {
   ParallelSearchRobot,
 };
 
-static bool
+inline bool
 PlayerTypeIsRobot(const PlayerType PlayerType) {
   return PlayerType != PlayerType::Human;
 }
 
-template <int64_t BoardSize>
-static Robot<BoardSize>*
-CreateRobot(const PlayerType PlayerType) {
-  switch (PlayerType) {
-    case PlayerType::SimpleStrategyRobot:
-      return new SimpleStrategyRobot<BoardSize>();
-    case PlayerType::BasicSearchRobot:
-      return new BasicSearchRobot<BoardSize>();
-    case PlayerType::ImprovedSearchRobot:
-      return new ImprovedSearchRobot<BoardSize>();
-    case PlayerType::MonteCarloSearchRobot:
-      return new MonteCarloSearchRobot<BoardSize>();
-    case PlayerType::ParallelSearchRobot:
-      return new ParallelSearchRobot<BoardSize>();
-    case PlayerType::Human:
-      break;
-  }
-  return nullptr;
-}
-
-static const char*
+inline const char*
 GetPlayerTypeString(const PlayerType type) {
   switch (type) {
     case PlayerType::Human:
@@ -53,4 +33,24 @@ GetPlayerTypeString(const PlayerType type) {
       return "ParallelSearchRobot";
   }
   return "";
+}
+
+template <int64_t BoardSize>
+Robot<BoardSize>*
+CreateRobot(const PlayerType PlayerType) {
+  switch (PlayerType) {
+    case PlayerType::SimpleStrategyRobot:
+      return new SimpleStrategyRobot<BoardSize>();
+    case PlayerType::BasicSearchRobot:
+      return new BasicSearchRobot<BoardSize>();
+    case PlayerType::ImprovedSearchRobot:
+      return new ImprovedSearchRobot<BoardSize>();
+    case PlayerType::MonteCarloSearchRobot:
+      return new MonteCarloSearchRobot<BoardSize>();
+    case PlayerType::ParallelSearchRobot:
+      return new ParallelSearchRobot<BoardSize>();
+    case PlayerType::Human:
+      break;
+  }
+  return nullptr;
 }

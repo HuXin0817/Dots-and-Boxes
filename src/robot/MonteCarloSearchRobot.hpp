@@ -16,28 +16,32 @@ class MonteCarloSearchRobot final : public Robot<BoardSize> {
   MonteCarloSearchRobot() = default;
 
   Span<Edge<BoardSize>>
-  BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override {
-    if (const Span<Edge<BoardSize>> edges = SubRobot.BestCandidateEdges(board); edges.Size() == 1) {
-      return edges;
-    }
-
-    SearchResult.Reset();
-    int64_t times = SearchTime / board.GetEdgeCountableBoard().GetBasicBoard().GetStep().RemainStep() + 1;
-    while (times--) {
-      SimulationBoard.Reset(board.GetEdgeCountableBoard());
-      const Edge<BoardSize> edge = RandomChoice(SubRobot.BestCandidateEdges(SimulationBoard));
-      SimulationBoard.Add(edge);
-      while (SimulationBoard.Gaming()) {
-        SimulationBoard.Add(RandomChoice(SubRobot.BestCandidateEdges(SimulationBoard)));
-      }
-      SearchResult.Add(edge, SimulationBoard.GetScoreMap().Score());
-    }
-
-    return SearchResult.Export();
-  }
+  BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override;
 
   private:
   ImprovedSearchRobot<BoardSize> SubRobot;
   ScoreCountableBoard<BoardSize> SimulationBoard;
   EdgeScoreMap<BoardSize, Int<2 * SearchTime>> SearchResult;
 };
+
+template <int64_t BoardSize, int64_t SearchTime>
+Span<Edge<BoardSize>>
+MonteCarloSearchRobot<BoardSize, SearchTime>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) {
+  if (const Span<Edge<BoardSize>> edges = SubRobot.BestCandidateEdges(board); edges.Size() == 1) {
+    return edges;
+  }
+
+  SearchResult.Reset();
+  int64_t times = SearchTime / board.GetEdgeCountableBoard().GetBasicBoard().GetStep().RemainStep() + 1;
+  while (times--) {
+    SimulationBoard.Reset(board.GetEdgeCountableBoard());
+    const Edge<BoardSize> edge = RandomChoice(SubRobot.BestCandidateEdges(SimulationBoard));
+    SimulationBoard.Add(edge);
+    while (SimulationBoard.Gaming()) {
+      SimulationBoard.Add(RandomChoice(SubRobot.BestCandidateEdges(SimulationBoard)));
+    }
+    SearchResult.Add(edge, SimulationBoard.GetScoreMap().Score());
+  }
+
+  return SearchResult.Export();
+}

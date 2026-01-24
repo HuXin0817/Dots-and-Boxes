@@ -8,30 +8,50 @@ class Step {
   Step() = default;
 
   void
-  Reset() {
-    v = 0;
-  }
+  Reset();
 
   bool
-  Gaming() const {
-    return v < Edge<BoardSize>::Max;
-  }
+  Gaming() const;
 
   SizeType<BoardSize>
-  RemainStep() const {
-    return Edge<BoardSize>::Max - v;
-  }
+  RemainStep() const;
 
   SizeType<BoardSize>
-  NowStep() const {
-    return v;
-  }
+  NowStep() const;
 
   void
-  Go() {
-    v++;
-  }
+  Go();
 
   private:
   SizeType<BoardSize> v = 0;
 };
+
+template <int64_t BoardSize>
+void
+Step<BoardSize>::Reset() {
+  v = 0;
+}
+
+template <int64_t BoardSize>
+bool
+Step<BoardSize>::Gaming() const {
+  return v < Edge<BoardSize>::Max;
+}
+
+template <int64_t BoardSize>
+SizeType<BoardSize>
+Step<BoardSize>::RemainStep() const {
+  return Edge<BoardSize>::Max - v;
+}
+
+template <int64_t BoardSize>
+SizeType<BoardSize>
+Step<BoardSize>::NowStep() const {
+  return v;
+}
+
+template <int64_t BoardSize>
+void
+Step<BoardSize>::Go() {
+  v++;
+}

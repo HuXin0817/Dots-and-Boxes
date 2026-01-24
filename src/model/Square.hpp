@@ -10,30 +10,48 @@ class Square {
 
   Square() = default;
 
-  Square(SizeType<BoardSize> v) : v(v) {
-  }
+  Square(SizeType<BoardSize> v);
 
-  Square(SizeType<BoardSize> x, SizeType<BoardSize> y) : v(x * Size + y) {
-  }
+  Square(SizeType<BoardSize> x, SizeType<BoardSize> y);
 
   SizeType<BoardSize>
-  Value() const {
-    return v;
-  }
+  Value() const;
 
   SizeType<BoardSize>
-  X() const {
-    return v / Size;
-  }
+  X() const;
 
   SizeType<BoardSize>
-  Y() const {
-    return v % Size;
-  }
+  Y() const;
 
   private:
   SizeType<BoardSize> v;
 };
+
+template <int64_t BoardSize, int64_t Length>
+Square<BoardSize, Length>::Square(SizeType<BoardSize> v) : v(v) {
+}
+
+template <int64_t BoardSize, int64_t Length>
+Square<BoardSize, Length>::Square(SizeType<BoardSize> x, SizeType<BoardSize> y) : v(x * Size + y) {
+}
+
+template <int64_t BoardSize, int64_t Length>
+SizeType<BoardSize>
+Square<BoardSize, Length>::Value() const {
+  return v;
+}
+
+template <int64_t BoardSize, int64_t Length>
+SizeType<BoardSize>
+Square<BoardSize, Length>::X() const {
+  return v / Size;
+}
+
+template <int64_t BoardSize, int64_t Length>
+SizeType<BoardSize>
+Square<BoardSize, Length>::Y() const {
+  return v % Size;
+}
 
 template <int64_t BoardSize>
 using Box = Square<BoardSize, BoardSize>;

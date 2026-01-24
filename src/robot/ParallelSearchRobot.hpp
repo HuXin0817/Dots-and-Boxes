@@ -14,26 +14,30 @@ class ParallelSearchRobot final : public Robot<BoardSize> {
   ParallelSearchRobot() = default;
 
   Span<Edge<BoardSize>>
-  BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override {
-    if (const Span<Edge<BoardSize>> edges = SubRobots.At(0).SubRobot.BestCandidateEdges(board); edges.Size() == 1) {
-      return edges;
-    }
-
-    SearchResult.Reset();
-
-#pragma omp parallel for
-    for (SubRobotType& model : SubRobots) {
-      model.BestCandidateEdges(board);
-    }
-
-    for (const SubRobotType& model : SubRobots) {
-      SearchResult.Add(model.SearchResult);
-    }
-
-    return SearchResult.Export();
-  }
+  BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override;
 
   private:
   Array<SubRobotType, SubRobotNumber> SubRobots;
   EdgeScoreMap<BoardSize, Int<2 * SearchTime>> SearchResult;
 };
+
+template <int64_t BoardSize>
+Span<Edge<BoardSize>>
+ParallelSearchRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) {
+  if (const Span<Edge<BoardSize>> edges = SubRobots.At(0).SubRobot.BestCandidateEdges(board); edges.Size() == 1) {
+    return edges;
+  }
+
+  SearchResult.Reset();
+
+#pragma omp parallel for
+  for (SubRobotType& model : SubRobots) {
+    model.BestCandidateEdges(board);
+  }
+
+  for (const SubRobotType& model : SubRobots) {
+    SearchResult.Add(model.SearchResult);
+  }
+
+  return SearchResult.Export();
+}
