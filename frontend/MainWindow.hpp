@@ -100,7 +100,7 @@ class MainWindow final : public QWidget {
     for (const Edge<BoardSize> edge : std::views::iota(0, Edge<BoardSize>::Max)) {
       int x = x0 + edge.Dot1().X() * EdgeCanvas<BoardSize>::Height;
       int y = y0 + edge.Dot1().Y() * EdgeCanvas<BoardSize>::Height;
-      if (edge.Dot1().X() == edge.Dot2().X()) {
+      if (edge.Rotate()) {
         y += UnitSize<BoardSize>;
       } else {
         x += UnitSize<BoardSize>;
@@ -157,9 +157,9 @@ class MainWindow final : public QWidget {
       if (Board.GetScoreMap().GetPlayer1Score() > Board.GetScoreMap().GetPlayer2Score()) {
         qInfo("Info: {\"Winner\":\"Player1\"}");
       } else if (Board.GetScoreMap().GetPlayer2Score() > Board.GetScoreMap().GetPlayer1Score()) {
-        qInfo("Info: \"Winner\":\"Player2\"");
+        qInfo("Info: {\"Winner\":\"Player2\"");
       } else {
-        qInfo("Info: \"Winner\":\"Draw\"");
+        qInfo("Info: {\"Winner\":\"Draw\"");
       }
 
       QMetaObject::invokeMethod(
