@@ -83,15 +83,11 @@ main(int argc, char* argv[]) {
   QCommandLineOption player2Option = PlayerTypeOption(2);
   parser.addOption(player2Option);
 
-  QCommandLineOption backgroundOption("background", QString("Run in background mode (no GUI interface)"));
-  parser.addOption(backgroundOption);
-
   parser.process(application);
 
   int boardSize = ParseBoardSize(parser.value(boardSizeOption));
   PlayerType player1Type = ParsePlayerType(parser.value(player1Option));
   PlayerType player2Type = ParsePlayerType(parser.value(player2Option));
-  bool isBackgroundMode = parser.isSet(backgroundOption);
 
   qInfo("Config: {\"BoardSize\":%d,\"Player1\":\"%s\",\"Player2\":\"%s\"}",
         boardSize,
@@ -100,9 +96,6 @@ main(int argc, char* argv[]) {
 
   if (QWidget* mainWindow = MainWindowCreator().CreateMainWindow(boardSize, player1Type, player2Type)) {
     mainWindow->show();
-    if (isBackgroundMode) {
-      mainWindow->hide();
-    }
   }
 
   return application.exec();
