@@ -31,10 +31,9 @@ ParseBoardSize(const QString& str) {
   int boardSize = str.toLongLong(&conversionOk);
 
   if (!conversionOk || boardSize < MainWindowCreator::MinBoardSize || boardSize > MainWindowCreator::MaxBoardSize) {
-    std::fprintf(stderr,
-                 "Error: Invalid board size. Must be an integer in range [%d, %d].\n",
-                 MainWindowCreator::MinBoardSize,
-                 MainWindowCreator::MaxBoardSize);
+    qInfo("Error: Invalid board size. Must be an integer in range [%d, %d].",
+          MainWindowCreator::MinBoardSize,
+          MainWindowCreator::MaxBoardSize);
     exit(EXIT_FAILURE);
   }
 
@@ -58,7 +57,7 @@ ParsePlayerType(const QString& str) {
   } else if (str.compare("robot:master", Qt::CaseInsensitive) == 0) {
     return PlayerType::ParallelSearchRobot;
   }
-  std::fprintf(stderr, "Error: Invalid player type '%s'.\n", str.toLocal8Bit().constData());
+  qInfo("Error: Invalid player type '%s'.", str.toLocal8Bit().constData());
   exit(EXIT_FAILURE);
 }
 
