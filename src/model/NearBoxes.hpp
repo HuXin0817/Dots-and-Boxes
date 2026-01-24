@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../common/Array.hpp"
+#include "../common/Iota.hpp"
 #include "../common/List.hpp"
 #include "Edge.hpp"
 #include "Square.hpp"
@@ -13,7 +14,7 @@ template <int BoardSize>
 class NearBoxesMapper {
   public:
   NearBoxesMapper() {
-    for (const Edge<BoardSize> edge : std::views::iota(0, Edge<BoardSize>::Max)) {
+    for (const Edge<BoardSize> edge : Iota(Edge<BoardSize>::Max)) {
       EdgeNearBoxes.At(edge.Value()) = GetNearBoxes(edge);
     }
   }

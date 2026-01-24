@@ -9,7 +9,7 @@ template <int BoardSize>
 class BasicBoard {
   public:
   BasicBoard() {
-    for (const Edge<BoardSize> edge : std::views::iota(0, Edge<BoardSize>::Max)) {
+    for (const Edge<BoardSize> edge : Iota(Edge<BoardSize>::Max)) {
       EdgeIndexes.At(edge.Value()) = edge.Value();
       Edges.At(edge.Value()) = edge;
     }

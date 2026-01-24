@@ -31,7 +31,7 @@ class EdgeCountableBoard {
 
   Edge<BoardSize>
   FindScoreableEdge() const {
-    for (const Box<BoardSize> box : std::views::iota(0, Box<BoardSize>::Max)) {
+    for (const Box<BoardSize> box : Iota(Box<BoardSize>::Max)) {
       if (EdgeCountOfBox.EdgeCount(box) == 3) {
         return FindNotContainsEdgeInBox(box);
       }

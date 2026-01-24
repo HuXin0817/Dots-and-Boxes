@@ -17,14 +17,14 @@ class MainWindow final : public QWidget {
     resize(WindowSize, WindowSize);
     setMinimumSize(WindowSize, WindowSize);
 
-    for (const int i : std::views::iota(0, Box<BoardSize>::Max)) {
+    for (const Dot<BoardSize> dot : Iota(Box<BoardSize>::Max)) {
       BoxCanvases.emplace_back(new BoxCanvas<BoardSize>(this));
     }
-    for (const Edge<BoardSize> edge : std::views::iota(0, Edge<BoardSize>::Max)) {
+    for (const Edge<BoardSize> edge : Iota(Edge<BoardSize>::Max)) {
       EdgeCanvases.emplace_back(
           new EdgeCanvas<BoardSize>(edge.Rotate(), [edge, this]() -> void { setPlayerMoveEdge(edge); }, this));
     }
-    for (const int i : std::views::iota(0, Dot<BoardSize>::Max)) {
+    for (const Box<BoardSize> box : Iota(Dot<BoardSize>::Max)) {
       DotCanvases.emplace_back(new DotCanvas<BoardSize>(this));
     }
 
@@ -51,7 +51,7 @@ class MainWindow final : public QWidget {
     }
     EdgeCanvases[edge.Value()]->State = StateFromTurn(Board.GetScoreMap().GetTurn());
     EdgeCanvases[edge.Value()]->raise();
-    for (const int i : std::views::iota(0, Dot<BoardSize>::Max)) {
+    for (const int i : Iota(Dot<BoardSize>::Max)) {
       DotCanvases[i]->raise();
     }
 
@@ -89,15 +89,13 @@ class MainWindow final : public QWidget {
     const int x0 = (width() - BoardWidth) / 2 - UnitSize<BoardSize>;
     const int y0 = (height() - BoardWidth) / 2 - UnitSize<BoardSize>;
 
-    for (const int i : std::views::iota(0, Box<BoardSize>::Size)) {
-      for (const int j : std::views::iota(0, Box<BoardSize>::Size)) {
-        const int x = x0 + i * EdgeCanvas<BoardSize>::Height + 2 * UnitSize<BoardSize>;
-        const int y = y0 + j * EdgeCanvas<BoardSize>::Height + 2 * UnitSize<BoardSize>;
-        BoxCanvases[Box<BoardSize>(i, j).Value()]->move(x, y);
-      }
+    for (const Box<BoardSize> box : Iota(Box<BoardSize>::Max)) {
+      const int x = x0 + box.X() * EdgeCanvas<BoardSize>::Height + 2 * UnitSize<BoardSize>;
+      const int y = y0 + box.Y() * EdgeCanvas<BoardSize>::Height + 2 * UnitSize<BoardSize>;
+      BoxCanvases[box.Value()]->move(x, y);
     }
 
-    for (const Edge<BoardSize> edge : std::views::iota(0, Edge<BoardSize>::Max)) {
+    for (const Edge<BoardSize> edge : Iota(Edge<BoardSize>::Max)) {
       int x = x0 + edge.Dot1().X() * EdgeCanvas<BoardSize>::Height;
       int y = y0 + edge.Dot1().Y() * EdgeCanvas<BoardSize>::Height;
       if (edge.Rotate()) {
@@ -108,12 +106,10 @@ class MainWindow final : public QWidget {
       EdgeCanvases[edge.Value()]->move(x, y);
     }
 
-    for (const int i : std::views::iota(0, Dot<BoardSize>::Size)) {
-      for (const int j : std::views::iota(0, Dot<BoardSize>::Size)) {
-        const int x = x0 + i * EdgeCanvas<BoardSize>::Height;
-        const int y = y0 + j * EdgeCanvas<BoardSize>::Height;
-        DotCanvases[Dot<BoardSize>(i, j).Value()]->move(x, y);
-      }
+    for (const Dot<BoardSize> dot : Iota(Dot<BoardSize>::Max)) {
+      const int x = x0 + dot.X() * EdgeCanvas<BoardSize>::Height;
+      const int y = y0 + dot.Y() * EdgeCanvas<BoardSize>::Height;
+      DotCanvases[dot.Value()]->move(x, y);
     }
   }
 

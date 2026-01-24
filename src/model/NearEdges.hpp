@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../common/Array.hpp"
+#include "../common/Iota.hpp"
 #include "Edge.hpp"
 #include "Square.hpp"
 
@@ -12,8 +13,8 @@ template <int BoardSize>
 class NearEdgesMapper {
   public:
   NearEdgesMapper() {
-    for (const SizeType x : std::views::iota(0, Box<BoardSize>::Size)) {
-      for (const SizeType y : std::views::iota(0, Box<BoardSize>::Size)) {
+    for (const SizeType x : Iota(Box<BoardSize>::Size)) {
+      for (const SizeType y : Iota(Box<BoardSize>::Size)) {
         const Dot<BoardSize> topLeft(x, y);
         const Dot<BoardSize> topRight(x + 1, y);
         const Dot<BoardSize> bottomLeft(x, y + 1);
