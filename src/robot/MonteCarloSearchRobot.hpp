@@ -8,7 +8,7 @@
 template <int64_t BoardSize>
 class ParallelSearchRobot;
 
-template <int64_t BoardSize, int64_t SearchTime = Edge<BoardSize>::Max << 8>
+template <int64_t BoardSize, int64_t SearchTime = static_cast<int64_t>(Edge<BoardSize>::Max) << 8>
 class MonteCarloSearchRobot final : public Robot<BoardSize> {
   friend class ParallelSearchRobot<BoardSize>;
 

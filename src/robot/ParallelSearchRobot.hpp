@@ -4,9 +4,9 @@
 
 template <int64_t BoardSize>
 class ParallelSearchRobot final : public Robot<BoardSize> {
-  static constexpr size_t SubRobotSearchTime = Edge<BoardSize>::Max << 5;
-  static constexpr size_t SubRobotNumber = 64;
-  static constexpr size_t SearchTime = SubRobotNumber * SubRobotSearchTime;
+  static constexpr int64_t SubRobotSearchTime = static_cast<int64_t>(Edge<BoardSize>::Max) << 5;
+  static constexpr int64_t SubRobotNumber = 64;
+  static constexpr int64_t SearchTime = SubRobotNumber * SubRobotSearchTime;
 
   using SubRobotType = MonteCarloSearchRobot<BoardSize, SubRobotSearchTime>;
 
