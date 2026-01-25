@@ -4,7 +4,7 @@
 #include "EdgeCountableBoard.hpp"
 
 template <int64_t BoardSize>
-class ScoreCountableBoard {
+class ScoreCountableBoard : public EdgeCountableBoard<BoardSize>, public ScoreMap<BoardSize> {
   public:
   ScoreCountableBoard() = default;
 
@@ -12,39 +12,19 @@ class ScoreCountableBoard {
   Reset(const EdgeCountableBoard<BoardSize>& newBoard);
   SizeType<BoardSize>
   Add(const Edge<BoardSize> edge);
-  const EdgeCountableBoard<BoardSize>&
-  GetEdgeCountableBoard() const;
-  const ScoreMap<BoardSize>&
-  GetScoreMap() const;
-
-  private:
-  EdgeCountableBoard<BoardSize> EdgeCountableBoard;
-  ScoreMap<BoardSize> ScoreMap;
 };
 
 template <int64_t BoardSize>
 void
 ScoreCountableBoard<BoardSize>::Reset(const ::EdgeCountableBoard<BoardSize>& newBoard) {
-  EdgeCountableBoard = newBoard;
-  ScoreMap.Reset();
+  EdgeCountableBoard<BoardSize>::operator=(newBoard);
+  ScoreMap<BoardSize>::Reset();
 }
 
 template <int64_t BoardSize>
 SizeType<BoardSize>
 ScoreCountableBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
-  SizeType<BoardSize> score = EdgeCountableBoard.Add(edge);
-  ScoreMap.Add(score);
+  SizeType<BoardSize> score = EdgeCountableBoard<BoardSize>::Add(edge);
+  ScoreMap<BoardSize>::Add(score);
   return score;
-}
-
-template <int64_t BoardSize>
-const EdgeCountableBoard<BoardSize>&
-ScoreCountableBoard<BoardSize>::GetEdgeCountableBoard() const {
-  return EdgeCountableBoard;
-}
-
-template <int64_t BoardSize>
-const ScoreMap<BoardSize>&
-ScoreCountableBoard<BoardSize>::GetScoreMap() const {
-  return ScoreMap;
 }

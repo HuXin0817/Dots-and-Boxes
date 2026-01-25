@@ -5,7 +5,7 @@
 #include "EdgeCountableBoard.hpp"
 
 template <int64_t BoardSize>
-class ScoreableEdgeBoard {
+class ScoreableEdgeBoard : public EdgeCountableBoard<BoardSize> {
   public:
   ScoreableEdgeBoard() = default;
 
@@ -17,24 +17,23 @@ class ScoreableEdgeBoard {
   MaxObtainableScore(const SizeType<BoardSize> minScore);
 
   private:
-  EdgeCountableBoard<BoardSize> EdgeCountableBoard;
   Queue<Edge<BoardSize>, Edge<BoardSize>::Max> ScoreableEdges;
 };
 
 template <int64_t BoardSize>
 void
 ScoreableEdgeBoard<BoardSize>::Reset(const ::EdgeCountableBoard<BoardSize>& newBoard) {
-  EdgeCountableBoard = newBoard;
+  EdgeCountableBoard<BoardSize>::operator=(newBoard);
   ScoreableEdges.Clear();
 }
 
 template <int64_t BoardSize>
 SizeType<BoardSize>
 ScoreableEdgeBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
-  const SizeType<BoardSize> score = EdgeCountableBoard.Add(edge);
+  const SizeType<BoardSize> score = EdgeCountableBoard<BoardSize>::Add(edge);
   for (const Box<BoardSize> box : NearBoxes(edge)) {
-    if (EdgeCountableBoard.GetEdgeCountOfBox().EdgeCount(box) == 3) {
-      ScoreableEdges.Append(EdgeCountableBoard.FindNotContainsEdgeInBox(box));
+    if (EdgeCountableBoard<BoardSize>::EdgeCount(box) == 3) {
+      ScoreableEdges.Append(EdgeCountableBoard<BoardSize>::FindNotContainsEdgeInBox(box));
     }
   }
   return score;
@@ -44,9 +43,9 @@ template <int64_t BoardSize>
 SizeType<BoardSize>
 ScoreableEdgeBoard<BoardSize>::MaxObtainableScore(const SizeType<BoardSize> minScore) {
   SizeType<BoardSize> score = 0;
-  while (EdgeCountableBoard.GetBasicBoard().GetStep().Gaming()) {
+  while (EdgeCountableBoard<BoardSize>::Gaming()) {
     if (ScoreableEdges.Empty()) {
-      if (const Edge<BoardSize> edge = EdgeCountableBoard.FindScoreableEdge();
+      if (const Edge<BoardSize> edge = EdgeCountableBoard<BoardSize>::FindScoreableEdge();
           edge.Value() != InvalidEdge<BoardSize>().Value()) {
         ScoreableEdges.Append(edge);
       } else {
@@ -54,7 +53,7 @@ ScoreableEdgeBoard<BoardSize>::MaxObtainableScore(const SizeType<BoardSize> minS
       }
     }
     const Edge<BoardSize> edge = ScoreableEdges.Pop();
-    if (EdgeCountableBoard.GetBasicBoard().Contains(edge)) {
+    if (EdgeCountableBoard<BoardSize>::Contains(edge)) {
       continue;
     }
     const SizeType<BoardSize> addScore = Add(edge);

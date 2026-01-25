@@ -34,7 +34,7 @@ BasicSearchRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardS
   List<Edge<BoardSize>, Edge<BoardSize>::Max>& candidateEdges = SubRobot.EnemyUnscoreableEdges;
   assert(candidateEdges.Empty());
 
-  for (const Edge<BoardSize> edge : board.GetEdgeCountableBoard().GetBasicBoard().EmptyEdges()) {
+  for (const Edge<BoardSize> edge : board.EmptyEdges()) {
     SimulationBoard.Reset(board.GetEdgeCountableBoard());
     SimulationBoard.Add(edge);
     if (const SizeType<BoardSize> score = SimulationBoard.MaxObtainableScore(minScore); score < minScore) {

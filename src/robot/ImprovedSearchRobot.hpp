@@ -28,15 +28,15 @@ ImprovedSearchRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<Boa
 
   SearchEdges.Clear();
   SizeType<BoardSize> maxScore = -Box<BoardSize>::Max;
-  for (const Edge<BoardSize> emptyEdge : board.GetEdgeCountableBoard().GetBasicBoard().EmptyEdges()) {
+  for (const Edge<BoardSize> emptyEdge : board.EmptyEdges()) {
     SimulationBoard.Reset(board.GetEdgeCountableBoard());
     SimulationBoard.Add(emptyEdge);
-    while (SimulationBoard.GetEdgeCountableBoard().GetBasicBoard().GetStep().Gaming()) {
+    while (SimulationBoard.Gaming()) {
       const Edge<BoardSize> edge = SubRobot.BestCandidateEdges(SimulationBoard).At(0);
-      assert(board.GetEdgeCountableBoard().GetEdgeCountOfBox().MaxCount(edge.Value()) > 1);
+      assert(board.MaxCount(edge.Value()) > 1);
       SimulationBoard.Add(edge);
     }
-    if (const SizeType<BoardSize> score = SimulationBoard.GetScoreMap().Score(); score > maxScore) {
+    if (const SizeType<BoardSize> score = SimulationBoard.Score(); score > maxScore) {
       maxScore = score;
       SearchEdges.Reset(emptyEdge);
     } else if (score == maxScore) {

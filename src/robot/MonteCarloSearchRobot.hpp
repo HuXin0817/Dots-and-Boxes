@@ -32,15 +32,15 @@ MonteCarloSearchRobot<BoardSize, SearchTime>::BestCandidateEdges(const ScoreCoun
   }
 
   SearchResult.Reset();
-  int64_t times = SearchTime / board.GetEdgeCountableBoard().GetBasicBoard().GetStep().RemainStep() + 1;
+  int64_t times = SearchTime / board.RemainStep() + 1;
   while (times--) {
     SimulationBoard.Reset(board.GetEdgeCountableBoard());
     const Edge<BoardSize> edge = RandomChoice(SubRobot.BestCandidateEdges(SimulationBoard));
     SimulationBoard.Add(edge);
-    while (SimulationBoard.GetEdgeCountableBoard().GetBasicBoard().GetStep().Gaming()) {
+    while (SimulationBoard.Gaming()) {
       SimulationBoard.Add(RandomChoice(SubRobot.BestCandidateEdges(SimulationBoard)));
     }
-    SearchResult.Add(edge, SimulationBoard.GetScoreMap().Score());
+    SearchResult.Add(edge, SimulationBoard.Score());
   }
 
   return SearchResult.Export();

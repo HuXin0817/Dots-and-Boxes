@@ -119,12 +119,12 @@ MainWindow<BoardSize>::showEvent(QShowEvent* event) {
   QWidget::showEvent(event);
 
   QThreadPool::globalInstance()->start([this] {
-    while (Board.GetEdgeCountableBoard().GetBasicBoard().GetStep().Gaming()) {
+    while (Board.Gaming()) {
       const QTime startTime = QTime::currentTime();
 
-      if ((PlayerTypeIsRobot(Player1Type) && Board.GetScoreMap().GetTurn().Value() == Player1Turn.Value())) {
+      if ((PlayerTypeIsRobot(Player1Type) && Board.GetTurn().Value() == Player1Turn.Value())) {
         PlayerMoveEdge = RandomChoice(Robot1->BestCandidateEdges(Board));
-      } else if (PlayerTypeIsRobot(Player2Type) && Board.GetScoreMap().GetTurn().Value() == Player2Turn.Value()) {
+      } else if (PlayerTypeIsRobot(Player2Type) && Board.GetTurn().Value() == Player2Turn.Value()) {
         PlayerMoveEdge = RandomChoice(Robot2->BestCandidateEdges(Board));
       } else {
         PlayerMoveEdge = InvalidEdge<BoardSize>();
@@ -133,27 +133,27 @@ MainWindow<BoardSize>::showEvent(QShowEvent* event) {
         }
       }
 
-      assert(!Board.GetEdgeCountableBoard().GetBasicBoard().Contains(PlayerMoveEdge));
+      assert(!Board.Contains(PlayerMoveEdge));
       QMetaObject::invokeMethod(this, [this]() { Add(PlayerMoveEdge); }, Qt::BlockingQueuedConnection);
-      assert(Board.GetEdgeCountableBoard().GetBasicBoard().Contains(PlayerMoveEdge));
+      assert(Board.Contains(PlayerMoveEdge));
 
       const double seconds = static_cast<double>(startTime.msecsTo(QTime::currentTime())) / 1000.0;
       qInfo(
           "%s",
           QString("Info: {\"Step\":%1,\"Player\":%2,\"Move\":%3,\"Score\":{\"Player1\":%4,\"Player2\":%5},\"Time\":%6}")
-              .arg(Board.GetEdgeCountableBoard().GetBasicBoard().GetStep().NowStep())
-              .arg(Board.GetScoreMap().GetTurn().Value() == Player1Turn.Value() ? 1 : 2)
+              .arg(Board.NowStep())
+              .arg(Board.GetTurn().Value() == Player1Turn.Value() ? 1 : 2)
               .arg(PlayerMoveEdge.Value())
-              .arg(Board.GetScoreMap().GetPlayer1Score())
-              .arg(Board.GetScoreMap().GetPlayer2Score())
+              .arg(Board.GetPlayer1Score())
+              .arg(Board.GetPlayer2Score())
               .arg(seconds, 0, 'f', 3)
               .toLocal8Bit()
               .constData());
     }
 
-    if (Board.GetScoreMap().GetPlayer1Score() > Board.GetScoreMap().GetPlayer2Score()) {
+    if (Board.GetPlayer1Score() > Board.GetPlayer2Score()) {
       qInfo("Info: {\"Winner\":\"Player1\"}");
-    } else if (Board.GetScoreMap().GetPlayer2Score() > Board.GetScoreMap().GetPlayer1Score()) {
+    } else if (Board.GetPlayer2Score() > Board.GetPlayer1Score()) {
       qInfo("Info: {\"Winner\":\"Player2\"}");
     } else {
       qInfo("Info: {\"Winner\":\"Draw\"}");
@@ -175,13 +175,13 @@ MainWindow<BoardSize>::showEvent(QShowEvent* event) {
 template <int64_t BoardSize>
 void
 MainWindow<BoardSize>::SetPlayerMoveEdge(const Edge<BoardSize> edge) {
-  if (Board.GetEdgeCountableBoard().GetBasicBoard().Contains(edge)) {
+  if (Board.Contains(edge)) {
     return;
   }
-  if (PlayerTypeIsRobot(Player1Type) && Board.GetScoreMap().GetTurn().Value() == Player1Turn.Value()) {
+  if (PlayerTypeIsRobot(Player1Type) && Board.GetTurn().Value() == Player1Turn.Value()) {
     return;
   }
-  if (PlayerTypeIsRobot(Player2Type) && Board.GetScoreMap().GetTurn().Value() == Player2Turn.Value()) {
+  if (PlayerTypeIsRobot(Player2Type) && Board.GetTurn().Value() == Player2Turn.Value()) {
     return;
   }
   PlayerMoveEdge = edge;
@@ -199,10 +199,10 @@ MainWindow<BoardSize>::Color() const {
 template <int64_t BoardSize>
 void
 MainWindow<BoardSize>::Add(const Edge<BoardSize> edge) {
-  if (Board.GetEdgeCountableBoard().GetBasicBoard().GetStep().NowStep() > 0) {
+  if (Board.NowStep() > 0) {
     EdgeCanvases[LastEdge.Value()]->HighLight = false;
   }
-  EdgeCanvases[edge.Value()]->State = StateFromTurn(Board.GetScoreMap().GetTurn());
+  EdgeCanvases[edge.Value()]->State = StateFromTurn(Board.GetTurn());
   EdgeCanvases[edge.Value()]->raise();
   for (const Dot<BoardSize> dot : Iota(Dot<BoardSize>::Max)) {
     DotCanvases[dot.Value()]->raise();
@@ -211,12 +211,12 @@ MainWindow<BoardSize>::Add(const Edge<BoardSize> edge) {
   for (const Box<BoardSize> box : NearBoxes(edge)) {
     int count = 0;
     for (const Edge<BoardSize> nearEdge : NearEdges(box)) {
-      if (Board.GetEdgeCountableBoard().GetBasicBoard().Contains(nearEdge)) {
+      if (Board.Contains(nearEdge)) {
         count++;
       }
     }
     if (count == 3) {
-      BoxCanvases[box.Value()]->State = StateFromTurn(Board.GetScoreMap().GetTurn());
+      BoxCanvases[box.Value()]->State = StateFromTurn(Board.GetTurn());
     }
   }
 
