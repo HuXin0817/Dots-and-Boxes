@@ -7,11 +7,11 @@ class Turn {
   void
   Reset();
   void
-  Change();
+  Add();
   bool
-  IsPlayer1() const;
+  IsPlayer1Turn() const;
   bool
-  IsPlayer2() const;
+  IsPlayer2Turn() const;
 
   private:
   bool v;
@@ -29,16 +29,16 @@ Turn::Reset() {
 }
 
 inline void
-Turn::Change() {
+Turn::Add() {
   v = !v;
 }
 
 inline bool
-Turn::IsPlayer1() const {
+Turn::IsPlayer1Turn() const {
   return v;
 }
 
 inline bool
-Turn::IsPlayer2() const {
+Turn::IsPlayer2Turn() const {
   return !v;
 }

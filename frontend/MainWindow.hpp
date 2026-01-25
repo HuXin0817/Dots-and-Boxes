@@ -122,9 +122,9 @@ MainWindow<BoardSize>::showEvent(QShowEvent* event) {
     while (Board.Gaming()) {
       const QTime startTime = QTime::currentTime();
 
-      if ((PlayerTypeIsRobot(Player1Type) && Board.GetTurn().IsPlayer1())) {
+      if ((PlayerTypeIsRobot(Player1Type) && Board.IsPlayer1Turn())) {
         PlayerMoveEdge = RandomChoice(Robot1->BestCandidateEdges(Board));
-      } else if (PlayerTypeIsRobot(Player2Type) && Board.GetTurn().IsPlayer2()) {
+      } else if (PlayerTypeIsRobot(Player2Type) && Board.IsPlayer2Turn()) {
         PlayerMoveEdge = RandomChoice(Robot2->BestCandidateEdges(Board));
       } else {
         PlayerMoveEdge = InvalidEdge<BoardSize>();
@@ -142,7 +142,7 @@ MainWindow<BoardSize>::showEvent(QShowEvent* event) {
           "%s",
           QString("Info: {\"Step\":%1,\"Player\":%2,\"Move\":%3,\"Score\":{\"Player1\":%4,\"Player2\":%5},\"Time\":%6}")
               .arg(Board.NowStep())
-              .arg(Board.GetTurn().IsPlayer1() ? 1 : 2)
+              .arg(Board.IsPlayer1Turn() ? 1 : 2)
               .arg(PlayerMoveEdge.Value())
               .arg(Board.GetPlayer1Score())
               .arg(Board.GetPlayer2Score())
@@ -178,10 +178,10 @@ MainWindow<BoardSize>::SetPlayerMoveEdge(const Edge<BoardSize> edge) {
   if (Board.Contains(edge)) {
     return;
   }
-  if (PlayerTypeIsRobot(Player1Type) && Board.GetTurn().IsPlayer1()) {
+  if (PlayerTypeIsRobot(Player1Type) && Board.IsPlayer1Turn()) {
     return;
   }
-  if (PlayerTypeIsRobot(Player2Type) && Board.GetTurn().IsPlayer2()) {
+  if (PlayerTypeIsRobot(Player2Type) && Board.IsPlayer2Turn()) {
     return;
   }
   PlayerMoveEdge = edge;
@@ -202,7 +202,7 @@ MainWindow<BoardSize>::Add(const Edge<BoardSize> edge) {
   if (Board.NowStep() > 0) {
     EdgeCanvases[LastEdge.Value()]->HighLight = false;
   }
-  EdgeCanvases[edge.Value()]->State = StateFromTurn(Board.GetTurn());
+  EdgeCanvases[edge.Value()]->State = StateFromTurn(static_cast<const Turn>(Board));
   EdgeCanvases[edge.Value()]->raise();
   for (const Dot<BoardSize> dot : Iota(Dot<BoardSize>::Max)) {
     DotCanvases[dot.Value()]->raise();
@@ -216,7 +216,7 @@ MainWindow<BoardSize>::Add(const Edge<BoardSize> edge) {
       }
     }
     if (count == 3) {
-      BoxCanvases[box.Value()]->State = StateFromTurn(Board.GetTurn());
+      BoxCanvases[box.Value()]->State = StateFromTurn(static_cast<const Turn>(Board));
     }
   }
 

@@ -16,7 +16,7 @@ class Step {
   SizeType<BoardSize>
   NowStep() const;
   void
-  Go();
+  Add();
 
   private:
   SizeType<BoardSize> v = 0;
@@ -48,6 +48,6 @@ Step<BoardSize>::NowStep() const {
 
 template <int64_t BoardSize>
 void
-Step<BoardSize>::Go() {
+Step<BoardSize>::Add() {
   v++;
 }

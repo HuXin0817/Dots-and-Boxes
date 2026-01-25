@@ -9,17 +9,17 @@
 #include "Edge.hpp"
 
 template <int64_t BoardSize, typename ScoreType>
-class EdgeScoreMap {
+class SearchScoreMap {
   public:
-  EdgeScoreMap() = default;
+  SearchScoreMap() = default;
 
   void
   Reset();
   void
   Add(const Edge<BoardSize> edge, const SizeType<BoardSize> score);
-  template <typename OtherEdgeScoreMap>
+  template <typename OtherSearchScoreMap>
   void
-  Add(const OtherEdgeScoreMap& other);
+  Add(const OtherSearchScoreMap& other);
   Span<Edge<BoardSize>>
   Export();
 
@@ -30,7 +30,7 @@ class EdgeScoreMap {
 
 template <int64_t BoardSize, typename ScoreType>
 void
-EdgeScoreMap<BoardSize, ScoreType>::Reset() {
+SearchScoreMap<BoardSize, ScoreType>::Reset() {
   memset(Time.begin(), 0, sizeof(Time));
   memset(Score.begin(), 0, sizeof(Score));
   BestEdges.Clear();
@@ -38,15 +38,15 @@ EdgeScoreMap<BoardSize, ScoreType>::Reset() {
 
 template <int64_t BoardSize, typename ScoreType>
 void
-EdgeScoreMap<BoardSize, ScoreType>::Add(const Edge<BoardSize> edge, const SizeType<BoardSize> score) {
+SearchScoreMap<BoardSize, ScoreType>::Add(const Edge<BoardSize> edge, const SizeType<BoardSize> score) {
   Time.At(edge.Value())++;
   Score.At(edge.Value()) += score;
 }
 
 template <int64_t BoardSize, typename ScoreType>
-template <typename OtherEdgeScoreMap>
+template <typename OtherSearchScoreMap>
 void
-EdgeScoreMap<BoardSize, ScoreType>::Add(const OtherEdgeScoreMap& other) {
+SearchScoreMap<BoardSize, ScoreType>::Add(const OtherSearchScoreMap& other) {
   for (const SizeType<BoardSize> i : Iota(Edge<BoardSize>::Max)) {
     Time.At(i) += other.Time.At(i);
     Score.At(i) += other.Score.At(i);
@@ -55,7 +55,7 @@ EdgeScoreMap<BoardSize, ScoreType>::Add(const OtherEdgeScoreMap& other) {
 
 template <int64_t BoardSize, typename ScoreType>
 Span<Edge<BoardSize>>
-EdgeScoreMap<BoardSize, ScoreType>::Export() {
+SearchScoreMap<BoardSize, ScoreType>::Export() {
   float maxScore = 0.0;
   for (const Edge<BoardSize> edge : Iota(Edge<BoardSize>::Max)) {
     if (Time.At(edge.Value()) > 0) {

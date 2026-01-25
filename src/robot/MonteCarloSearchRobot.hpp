@@ -2,7 +2,7 @@
 
 #include "../board/ScoreCountableBoard.hpp"
 #include "../common/Random.hpp"
-#include "../model/EdgeScoreMap.hpp"
+#include "../model/SearchScoreMap.hpp"
 #include "ImprovedSearchRobot.hpp"
 
 template <int64_t BoardSize>
@@ -21,7 +21,7 @@ class MonteCarloSearchRobot final : public Robot<BoardSize> {
   private:
   ImprovedSearchRobot<BoardSize> SubRobot;
   ScoreCountableBoard<BoardSize> SimulationBoard;
-  EdgeScoreMap<BoardSize, Int<2 * SearchTime>> SearchResult;
+  SearchScoreMap<BoardSize, Int<2 * SearchTime>> SearchResult;
 };
 
 template <int64_t BoardSize, int64_t SearchTime>
@@ -34,7 +34,7 @@ MonteCarloSearchRobot<BoardSize, SearchTime>::BestCandidateEdges(const ScoreCoun
   SearchResult.Reset();
   int64_t times = SearchTime / board.RemainStep() + 1;
   while (times--) {
-    SimulationBoard.Reset(board.GetEdgeCountableBoard());
+    SimulationBoard.Reset(static_cast<EdgeCountableBoard<BoardSize>>(board));
     const Edge<BoardSize> edge = RandomChoice(SubRobot.BestCandidateEdges(SimulationBoard));
     SimulationBoard.Add(edge);
     while (SimulationBoard.Gaming()) {

@@ -9,24 +9,37 @@
 #include "Square.hpp"
 
 template <int64_t BoardSize>
-class EdgeCountOfBox {
+class EdgeCounter {
   public:
-  EdgeCountOfBox() = default;
+  EdgeCounter();
 
+  void
+  Reset();
   SizeType<BoardSize>
   Add(const Edge<BoardSize> edge);
   uint8_t
   EdgeCount(const Box<BoardSize> box) const;
   uint8_t
-  MaxCount(const Edge<BoardSize> edge) const;
+  MaxEdgeCount(const Edge<BoardSize> edge) const;
 
   private:
   Array<uint8_t, Box<BoardSize>::Max> Map;
 };
 
 template <int64_t BoardSize>
+EdgeCounter<BoardSize>::EdgeCounter() {
+  Reset();
+}
+
+template <int64_t BoardSize>
+void
+EdgeCounter<BoardSize>::Reset() {
+  Map = Array<uint8_t, Box<BoardSize>::Max>();
+}
+
+template <int64_t BoardSize>
 SizeType<BoardSize>
-EdgeCountOfBox<BoardSize>::Add(const Edge<BoardSize> edge) {
+EdgeCounter<BoardSize>::Add(const Edge<BoardSize> edge) {
   SizeType<BoardSize> score = 0;
   for (const Box<BoardSize> box : NearBoxes(edge)) {
     Map.At(box.Value())++;
@@ -41,16 +54,16 @@ EdgeCountOfBox<BoardSize>::Add(const Edge<BoardSize> edge) {
 
 template <int64_t BoardSize>
 uint8_t
-EdgeCountOfBox<BoardSize>::EdgeCount(const Box<BoardSize> box) const {
+EdgeCounter<BoardSize>::EdgeCount(const Box<BoardSize> box) const {
   return Map.At(box.Value());
 }
 
 template <int64_t BoardSize>
 uint8_t
-EdgeCountOfBox<BoardSize>::MaxCount(const Edge<BoardSize> edge) const {
+EdgeCounter<BoardSize>::MaxEdgeCount(const Edge<BoardSize> edge) const {
   uint8_t maxCount = 0;
   for (const Box<BoardSize> box : NearBoxes(edge)) {
-    maxCount = std::max(maxCount, Map.At(box.Value()));
+    maxCount = std::max(maxCount, EdgeCount(box));
   }
   return maxCount;
 }

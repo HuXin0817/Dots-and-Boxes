@@ -6,13 +6,18 @@
 template <int64_t BoardSize>
 class ScoreCountableBoard : public EdgeCountableBoard<BoardSize>, public ScoreMap<BoardSize> {
   public:
-  ScoreCountableBoard() = default;
+  ScoreCountableBoard();
 
   void
-  Reset(const EdgeCountableBoard<BoardSize>& newBoard);
+  Reset(const EdgeCountableBoard<BoardSize>& newBoard = EdgeCountableBoard<BoardSize>());
   SizeType<BoardSize>
   Add(const Edge<BoardSize> edge);
 };
+
+template <int64_t BoardSize>
+ScoreCountableBoard<BoardSize>::ScoreCountableBoard() {
+  Reset();
+}
 
 template <int64_t BoardSize>
 void

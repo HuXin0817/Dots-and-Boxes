@@ -18,7 +18,7 @@ class ParallelSearchRobot final : public Robot<BoardSize> {
 
   private:
   Array<SubRobotType, SubRobotNumber> SubRobots;
-  EdgeScoreMap<BoardSize, Int<2 * SearchTime>> SearchResult;
+  SearchScoreMap<BoardSize, Int<2 * SearchTime>> SearchResult;
 };
 
 template <int64_t BoardSize>

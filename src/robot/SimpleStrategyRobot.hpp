@@ -35,7 +35,7 @@ SimpleStrategyRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<Boa
   const Span<Edge<BoardSize>> emptyEdges = board.EmptyEdges();
 
   for (const Edge<BoardSize> edge : emptyEdges) {
-    if (const uint8_t maxCount = board.MaxCount(edge); maxCount == 3) {
+    if (const uint8_t maxCount = board.MaxEdgeCount(edge); maxCount == 3) {
       ScoreableEdges.Append(edge);
     } else if (maxCount < 2) {
       EnemyUnscoreableEdges.Append(edge);

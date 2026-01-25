@@ -4,32 +4,24 @@
 #include "Turn.hpp"
 
 template <int64_t BoardSize>
-class ScoreMap {
+class ScoreMap : public Turn {
   public:
   ScoreMap();
 
   void
   Reset();
-
   void
   Add(const SizeType<BoardSize> score);
-
   SizeType<BoardSize>
   Score() const;
-
   SizeType<BoardSize>
   GetPlayer1Score() const;
-
   SizeType<BoardSize>
   GetPlayer2Score() const;
-
-  Turn
-  GetTurn() const;
 
   private:
   SizeType<BoardSize> Player1Score = 0;
   SizeType<BoardSize> Player2Score = 0;
-  Turn Turn;
 };
 
 template <int64_t BoardSize>
@@ -42,17 +34,17 @@ void
 ScoreMap<BoardSize>::Reset() {
   Player1Score = 0;
   Player2Score = 0;
-  Turn.Reset();
+  Turn::Reset();
 }
 
 template <int64_t BoardSize>
 void
 ScoreMap<BoardSize>::Add(const SizeType<BoardSize> score) {
   if (score == 0) {
-    Turn.Change();
+    Turn::Add();
     return;
   }
-  if (Turn.IsPlayer1()) {
+  if (Turn::IsPlayer1Turn()) {
     Player1Score += score;
   } else {
     Player2Score += score;
@@ -75,10 +67,4 @@ template <int64_t BoardSize>
 SizeType<BoardSize>
 ScoreMap<BoardSize>::GetPlayer2Score() const {
   return Player2Score;
-}
-
-template <int64_t BoardSize>
-Turn
-ScoreMap<BoardSize>::GetTurn() const {
-  return Turn;
 }

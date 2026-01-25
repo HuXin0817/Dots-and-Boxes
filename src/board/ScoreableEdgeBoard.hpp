@@ -7,10 +7,10 @@
 template <int64_t BoardSize>
 class ScoreableEdgeBoard : public EdgeCountableBoard<BoardSize> {
   public:
-  ScoreableEdgeBoard() = default;
+  ScoreableEdgeBoard();
 
   void
-  Reset(const EdgeCountableBoard<BoardSize>& newBoard);
+  Reset(const EdgeCountableBoard<BoardSize>& newBoard = EdgeCountableBoard<BoardSize>());
   SizeType<BoardSize>
   Add(const Edge<BoardSize> edge);
   SizeType<BoardSize>
@@ -19,6 +19,11 @@ class ScoreableEdgeBoard : public EdgeCountableBoard<BoardSize> {
   private:
   Queue<Edge<BoardSize>, Edge<BoardSize>::Max> ScoreableEdges;
 };
+
+template <int64_t BoardSize>
+ScoreableEdgeBoard<BoardSize>::ScoreableEdgeBoard() {
+  Reset();
+}
 
 template <int64_t BoardSize>
 void

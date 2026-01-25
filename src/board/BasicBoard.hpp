@@ -11,6 +11,8 @@ class BasicBoard : public Step<BoardSize> {
   BasicBoard();
 
   void
+  Reset();
+  void
   Add(const Edge<BoardSize> edge);
   bool
   Contains(const Edge<BoardSize> edge) const;
@@ -26,6 +28,13 @@ class BasicBoard : public Step<BoardSize> {
 
 template <int64_t BoardSize>
 BasicBoard<BoardSize>::BasicBoard() {
+  Reset();
+}
+
+template <int64_t BoardSize>
+void
+BasicBoard<BoardSize>::Reset() {
+  Step<BoardSize>::Reset();
   for (const Edge<BoardSize> edge : Iota(Edge<BoardSize>::Max)) {
     EdgeIndexes.At(edge.Value()) = edge.Value();
     Edges.At(edge.Value()) = edge;
@@ -41,7 +50,7 @@ BasicBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
   std::swap(Edges.At(edgeIndex), Edges.At(Step<BoardSize>::NowStep()));
   EdgeIndexes.At(edge.Value()) = Step<BoardSize>::NowStep();
   EdgeIndexes.At(nowEdge.Value()) = edgeIndex;
-  Step<BoardSize>::Go();
+  Step<BoardSize>::Add();
 }
 
 template <int64_t BoardSize>

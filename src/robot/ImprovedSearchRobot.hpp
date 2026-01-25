@@ -29,7 +29,7 @@ ImprovedSearchRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<Boa
   SearchEdges.Clear();
   SizeType<BoardSize> maxScore = -Box<BoardSize>::Max;
   for (const Edge<BoardSize> emptyEdge : board.EmptyEdges()) {
-    SimulationBoard.Reset(board.GetEdgeCountableBoard());
+    SimulationBoard.Reset(static_cast<EdgeCountableBoard<BoardSize>>(board));
     SimulationBoard.Add(emptyEdge);
     while (SimulationBoard.Gaming()) {
       const Edge<BoardSize> edge = SubRobot.BestCandidateEdges(SimulationBoard).At(0);
