@@ -3,6 +3,16 @@
 #include "frontend/MainWindowCreator.hpp"
 
 static constexpr int64_t DefaultBoardSize = 6;
+static constexpr PlayerType DefaultPlayerType = PlayerType::ParallelSearchRobot;
+
+static constexpr const char* PlayerTypeOptionStrings[] = {
+    "human",
+    "robot:easy",
+    "robot:medium",
+    "robot:hard",
+    "robot:expert",
+    "robot:master",
+};
 
 QCommandLineOption
 BoardSizeOption() {
@@ -18,11 +28,18 @@ BoardSizeOption() {
 QCommandLineOption
 PlayerTypeOption(int player) {
   const char* discription =
-      "Set type of player %1. Accepts: 'human', 'robot', 'robot:easy', 'robot:medium', 'robot:hard', 'robot:expert',"
-      " or 'robot:master' (default: robot). Note: 'robot' is equivalent to 'robot:master'.";
+      "Set type of player %1. Accepts: 'human', 'robot', '%2', '%3', '%4', "
+      "'%5' or '%6' (default: 'robot'). Note: 'robot' is equivalent to '%7'.";
 
   return QCommandLineOption(QStringList() << QString("p%1").arg(player) << QString("player%1").arg(player),
-                            QString(discription).arg(player),
+                            QString(discription)
+                                .arg(player)
+                                .arg(PlayerTypeOptionStrings[1])
+                                .arg(PlayerTypeOptionStrings[2])
+                                .arg(PlayerTypeOptionStrings[3])
+                                .arg(PlayerTypeOptionStrings[4])
+                                .arg(PlayerTypeOptionStrings[5])
+                                .arg(PlayerTypeOptionStrings[static_cast<int>(DefaultPlayerType)]),
                             "Type",
                             "robot");
 }
@@ -44,20 +61,13 @@ ParseBoardSize(const QString& str) {
 
 PlayerType
 ParsePlayerType(const QString& str) {
-  if (str.compare("human", Qt::CaseInsensitive) == 0) {
-    return PlayerType::Human;
-  } else if (str.compare("robot", Qt::CaseInsensitive) == 0) {
-    return PlayerType::ParallelSearchRobot;
-  } else if (str.compare("robot:easy", Qt::CaseInsensitive) == 0) {
-    return PlayerType::SimpleStrategyRobot;
-  } else if (str.compare("robot:medium", Qt::CaseInsensitive) == 0) {
-    return PlayerType::BasicSearchRobot;
-  } else if (str.compare("robot:hard", Qt::CaseInsensitive) == 0) {
-    return PlayerType::ImprovedSearchRobot;
-  } else if (str.compare("robot:expert", Qt::CaseInsensitive) == 0) {
-    return PlayerType::MonteCarloSearchRobot;
-  } else if (str.compare("robot:master", Qt::CaseInsensitive) == 0) {
-    return PlayerType::ParallelSearchRobot;
+  if (str.compare("robot", Qt::CaseInsensitive) == 0) {
+    return DefaultPlayerType;
+  }
+  for (const int i : Iota(sizeof(PlayerTypeOptionStrings) / sizeof(PlayerTypeOptionStrings[0]))) {
+    if (str.compare(PlayerTypeOptionStrings[i], Qt::CaseInsensitive) == 0) {
+      return static_cast<PlayerType>(i);
+    }
   }
   qInfo("Error: Invalid player type '%s'.", str.toLocal8Bit().constData());
   exit(EXIT_FAILURE);
