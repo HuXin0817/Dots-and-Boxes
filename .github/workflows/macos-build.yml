@@ -15,16 +15,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install OpenMP
+      - name: Install requirements
         run: |
-          brew install libomp
-
-      - name: Install Qt6
-        run: |
-          brew install qt@6
-
-      - name: Setup Qt6 environment
-        run: |
+          brew install libomp qt@6
           echo "CMAKE_PREFIX_PATH=$(brew --prefix qt@6)/lib/cmake" >> $GITHUB_ENV
           echo "PATH=$(brew --prefix qt@6)/bin:$PATH" >> $GITHUB_ENV
 
@@ -32,7 +25,6 @@ jobs:
         run: |
           LIBOMP_PREFIX=$(brew --prefix libomp)
           cmake -B build -S . \
-            -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_PREFIX_PATH=$(brew --prefix qt@6)/lib/cmake \
             -DOpenMP_C_FLAGS="-Xpreprocessor -fopenmp -I${LIBOMP_PREFIX}/include" \
             -DOpenMP_C_LIB_NAMES=omp \
