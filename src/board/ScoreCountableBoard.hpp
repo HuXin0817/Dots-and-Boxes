@@ -1,12 +1,12 @@
 #pragma once
 
-#include "../model/ScoreMap.hpp"
+#include "../model/GameScoreMap.hpp"
 #include "EdgeCountableBoard.hpp"
 
 namespace dab {
 
 template <int64_t BoardSize>
-class ScoreCountableBoard : public EdgeCountableBoard<BoardSize>, public ScoreMap<BoardSize> {
+class ScoreCountableBoard : public EdgeCountableBoard<BoardSize>, public GameScoreMap<BoardSize> {
   public:
   ScoreCountableBoard();
 
@@ -25,14 +25,14 @@ template <int64_t BoardSize>
 void
 ScoreCountableBoard<BoardSize>::Reset(const EdgeCountableBoard<BoardSize>& newBoard) {
   EdgeCountableBoard<BoardSize>::operator=(newBoard);
-  ScoreMap<BoardSize>::Reset();
+  GameScoreMap<BoardSize>::Reset();
 }
 
 template <int64_t BoardSize>
 SizeType<BoardSize>
 ScoreCountableBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
   SizeType<BoardSize> score = EdgeCountableBoard<BoardSize>::Add(edge);
-  ScoreMap<BoardSize>::Add(score);
+  GameScoreMap<BoardSize>::Add(score);
   return score;
 }
 

@@ -6,9 +6,9 @@
 namespace dab {
 
 template <int64_t BoardSize>
-class ScoreMap : public Turn {
+class GameScoreMap : public Turn {
   public:
-  ScoreMap();
+  GameScoreMap();
 
   void
   Reset();
@@ -27,13 +27,13 @@ class ScoreMap : public Turn {
 };
 
 template <int64_t BoardSize>
-ScoreMap<BoardSize>::ScoreMap() {
+GameScoreMap<BoardSize>::GameScoreMap() {
   Reset();
 }
 
 template <int64_t BoardSize>
 void
-ScoreMap<BoardSize>::Reset() {
+GameScoreMap<BoardSize>::Reset() {
   Player1Score = 0;
   Player2Score = 0;
   Turn::Reset();
@@ -41,7 +41,7 @@ ScoreMap<BoardSize>::Reset() {
 
 template <int64_t BoardSize>
 void
-ScoreMap<BoardSize>::Add(const SizeType<BoardSize> score) {
+GameScoreMap<BoardSize>::Add(const SizeType<BoardSize> score) {
   if (score == 0) {
     Turn::Add();
     return;
@@ -55,19 +55,19 @@ ScoreMap<BoardSize>::Add(const SizeType<BoardSize> score) {
 
 template <int64_t BoardSize>
 SizeType<BoardSize>
-ScoreMap<BoardSize>::Score() const {
+GameScoreMap<BoardSize>::Score() const {
   return Player1Score - Player2Score;
 }
 
 template <int64_t BoardSize>
 SizeType<BoardSize>
-ScoreMap<BoardSize>::GetPlayer1Score() const {
+GameScoreMap<BoardSize>::GetPlayer1Score() const {
   return Player1Score;
 }
 
 template <int64_t BoardSize>
 SizeType<BoardSize>
-ScoreMap<BoardSize>::GetPlayer2Score() const {
+GameScoreMap<BoardSize>::GetPlayer2Score() const {
   return Player2Score;
 }
 
