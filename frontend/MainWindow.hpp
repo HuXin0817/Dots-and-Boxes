@@ -122,9 +122,9 @@ MainWindow<BoardSize>::showEvent(QShowEvent* event) {
     while (Board.Gaming()) {
       const QTime startTime = QTime::currentTime();
 
-      if ((PlayerTypeIsRobot(Player1Type) && Board.GetTurn().Value() == Player1Turn.Value())) {
+      if ((PlayerTypeIsRobot(Player1Type) && Board.GetTurn().IsPlayer1())) {
         PlayerMoveEdge = RandomChoice(Robot1->BestCandidateEdges(Board));
-      } else if (PlayerTypeIsRobot(Player2Type) && Board.GetTurn().Value() == Player2Turn.Value()) {
+      } else if (PlayerTypeIsRobot(Player2Type) && Board.GetTurn().IsPlayer2()) {
         PlayerMoveEdge = RandomChoice(Robot2->BestCandidateEdges(Board));
       } else {
         PlayerMoveEdge = InvalidEdge<BoardSize>();
@@ -142,7 +142,7 @@ MainWindow<BoardSize>::showEvent(QShowEvent* event) {
           "%s",
           QString("Info: {\"Step\":%1,\"Player\":%2,\"Move\":%3,\"Score\":{\"Player1\":%4,\"Player2\":%5},\"Time\":%6}")
               .arg(Board.NowStep())
-              .arg(Board.GetTurn().Value() == Player1Turn.Value() ? 1 : 2)
+              .arg(Board.GetTurn().IsPlayer1() ? 1 : 2)
               .arg(PlayerMoveEdge.Value())
               .arg(Board.GetPlayer1Score())
               .arg(Board.GetPlayer2Score())
@@ -178,10 +178,10 @@ MainWindow<BoardSize>::SetPlayerMoveEdge(const Edge<BoardSize> edge) {
   if (Board.Contains(edge)) {
     return;
   }
-  if (PlayerTypeIsRobot(Player1Type) && Board.GetTurn().Value() == Player1Turn.Value()) {
+  if (PlayerTypeIsRobot(Player1Type) && Board.GetTurn().IsPlayer1()) {
     return;
   }
-  if (PlayerTypeIsRobot(Player2Type) && Board.GetTurn().Value() == Player2Turn.Value()) {
+  if (PlayerTypeIsRobot(Player2Type) && Board.GetTurn().IsPlayer2()) {
     return;
   }
   PlayerMoveEdge = edge;

@@ -2,19 +2,30 @@
 
 class Turn {
   public:
-  Turn() = default;
-  Turn(const bool v);
+  Turn();
 
+  void
+  Reset();
   void
   Change();
   bool
-  Value() const;
+  IsPlayer1() const;
+  bool
+  IsPlayer2() const;
 
   private:
-  bool v = true;
+  bool v;
+
+  static constexpr bool Player1 = true;
 };
 
-inline Turn::Turn(const bool v) : v(v) {
+inline Turn::Turn() {
+  Reset();
+}
+
+inline void
+Turn::Reset() {
+  v = Player1;
 }
 
 inline void
@@ -23,9 +34,11 @@ Turn::Change() {
 }
 
 inline bool
-Turn::Value() const {
+Turn::IsPlayer1() const {
   return v;
 }
 
-inline Turn Player1Turn = true;
-inline Turn Player2Turn = !Player1Turn.Value();
+inline bool
+Turn::IsPlayer2() const {
+  return !v;
+}

@@ -29,7 +29,7 @@ class ScoreMap {
   private:
   SizeType<BoardSize> Player1Score = 0;
   SizeType<BoardSize> Player2Score = 0;
-  Turn Turn = Player1Turn;
+  Turn Turn;
 };
 
 template <int64_t BoardSize>
@@ -42,7 +42,7 @@ void
 ScoreMap<BoardSize>::Reset() {
   Player1Score = 0;
   Player2Score = 0;
-  Turn = Player1Turn;
+  Turn.Reset();
 }
 
 template <int64_t BoardSize>
@@ -52,7 +52,7 @@ ScoreMap<BoardSize>::Add(const SizeType<BoardSize> score) {
     Turn.Change();
     return;
   }
-  if (Turn.Value() == Player1Turn.Value()) {
+  if (Turn.IsPlayer1()) {
     Player1Score += score;
   } else {
     Player2Score += score;

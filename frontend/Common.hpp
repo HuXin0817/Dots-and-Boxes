@@ -18,7 +18,7 @@ enum class State {
 
 inline State
 StateFromTurn(const Turn turn) {
-  if (turn.Value() == Player1Turn.Value()) {
+  if (turn.IsPlayer1()) {
     return State::Player1Occupy;
   } else {
     return State::Player2Occupy;
