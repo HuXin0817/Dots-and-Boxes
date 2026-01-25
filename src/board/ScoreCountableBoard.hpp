@@ -12,8 +12,6 @@ class ScoreCountableBoard {
   Reset(const EdgeCountableBoard<BoardSize>& newBoard);
   SizeType<BoardSize>
   Add(const Edge<BoardSize> edge);
-  bool
-  Gaming() const;
   const EdgeCountableBoard<BoardSize>&
   GetEdgeCountableBoard() const;
   const ScoreMap<BoardSize>&
@@ -37,12 +35,6 @@ ScoreCountableBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
   SizeType<BoardSize> score = EdgeCountableBoard.Add(edge);
   ScoreMap.Add(score);
   return score;
-}
-
-template <int64_t BoardSize>
-bool
-ScoreCountableBoard<BoardSize>::Gaming() const {
-  return ScoreMap.Gaming() && EdgeCountableBoard.GetBasicBoard().GetStep().Gaming();
 }
 
 template <int64_t BoardSize>

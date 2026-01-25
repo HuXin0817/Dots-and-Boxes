@@ -1,12 +1,10 @@
 #pragma once
 
-#include "Square.hpp"
+#include "SizeType.hpp"
 #include "Turn.hpp"
 
 template <int64_t BoardSize>
 class ScoreMap {
-  static constexpr SizeType<BoardSize> MinWinnerScore = Box<BoardSize>::Max / 2 + 1;
-
   public:
   ScoreMap();
 
@@ -18,9 +16,6 @@ class ScoreMap {
 
   SizeType<BoardSize>
   Score() const;
-
-  bool
-  Gaming() const;
 
   SizeType<BoardSize>
   GetPlayer1Score() const;
@@ -68,12 +63,6 @@ template <int64_t BoardSize>
 SizeType<BoardSize>
 ScoreMap<BoardSize>::Score() const {
   return Player1Score - Player2Score;
-}
-
-template <int64_t BoardSize>
-bool
-ScoreMap<BoardSize>::Gaming() const {
-  return Player1Score < MinWinnerScore && Player2Score < MinWinnerScore;
 }
 
 template <int64_t BoardSize>
