@@ -2,6 +2,8 @@
 
 #include "ParallelSearchRobot.hpp"
 
+namespace dab {
+
 enum class PlayerType {
   Human = 0,
   SimpleStrategyRobot,
@@ -54,3 +56,5 @@ CreateRobot(const PlayerType PlayerType) {
   }
   return nullptr;
 }
+
+}  // namespace dab

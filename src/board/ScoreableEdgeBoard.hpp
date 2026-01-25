@@ -4,6 +4,8 @@
 #include "../model/Edge.hpp"
 #include "EdgeCountableBoard.hpp"
 
+namespace dab {
+
 template <int64_t BoardSize>
 class ScoreableEdgeBoard : public EdgeCountableBoard<BoardSize> {
   public:
@@ -27,7 +29,7 @@ ScoreableEdgeBoard<BoardSize>::ScoreableEdgeBoard() {
 
 template <int64_t BoardSize>
 void
-ScoreableEdgeBoard<BoardSize>::Reset(const ::EdgeCountableBoard<BoardSize>& newBoard) {
+ScoreableEdgeBoard<BoardSize>::Reset(const EdgeCountableBoard<BoardSize>& newBoard) {
   EdgeCountableBoard<BoardSize>::operator=(newBoard);
   ScoreableEdges.Clear();
 }
@@ -70,3 +72,5 @@ ScoreableEdgeBoard<BoardSize>::MaxObtainableScore(const SizeType<BoardSize> minS
   }
   return score;
 }
+
+}  // namespace dab

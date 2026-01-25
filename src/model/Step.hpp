@@ -2,6 +2,8 @@
 
 #include "Edge.hpp"
 
+namespace dab {
+
 template <int64_t BoardSize>
 class Step {
   public:
@@ -51,3 +53,5 @@ void
 Step<BoardSize>::Add() {
   v++;
 }
+
+}  // namespace dab

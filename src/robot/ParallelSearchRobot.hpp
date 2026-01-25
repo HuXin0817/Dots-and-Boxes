@@ -2,6 +2,8 @@
 
 #include "MonteCarloSearchRobot.hpp"
 
+namespace dab {
+
 template <int64_t BoardSize>
 class ParallelSearchRobot final : public Robot<BoardSize> {
   static constexpr int64_t SubRobotSearchTime = static_cast<int64_t>(Edge<BoardSize>::Max) << 5;
@@ -41,3 +43,5 @@ ParallelSearchRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<Boa
 
   return SearchResult.Export();
 }
+
+}  // namespace dab

@@ -5,6 +5,8 @@
 
 #include "Array.hpp"
 
+namespace dab {
+
 template <typename T, size_t Cap>
 class Queue {
   public:
@@ -92,3 +94,5 @@ const T*
 Queue<T, Cap>::end() const {
   return Data.begin() + End;
 }
+
+}  // namespace dab

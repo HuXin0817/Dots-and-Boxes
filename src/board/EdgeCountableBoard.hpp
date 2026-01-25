@@ -6,6 +6,8 @@
 #include "../model/Square.hpp"
 #include "BasicBoard.hpp"
 
+namespace dab {
+
 template <int64_t BoardSize>
 class EdgeCountableBoard : public BasicBoard<BoardSize>, public EdgeCounter<BoardSize> {
   public:
@@ -63,3 +65,5 @@ EdgeCountableBoard<BoardSize>::FindScoreableEdge() const {
   }
   return InvalidEdge<BoardSize>();
 }
+
+}  // namespace dab

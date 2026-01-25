@@ -5,6 +5,8 @@
 #include "../model/SearchScoreMap.hpp"
 #include "ImprovedSearchRobot.hpp"
 
+namespace dab {
+
 template <int64_t BoardSize>
 class ParallelSearchRobot;
 
@@ -45,3 +47,5 @@ MonteCarloSearchRobot<BoardSize, SearchTime>::BestCandidateEdges(const ScoreCoun
 
   return SearchResult.Export();
 }
+
+}  // namespace dab

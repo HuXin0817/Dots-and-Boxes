@@ -1,5 +1,7 @@
 #pragma once
 
+namespace dab {
+
 template <typename T>
 class IotaIterator {
   public:
@@ -70,3 +72,5 @@ IotaIterator<T>
 Iota<T>::end() {
   return v;
 }
+
+}  // namespace dab

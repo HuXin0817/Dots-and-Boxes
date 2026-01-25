@@ -8,6 +8,8 @@
 #include "../common/Span.hpp"
 #include "Edge.hpp"
 
+namespace dab {
+
 template <int64_t BoardSize, typename ScoreType>
 class SearchScoreMap {
   public:
@@ -68,5 +70,7 @@ SearchScoreMap<BoardSize, ScoreType>::Export() {
       }
     }
   }
-  return ::Export(BestEdges);
+  return ::dab::Export(BestEdges);
 }
+
+}  // namespace dab

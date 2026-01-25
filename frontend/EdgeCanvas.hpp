@@ -2,6 +2,8 @@
 
 #include "Common.hpp"
 
+namespace dab::frontend {
+
 template <int64_t BoardSize>
 class MainWindow;
 
@@ -112,3 +114,5 @@ EdgeCanvas<BoardSize>::Color() const {
 
   return color;
 }
+
+}  // namespace dab::frontend

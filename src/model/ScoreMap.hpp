@@ -3,6 +3,8 @@
 #include "SizeType.hpp"
 #include "Turn.hpp"
 
+namespace dab {
+
 template <int64_t BoardSize>
 class ScoreMap : public Turn {
   public:
@@ -68,3 +70,5 @@ SizeType<BoardSize>
 ScoreMap<BoardSize>::GetPlayer2Score() const {
   return Player2Score;
 }
+
+}  // namespace dab

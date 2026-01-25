@@ -11,6 +11,8 @@
 #include "DotCanvas.hpp"
 #include "EdgeCanvas.hpp"
 
+namespace dab::frontend {
+
 template <int64_t BoardSize>
 class MainWindow final : public QWidget {
   static constexpr int BoardWidth = Box<BoardSize>::Size * EdgeCanvas<BoardSize>::Height;
@@ -225,3 +227,5 @@ MainWindow<BoardSize>::Add(const Edge<BoardSize> edge) {
   update();
   QApplication::beep();
 }
+
+}  // namespace dab::frontend

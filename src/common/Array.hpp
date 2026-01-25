@@ -4,6 +4,8 @@
 #include <cstddef>
 #include <cstring>
 
+namespace dab {
+
 template <typename T, size_t Length>
 class Array {
   public:
@@ -73,3 +75,5 @@ const T*
 Array<T, Length>::end() const {
   return Data + Length;
 }
+
+}  // namespace dab

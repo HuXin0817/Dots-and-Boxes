@@ -4,6 +4,8 @@
 #include "../common/Span.hpp"
 #include "BasicSearchRobot.hpp"
 
+namespace dab {
+
 template <int64_t BoardSize>
 class ImprovedSearchRobot final : public Robot<BoardSize> {
   public:
@@ -46,3 +48,5 @@ ImprovedSearchRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<Boa
 
   return Export(SearchEdges);
 }
+
+}  // namespace dab

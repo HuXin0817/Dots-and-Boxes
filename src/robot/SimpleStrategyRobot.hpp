@@ -5,6 +5,8 @@
 #include "../common/Span.hpp"
 #include "Robot.hpp"
 
+namespace dab {
+
 template <int64_t BoardSize>
 class BasicSearchRobot;
 
@@ -51,3 +53,5 @@ SimpleStrategyRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<Boa
 
   return {emptyEdges.begin(), emptyEdges.end()};
 }
+
+}  // namespace dab

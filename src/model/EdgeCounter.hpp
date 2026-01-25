@@ -8,6 +8,8 @@
 #include "NearBoxes.hpp"
 #include "Square.hpp"
 
+namespace dab {
+
 template <int64_t BoardSize>
 class EdgeCounter {
   public:
@@ -67,3 +69,5 @@ EdgeCounter<BoardSize>::MaxEdgeCount(const Edge<BoardSize> edge) const {
   }
   return maxCount;
 }
+
+}  // namespace dab

@@ -5,6 +5,8 @@
 #include "../model/Edge.hpp"
 #include "../model/Step.hpp"
 
+namespace dab {
+
 template <int64_t BoardSize>
 class BasicBoard : public Step<BoardSize> {
   public:
@@ -70,3 +72,5 @@ Span<Edge<BoardSize>>
 BasicBoard<BoardSize>::MoveRecord() const {
   return {Edges.begin(), Edges.begin() + Step<BoardSize>::NowStep()};
 }
+
+}  // namespace dab

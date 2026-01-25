@@ -2,6 +2,8 @@
 
 #include <random>
 
+namespace dab {
+
 template <typename T>
 const auto&
 RandomChoice(const T& data) {
@@ -15,3 +17,5 @@ RandomChoice(const T& data) {
   std::uniform_int_distribution<size_t> dist(0, data.Size() - 1);
   return data.At(dist(rng));
 }
+
+}  // namespace dab

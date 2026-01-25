@@ -5,6 +5,8 @@
 #include "Edge.hpp"
 #include "Square.hpp"
 
+namespace dab {
+
 template <int64_t BoardSize>
 const Array<Edge<BoardSize>, 4>&
 NearEdges(const Box<BoardSize> box);
@@ -45,3 +47,5 @@ NearEdges(const Box<BoardSize> box) {
 
   return Instance.BoxNearEdges.At(box.Value());
 }
+
+}  // namespace dab

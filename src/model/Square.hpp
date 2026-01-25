@@ -2,6 +2,8 @@
 
 #include "SizeType.hpp"
 
+namespace dab {
+
 template <int64_t BoardSize, int64_t Length>
 class Square {
   public:
@@ -54,3 +56,5 @@ using Box = Square<BoardSize, BoardSize>;
 
 template <int64_t BoardSize>
 using Dot = Square<BoardSize, BoardSize + 1>;
+
+}  // namespace dab

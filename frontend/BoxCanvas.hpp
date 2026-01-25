@@ -2,6 +2,8 @@
 
 #include "EdgeCanvas.hpp"
 
+namespace dab::frontend {
+
 template <int64_t BoardSize>
 class MainWindow;
 
@@ -57,3 +59,5 @@ BoxCanvas<BoardSize>::Color() const {
   }
   return {0, 0, 0, 0};
 }
+
+}  // namespace dab::frontend

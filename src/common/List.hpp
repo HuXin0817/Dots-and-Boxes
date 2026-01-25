@@ -5,6 +5,8 @@
 
 #include "Array.hpp"
 
+namespace dab {
+
 template <typename T, size_t Cap>
 class List {
   public:
@@ -108,3 +110,5 @@ const T*
 List<T, Cap>::end() const {
   return Data.begin() + Length;
 }
+
+}  // namespace dab

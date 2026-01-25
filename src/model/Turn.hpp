@@ -1,5 +1,7 @@
 #pragma once
 
+namespace dab {
+
 class Turn {
   public:
   Turn();
@@ -42,3 +44,5 @@ inline bool
 Turn::IsPlayer2Turn() const {
   return !v;
 }
+
+}  // namespace dab

@@ -6,6 +6,8 @@
 #include <limits>
 #include <type_traits>
 
+namespace dab {
+
 // clang-format off
 template <int64_t Max>
 using Int = std::conditional_t<Max <= std::numeric_limits<int8_t>::max(), int8_t,
@@ -15,3 +17,5 @@ using Int = std::conditional_t<Max <= std::numeric_limits<int8_t>::max(), int8_t
 template <int64_t BoardSize>
 using SizeType = Int<2 * BoardSize * (BoardSize + 1)>;
 // clang-format on
+
+}  // namespace dab

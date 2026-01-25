@@ -2,6 +2,8 @@
 
 #include <cstddef>
 
+namespace dab {
+
 template <typename T>
 class Span {
   public:
@@ -64,3 +66,5 @@ auto
 Export(const T& arr) {
   return Span(arr.begin(), arr.end());
 }
+
+}  // namespace dab

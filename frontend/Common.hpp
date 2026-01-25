@@ -7,6 +7,8 @@
 
 #include "../src/model/Turn.hpp"
 
+namespace dab::frontend {
+
 template <int64_t BoardSize>
 static constexpr int UnitSize = 6 + 16 / BoardSize;
 
@@ -29,3 +31,5 @@ inline bool
 isDarkTheme() {
   return QApplication::palette().color(QPalette::Window).lightness() < 128;
 }
+
+}  // namespace dab::frontend

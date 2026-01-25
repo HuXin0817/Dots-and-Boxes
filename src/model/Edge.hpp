@@ -4,6 +4,8 @@
 
 #include "Square.hpp"
 
+namespace dab {
+
 template <int64_t BoardSize>
 class Edge {
   public:
@@ -81,3 +83,5 @@ Edge<BoardSize>
 InvalidEdge() {
   return -1;
 }
+
+}  // namespace dab
