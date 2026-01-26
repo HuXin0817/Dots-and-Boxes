@@ -7,26 +7,32 @@
 namespace dab {
 
 template <int64_t BoardSize>
-class BasicSearchRobot final : public SimpleStrategyRobot<BoardSize> {
+class BasicSearchRobot final : public Robot<BoardSize> {
   public:
   BasicSearchRobot() = default;
 
   Span<Edge<BoardSize>>
   BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override;
+  bool
+  EnemyUnscoreable() const;
+  bool
+  Scoreable() const;
 
   private:
+  SimpleStrategyRobot<BoardSize> SubRobot;
   ScoreableEdgeBoard<BoardSize> SimulationBoard;
 };
 
 template <int64_t BoardSize>
 Span<Edge<BoardSize>>
 BasicSearchRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) {
-  if (Span<Edge<BoardSize>> edges = SimpleStrategyRobot<BoardSize>::BestCandidateEdges(board);
-      SimpleStrategyRobot<BoardSize>::EnemyUnscoreable() || SimpleStrategyRobot<BoardSize>::Scoreable()) {
+  if (Span<Edge<BoardSize>> edges = SubRobot.BestCandidateEdges(board);
+      SubRobot.EnemyUnscoreable() || SubRobot.Scoreable()) {
     return edges;
   }
 
   SizeType<BoardSize> minScore = Box<BoardSize>::Max + 1;
+  Array<Edge<BoardSize>, Edge<BoardSize>::Max>& candidateEdges = SubRobot.GetEdgeBuffer();
   SizeType<BoardSize> candidateEdgesSize = 0;
 
   for (const Edge<BoardSize> edge : board.EmptyEdges()) {
@@ -35,14 +41,25 @@ BasicSearchRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardS
     if (const SizeType<BoardSize> score = SimulationBoard.MaxObtainableScore(minScore); score < minScore) {
       minScore = score;
       candidateEdgesSize = 1;
-      SimpleStrategyRobot<BoardSize>::Edges.At(0) = edge;
+      candidateEdges.At(0) = edge;
     } else if (score == minScore) {
-      SimpleStrategyRobot<BoardSize>::Edges.At(candidateEdgesSize++) = edge;
+      candidateEdges.At(candidateEdgesSize++) = edge;
     }
   }
 
-  return Span(SimpleStrategyRobot<BoardSize>::Edges.begin(),
-              SimpleStrategyRobot<BoardSize>::Edges.begin() + candidateEdgesSize);
+  return Span(candidateEdges.begin(), candidateEdges.begin() + candidateEdgesSize);
+}
+
+template <int64_t BoardSize>
+bool
+BasicSearchRobot<BoardSize>::EnemyUnscoreable() const {
+  return SubRobot.EnemyUnscoreable();
+}
+
+template <int64_t BoardSize>
+bool
+BasicSearchRobot<BoardSize>::Scoreable() const {
+  return SubRobot.Scoreable();
 }
 
 }  // namespace dab

@@ -18,13 +18,13 @@ class SimpleStrategyRobot : public Robot<BoardSize> {
   EnemyUnscoreable() const;
   bool
   Scoreable() const;
-
-  protected:
-  Array<Edge<BoardSize>, Edge<BoardSize>::Max> Edges;
+  Array<Edge<BoardSize>, Edge<BoardSize>::Max>&
+  GetEdgeBuffer();
 
   private:
   SizeType<BoardSize> EnemyUnscoreableIndex;
   SizeType<BoardSize> ScoreableIndex;
+  Array<Edge<BoardSize>, Edge<BoardSize>::Max> Edges;
 };
 
 template <int64_t BoardSize>
@@ -63,6 +63,12 @@ template <int64_t BoardSize>
 bool
 SimpleStrategyRobot<BoardSize>::Scoreable() const {
   return ScoreableIndex > 0;
+}
+
+template <int64_t BoardSize>
+Array<Edge<BoardSize>, Edge<BoardSize>::Max>&
+SimpleStrategyRobot<BoardSize>::GetEdgeBuffer() {
+  return Edges;
 }
 
 }  // namespace dab
