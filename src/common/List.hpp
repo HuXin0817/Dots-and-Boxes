@@ -23,9 +23,9 @@ class List {
   bool
   Empty() const;
   T&
-  At(size_t i);
+  At(const size_t i);
   const T&
-  At(size_t i) const;
+  At(const size_t i) const;
 
   T*
   begin();
@@ -75,14 +75,14 @@ List<T, Cap>::Empty() const {
 
 template <typename T, size_t Cap>
 T&
-List<T, Cap>::At(size_t i) {
+List<T, Cap>::At(const size_t i) {
   assert(i < Length);
   return Data.At(i);
 }
 
 template <typename T, size_t Cap>
 const T&
-List<T, Cap>::At(size_t i) const {
+List<T, Cap>::At(const size_t i) const {
   assert(i < Length);
   return Data.At(i);
 }

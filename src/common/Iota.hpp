@@ -5,7 +5,7 @@ namespace dab {
 template <typename T>
 class IotaIterator {
   public:
-  IotaIterator(T v);
+  IotaIterator(const T v);
 
   T
   operator*();
@@ -23,7 +23,7 @@ class IotaIterator {
 template <typename T>
 class Iota {
   public:
-  Iota(T end);
+  Iota(const T end);
 
   IotaIterator<T>
   begin();
@@ -36,7 +36,7 @@ class Iota {
 };
 
 template <typename T>
-IotaIterator<T>::IotaIterator(T v) : v(v) {
+IotaIterator<T>::IotaIterator(const T v) : v(v) {
 }
 
 template <typename T>
@@ -58,7 +58,7 @@ IotaIterator<T>::operator!=(const IotaIterator<T> o) {
 }
 
 template <typename T>
-Iota<T>::Iota(T end) : v(end) {
+Iota<T>::Iota(const T end) : v(end) {
 }
 
 template <typename T>

@@ -15,9 +15,9 @@ class Array {
   operator=(const Array& other);
 
   T&
-  At(size_t i);
+  At(const size_t i);
   const T&
-  At(size_t i) const;
+  At(const size_t i) const;
 
   T*
   begin();
@@ -40,14 +40,14 @@ Array<T, Length>::operator=(const Array& other) {
 
 template <typename T, size_t Length>
 T&
-Array<T, Length>::At(size_t i) {
+Array<T, Length>::At(const size_t i) {
   assert(i < Length);
   return Data[i];
 }
 
 template <typename T, size_t Length>
 const T&
-Array<T, Length>::At(size_t i) const {
+Array<T, Length>::At(const size_t i) const {
   assert(i < Length);
   return Data[i];
 }

@@ -15,7 +15,7 @@ class Span {
   bool
   Empty() const;
   const T&
-  At(size_t i) const;
+  At(const size_t i) const;
 
   const T*
   begin() const;
@@ -45,7 +45,7 @@ Span<T>::Empty() const {
 
 template <typename T>
 const T&
-Span<T>::At(size_t i) const {
+Span<T>::At(const size_t i) const {
   return Begin[i];
 }
 
