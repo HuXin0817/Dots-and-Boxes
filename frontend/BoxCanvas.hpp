@@ -53,8 +53,8 @@ BoxCanvas<BoardSize>::paintEvent(QPaintEvent* event) {
 template <int64_t BoardSize>
 QColor
 BoxCanvas<BoardSize>::Color() const {
-  static QColor Player1OccupyColor = {64, 64, 255, 64};
-  static QColor Player2OccupyColor = {255, 64, 64, 64};
+  static QColor Player1OccupyColor = QColor(64, 64, 255, 64);
+  static QColor Player2OccupyColor = QColor(255, 64, 64, 64);
 
   if (State == State::Player1Occupy) {
     return Player1OccupyColor;
@@ -62,7 +62,7 @@ BoxCanvas<BoardSize>::Color() const {
   if (State == State::Player2Occupy) {
     return Player2OccupyColor;
   }
-  return {0, 0, 0, 0};
+  return QColor(0, 0, 0, 0);
 }
 
 }  // namespace dab::frontend

@@ -64,13 +64,13 @@ BasicBoard<BoardSize>::Contains(const Edge<BoardSize> edge) const {
 template <int64_t BoardSize>
 Span<Edge<BoardSize>>
 BasicBoard<BoardSize>::EmptyEdges() const {
-  return {Edges.begin() + Step<BoardSize>::NowStep(), Edges.begin() + Edge<BoardSize>::Max};
+  return Span(Edges.begin() + Step<BoardSize>::NowStep(), Edges.begin() + Edge<BoardSize>::Max);
 }
 
 template <int64_t BoardSize>
 Span<Edge<BoardSize>>
 BasicBoard<BoardSize>::MoveRecord() const {
-  return {Edges.begin(), Edges.begin() + Step<BoardSize>::NowStep()};
+  return Span(Edges.begin(), Edges.begin() + Step<BoardSize>::NowStep());
 }
 
 }  // namespace dab

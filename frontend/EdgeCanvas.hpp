@@ -95,12 +95,12 @@ EdgeCanvas<BoardSize>::leaveEvent(QEvent* event) {
 template <int64_t BoardSize>
 QColor
 EdgeCanvas<BoardSize>::Color() const {
-  static QColor DarkThemeColor = {65, 65, 65, 255};
-  static QColor LightThemeColor = {217, 217, 217, 255};
-  static QColor DarkThemeHoveredColor = {90, 90, 90, 255};
-  static QColor LightThemeHoveredColor = {202, 202, 202, 255};
-  static QColor Player1OccupyColor = {64, 64, 255, 255};
-  static QColor Player2OccupyColor = {255, 64, 64, 255};
+  static QColor DarkThemeColor = QColor(65, 65, 65, 255);
+  static QColor LightThemeColor = QColor(217, 217, 217, 255);
+  static QColor DarkThemeHoveredColor = QColor(90, 90, 90, 255);
+  static QColor LightThemeHoveredColor = QColor(202, 202, 202, 255);
+  static QColor Player1OccupyColor = QColor(64, 64, 255, 255);
+  static QColor Player2OccupyColor = QColor(255, 64, 64, 255);
 
   if (State == State::Free) {
     if (Hovered) {

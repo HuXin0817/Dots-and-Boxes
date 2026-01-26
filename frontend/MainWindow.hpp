@@ -192,8 +192,8 @@ MainWindow<BoardSize>::SetPlayerMoveEdge(const Edge<BoardSize> edge) {
 template <int64_t BoardSize>
 QColor
 MainWindow<BoardSize>::Color() const {
-  static QColor DarkThemeColor = {43, 43, 43, 255};
-  static QColor LightThemeColor = {242, 242, 242, 255};
+  static QColor DarkThemeColor = QColor(43, 43, 43, 255);
+  static QColor LightThemeColor = QColor(242, 242, 242, 255);
 
   return isDarkTheme() ? DarkThemeColor : LightThemeColor;
 }
