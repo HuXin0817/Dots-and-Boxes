@@ -10,9 +10,10 @@ class BoxCanvas final : public QWidget {
   public:
   static constexpr int Width = EdgeCanvas<BoardSize>::Height - 2 * UnitSize<BoardSize>;
 
-  explicit BoxCanvas(QWidget* parent);
+  explicit BoxCanvas(QPointer<QWidget> parent);
 
-  void SetState(const Turn turn);
+  void
+  SetState(const Turn turn);
 
   protected:
   void
@@ -26,12 +27,13 @@ class BoxCanvas final : public QWidget {
 };
 
 template <int64_t BoardSize>
-BoxCanvas<BoardSize>::BoxCanvas(QWidget* parent) : QWidget(parent) {
+BoxCanvas<BoardSize>::BoxCanvas(QPointer<QWidget> parent) : QWidget(parent) {
   setFixedSize(QSize(Width, Width));
 }
 
 template <int64_t BoardSize>
-void BoxCanvas<BoardSize>::SetState(const Turn turn) {
+void
+BoxCanvas<BoardSize>::SetState(const Turn turn) {
   State = StateFromTurn(turn);
 }
 

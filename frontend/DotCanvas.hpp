@@ -9,7 +9,7 @@ class DotCanvas final : public QWidget {
   public:
   static constexpr int Width = 2 * UnitSize<BoardSize>;
 
-  explicit DotCanvas(QWidget* parent);
+  explicit DotCanvas(QPointer<QWidget> parent);
 
   protected:
   void
@@ -21,7 +21,7 @@ class DotCanvas final : public QWidget {
 };
 
 template <int64_t BoardSize>
-DotCanvas<BoardSize>::DotCanvas(QWidget* parent) : QWidget(parent) {
+DotCanvas<BoardSize>::DotCanvas(QPointer<QWidget> parent) : QWidget(parent) {
   setFixedSize(Width, Width);
 }
 

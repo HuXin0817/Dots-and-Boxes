@@ -19,7 +19,7 @@ class MainWindow final : public QWidget {
   static constexpr int WindowSize = BoardWidth + 2 * BoxCanvas<BoardSize>::Width;
 
   public:
-  explicit MainWindow(const PlayerType player1Type, const PlayerType player2Type, QWidget* parent);
+  explicit MainWindow(const PlayerType player1Type, const PlayerType player2Type, QPointer<QWidget> parent);
 
   protected:
   void
@@ -50,7 +50,7 @@ class MainWindow final : public QWidget {
 };
 
 template <int64_t BoardSize>
-MainWindow<BoardSize>::MainWindow(const PlayerType player1Type, const PlayerType player2Type, QWidget* parent)
+MainWindow<BoardSize>::MainWindow(const PlayerType player1Type, const PlayerType player2Type, QPointer<QWidget> parent)
     : QWidget(parent), Player1Type(player1Type), Player2Type(player2Type) {
   resize(WindowSize, WindowSize);
   setMinimumSize(WindowSize, WindowSize);

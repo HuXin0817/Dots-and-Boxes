@@ -10,10 +10,12 @@ class EdgeCanvas final : public QWidget {
   static constexpr int Width = UnitSize<BoardSize> * 2;
   static constexpr int Height = Width * 5;
 
-  explicit EdgeCanvas(const bool rotate, const std::function<void()>& callBack, QWidget* parent);
+  explicit EdgeCanvas(const bool rotate, const std::function<void()>& callBack, QPointer<QWidget> parent);
 
-  void SetState(const Turn turn);
-  void SetHighLight(const bool highLight);
+  void
+  SetState(const Turn turn);
+  void
+  SetHighLight(const bool highLight);
 
   protected:
   void
@@ -36,18 +38,20 @@ class EdgeCanvas final : public QWidget {
 };
 
 template <int64_t BoardSize>
-EdgeCanvas<BoardSize>::EdgeCanvas(const bool rotate, const std::function<void()>& callBack, QWidget* parent)
+EdgeCanvas<BoardSize>::EdgeCanvas(const bool rotate, const std::function<void()>& callBack, QPointer<QWidget> parent)
     : QWidget(parent), CallBack(callBack) {
   setFixedSize(QSize(rotate ? Width : Height, rotate ? Height : Width));
 }
 
 template <int64_t BoardSize>
-void EdgeCanvas<BoardSize>::SetState(const Turn turn) {
+void
+EdgeCanvas<BoardSize>::SetState(const Turn turn) {
   State = StateFromTurn(turn);
 }
 
 template <int64_t BoardSize>
-void EdgeCanvas<BoardSize>::SetHighLight(const bool highLight) {
+void
+EdgeCanvas<BoardSize>::SetHighLight(const bool highLight) {
   HighLight = highLight;
 }
 

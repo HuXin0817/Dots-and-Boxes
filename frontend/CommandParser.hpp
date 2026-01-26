@@ -147,18 +147,18 @@ CommandParser::ParsePlayerType(const QString& str) {
 
 class MainWindowCreator {
   public:
-  QWidget*
-  CreateMainWindow(const Config& config, QWidget* parent = nullptr);
+  QPointer<QWidget>
+  CreateMainWindow(const Config& config, QPointer<QWidget> parent = nullptr);
 
   private:
   template <int64_t BoardSize>
-  QWidget*
-  CreateMainWindowImpl(const Config& config, QWidget* parent);
+  QPointer<QWidget>
+  CreateMainWindowImpl(const Config& config, QPointer<QWidget> parent);
 };
 
 template <int64_t BoardSize>
-QWidget*
-MainWindowCreator::CreateMainWindowImpl(const Config& config, QWidget* parent) {
+QPointer<QWidget>
+MainWindowCreator::CreateMainWindowImpl(const Config& config, QPointer<QWidget> parent) {
   if (config.BoardSize == BoardSize) {
     return new MainWindow<BoardSize>(config.Player1Type, config.Player2Type, parent);
   }
@@ -168,8 +168,8 @@ MainWindowCreator::CreateMainWindowImpl(const Config& config, QWidget* parent) {
   return nullptr;
 }
 
-inline QWidget*
-MainWindowCreator::CreateMainWindow(const Config& config, QWidget* parent) {
+inline QPointer<QWidget>
+MainWindowCreator::CreateMainWindow(const Config& config, QPointer<QWidget> parent) {
   if (config.BoardSize < MinBoardSize || config.BoardSize > MaxBoardSize) {
     return nullptr;
   }

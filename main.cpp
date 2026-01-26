@@ -11,7 +11,7 @@ main(int argc, char* argv[]) {
   application.setOrganizationName("Dots and Boxes");
 
   Config config = CommandParser().Process(application);
-  if (QWidget* mainWindow = MainWindowCreator().CreateMainWindow(config)) {
+  if (QPointer<QWidget> mainWindow = MainWindowCreator().CreateMainWindow(config)) {
     mainWindow->show();
   }
 
