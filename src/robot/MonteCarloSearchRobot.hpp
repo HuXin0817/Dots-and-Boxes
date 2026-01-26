@@ -20,6 +20,9 @@ class MonteCarloSearchRobot final : public Robot<BoardSize> {
   Span<Edge<BoardSize>>
   BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override;
 
+  bool
+  CanEarlyExit(const ScoreCountableBoard<BoardSize>& board, Span<Edge<BoardSize>>& result);
+
   private:
   ImprovedSearchRobot<BoardSize> SubRobot;
   ScoreCountableBoard<BoardSize> SimulationBoard;
@@ -29,7 +32,7 @@ class MonteCarloSearchRobot final : public Robot<BoardSize> {
 template <int64_t BoardSize, int64_t SearchTime>
 Span<Edge<BoardSize>>
 MonteCarloSearchRobot<BoardSize, SearchTime>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) {
-  if (const Span<Edge<BoardSize>> edges = SubRobot.BestCandidateEdges(board); edges.Size() == 1) {
+  if (Span<Edge<BoardSize>> edges; CanEarlyExit(board, edges)) {
     return edges;
   }
 
@@ -46,6 +49,14 @@ MonteCarloSearchRobot<BoardSize, SearchTime>::BestCandidateEdges(const ScoreCoun
   }
 
   return SearchResult.Export();
+}
+
+template <int64_t BoardSize, int64_t SearchTime>
+bool
+MonteCarloSearchRobot<BoardSize, SearchTime>::CanEarlyExit(const ScoreCountableBoard<BoardSize>& board,
+                                                           Span<Edge<BoardSize>>& result) {
+  result = SubRobot.BestCandidateEdges(board);
+  return result.Size() == 1;
 }
 
 }  // namespace dab
