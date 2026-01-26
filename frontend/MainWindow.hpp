@@ -165,7 +165,7 @@ MainWindow<BoardSize>::showEvent(QShowEvent* event) {
         this,
         [this]() {
           QTimer::singleShot(2000, this, [this]() {
-            EdgeCanvases[LastEdge.Value()]->HighLight = false;
+            EdgeCanvases[LastEdge.Value()]->SetHighLight(false);
             update();
             QTimer::singleShot(2000, this, &MainWindow::close);
           });
@@ -202,9 +202,9 @@ template <int64_t BoardSize>
 void
 MainWindow<BoardSize>::Add(const Edge<BoardSize> edge) {
   if (Board.NowStep() > 0) {
-    EdgeCanvases[LastEdge.Value()]->HighLight = false;
+    EdgeCanvases[LastEdge.Value()]->SetHighLight(false);
   }
-  EdgeCanvases[edge.Value()]->State = StateFromTurn(static_cast<const Turn>(Board));
+  EdgeCanvases[edge.Value()]->SetState(static_cast<const Turn>(Board));
   EdgeCanvases[edge.Value()]->raise();
   for (const Dot<BoardSize> dot : Iota(Dot<BoardSize>::Max)) {
     DotCanvases[dot.Value()]->raise();
@@ -218,7 +218,7 @@ MainWindow<BoardSize>::Add(const Edge<BoardSize> edge) {
       }
     }
     if (count == 3) {
-      BoxCanvases[box.Value()]->State = StateFromTurn(static_cast<const Turn>(Board));
+      BoxCanvases[box.Value()]->SetState(static_cast<const Turn>(Board));
     }
   }
 

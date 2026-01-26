@@ -5,17 +5,15 @@
 namespace dab::frontend {
 
 template <int64_t BoardSize>
-class MainWindow;
-
-template <int64_t BoardSize>
 class EdgeCanvas final : public QWidget {
-  friend class MainWindow<BoardSize>;
-
   public:
   static constexpr int Width = UnitSize<BoardSize> * 2;
   static constexpr int Height = Width * 5;
 
   explicit EdgeCanvas(const bool rotate, const std::function<void()>& callBack, QWidget* parent);
+
+  void SetState(const Turn turn);
+  void SetHighLight(const bool highLight);
 
   protected:
   void
@@ -41,6 +39,16 @@ template <int64_t BoardSize>
 EdgeCanvas<BoardSize>::EdgeCanvas(const bool rotate, const std::function<void()>& callBack, QWidget* parent)
     : QWidget(parent), CallBack(callBack) {
   setFixedSize(QSize(rotate ? Width : Height, rotate ? Height : Width));
+}
+
+template <int64_t BoardSize>
+void EdgeCanvas<BoardSize>::SetState(const Turn turn) {
+  State = StateFromTurn(turn);
+}
+
+template <int64_t BoardSize>
+void EdgeCanvas<BoardSize>::SetHighLight(const bool highLight) {
+  HighLight = highLight;
 }
 
 template <int64_t BoardSize>

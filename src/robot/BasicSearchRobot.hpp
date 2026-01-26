@@ -7,12 +7,7 @@
 namespace dab {
 
 template <int64_t BoardSize>
-class ImprovedSearchRobot;
-
-template <int64_t BoardSize>
-class BasicSearchRobot final : public Robot<BoardSize> {
-  friend class ImprovedSearchRobot<BoardSize>;
-
+class BasicSearchRobot final : public SimpleStrategyRobot<BoardSize> {
   public:
   BasicSearchRobot() = default;
 
@@ -20,34 +15,34 @@ class BasicSearchRobot final : public Robot<BoardSize> {
   BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override;
 
   private:
-  SimpleStrategyRobot<BoardSize> SubRobot;
   ScoreableEdgeBoard<BoardSize> SimulationBoard;
 };
 
 template <int64_t BoardSize>
 Span<Edge<BoardSize>>
 BasicSearchRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) {
-  if (Span<Edge<BoardSize>> edges = SubRobot.BestCandidateEdges(board);
-      !SubRobot.EnemyUnscoreableEdges.Empty() || !SubRobot.ScoreableEdges.Empty()) {
+  if (Span<Edge<BoardSize>> edges = SimpleStrategyRobot<BoardSize>::BestCandidateEdges(board);
+      SimpleStrategyRobot<BoardSize>::EnemyUnscoreable() || SimpleStrategyRobot<BoardSize>::Scoreable()) {
     return edges;
   }
 
   SizeType<BoardSize> minScore = Box<BoardSize>::Max + 1;
-  List<Edge<BoardSize>, Edge<BoardSize>::Max>& candidateEdges = SubRobot.EnemyUnscoreableEdges;
-  assert(candidateEdges.Empty());
+  SizeType<BoardSize> candidateEdgesSize = 0;
 
   for (const Edge<BoardSize> edge : board.EmptyEdges()) {
     SimulationBoard.Reset(static_cast<EdgeCountableBoard<BoardSize>>(board));
     SimulationBoard.Add(edge);
     if (const SizeType<BoardSize> score = SimulationBoard.MaxObtainableScore(minScore); score < minScore) {
       minScore = score;
-      candidateEdges.Reset(edge);
+      candidateEdgesSize = 1;
+      SimpleStrategyRobot<BoardSize>::Edges.At(0) = edge;
     } else if (score == minScore) {
-      candidateEdges.Append(edge);
+      SimpleStrategyRobot<BoardSize>::Edges.At(candidateEdgesSize++) = edge;
     }
   }
 
-  return Export(candidateEdges);
+  return Span(SimpleStrategyRobot<BoardSize>::Edges.begin(),
+              SimpleStrategyRobot<BoardSize>::Edges.begin() + candidateEdgesSize);
 }
 
 }  // namespace dab

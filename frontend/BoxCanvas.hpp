@@ -1,20 +1,18 @@
 #pragma once
 
+#include "Common.hpp"
 #include "EdgeCanvas.hpp"
 
 namespace dab::frontend {
 
 template <int64_t BoardSize>
-class MainWindow;
-
-template <int64_t BoardSize>
 class BoxCanvas final : public QWidget {
-  friend class MainWindow<BoardSize>;
-
   public:
   static constexpr int Width = EdgeCanvas<BoardSize>::Height - 2 * UnitSize<BoardSize>;
 
   explicit BoxCanvas(QWidget* parent);
+
+  void SetState(const Turn turn);
 
   protected:
   void
@@ -30,6 +28,11 @@ class BoxCanvas final : public QWidget {
 template <int64_t BoardSize>
 BoxCanvas<BoardSize>::BoxCanvas(QWidget* parent) : QWidget(parent) {
   setFixedSize(QSize(Width, Width));
+}
+
+template <int64_t BoardSize>
+void BoxCanvas<BoardSize>::SetState(const Turn turn) {
+  State = StateFromTurn(turn);
 }
 
 template <int64_t BoardSize>

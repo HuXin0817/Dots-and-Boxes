@@ -38,7 +38,7 @@ ParallelSearchRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<Boa
   }
 
   for (const SubRobotType& model : SubRobots) {
-    SearchResult.Add(model.SearchResult);
+    SearchResult.Add(model.GetSearchResult());
   }
 
   return SearchResult.Export();

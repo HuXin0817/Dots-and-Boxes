@@ -7,21 +7,17 @@
 
 namespace dab {
 
-template <int64_t BoardSize>
-class ParallelSearchRobot;
-
 template <int64_t BoardSize, int64_t SearchTime = static_cast<int64_t>(Edge<BoardSize>::Max) << 8>
 class MonteCarloSearchRobot final : public Robot<BoardSize> {
-  friend class ParallelSearchRobot<BoardSize>;
-
   public:
   MonteCarloSearchRobot() = default;
 
   Span<Edge<BoardSize>>
   BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override;
-
   bool
   CanEarlyExit(const ScoreCountableBoard<BoardSize>& board, Span<Edge<BoardSize>>& result);
+  const SearchScoreMap<BoardSize, Int<2 * SearchTime>>&
+  GetSearchResult() const;
 
   private:
   ImprovedSearchRobot<BoardSize> SubRobot;
@@ -57,6 +53,12 @@ MonteCarloSearchRobot<BoardSize, SearchTime>::CanEarlyExit(const ScoreCountableB
                                                            Span<Edge<BoardSize>>& result) {
   result = SubRobot.BestCandidateEdges(board);
   return result.Size() == 1;
+}
+
+template <int64_t BoardSize, int64_t SearchTime>
+const SearchScoreMap<BoardSize, Int<2 * SearchTime>>&
+MonteCarloSearchRobot<BoardSize, SearchTime>::GetSearchResult() const {
+  return SearchResult;
 }
 
 }  // namespace dab
