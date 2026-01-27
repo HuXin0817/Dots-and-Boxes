@@ -21,21 +21,6 @@ class IotaIterator {
 };
 
 template <typename T>
-class Iota {
-  public:
-  Iota(const T end);
-
-  IotaIterator<T>
-  begin();
-
-  IotaIterator<T>
-  end();
-
-  private:
-  T v;
-};
-
-template <typename T>
 IotaIterator<T>::IotaIterator(const T v) : v(v) {
 }
 
@@ -56,6 +41,21 @@ bool
 IotaIterator<T>::operator!=(const IotaIterator<T> o) {
   return v != o.v;
 }
+
+template <typename T>
+class Iota {
+  public:
+  Iota(const T end);
+
+  IotaIterator<T>
+  begin();
+
+  IotaIterator<T>
+  end();
+
+  private:
+  T v;
+};
 
 template <typename T>
 Iota<T>::Iota(const T end) : v(end) {
