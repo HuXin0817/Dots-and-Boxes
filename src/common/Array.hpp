@@ -1,8 +1,8 @@
 #pragma once
 
+#include <algorithm>
 #include <cassert>
 #include <cstddef>
-#include <cstring>
 
 namespace dab {
 
@@ -10,6 +10,7 @@ template <typename T, size_t Length>
 class Array {
   public:
   Array() = default;
+  Array(const Array& other);
 
   void
   operator=(const Array& other);
@@ -33,9 +34,14 @@ class Array {
 };
 
 template <typename T, size_t Length>
+Array<T, Length>::Array(const Array& other) {
+  std::copy(other.Data, other.Data + Length, Data);
+}
+
+template <typename T, size_t Length>
 void
 Array<T, Length>::operator=(const Array& other) {
-  memcpy(Data, other.Data, Length * sizeof(T));
+  std::copy(other.Data, other.Data + Length, Data);
 }
 
 template <typename T, size_t Length>
