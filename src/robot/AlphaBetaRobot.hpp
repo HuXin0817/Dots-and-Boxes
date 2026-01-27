@@ -39,7 +39,7 @@ AlphaBetaRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSiz
     }
     if (const SizeType<BoardSize> score = SimulationBoard.Score(); score > maxScore) {
       maxScore = score;
-      SearchEdges.Reset(emptyEdge);
+      SearchEdges.ClearAndSet(emptyEdge);
     } else if (score == maxScore) {
       SearchEdges.Append(emptyEdge);
     }

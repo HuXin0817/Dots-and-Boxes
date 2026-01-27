@@ -13,7 +13,7 @@ class List {
   List() = default;
 
   void
-  Reset(const T item);
+  ClearAndSet(const T item);
   void
   Clear();
   void
@@ -43,7 +43,7 @@ class List {
 
 template <typename T, size_t Cap>
 void
-List<T, Cap>::Reset(const T item) {
+List<T, Cap>::ClearAndSet(const T item) {
   Data.At(0) = item;
   Length = 1;
 }

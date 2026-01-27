@@ -64,7 +64,7 @@ SearchScoreMap<BoardSize, ScoreType>::Export() {
       if (const float score = static_cast<float>(Score.At(edge)) / static_cast<float>(Time.At(edge));
           score > maxScore || BestEdges.Empty()) {
         maxScore = score;
-        BestEdges.Reset(edge);
+        BestEdges.ClearAndSet(edge);
       } else if (score == maxScore) {
         BestEdges.Append(edge);
       }
