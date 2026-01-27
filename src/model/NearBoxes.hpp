@@ -30,7 +30,7 @@ class NearBoxesMapper {
 template <int64_t BoardSize>
 NearBoxesMapper<BoardSize>::NearBoxesMapper() {
   for (const Edge<BoardSize> edge : Iota(Edge<BoardSize>::Max)) {
-    EdgeNearBoxes.At(edge.Value()) = GetNearBoxes(edge);
+    EdgeNearBoxes.At(edge) = GetNearBoxes(edge);
   }
 }
 
@@ -59,7 +59,7 @@ const List<Box<BoardSize>, 2>&
 NearBoxes(const Edge<BoardSize> edge) {
   static NearBoxesMapper<BoardSize> Instance;
 
-  return Instance.EdgeNearBoxes.At(edge.Value());
+  return Instance.EdgeNearBoxes.At(edge);
 }
 
 }  // namespace dab

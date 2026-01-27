@@ -94,7 +94,7 @@ MainWindow<BoardSize>::resizeEvent(QResizeEvent* event) {
   for (const Box<BoardSize> box : Iota(Box<BoardSize>::Max)) {
     const int x = x0 + box.X() * EdgeCanvas<BoardSize>::Height + 2 * UnitSize<BoardSize>;
     const int y = y0 + box.Y() * EdgeCanvas<BoardSize>::Height + 2 * UnitSize<BoardSize>;
-    BoxCanvases[box.Value()]->move(x, y);
+    BoxCanvases[box]->move(x, y);
   }
 
   for (const Edge<BoardSize> edge : Iota(Edge<BoardSize>::Max)) {
@@ -105,13 +105,13 @@ MainWindow<BoardSize>::resizeEvent(QResizeEvent* event) {
     } else {
       x += UnitSize<BoardSize>;
     }
-    EdgeCanvases[edge.Value()]->move(x, y);
+    EdgeCanvases[edge]->move(x, y);
   }
 
   for (const Dot<BoardSize> dot : Iota(Dot<BoardSize>::Max)) {
     const int x = x0 + dot.X() * EdgeCanvas<BoardSize>::Height;
     const int y = y0 + dot.Y() * EdgeCanvas<BoardSize>::Height;
-    DotCanvases[dot.Value()]->move(x, y);
+    DotCanvases[dot]->move(x, y);
   }
 }
 
@@ -130,7 +130,7 @@ MainWindow<BoardSize>::showEvent(QShowEvent* event) {
         PlayerMoveEdge = RandomChoice(Robot2->BestCandidateEdges(Board));
       } else {
         PlayerMoveEdge = InvalidEdge<BoardSize>();
-        while (PlayerMoveEdge.Value() == InvalidEdge<BoardSize>().Value()) {
+        while (PlayerMoveEdge == InvalidEdge<BoardSize>()) {
           QThread::yieldCurrentThread();
         }
       }
@@ -145,7 +145,7 @@ MainWindow<BoardSize>::showEvent(QShowEvent* event) {
           QString("Info: {\"Step\":%1,\"Player\":%2,\"Move\":%3,\"Score\":{\"Player1\":%4,\"Player2\":%5},\"Time\":%6}")
               .arg(Board.NowStep())
               .arg(Board.IsPlayer1Turn() ? 1 : 2)
-              .arg(PlayerMoveEdge.Value())
+              .arg(PlayerMoveEdge.operator SizeType<BoardSize>())
               .arg(Board.GetPlayer1Score())
               .arg(Board.GetPlayer2Score())
               .arg(seconds, 0, 'f', 3)
@@ -165,7 +165,7 @@ MainWindow<BoardSize>::showEvent(QShowEvent* event) {
         this,
         [this]() -> void {
           QTimer::singleShot(2000, this, [this]() -> void {
-            EdgeCanvases[LastEdge.Value()]->SetHighLight(false);
+            EdgeCanvases[LastEdge]->SetHighLight(false);
             update();
             QTimer::singleShot(2000, this, &MainWindow::close);
           });
@@ -202,12 +202,12 @@ template <int64_t BoardSize>
 void
 MainWindow<BoardSize>::Add(const Edge<BoardSize> edge) {
   if (Board.NowStep() > 0) {
-    EdgeCanvases[LastEdge.Value()]->SetHighLight(false);
+    EdgeCanvases[LastEdge]->SetHighLight(false);
   }
-  EdgeCanvases[edge.Value()]->SetState(static_cast<const Turn>(Board));
-  EdgeCanvases[edge.Value()]->raise();
+  EdgeCanvases[edge]->SetState(static_cast<const Turn>(Board));
+  EdgeCanvases[edge]->raise();
   for (const Dot<BoardSize> dot : Iota(Dot<BoardSize>::Max)) {
-    DotCanvases[dot.Value()]->raise();
+    DotCanvases[dot]->raise();
   }
 
   for (const Box<BoardSize> box : NearBoxes(edge)) {
@@ -218,7 +218,7 @@ MainWindow<BoardSize>::Add(const Edge<BoardSize> edge) {
       }
     }
     if (count == 3) {
-      BoxCanvases[box.Value()]->SetState(static_cast<const Turn>(Board));
+      BoxCanvases[box]->SetState(static_cast<const Turn>(Board));
     }
   }
 

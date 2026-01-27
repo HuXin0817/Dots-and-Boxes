@@ -15,8 +15,7 @@ class Edge {
   Edge(SizeType<BoardSize> v);
   Edge(const Dot<BoardSize> dot1, const Dot<BoardSize> dot2);
 
-  SizeType<BoardSize>
-  Value() const;
+  operator SizeType<BoardSize>() const;
   Dot<BoardSize>
   Dot1() const;
   Dot<BoardSize>
@@ -34,19 +33,19 @@ Edge<BoardSize>::Edge(SizeType<BoardSize> v) : v(v) {
 
 template <int64_t BoardSize>
 Edge<BoardSize>::Edge(const Dot<BoardSize> dot1, const Dot<BoardSize> dot2) {
-  if (dot2.Value() - dot1.Value() == 1) {
-    v = 2 * (dot1.Value() - dot1.Value() / (BoardSize + 1)) + 1;
+  if (dot2 - dot1 == 1) {
+    v = 2 * (dot1 - dot1 / (BoardSize + 1)) + 1;
   } else {
-    v = 2 * dot1.Value();
+    v = 2 * dot1;
   }
 
-  assert(Dot1().Value() == dot1.Value());
-  assert(Dot2().Value() == dot2.Value());
+  assert(Dot1() == dot1);
+  assert(Dot2() == dot2);
 }
 
 template <int64_t BoardSize>
-SizeType<BoardSize>
-Edge<BoardSize>::Value() const {
+Edge<BoardSize>::
+operator SizeType<BoardSize>() const {
   return v;
 }
 

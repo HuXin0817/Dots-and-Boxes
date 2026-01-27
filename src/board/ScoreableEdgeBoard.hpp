@@ -53,7 +53,7 @@ ScoreableEdgeBoard<BoardSize>::MaxObtainableScore(const SizeType<BoardSize> minS
   while (EdgeCountableBoard<BoardSize>::Gaming()) {
     if (ScoreableEdges.Empty()) {
       if (const Edge<BoardSize> edge = EdgeCountableBoard<BoardSize>::FindScoreableEdge();
-          edge.Value() != InvalidEdge<BoardSize>().Value()) {
+          edge != InvalidEdge<BoardSize>()) {
         ScoreableEdges.Append(edge);
       } else {
         break;

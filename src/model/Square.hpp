@@ -14,8 +14,7 @@ class Square {
   Square(SizeType<BoardSize> v);
   Square(SizeType<BoardSize> x, SizeType<BoardSize> y);
 
-  SizeType<BoardSize>
-  Value() const;
+  operator SizeType<BoardSize>() const;
   SizeType<BoardSize>
   X() const;
   SizeType<BoardSize>
@@ -34,8 +33,8 @@ Square<BoardSize, Length>::Square(SizeType<BoardSize> x, SizeType<BoardSize> y) 
 }
 
 template <int64_t BoardSize, int64_t Length>
-SizeType<BoardSize>
-Square<BoardSize, Length>::Value() const {
+Square<BoardSize, Length>::
+operator SizeType<BoardSize>() const {
   return v;
 }
 

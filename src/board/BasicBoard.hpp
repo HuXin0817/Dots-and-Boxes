@@ -38,8 +38,8 @@ void
 BasicBoard<BoardSize>::Reset() {
   Step<BoardSize>::Reset();
   for (const Edge<BoardSize> edge : Iota(Edge<BoardSize>::Max)) {
-    EdgeIndexes.At(edge.Value()) = edge.Value();
-    Edges.At(edge.Value()) = edge;
+    EdgeIndexes.At(edge) = edge;
+    Edges.At(edge) = edge;
   }
 }
 
@@ -48,17 +48,17 @@ void
 BasicBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
   assert(!Contains(edge));
   const Edge<BoardSize> nowEdge = Edges.At(Step<BoardSize>::NowStep());
-  const SizeType<BoardSize> edgeIndex = EdgeIndexes.At(edge.Value());
+  const SizeType<BoardSize> edgeIndex = EdgeIndexes.At(edge);
   std::swap(Edges.At(edgeIndex), Edges.At(Step<BoardSize>::NowStep()));
-  EdgeIndexes.At(edge.Value()) = Step<BoardSize>::NowStep();
-  EdgeIndexes.At(nowEdge.Value()) = edgeIndex;
+  EdgeIndexes.At(edge) = Step<BoardSize>::NowStep();
+  EdgeIndexes.At(nowEdge) = edgeIndex;
   Step<BoardSize>::Add();
 }
 
 template <int64_t BoardSize>
 bool
 BasicBoard<BoardSize>::Contains(const Edge<BoardSize> edge) const {
-  return EdgeIndexes.At(edge.Value()) < Step<BoardSize>::NowStep();
+  return EdgeIndexes.At(edge) < Step<BoardSize>::NowStep();
 }
 
 template <int64_t BoardSize>

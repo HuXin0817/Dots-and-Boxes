@@ -41,8 +41,8 @@ SearchScoreMap<BoardSize, ScoreType>::Reset() {
 template <int64_t BoardSize, typename ScoreType>
 void
 SearchScoreMap<BoardSize, ScoreType>::Add(const Edge<BoardSize> edge, const SizeType<BoardSize> score) {
-  Time.At(edge.Value())++;
-  Score.At(edge.Value()) += score;
+  Time.At(edge)++;
+  Score.At(edge) += score;
 }
 
 template <int64_t BoardSize, typename ScoreType>
@@ -60,8 +60,8 @@ Span<Edge<BoardSize>>
 SearchScoreMap<BoardSize, ScoreType>::Export() {
   float maxScore = 0.0;
   for (const Edge<BoardSize> edge : Iota(Edge<BoardSize>::Max)) {
-    if (Time.At(edge.Value()) > 0) {
-      if (const float score = static_cast<float>(Score.At(edge.Value())) / static_cast<float>(Time.At(edge.Value()));
+    if (Time.At(edge) > 0) {
+      if (const float score = static_cast<float>(Score.At(edge)) / static_cast<float>(Time.At(edge));
           score > maxScore || BestEdges.Empty()) {
         maxScore = score;
         BestEdges.Reset(edge);

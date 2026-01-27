@@ -29,7 +29,7 @@ class NearEdgesMapper {
 template <int64_t BoardSize>
 NearEdgesMapper<BoardSize>::NearEdgesMapper() {
   for (const Box<BoardSize> box : Iota(Box<BoardSize>::Max)) {
-    BoxNearEdges.At(box.Value()) = GetNearEdges(box);
+    BoxNearEdges.At(box) = GetNearEdges(box);
   }
 }
 
@@ -55,7 +55,7 @@ const Array<Edge<BoardSize>, 4>&
 NearEdges(const Box<BoardSize> box) {
   static NearEdgesMapper<BoardSize> Instance;
 
-  return Instance.BoxNearEdges.At(box.Value());
+  return Instance.BoxNearEdges.At(box);
 }
 
 }  // namespace dab
