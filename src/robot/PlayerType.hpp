@@ -4,7 +4,7 @@
 
 namespace dab {
 
-enum class PlayerType {
+enum class PlayerType : uint8_t {
   Human = 0,
   SimpleStrategyRobot,
   BasicSearchRobot,
@@ -14,13 +14,13 @@ enum class PlayerType {
 };
 
 inline bool
-PlayerTypeIsRobot(const PlayerType PlayerType) {
-  return PlayerType != PlayerType::Human;
+PlayerTypeIsRobot(const PlayerType playerType) {
+  return playerType != PlayerType::Human;
 }
 
 inline const char*
-GetPlayerTypeString(const PlayerType type) {
-  switch (type) {
+GetPlayerTypeString(const PlayerType playerType) {
+  switch (playerType) {
     case PlayerType::Human:
       return "Human";
     case PlayerType::SimpleStrategyRobot:
@@ -39,8 +39,8 @@ GetPlayerTypeString(const PlayerType type) {
 
 template <int64_t BoardSize>
 Robot<BoardSize>*
-CreateRobot(const PlayerType PlayerType) {
-  switch (PlayerType) {
+CreateRobot(const PlayerType playerType) {
+  switch (playerType) {
     case PlayerType::SimpleStrategyRobot:
       return new SimpleStrategyRobot<BoardSize>();
     case PlayerType::BasicSearchRobot:

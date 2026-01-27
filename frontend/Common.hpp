@@ -13,7 +13,7 @@ namespace dab::frontend {
 template <int64_t BoardSize>
 static constexpr int UnitSize = 6 + 16 / BoardSize;
 
-enum class State {
+enum class State : uint8_t {
   Free,
   Player1Occupy,
   Player2Occupy,

@@ -2,6 +2,7 @@
 
 #include <QCommandLineParser>
 
+#include "Config.hpp"
 #include "MainWindow.hpp"
 
 namespace dab::frontend {
@@ -20,19 +21,6 @@ static constexpr const char* PlayerTypeOptionStrings[] = {
     "robot:master",
 };
 
-class Config {
-  public:
-  Config(int64_t boardSize, PlayerType player1Type, PlayerType player2Type);
-
-  int64_t BoardSize;
-  PlayerType Player1Type;
-  PlayerType Player2Type;
-};
-
-inline Config::Config(int64_t boardSize, PlayerType player1Type, PlayerType player2Type)
-    : BoardSize(boardSize), Player1Type(player1Type), Player2Type(player2Type) {
-}
-
 class CommandParser {
   public:
   Config
@@ -45,11 +33,11 @@ class CommandParser {
   QCommandLineOption
   BoardSizeOption();
   QCommandLineOption
-  PlayerTypeOption(int player);
+  PlayerTypeOption(int8_t player);
   int64_t
-  ParseBoardSize(const QString& str);
+  ParseBoardSize(const QString& arg);
   PlayerType
-  ParsePlayerType(const QString& str);
+  ParsePlayerType(const QString& arg);
 };
 
 inline Config
@@ -66,15 +54,11 @@ CommandParser::Process(const QApplication& application) {
   parser.addOption(player2Option);
   parser.process(application);
 
-  int64_t boardSize = ParseBoardSize(parser.value(boardSizeOption));
-  PlayerType player1Type = ParsePlayerType(parser.value(player1Option));
-  PlayerType player2Type = ParsePlayerType(parser.value(player2Option));
-  qInfo("Config: {\"BoardSize\":%lld,\"Player1\":\"%s\",\"Player2\":\"%s\"}",
-        boardSize,
-        GetPlayerTypeString(player1Type),
-        GetPlayerTypeString(player2Type));
-
-  return Config(boardSize, player1Type, player2Type);
+  Config Config(ParseBoardSize(parser.value(boardSizeOption)),
+                ParsePlayerType(parser.value(player1Option)),
+                ParsePlayerType(parser.value(player2Option)));
+  qInfo("Config: %s", Config.ToString().toLocal8Bit().constData());
+  return Config;
 }
 
 inline QCommandLineOption
@@ -89,7 +73,7 @@ CommandParser::BoardSizeOption() {
 }
 
 inline QCommandLineOption
-CommandParser::PlayerTypeOption(int player) {
+CommandParser::PlayerTypeOption(int8_t player) {
   QStringList accepted;
   accepted << "human" << "robot";
   for (size_t i = 1; i < PlayerTypeOptionStringsSize; ++i) {
@@ -117,9 +101,9 @@ CommandParser::PlayerTypeOption(int player) {
 }
 
 inline int64_t
-CommandParser::ParseBoardSize(const QString& str) {
+CommandParser::ParseBoardSize(const QString& arg) {
   bool conversionOk = false;
-  const int64_t boardSize = str.toLongLong(&conversionOk);
+  const int64_t boardSize = arg.toLongLong(&conversionOk);
   if (!conversionOk || boardSize < MinBoardSize || boardSize > MaxBoardSize) {
     qInfo("Error: Invalid board size. Must be an integer in range [%lld, %lld].", MinBoardSize, MaxBoardSize);
     exit(EXIT_FAILURE);
@@ -128,16 +112,16 @@ CommandParser::ParseBoardSize(const QString& str) {
 }
 
 inline PlayerType
-CommandParser::ParsePlayerType(const QString& str) {
-  if (str.compare("robot", Qt::CaseInsensitive) == 0) {
+CommandParser::ParsePlayerType(const QString& arg) {
+  if (arg.compare("robot", Qt::CaseInsensitive) == 0) {
     return DefaultPlayerType;
   }
   for (size_t i = 0; i < PlayerTypeOptionStringsSize; ++i) {
-    if (str.compare(PlayerTypeOptionStrings[i], Qt::CaseInsensitive) == 0) {
+    if (arg.compare(PlayerTypeOptionStrings[i], Qt::CaseInsensitive) == 0) {
       return static_cast<PlayerType>(i);
     }
   }
-  qInfo("Error: Invalid player type '%s'.", str.toLocal8Bit().constData());
+  qInfo("Error: Invalid player type '%s'.", arg.toLocal8Bit().constData());
   exit(EXIT_FAILURE);
 }
 

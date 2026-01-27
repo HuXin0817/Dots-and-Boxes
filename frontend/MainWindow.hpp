@@ -6,10 +6,10 @@
 #include <QTimer>
 
 #include "../src/robot/PlayerType.hpp"
-#include "../src/robot/Robot.hpp"
 #include "BoxCanvas.hpp"
 #include "DotCanvas.hpp"
 #include "EdgeCanvas.hpp"
+#include "MoveRecord.hpp"
 
 namespace dab::frontend {
 
@@ -140,25 +140,21 @@ MainWindow<BoardSize>::showEvent(QShowEvent* event) {
       assert(Board.Contains(PlayerMoveEdge));
 
       const double seconds = static_cast<double>(startTime.msecsTo(QTime::currentTime())) / 1000.0;
-      qInfo(
-          "%s",
-          QString("Info: {\"Step\":%1,\"Player\":%2,\"Move\":%3,\"Score\":{\"Player1\":%4,\"Player2\":%5},\"Time\":%6}")
-              .arg(Board.NowStep())
-              .arg(Board.IsPlayer1Turn() ? 1 : 2)
-              .arg(PlayerMoveEdge.operator SizeType<BoardSize>())
-              .arg(Board.GetPlayer1Score())
-              .arg(Board.GetPlayer2Score())
-              .arg(seconds, 0, 'f', 3)
-              .toLocal8Bit()
-              .constData());
+      MoveRecord<BoardSize> moveRecord(Board.NowStep(),
+                                       Board.IsPlayer1Turn() ? 1 : 2,
+                                       PlayerMoveEdge,
+                                       Board.GetPlayer1Score(),
+                                       Board.GetPlayer2Score(),
+                                       seconds);
+      qInfo("Info: %s", moveRecord.ToString().toLocal8Bit().constData());
     }
 
     if (Board.GetPlayer1Score() > Board.GetPlayer2Score()) {
-      qInfo("Info: {\"Winner\":\"Player1\"}");
+      qInfo(R"(Info: {"Winner":"Player1"})");
     } else if (Board.GetPlayer2Score() > Board.GetPlayer1Score()) {
-      qInfo("Info: {\"Winner\":\"Player2\"}");
+      qInfo(R"(Info: {"Winner":"Player2"})");
     } else {
-      qInfo("Info: {\"Winner\":\"Draw\"}");
+      qInfo(R"(Info: {"Winner":"Draw"})");
     }
 
     QMetaObject::invokeMethod(
