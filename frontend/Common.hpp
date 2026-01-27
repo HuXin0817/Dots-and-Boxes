@@ -5,6 +5,7 @@
 #include <QPalette>
 #include <QPointer>
 #include <QWidget>
+#include <QStyleHints>
 
 #include "../src/model/Turn.hpp"
 
@@ -28,8 +29,9 @@ StateFromTurn(const Turn turn) {
   }
 }
 
-inline QColor ThemeColor(const QColor& DarkThemeColor, const QColor& LightThemeColor) {
-  if (QApplication::palette().color(QPalette::Window).lightness() < 128) {
+inline QColor
+ThemeColor(const QColor& DarkThemeColor, const QColor& LightThemeColor) {
+  if (QApplication::styleHints()->colorScheme() == Qt::ColorScheme::Dark) {
     return DarkThemeColor;
   } else {
     return LightThemeColor;
