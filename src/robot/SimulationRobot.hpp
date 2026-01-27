@@ -7,9 +7,9 @@
 namespace dab {
 
 template <int64_t BoardSize>
-class AlphaBetaRobot final : public Robot<BoardSize> {
+class SimulationRobot final : public Robot<BoardSize> {
   public:
-  AlphaBetaRobot() = default;
+  SimulationRobot() = default;
 
   Span<Edge<BoardSize>>
   BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override;
@@ -22,7 +22,7 @@ class AlphaBetaRobot final : public Robot<BoardSize> {
 
 template <int64_t BoardSize>
 Span<Edge<BoardSize>>
-AlphaBetaRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) {
+SimulationRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) {
   if (const Span<Edge<BoardSize>> edges = SubRobot.BestCandidateEdges(board); SubRobot.EnemyUnscoreable()) {
     return edges;
   }

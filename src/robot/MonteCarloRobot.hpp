@@ -3,7 +3,7 @@
 #include "../board/ScoreCountableBoard.hpp"
 #include "../common/Random.hpp"
 #include "../model/SearchScoreMap.hpp"
-#include "AlphaBetaRobot.hpp"
+#include "SimulationRobot.hpp"
 
 namespace dab {
 
@@ -20,7 +20,7 @@ class MonteCarloRobot final : public Robot<BoardSize> {
   GetSearchResult() const;
 
   private:
-  AlphaBetaRobot<BoardSize> SubRobot;
+  SimulationRobot<BoardSize> SubRobot;
   ScoreCountableBoard<BoardSize> SimulationBoard;
   SearchScoreMap<BoardSize, Int<2 * SearchTime>> SearchResult;
 };

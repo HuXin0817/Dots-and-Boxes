@@ -8,7 +8,7 @@ enum class PlayerType : uint8_t {
   Human = 0,
   GreedyRobot,
   MinimaxRobot,
-  AlphaBetaRobot,
+  SimulationRobot,
   MonteCarloRobot,
   ParallelSearchRobot,
 };
@@ -27,8 +27,8 @@ GetPlayerTypeString(const PlayerType playerType) {
       return "GreedyRobot";
     case PlayerType::MinimaxRobot:
       return "MinimaxRobot";
-    case PlayerType::AlphaBetaRobot:
-      return "AlphaBetaRobot";
+    case PlayerType::SimulationRobot:
+      return "SimulationRobot";
     case PlayerType::MonteCarloRobot:
       return "MonteCarloRobot";
     case PlayerType::ParallelSearchRobot:
@@ -45,8 +45,8 @@ CreateRobot(const PlayerType playerType) {
       return new GreedyRobot<BoardSize>();
     case PlayerType::MinimaxRobot:
       return new MinimaxRobot<BoardSize>();
-    case PlayerType::AlphaBetaRobot:
-      return new AlphaBetaRobot<BoardSize>();
+    case PlayerType::SimulationRobot:
+      return new SimulationRobot<BoardSize>();
     case PlayerType::MonteCarloRobot:
       return new MonteCarloRobot<BoardSize>();
     case PlayerType::ParallelSearchRobot:

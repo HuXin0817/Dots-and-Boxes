@@ -133,7 +133,7 @@ Dots-and-Boxes/
 │   │   └── Turn.hpp
 │   └── robot/          # AI implementations
 │       ├── MinimaxRobot.hpp
-│       ├── AlphaBetaRobot.hpp
+│       ├── SimulationRobot.hpp
 │       ├── MonteCarloRobot.hpp
 │       ├── ParallelSearchRobot.hpp
 │       ├── PlayerType.hpp
