@@ -72,7 +72,6 @@ EdgeCanvas<BoardSize>::paintEvent(QPaintEvent* event) {
   painter.setRenderHint(QPainter::Antialiasing);
   painter.setPen(Qt::NoPen);
   painter.setBrush(QBrush(Color()));
-
   painter.drawRect(rect());
 }
 

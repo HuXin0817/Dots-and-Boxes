@@ -31,15 +31,10 @@ DotCanvas<BoardSize>::paintEvent(QPaintEvent* event) {
   QWidget::paintEvent(event);
 
   QPainter painter(this);
-
   painter.setRenderHint(QPainter::Antialiasing);
   painter.setBrush(QBrush(Color()));
   painter.setPen(Qt::NoPen);
-
-  const int x = width() / 2;
-  const int y = height() / 2;
-
-  painter.drawEllipse(QPoint(x, y), UnitSize<BoardSize>, UnitSize<BoardSize>);
+  painter.drawEllipse(width() / 2, height() / 2, UnitSize<BoardSize>, UnitSize<BoardSize>);
 }
 
 template <int64_t BoardSize>
