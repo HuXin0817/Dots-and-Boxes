@@ -191,7 +191,7 @@ MainWindow<BoardSize>::Color() const {
   static const QColor DarkThemeColor = QColor(43, 43, 43, 255);
   static const QColor LightThemeColor = QColor(242, 242, 242, 255);
 
-  return isDarkTheme() ? DarkThemeColor : LightThemeColor;
+  return ThemeColor(DarkThemeColor, LightThemeColor);
 }
 
 template <int64_t BoardSize>

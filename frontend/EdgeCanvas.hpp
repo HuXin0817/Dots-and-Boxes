@@ -105,9 +105,9 @@ EdgeCanvas<BoardSize>::Color() const {
 
   if (State == State::Free) {
     if (Hovered) {
-      return isDarkTheme() ? DarkThemeHoveredColor : LightThemeHoveredColor;
+      return ThemeColor(DarkThemeHoveredColor, LightThemeHoveredColor);
     }
-    return isDarkTheme() ? DarkThemeColor : LightThemeColor;
+    return ThemeColor(DarkThemeColor, LightThemeColor);
   }
 
   QColor color;

@@ -43,7 +43,7 @@ DotCanvas<BoardSize>::Color() const {
   static const QColor DarkThemeColor = QColor(202, 202, 202, 255);
   static const QColor LightThemeColor = QColor(255, 255, 255, 255);
 
-  return isDarkTheme() ? DarkThemeColor : LightThemeColor;
+  return ThemeColor(DarkThemeColor, LightThemeColor);
 }
 
 }  // namespace dab::frontend

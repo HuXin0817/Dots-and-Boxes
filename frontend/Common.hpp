@@ -28,9 +28,12 @@ StateFromTurn(const Turn turn) {
   }
 }
 
-inline bool
-isDarkTheme() {
-  return QApplication::palette().color(QPalette::Window).lightness() < 128;
+inline QColor ThemeColor(const QColor& DarkThemeColor, const QColor& LightThemeColor) {
+  if (QApplication::palette().color(QPalette::Window).lightness() < 128) {
+    return DarkThemeColor;
+  } else {
+    return LightThemeColor;
+  }
 }
 
 }  // namespace dab::frontend
