@@ -40,7 +40,7 @@ class EdgeCanvas final : public QWidget {
 template <int64_t BoardSize>
 EdgeCanvas<BoardSize>::EdgeCanvas(const bool rotate, const std::function<void()>& callBack, QPointer<QWidget> parent)
     : QWidget(parent), CallBack(callBack) {
-  setFixedSize(QSize(rotate ? Width : Height, rotate ? Height : Width));
+  setFixedSize(rotate ? Width : Height, rotate ? Height : Width);
 }
 
 template <int64_t BoardSize>

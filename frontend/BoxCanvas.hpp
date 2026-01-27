@@ -28,7 +28,7 @@ class BoxCanvas final : public QWidget {
 
 template <int64_t BoardSize>
 BoxCanvas<BoardSize>::BoxCanvas(QPointer<QWidget> parent) : QWidget(parent) {
-  setFixedSize(QSize(Width, Width));
+  setFixedSize(Width, Width);
 }
 
 template <int64_t BoardSize>
