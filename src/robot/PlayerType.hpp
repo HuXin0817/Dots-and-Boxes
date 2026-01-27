@@ -22,17 +22,17 @@ inline const char*
 GetPlayerTypeString(const PlayerType playerType) {
   switch (playerType) {
     case PlayerType::Human:
-      return "Human";
+      return "dab::PlayerType::Human";
     case PlayerType::GreedyRobot:
-      return "GreedyRobot";
+      return "dab::PlayerType::GreedyRobot";
     case PlayerType::MinimaxRobot:
-      return "MinimaxRobot";
+      return "dab::PlayerType::MinimaxRobot";
     case PlayerType::AlphaBetaRobot:
-      return "AlphaBetaRobot";
+      return "dab::PlayerType::AlphaBetaRobot";
     case PlayerType::MonteCarloRobot:
-      return "MonteCarloRobot";
+      return "dab::PlayerType::MonteCarloRobot";
     case PlayerType::ParallelSearchRobot:
-      return "ParallelSearchRobot";
+      return "dab::PlayerType::ParallelSearchRobot";
   }
   return "";
 }
