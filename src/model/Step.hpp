@@ -11,14 +11,14 @@ class Step {
 
   void
   Reset();
+  void
+  Add();
   bool
   Gaming() const;
   SizeType<BoardSize>
   RemainStep() const;
   SizeType<BoardSize>
   NowStep() const;
-  void
-  Add();
 
   private:
   SizeType<BoardSize> v = 0;
@@ -28,6 +28,12 @@ template <int64_t BoardSize>
 void
 Step<BoardSize>::Reset() {
   v = 0;
+}
+
+template <int64_t BoardSize>
+void
+Step<BoardSize>::Add() {
+  v++;
 }
 
 template <int64_t BoardSize>
@@ -46,12 +52,6 @@ template <int64_t BoardSize>
 SizeType<BoardSize>
 Step<BoardSize>::NowStep() const {
   return v;
-}
-
-template <int64_t BoardSize>
-void
-Step<BoardSize>::Add() {
-  v++;
 }
 
 }  // namespace dab
