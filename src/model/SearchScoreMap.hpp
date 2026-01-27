@@ -1,6 +1,7 @@
 #pragma once
 
-#include <cstring>
+#include <algorithm>
+#include <memory>
 
 #include "../common/Array.hpp"
 #include "../common/Iota.hpp"
@@ -33,8 +34,8 @@ class SearchScoreMap {
 template <int64_t BoardSize, typename ScoreType>
 void
 SearchScoreMap<BoardSize, ScoreType>::Reset() {
-  memset(Time.begin(), 0, sizeof(Time));
-  memset(Score.begin(), 0, sizeof(Score));
+  std::fill(Time.begin(), Time.end(), 0);
+  std::fill(Score.begin(), Score.end(), 0);
   BestEdges.Clear();
 }
 

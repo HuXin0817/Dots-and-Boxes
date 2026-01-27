@@ -122,13 +122,15 @@ MainWindow<BoardSize>::showEvent(QShowEvent* event) {
   QWidget::showEvent(event);
 
   QThreadPool::globalInstance()->start([this]() -> void {
+    Random Random;
     while (Board.Gaming()) {
       const QTime startTime = QTime::currentTime();
+      const Turn turn = static_cast<Turn>(Board);
 
       if ((PlayerTypeIsRobot(Player1Type) && Board.IsPlayer1Turn())) {
-        PlayerMoveEdge = RandomChoice(Robot1->BestCandidateEdges(Board));
+        PlayerMoveEdge = Random.Choice(Robot1->BestCandidateEdges(Board));
       } else if (PlayerTypeIsRobot(Player2Type) && Board.IsPlayer2Turn()) {
-        PlayerMoveEdge = RandomChoice(Robot2->BestCandidateEdges(Board));
+        PlayerMoveEdge = Random.Choice(Robot2->BestCandidateEdges(Board));
       } else {
         PlayerMoveEdge = InvalidEdge<BoardSize>();
         while (PlayerMoveEdge == InvalidEdge<BoardSize>()) {
@@ -136,7 +138,6 @@ MainWindow<BoardSize>::showEvent(QShowEvent* event) {
         }
       }
 
-      const Turn turn = static_cast<Turn>(Board);
       assert(!Board.Contains(PlayerMoveEdge));
       QMetaObject::invokeMethod(this, [this]() -> void { Add(PlayerMoveEdge); }, Qt::BlockingQueuedConnection);
       assert(Board.Contains(PlayerMoveEdge));

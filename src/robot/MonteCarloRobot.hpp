@@ -32,14 +32,15 @@ MonteCarloRobot<BoardSize, SearchTime>::BestCandidateEdges(const ScoreCountableB
     return edges;
   }
 
+  Random Random;
   SearchResult.Reset();
   int64_t times = SearchTime / board.RemainStep() + 1;
   while (times--) {
     SimulationBoard.Reset(static_cast<EdgeCountableBoard<BoardSize>>(board));
-    const Edge<BoardSize> edge = RandomChoice(SubRobot.BestCandidateEdges(SimulationBoard));
+    const Edge<BoardSize> edge = Random.Choice(SubRobot.BestCandidateEdges(SimulationBoard));
     SimulationBoard.Add(edge);
     while (SimulationBoard.Gaming()) {
-      SimulationBoard.Add(RandomChoice(SubRobot.BestCandidateEdges(SimulationBoard)));
+      SimulationBoard.Add(Random.Choice(SubRobot.BestCandidateEdges(SimulationBoard)));
     }
     SearchResult.Add(edge, SimulationBoard.Score());
   }
@@ -50,7 +51,7 @@ MonteCarloRobot<BoardSize, SearchTime>::BestCandidateEdges(const ScoreCountableB
 template <int64_t BoardSize, int64_t SearchTime>
 bool
 MonteCarloRobot<BoardSize, SearchTime>::CanEarlyExit(const ScoreCountableBoard<BoardSize>& board,
-                                                           Span<Edge<BoardSize>>& result) {
+                                                     Span<Edge<BoardSize>>& result) {
   result = SubRobot.BestCandidateEdges(board);
   return result.Size() == 1;
 }
