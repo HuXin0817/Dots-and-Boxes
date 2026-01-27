@@ -10,7 +10,7 @@ main(int argc, char* argv[]) {
   application.setApplicationVersion("1.0.0");
   application.setOrganizationName("Dots and Boxes");
 
-  Config config = CommandParser().Process(application);
+  const Config config = CommandParser().Process(application);
   if (QPointer<QWidget> mainWindow = MainWindowCreator().CreateMainWindow(config)) {
     mainWindow->show();
   }

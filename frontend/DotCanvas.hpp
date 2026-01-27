@@ -40,8 +40,8 @@ DotCanvas<BoardSize>::paintEvent(QPaintEvent* event) {
 template <int64_t BoardSize>
 QColor
 DotCanvas<BoardSize>::Color() const {
-  static QColor DarkThemeColor = QColor(202, 202, 202, 255);
-  static QColor LightThemeColor = QColor(255, 255, 255, 255);
+  static const QColor DarkThemeColor = QColor(202, 202, 202, 255);
+  static const QColor LightThemeColor = QColor(255, 255, 255, 255);
 
   return isDarkTheme() ? DarkThemeColor : LightThemeColor;
 }

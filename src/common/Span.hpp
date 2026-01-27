@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cassert>
 #include <cstddef>
 
 namespace dab {
@@ -46,6 +47,7 @@ Span<T>::Empty() const {
 template <typename T>
 const T&
 Span<T>::At(const size_t i) const {
+  assert(i < Size());
   return Begin[i];
 }
 

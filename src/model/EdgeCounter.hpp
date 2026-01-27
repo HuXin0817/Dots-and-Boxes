@@ -25,7 +25,7 @@ class EdgeCounter {
   MaxEdgeCount(const Edge<BoardSize> edge) const;
 
   private:
-  Array<uint8_t, Box<BoardSize>::Max> Map;
+  Array<uint8_t, Box<BoardSize>::Max> Counter;
 };
 
 template <int64_t BoardSize>
@@ -36,7 +36,7 @@ EdgeCounter<BoardSize>::EdgeCounter() {
 template <int64_t BoardSize>
 void
 EdgeCounter<BoardSize>::Reset() {
-  Map = Array<uint8_t, Box<BoardSize>::Max>();
+  Counter = Array<uint8_t, Box<BoardSize>::Max>();
 }
 
 template <int64_t BoardSize>
@@ -44,8 +44,8 @@ SizeType<BoardSize>
 EdgeCounter<BoardSize>::Add(const Edge<BoardSize> edge) {
   SizeType<BoardSize> score = 0;
   for (const Box<BoardSize> box : NearBoxes(edge)) {
-    Map.At(box.Value())++;
-    const uint8_t num = Map.At(box.Value());
+    Counter.At(box.Value())++;
+    const uint8_t num = Counter.At(box.Value());
     assert(num <= 4);
     if (num == 4) {
       score++;
@@ -57,7 +57,7 @@ EdgeCounter<BoardSize>::Add(const Edge<BoardSize> edge) {
 template <int64_t BoardSize>
 uint8_t
 EdgeCounter<BoardSize>::EdgeCount(const Box<BoardSize> box) const {
-  return Map.At(box.Value());
+  return Counter.At(box.Value());
 }
 
 template <int64_t BoardSize>

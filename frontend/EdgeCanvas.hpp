@@ -79,6 +79,7 @@ template <int64_t BoardSize>
 void
 EdgeCanvas<BoardSize>::enterEvent(QEnterEvent* event) {
   QWidget::enterEvent(event);
+
   Hovered = true;
   update();
 }
@@ -87,6 +88,7 @@ template <int64_t BoardSize>
 void
 EdgeCanvas<BoardSize>::leaveEvent(QEvent* event) {
   QWidget::leaveEvent(event);
+
   Hovered = false;
   update();
 }
@@ -94,12 +96,12 @@ EdgeCanvas<BoardSize>::leaveEvent(QEvent* event) {
 template <int64_t BoardSize>
 QColor
 EdgeCanvas<BoardSize>::Color() const {
-  static QColor DarkThemeColor = QColor(65, 65, 65, 255);
-  static QColor LightThemeColor = QColor(217, 217, 217, 255);
-  static QColor DarkThemeHoveredColor = QColor(90, 90, 90, 255);
-  static QColor LightThemeHoveredColor = QColor(202, 202, 202, 255);
-  static QColor Player1OccupyColor = QColor(64, 64, 255, 255);
-  static QColor Player2OccupyColor = QColor(255, 64, 64, 255);
+  static const QColor DarkThemeColor = QColor(65, 65, 65, 255);
+  static const QColor LightThemeColor = QColor(217, 217, 217, 255);
+  static const QColor DarkThemeHoveredColor = QColor(90, 90, 90, 255);
+  static const QColor LightThemeHoveredColor = QColor(202, 202, 202, 255);
+  static const QColor Player1OccupyColor = QColor(64, 64, 255, 255);
+  static const QColor Player2OccupyColor = QColor(255, 64, 64, 255);
 
   if (State == State::Free) {
     if (Hovered) {
@@ -114,7 +116,6 @@ EdgeCanvas<BoardSize>::Color() const {
   } else if (State == State::Player2Occupy) {
     color = Player2OccupyColor;
   }
-
   if (HighLight) {
     color.setAlpha(255);
   } else if (Hovered) {

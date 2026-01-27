@@ -31,7 +31,7 @@ ScoreCountableBoard<BoardSize>::Reset(const EdgeCountableBoard<BoardSize>& newBo
 template <int64_t BoardSize>
 SizeType<BoardSize>
 ScoreCountableBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
-  SizeType<BoardSize> score = EdgeCountableBoard<BoardSize>::Add(edge);
+  const SizeType<BoardSize> score = EdgeCountableBoard<BoardSize>::Add(edge);
   GameScoreMap<BoardSize>::Add(score);
   return score;
 }

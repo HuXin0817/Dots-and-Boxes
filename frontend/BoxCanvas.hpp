@@ -52,8 +52,8 @@ BoxCanvas<BoardSize>::paintEvent(QPaintEvent* event) {
 template <int64_t BoardSize>
 QColor
 BoxCanvas<BoardSize>::Color() const {
-  static QColor Player1OccupyColor = QColor(64, 64, 255, 64);
-  static QColor Player2OccupyColor = QColor(255, 64, 64, 64);
+  static const QColor Player1OccupyColor = QColor(64, 64, 255, 64);
+  static const QColor Player2OccupyColor = QColor(255, 64, 64, 64);
 
   if (State == State::Player1Occupy) {
     return Player1OccupyColor;

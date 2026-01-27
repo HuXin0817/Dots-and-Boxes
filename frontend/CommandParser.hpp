@@ -48,25 +48,21 @@ class CommandParser {
 
 inline Config
 CommandParser::Process(const QApplication& application) {
+  const QCommandLineOption boardSizeOption = BoardSizeOption();
+  const QCommandLineOption player1Option = PlayerTypeOption(1);
+  const QCommandLineOption player2Option = PlayerTypeOption(2);
+
   QCommandLineParser parser;
   parser.addHelpOption();
   parser.addVersionOption();
-
-  QCommandLineOption boardSizeOption = BoardSizeOption();
   parser.addOption(boardSizeOption);
-
-  QCommandLineOption player1Option = PlayerTypeOption(1);
   parser.addOption(player1Option);
-
-  QCommandLineOption player2Option = PlayerTypeOption(2);
   parser.addOption(player2Option);
-
   parser.process(application);
 
   int64_t boardSize = ParseBoardSize(parser.value(boardSizeOption));
   PlayerType player1Type = ParsePlayerType(parser.value(player1Option));
   PlayerType player2Type = ParsePlayerType(parser.value(player2Option));
-
   qInfo("Config: {\"BoardSize\":%lld,\"Player1\":\"%s\",\"Player2\":\"%s\"}",
         boardSize,
         GetPlayerTypeString(player1Type),
@@ -121,13 +117,11 @@ CommandParser::PlayerTypeOption(int player) {
 inline int64_t
 CommandParser::ParseBoardSize(const QString& str) {
   bool conversionOk = false;
-  int64_t boardSize = str.toLongLong(&conversionOk);
-
+  const int64_t boardSize = str.toLongLong(&conversionOk);
   if (!conversionOk || boardSize < MinBoardSize || boardSize > MaxBoardSize) {
     qInfo("Error: Invalid board size. Must be an integer in range [%lld, %lld].", MinBoardSize, MaxBoardSize);
     exit(EXIT_FAILURE);
   }
-
   return boardSize;
 }
 

@@ -23,7 +23,7 @@ class ImprovedSearchRobot final : public Robot<BoardSize> {
 template <int64_t BoardSize>
 Span<Edge<BoardSize>>
 ImprovedSearchRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) {
-  if (Span<Edge<BoardSize>> edges = SubRobot.BestCandidateEdges(board); SubRobot.EnemyUnscoreable()) {
+  if (const Span<Edge<BoardSize>> edges = SubRobot.BestCandidateEdges(board); SubRobot.EnemyUnscoreable()) {
     return edges;
   }
 
@@ -34,7 +34,7 @@ ImprovedSearchRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<Boa
     SimulationBoard.Add(emptyEdge);
     while (SimulationBoard.Gaming()) {
       const Edge<BoardSize> edge = SubRobot.BestCandidateEdges(SimulationBoard).At(0);
-      assert(board.MaxEdgeCount(edge.Value()) > 1);
+      assert(board.MaxEdgeCount(edge) > 1);
       SimulationBoard.Add(edge);
     }
     if (const SizeType<BoardSize> score = SimulationBoard.Score(); score > maxScore) {
