@@ -120,7 +120,7 @@ void
 MainWindow<BoardSize>::showEvent(QShowEvent* event) {
   QWidget::showEvent(event);
 
-  QThreadPool::globalInstance()->start([this] {
+  QThreadPool::globalInstance()->start([this]() -> void {
     while (Board.Gaming()) {
       const QTime startTime = QTime::currentTime();
 
@@ -136,7 +136,7 @@ MainWindow<BoardSize>::showEvent(QShowEvent* event) {
       }
 
       assert(!Board.Contains(PlayerMoveEdge));
-      QMetaObject::invokeMethod(this, [this]() { Add(PlayerMoveEdge); }, Qt::BlockingQueuedConnection);
+      QMetaObject::invokeMethod(this, [this]() -> void { Add(PlayerMoveEdge); }, Qt::BlockingQueuedConnection);
       assert(Board.Contains(PlayerMoveEdge));
 
       const double seconds = static_cast<double>(startTime.msecsTo(QTime::currentTime())) / 1000.0;
@@ -163,8 +163,8 @@ MainWindow<BoardSize>::showEvent(QShowEvent* event) {
 
     QMetaObject::invokeMethod(
         this,
-        [this]() {
-          QTimer::singleShot(2000, this, [this]() {
+        [this]() -> void {
+          QTimer::singleShot(2000, this, [this]() -> void {
             EdgeCanvases[LastEdge.Value()]->SetHighLight(false);
             update();
             QTimer::singleShot(2000, this, &MainWindow::close);
