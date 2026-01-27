@@ -155,7 +155,9 @@ MainWindow<BoardSize>::showEvent(QShowEvent* event) {
       moveRecord.insert("Score", playerScore);
       moveRecord.insert("Time", seconds);
 
-      qInfo("Info: %s", QJsonDocument(moveRecord).toJson(QJsonDocument::Compact).constData());
+      QJsonObject info;
+      info.insert("Info", moveRecord);
+      qInfo() << QJsonDocument(info).toJson(QJsonDocument::Compact).constData();
     }
 
     QJsonObject winner;
@@ -166,7 +168,7 @@ MainWindow<BoardSize>::showEvent(QShowEvent* event) {
     } else {
       winner.insert("Winner", "Draw");
     }
-    qInfo("Info: %s", QJsonDocument(winner).toJson(QJsonDocument::Compact).constData());
+    qInfo() << QJsonDocument(winner).toJson(QJsonDocument::Compact).constData();
 
     QMetaObject::invokeMethod(
         this,

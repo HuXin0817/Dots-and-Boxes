@@ -38,10 +38,12 @@ inline Config::Config(int64_t boardSize, PlayerType player1Type, PlayerType play
 
 inline QString
 Config::ToString() const {
+  QJsonObject configData;
+  configData.insert("BoardSize", BoardSize);
+  configData.insert("Player1Type", GetPlayerTypeString(Player1Type));
+  configData.insert("Player2Type", GetPlayerTypeString(Player2Type));
   QJsonObject config;
-  config.insert("BoardSize", BoardSize);
-  config.insert("Player1Type", GetPlayerTypeString(Player1Type));
-  config.insert("Player2Type", GetPlayerTypeString(Player2Type));
+  config.insert("Config", configData);
   return QJsonDocument(config).toJson(QJsonDocument::Compact);
 }
 
@@ -81,7 +83,7 @@ CommandParser::Process(const QApplication& application) {
   Config Config(ParseBoardSize(parser.value(boardSizeOption)),
                 ParsePlayerType(parser.value(player1Option)),
                 ParsePlayerType(parser.value(player2Option)));
-  qInfo("Config: %s", Config.ToString().toLocal8Bit().constData());
+  qInfo() << Config.ToString().toLocal8Bit().constData();
   return Config;
 }
 
