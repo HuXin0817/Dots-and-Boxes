@@ -132,13 +132,13 @@ Dots-and-Boxes/
 │   │   ├── Step.hpp
 │   │   └── Turn.hpp
 │   └── robot/          # AI implementations
-│       ├── BasicSearchRobot.hpp
-│       ├── ImprovedSearchRobot.hpp
-│       ├── MonteCarloSearchRobot.hpp
+│       ├── MinimaxRobot.hpp
+│       ├── AlphaBetaRobot.hpp
+│       ├── MonteCarloRobot.hpp
 │       ├── ParallelSearchRobot.hpp
 │       ├── PlayerType.hpp
 │       ├── Robot.hpp
-│       └── SimpleStrategyRobot.hpp
+│       └── GreedyRobot.hpp
 ├── main.cpp            # Entry point
 ├── CMakeLists.txt      # Build configuration
 ├── LICENSE             # License file

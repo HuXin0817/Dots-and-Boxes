@@ -2,27 +2,27 @@
 
 #include "../common/List.hpp"
 #include "../common/Span.hpp"
-#include "BasicSearchRobot.hpp"
+#include "MinimaxRobot.hpp"
 
 namespace dab {
 
 template <int64_t BoardSize>
-class ImprovedSearchRobot final : public Robot<BoardSize> {
+class AlphaBetaRobot final : public Robot<BoardSize> {
   public:
-  ImprovedSearchRobot() = default;
+  AlphaBetaRobot() = default;
 
   Span<Edge<BoardSize>>
   BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override;
 
   private:
-  BasicSearchRobot<BoardSize> SubRobot;
+  MinimaxRobot<BoardSize> SubRobot;
   ScoreCountableBoard<BoardSize> SimulationBoard;
   List<Edge<BoardSize>, Edge<BoardSize>::Max> SearchEdges;
 };
 
 template <int64_t BoardSize>
 Span<Edge<BoardSize>>
-ImprovedSearchRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) {
+AlphaBetaRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) {
   if (const Span<Edge<BoardSize>> edges = SubRobot.BestCandidateEdges(board); SubRobot.EnemyUnscoreable()) {
     return edges;
   }

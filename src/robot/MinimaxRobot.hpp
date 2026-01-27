@@ -2,14 +2,14 @@
 
 #include "../board/ScoreableEdgeBoard.hpp"
 #include "../common/Span.hpp"
-#include "SimpleStrategyRobot.hpp"
+#include "GreedyRobot.hpp"
 
 namespace dab {
 
 template <int64_t BoardSize>
-class BasicSearchRobot final : public Robot<BoardSize> {
+class MinimaxRobot final : public Robot<BoardSize> {
   public:
-  BasicSearchRobot() = default;
+  MinimaxRobot() = default;
 
   Span<Edge<BoardSize>>
   BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override;
@@ -19,13 +19,13 @@ class BasicSearchRobot final : public Robot<BoardSize> {
   Scoreable() const;
 
   private:
-  SimpleStrategyRobot<BoardSize> SubRobot;
+  GreedyRobot<BoardSize> SubRobot;
   ScoreableEdgeBoard<BoardSize> SimulationBoard;
 };
 
 template <int64_t BoardSize>
 Span<Edge<BoardSize>>
-BasicSearchRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) {
+MinimaxRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) {
   if (const Span<Edge<BoardSize>> edges = SubRobot.BestCandidateEdges(board);
       SubRobot.EnemyUnscoreable() || SubRobot.Scoreable()) {
     return edges;
@@ -52,13 +52,13 @@ BasicSearchRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardS
 
 template <int64_t BoardSize>
 bool
-BasicSearchRobot<BoardSize>::EnemyUnscoreable() const {
+MinimaxRobot<BoardSize>::EnemyUnscoreable() const {
   return SubRobot.EnemyUnscoreable();
 }
 
 template <int64_t BoardSize>
 bool
-BasicSearchRobot<BoardSize>::Scoreable() const {
+MinimaxRobot<BoardSize>::Scoreable() const {
   return SubRobot.Scoreable();
 }
 

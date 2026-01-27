@@ -6,10 +6,10 @@ namespace dab {
 
 enum class PlayerType : uint8_t {
   Human = 0,
-  SimpleStrategyRobot,
-  BasicSearchRobot,
-  ImprovedSearchRobot,
-  MonteCarloSearchRobot,
+  GreedyRobot,
+  MinimaxRobot,
+  AlphaBetaRobot,
+  MonteCarloRobot,
   ParallelSearchRobot,
 };
 
@@ -23,14 +23,14 @@ GetPlayerTypeString(const PlayerType playerType) {
   switch (playerType) {
     case PlayerType::Human:
       return "Human";
-    case PlayerType::SimpleStrategyRobot:
-      return "SimpleStrategyRobot";
-    case PlayerType::BasicSearchRobot:
-      return "BasicSearchRobot";
-    case PlayerType::ImprovedSearchRobot:
-      return "ImprovedSearchRobot";
-    case PlayerType::MonteCarloSearchRobot:
-      return "MonteCarloSearchRobot";
+    case PlayerType::GreedyRobot:
+      return "GreedyRobot";
+    case PlayerType::MinimaxRobot:
+      return "MinimaxRobot";
+    case PlayerType::AlphaBetaRobot:
+      return "AlphaBetaRobot";
+    case PlayerType::MonteCarloRobot:
+      return "MonteCarloRobot";
     case PlayerType::ParallelSearchRobot:
       return "ParallelSearchRobot";
   }
@@ -41,14 +41,14 @@ template <int64_t BoardSize>
 Robot<BoardSize>*
 CreateRobot(const PlayerType playerType) {
   switch (playerType) {
-    case PlayerType::SimpleStrategyRobot:
-      return new SimpleStrategyRobot<BoardSize>();
-    case PlayerType::BasicSearchRobot:
-      return new BasicSearchRobot<BoardSize>();
-    case PlayerType::ImprovedSearchRobot:
-      return new ImprovedSearchRobot<BoardSize>();
-    case PlayerType::MonteCarloSearchRobot:
-      return new MonteCarloSearchRobot<BoardSize>();
+    case PlayerType::GreedyRobot:
+      return new GreedyRobot<BoardSize>();
+    case PlayerType::MinimaxRobot:
+      return new MinimaxRobot<BoardSize>();
+    case PlayerType::AlphaBetaRobot:
+      return new AlphaBetaRobot<BoardSize>();
+    case PlayerType::MonteCarloRobot:
+      return new MonteCarloRobot<BoardSize>();
     case PlayerType::ParallelSearchRobot:
       return new ParallelSearchRobot<BoardSize>();
     case PlayerType::Human:

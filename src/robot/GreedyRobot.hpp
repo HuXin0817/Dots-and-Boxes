@@ -8,9 +8,9 @@
 namespace dab {
 
 template <int64_t BoardSize>
-class SimpleStrategyRobot : public Robot<BoardSize> {
+class GreedyRobot : public Robot<BoardSize> {
   public:
-  SimpleStrategyRobot() = default;
+  GreedyRobot() = default;
 
   Span<Edge<BoardSize>>
   BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override;
@@ -29,7 +29,7 @@ class SimpleStrategyRobot : public Robot<BoardSize> {
 
 template <int64_t BoardSize>
 Span<Edge<BoardSize>>
-SimpleStrategyRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) {
+GreedyRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) {
   ScoreableIndex = 0;
   EnemyUnscoreableIndex = Edge<BoardSize>::Max;
 
@@ -55,19 +55,19 @@ SimpleStrategyRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<Boa
 
 template <int64_t BoardSize>
 bool
-SimpleStrategyRobot<BoardSize>::EnemyUnscoreable() const {
+GreedyRobot<BoardSize>::EnemyUnscoreable() const {
   return EnemyUnscoreableIndex < Edge<BoardSize>::Max;
 }
 
 template <int64_t BoardSize>
 bool
-SimpleStrategyRobot<BoardSize>::Scoreable() const {
+GreedyRobot<BoardSize>::Scoreable() const {
   return ScoreableIndex > 0;
 }
 
 template <int64_t BoardSize>
 Array<Edge<BoardSize>, Edge<BoardSize>::Max>&
-SimpleStrategyRobot<BoardSize>::GetEdgeBuffer() {
+GreedyRobot<BoardSize>::GetEdgeBuffer() {
   return Edges;
 }
 

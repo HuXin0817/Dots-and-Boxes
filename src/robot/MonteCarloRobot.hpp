@@ -3,14 +3,14 @@
 #include "../board/ScoreCountableBoard.hpp"
 #include "../common/Random.hpp"
 #include "../model/SearchScoreMap.hpp"
-#include "ImprovedSearchRobot.hpp"
+#include "AlphaBetaRobot.hpp"
 
 namespace dab {
 
 template <int64_t BoardSize, int64_t SearchTime = static_cast<int64_t>(Edge<BoardSize>::Max) << 8>
-class MonteCarloSearchRobot final : public Robot<BoardSize> {
+class MonteCarloRobot final : public Robot<BoardSize> {
   public:
-  MonteCarloSearchRobot() = default;
+  MonteCarloRobot() = default;
 
   Span<Edge<BoardSize>>
   BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override;
@@ -20,14 +20,14 @@ class MonteCarloSearchRobot final : public Robot<BoardSize> {
   GetSearchResult() const;
 
   private:
-  ImprovedSearchRobot<BoardSize> SubRobot;
+  AlphaBetaRobot<BoardSize> SubRobot;
   ScoreCountableBoard<BoardSize> SimulationBoard;
   SearchScoreMap<BoardSize, Int<2 * SearchTime>> SearchResult;
 };
 
 template <int64_t BoardSize, int64_t SearchTime>
 Span<Edge<BoardSize>>
-MonteCarloSearchRobot<BoardSize, SearchTime>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) {
+MonteCarloRobot<BoardSize, SearchTime>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) {
   if (Span<Edge<BoardSize>> edges; CanEarlyExit(board, edges)) {
     return edges;
   }
@@ -49,7 +49,7 @@ MonteCarloSearchRobot<BoardSize, SearchTime>::BestCandidateEdges(const ScoreCoun
 
 template <int64_t BoardSize, int64_t SearchTime>
 bool
-MonteCarloSearchRobot<BoardSize, SearchTime>::CanEarlyExit(const ScoreCountableBoard<BoardSize>& board,
+MonteCarloRobot<BoardSize, SearchTime>::CanEarlyExit(const ScoreCountableBoard<BoardSize>& board,
                                                            Span<Edge<BoardSize>>& result) {
   result = SubRobot.BestCandidateEdges(board);
   return result.Size() == 1;
@@ -57,7 +57,7 @@ MonteCarloSearchRobot<BoardSize, SearchTime>::CanEarlyExit(const ScoreCountableB
 
 template <int64_t BoardSize, int64_t SearchTime>
 const SearchScoreMap<BoardSize, Int<2 * SearchTime>>&
-MonteCarloSearchRobot<BoardSize, SearchTime>::GetSearchResult() const {
+MonteCarloRobot<BoardSize, SearchTime>::GetSearchResult() const {
   return SearchResult;
 }
 

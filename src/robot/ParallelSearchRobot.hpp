@@ -1,6 +1,6 @@
 #pragma once
 
-#include "MonteCarloSearchRobot.hpp"
+#include "MonteCarloRobot.hpp"
 
 namespace dab {
 
@@ -10,7 +10,7 @@ class ParallelSearchRobot final : public Robot<BoardSize> {
   static constexpr int64_t SubRobotNumber = 64;
   static constexpr int64_t SearchTime = SubRobotNumber * SubRobotSearchTime;
 
-  using SubRobotType = MonteCarloSearchRobot<BoardSize, SubRobotSearchTime>;
+  using SubRobotType = MonteCarloRobot<BoardSize, SubRobotSearchTime>;
 
   public:
   ParallelSearchRobot() = default;
