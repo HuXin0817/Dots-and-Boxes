@@ -4,8 +4,8 @@
 #include <QPainter>
 #include <QPalette>
 #include <QPointer>
-#include <QWidget>
 #include <QStyleHints>
+#include <QWidget>
 
 #include "../src/model/Turn.hpp"
 

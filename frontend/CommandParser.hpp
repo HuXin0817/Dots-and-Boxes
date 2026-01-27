@@ -38,10 +38,11 @@ inline Config::Config(int64_t boardSize, PlayerType player1Type, PlayerType play
 
 inline QString
 Config::ToString() const {
-  return QString(R"({"BoardSize":%1,"Player1":"%2","Player2":"%3"})")
-      .arg(BoardSize)
-      .arg(GetPlayerTypeString(Player1Type))
-      .arg(GetPlayerTypeString(Player2Type));
+  QJsonObject config;
+  config.insert("BoardSize", BoardSize);
+  config.insert("Player1Type", GetPlayerTypeString(Player1Type));
+  config.insert("Player2Type", GetPlayerTypeString(Player2Type));
+  return QJsonDocument(config).toJson(QJsonDocument::Compact);
 }
 
 class CommandParser {

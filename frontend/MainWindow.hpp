@@ -1,5 +1,7 @@
 #pragma once
 
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QPointer>
 #include <QThreadPool>
 #include <QTime>
@@ -9,7 +11,6 @@
 #include "BoxCanvas.hpp"
 #include "DotCanvas.hpp"
 #include "EdgeCanvas.hpp"
-#include "MoveRecord.hpp"
 
 namespace dab::frontend {
 
@@ -135,27 +136,36 @@ MainWindow<BoardSize>::showEvent(QShowEvent* event) {
         }
       }
 
+      const Turn turn = static_cast<Turn>(Board);
       assert(!Board.Contains(PlayerMoveEdge));
       QMetaObject::invokeMethod(this, [this]() -> void { Add(PlayerMoveEdge); }, Qt::BlockingQueuedConnection);
       assert(Board.Contains(PlayerMoveEdge));
 
       const double seconds = static_cast<double>(startTime.msecsTo(QTime::currentTime())) / 1000.0;
-      MoveRecord<BoardSize> moveRecord(Board.NowStep(),
-                                       Board.IsPlayer1Turn() ? 1 : 2,
-                                       PlayerMoveEdge,
-                                       Board.GetPlayer1Score(),
-                                       Board.GetPlayer2Score(),
-                                       seconds);
-      qInfo("Info: %s", moveRecord.ToString().toLocal8Bit().constData());
+
+      QJsonObject playerScore;
+      playerScore.insert("Player1", Board.GetPlayer1Score());
+      playerScore.insert("Player2", Board.GetPlayer2Score());
+
+      QJsonObject moveRecord;
+      moveRecord.insert("Step", Board.NowStep());
+      moveRecord.insert("Turn", turn.IsPlayer1Turn() ? 1 : 2);
+      moveRecord.insert("Move", PlayerMoveEdge.operator SizeType<BoardSize>());
+      moveRecord.insert("Score", playerScore);
+      moveRecord.insert("Time", seconds);
+
+      qInfo("Info: %s", QJsonDocument(moveRecord).toJson(QJsonDocument::Compact).constData());
     }
 
+    QJsonObject winner;
     if (Board.GetPlayer1Score() > Board.GetPlayer2Score()) {
-      qInfo(R"(Info: {"Winner":"Player1"})");
+      winner.insert("Winner", "Player1");
     } else if (Board.GetPlayer2Score() > Board.GetPlayer1Score()) {
-      qInfo(R"(Info: {"Winner":"Player2"})");
+      winner.insert("Winner", "Player2");
     } else {
-      qInfo(R"(Info: {"Winner":"Draw"})");
+      winner.insert("Winner", "Draw");
     }
+    qInfo("Info: %s", QJsonDocument(winner).toJson(QJsonDocument::Compact).constData());
 
     QMetaObject::invokeMethod(
         this,
