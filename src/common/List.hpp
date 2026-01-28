@@ -38,7 +38,7 @@ class List : public Iterable<List<T, Cap>> {
 template <typename T, size_t Cap>
 void
 List<T, Cap>::ClearAndSet(const T item) {
-  Data.At(0) = item;
+  Data[0] = item;
   Length = 1;
 }
 
@@ -52,7 +52,7 @@ template <typename T, size_t Cap>
 void
 List<T, Cap>::Append(const T item) {
   assert(Length < Cap);
-  Data.At(Length++) = item;
+  Data[Length++] = item;
 }
 
 template <typename T, size_t Cap>

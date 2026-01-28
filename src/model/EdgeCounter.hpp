@@ -44,8 +44,8 @@ SizeType<BoardSize>
 EdgeCounter<BoardSize>::Add(const Edge<BoardSize> edge) {
   SizeType<BoardSize> score = 0;
   for (const Box<BoardSize> box : NearBoxes(edge)) {
-    Counter.At(box)++;
-    const uint8_t num = Counter.At(box);
+    Counter[box]++;
+    const uint8_t num = Counter[box];
     assert(num <= 4);
     if (num == 4) {
       score++;
@@ -57,7 +57,7 @@ EdgeCounter<BoardSize>::Add(const Edge<BoardSize> edge) {
 template <int64_t BoardSize>
 uint8_t
 EdgeCounter<BoardSize>::EdgeCount(const Box<BoardSize> box) const {
-  return Counter.At(box);
+  return Counter[box];
 }
 
 template <int64_t BoardSize>

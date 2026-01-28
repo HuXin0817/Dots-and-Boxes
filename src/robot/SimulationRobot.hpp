@@ -33,7 +33,7 @@ SimulationRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSi
     SimulationBoard.Reset(static_cast<EdgeCountableBoard<BoardSize>>(board));
     SimulationBoard.Add(emptyEdge);
     while (SimulationBoard.Gaming()) {
-      const Edge<BoardSize> edge = SubRobot.BestCandidateEdges(SimulationBoard).At(0);
+      const Edge<BoardSize> edge = SubRobot.BestCandidateEdges(SimulationBoard)[0];
       assert(board.MaxEdgeCount(edge) > 1);
       SimulationBoard.Add(edge);
     }

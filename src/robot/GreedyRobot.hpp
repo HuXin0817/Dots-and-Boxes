@@ -36,9 +36,9 @@ GreedyRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>&
   Span<Edge<BoardSize>> emptyEdges = board.EmptyEdges();
   for (const Edge<BoardSize> edge : emptyEdges) {
     if (const uint8_t maxCount = board.MaxEdgeCount(edge); maxCount == 3) {
-      Edges.At(ScoreableIndex++) = edge;
+      Edges[ScoreableIndex++] = edge;
     } else if (maxCount < 2) {
-      Edges.At(--EnemyUnscoreableIndex) = edge;
+      Edges[--EnemyUnscoreableIndex] = edge;
     }
   }
   assert(ScoreableIndex <= EnemyUnscoreableIndex);

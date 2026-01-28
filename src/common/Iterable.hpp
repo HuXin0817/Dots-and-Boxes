@@ -22,9 +22,9 @@ class Iterable {
   Empty() const;
 
   auto&
-  At(size_t i);
+  operator[](size_t i);
   const auto&
-  At(size_t i) const;
+  operator[](size_t i) const;
 
   protected:
   ~Iterable() = default;
@@ -68,13 +68,13 @@ Iterable<Derived>::Empty() const {
 
 template <typename Derived>
 auto&
-Iterable<Derived>::At(size_t i) {
+Iterable<Derived>::operator[](size_t i) {
   return static_cast<Derived*>(this)->Begin()[i];
 }
 
 template <typename Derived>
 const auto&
-Iterable<Derived>::At(size_t i) const {
+Iterable<Derived>::operator[](size_t i) const {
   return static_cast<const Derived*>(this)->Begin()[i];
 }
 

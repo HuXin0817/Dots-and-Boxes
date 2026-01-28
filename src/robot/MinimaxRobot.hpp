@@ -41,9 +41,9 @@ MinimaxRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>
     if (const SizeType<BoardSize> score = SimulationBoard.MaxObtainableScore(minScore); score < minScore) {
       minScore = score;
       candidateEdgesSize = 1;
-      candidateEdges.At(0) = edge;
+      candidateEdges[0] = edge;
     } else if (score == minScore) {
-      candidateEdges.At(candidateEdgesSize++) = edge;
+      candidateEdges[candidateEdgesSize++] = edge;
     }
   }
 

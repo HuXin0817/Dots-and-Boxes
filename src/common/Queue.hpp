@@ -47,14 +47,14 @@ template <typename T, size_t Cap>
 void
 Queue<T, Cap>::Append(const T item) {
   assert(EndIndex < Cap);
-  Data.At(EndIndex++) = item;
+  Data[EndIndex++] = item;
 }
 
 template <typename T, size_t Cap>
 T
 Queue<T, Cap>::Pop() {
   assert(Size() > 0);
-  return Data.At(BeginIndex++);
+  return Data[BeginIndex++];
 }
 
 template <typename T, size_t Cap>
