@@ -45,7 +45,7 @@ SimulationRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSi
     }
   }
 
-  return Export<List<Edge<BoardSize>, Edge<BoardSize>::Max>>(SearchEdges);
+  return Export(SearchEdges);
 }
 
 }  // namespace dab
