@@ -46,7 +46,7 @@ Queue<T, Cap>::Clear() {
 template <typename T, size_t Cap>
 void
 Queue<T, Cap>::Append(const T item) {
-  assert(endIdx < Cap);
+  assert(EndIndex < Cap);
   Data.At(EndIndex++) = item;
 }
 
