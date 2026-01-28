@@ -3,7 +3,6 @@
 #include <algorithm>
 
 #include "../common/Array.hpp"
-#include "../common/Iota.hpp"
 #include "../common/List.hpp"
 #include "../common/Span.hpp"
 #include "Edge.hpp"
@@ -49,7 +48,7 @@ template <int64_t BoardSize, typename ScoreType>
 template <typename OtherSearchScoreMap>
 void
 SearchScoreMap<BoardSize, ScoreType>::Add(const OtherSearchScoreMap& other) {
-  for (const SizeType<BoardSize> i : Iota(Edge<BoardSize>::Max)) {
+  for (const SizeType<BoardSize> i : Iota<Edge<BoardSize>>()) {
     Time.At(i) += other.Time.At(i);
     Score.At(i) += other.Score.At(i);
   }
@@ -59,7 +58,7 @@ template <int64_t BoardSize, typename ScoreType>
 Span<Edge<BoardSize>>
 SearchScoreMap<BoardSize, ScoreType>::Export() {
   float maxScore = 0.0;
-  for (const Edge<BoardSize> edge : Iota(Edge<BoardSize>::Max)) {
+  for (const Edge<BoardSize> edge : Iota<Edge<BoardSize>>()) {
     if (Time.At(edge) > 0) {
       if (const float score = static_cast<float>(Score.At(edge)) / static_cast<float>(Time.At(edge));
           score > maxScore || BestEdges.Empty()) {

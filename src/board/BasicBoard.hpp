@@ -37,7 +37,7 @@ template <int64_t BoardSize>
 void
 BasicBoard<BoardSize>::Reset() {
   Step<BoardSize>::Reset();
-  for (const Edge<BoardSize> edge : Iota(Edge<BoardSize>::Max)) {
+  for (const Edge<BoardSize> edge : Iota<Edge<BoardSize>>()) {
     EdgeIndexes.At(edge) = edge;
     Edges.At(edge) = edge;
   }

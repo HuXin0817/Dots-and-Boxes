@@ -56,14 +56,14 @@ MainWindow<BoardSize>::MainWindow(const PlayerType player1Type, const PlayerType
   resize(WindowSize, WindowSize);
   setMinimumSize(WindowSize, WindowSize);
 
-  for (const Dot<BoardSize> dot : Iota(Box<BoardSize>::Max)) {
+  for (const Dot<BoardSize> dot : Iota<Box<BoardSize>>()) {
     BoxCanvases.emplace_back(new BoxCanvas<BoardSize>(this));
   }
-  for (const Edge<BoardSize> edge : Iota(Edge<BoardSize>::Max)) {
+  for (const Edge<BoardSize> edge : Iota<Edge<BoardSize>>()) {
     EdgeCanvases.emplace_back(
         new EdgeCanvas<BoardSize>(edge.Rotate(), [edge, this]() -> void { SetPlayerMoveEdge(edge); }, this));
   }
-  for (const Box<BoardSize> box : Iota(Dot<BoardSize>::Max)) {
+  for (const Box<BoardSize> box : Iota<Dot<BoardSize>>()) {
     DotCanvases.emplace_back(new DotCanvas<BoardSize>(this));
   }
 
@@ -92,13 +92,13 @@ MainWindow<BoardSize>::resizeEvent(QResizeEvent* event) {
   const int x0 = (width() - BoardWidth) / 2 - UnitSize<BoardSize>;
   const int y0 = (height() - BoardWidth) / 2 - UnitSize<BoardSize>;
 
-  for (const Box<BoardSize> box : Iota(Box<BoardSize>::Max)) {
+  for (const Box<BoardSize> box : Iota<Box<BoardSize>>()) {
     const int x = x0 + box.X() * EdgeCanvas<BoardSize>::Height + 2 * UnitSize<BoardSize>;
     const int y = y0 + box.Y() * EdgeCanvas<BoardSize>::Height + 2 * UnitSize<BoardSize>;
     BoxCanvases[box]->move(x, y);
   }
 
-  for (const Edge<BoardSize> edge : Iota(Edge<BoardSize>::Max)) {
+  for (const Edge<BoardSize> edge : Iota<Edge<BoardSize>>()) {
     int x = x0 + edge.Dot1().X() * EdgeCanvas<BoardSize>::Height;
     int y = y0 + edge.Dot1().Y() * EdgeCanvas<BoardSize>::Height;
     if (edge.Rotate()) {
@@ -109,7 +109,7 @@ MainWindow<BoardSize>::resizeEvent(QResizeEvent* event) {
     EdgeCanvases[edge]->move(x, y);
   }
 
-  for (const Dot<BoardSize> dot : Iota(Dot<BoardSize>::Max)) {
+  for (const Dot<BoardSize> dot : Iota<Dot<BoardSize>>()) {
     const int x = x0 + dot.X() * EdgeCanvas<BoardSize>::Height;
     const int y = y0 + dot.Y() * EdgeCanvas<BoardSize>::Height;
     DotCanvases[dot]->move(x, y);
@@ -215,7 +215,7 @@ MainWindow<BoardSize>::Add(const Edge<BoardSize> edge) {
   }
   EdgeCanvases[edge]->SetState(static_cast<const Turn>(Board));
   EdgeCanvases[edge]->raise();
-  for (const Dot<BoardSize> dot : Iota(Dot<BoardSize>::Max)) {
+  for (const Dot<BoardSize> dot : Iota<Dot<BoardSize>>()) {
     DotCanvases[dot]->raise();
   }
 

@@ -40,8 +40,8 @@ template <typename T>
 template <typename Other>
 Span<T>::
 operator Span<Other>() const {
-  return Span(const_cast<Other*>(reinterpret_cast<const Other*>(Begin())),
-              const_cast<Other*>(reinterpret_cast<const Other*>(End())));
+  return Span<Other>(const_cast<Other*>(reinterpret_cast<const Other*>(Begin())),
+                     const_cast<Other*>(reinterpret_cast<const Other*>(End())));
 }
 
 template <typename T>

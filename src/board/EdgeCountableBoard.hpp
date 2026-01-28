@@ -58,7 +58,7 @@ EdgeCountableBoard<BoardSize>::FindNotContainsEdgeInBox(const Box<BoardSize> box
 template <int64_t BoardSize>
 Edge<BoardSize>
 EdgeCountableBoard<BoardSize>::FindScoreableEdge() const {
-  for (const Box<BoardSize> box : Iota(Box<BoardSize>::Max)) {
+  for (const Box<BoardSize> box : Iota<Box<BoardSize>>()) {
     if (EdgeCounter<BoardSize>::EdgeCount(box) == 3) {
       return FindNotContainsEdgeInBox(box);
     }

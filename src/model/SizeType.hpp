@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <limits>
+#include <ranges>
 #include <type_traits>
 
 namespace dab {
@@ -17,5 +18,11 @@ using Int = std::conditional_t<Max <= std::numeric_limits<int8_t>::max(), int8_t
 template <int64_t BoardSize>
 using SizeType = Int<2 * BoardSize * (BoardSize + 1)>;
 // clang-format on
+
+template <typename T>
+auto
+Iota() {
+  return std::views::iota(0, T::Max);
+}
 
 }  // namespace dab
