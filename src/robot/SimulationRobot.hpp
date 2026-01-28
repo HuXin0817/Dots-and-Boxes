@@ -17,7 +17,7 @@ class SimulationRobot final : public Robot<BoardSize> {
   private:
   MinimaxRobot<BoardSize> SubRobot;
   ScoreCountableBoard<BoardSize> SimulationBoard;
-  List<Edge<BoardSize>, Edge<BoardSize>::Max> SearchEdges;
+  List<Edge<BoardSize>, Limits<Edge<BoardSize>>::Max> SearchEdges;
 };
 
 template <int64_t BoardSize>
@@ -28,7 +28,7 @@ SimulationRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSi
   }
 
   SearchEdges.Clear();
-  SizeType<BoardSize> maxScore = -Box<BoardSize>::Max;
+  SizeType<BoardSize> maxScore = -Limits<Box<BoardSize>>::Max;
   for (const Edge<BoardSize> emptyEdge : board.EmptyEdges()) {
     SimulationBoard.Reset(static_cast<EdgeCountableBoard<BoardSize>>(board));
     SimulationBoard.Add(emptyEdge);

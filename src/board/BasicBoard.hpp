@@ -24,8 +24,8 @@ class BasicBoard : public Step<BoardSize> {
   MoveRecord() const;
 
   private:
-  Array<Edge<BoardSize>, Edge<BoardSize>::Max> Edges;
-  Array<SizeType<BoardSize>, Edge<BoardSize>::Max> EdgeIndexes;
+  Array<Edge<BoardSize>, Limits<Edge<BoardSize>>::Max> Edges;
+  Array<SizeType<BoardSize>, Limits<Edge<BoardSize>>::Max> EdgeIndexes;
 };
 
 template <int64_t BoardSize>
@@ -64,7 +64,7 @@ BasicBoard<BoardSize>::Contains(const Edge<BoardSize> edge) const {
 template <int64_t BoardSize>
 Span<Edge<BoardSize>>
 BasicBoard<BoardSize>::EmptyEdges() const {
-  return Span(Edges.begin() + Step<BoardSize>::NowStep(), Edges.begin() + Edge<BoardSize>::Max);
+  return Span(Edges.begin() + Step<BoardSize>::NowStep(), Edges.begin() + Limits<Edge<BoardSize>>::Max);
 }
 
 template <int64_t BoardSize>

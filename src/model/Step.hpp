@@ -39,13 +39,13 @@ Step<BoardSize>::Add() {
 template <int64_t BoardSize>
 bool
 Step<BoardSize>::Gaming() const {
-  return v < Edge<BoardSize>::Max;
+  return v < Limits<Edge<BoardSize>>::Max;
 }
 
 template <int64_t BoardSize>
 SizeType<BoardSize>
 Step<BoardSize>::RemainStep() const {
-  return Edge<BoardSize>::Max - v;
+  return Limits<Edge<BoardSize>>::Max - v;
 }
 
 template <int64_t BoardSize>

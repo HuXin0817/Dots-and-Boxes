@@ -3,14 +3,13 @@
 #include <cassert>
 
 #include "Square.hpp"
+#include "Types.hpp"
 
 namespace dab {
 
 template <int64_t BoardSize>
 class Edge {
   public:
-  static constexpr SizeType<BoardSize> Max = 2 * BoardSize * (BoardSize + 1);
-
   Edge() = default;
   Edge(SizeType<BoardSize> v);
   Edge(const Dot<BoardSize> dot1, const Dot<BoardSize> dot2);
@@ -82,5 +81,11 @@ Edge<BoardSize>
 InvalidEdge() {
   return -1;
 }
+
+template <int64_t BoardSize>
+class Limits<Edge<BoardSize>> {
+  public:
+  static constexpr SizeType<BoardSize> Max = 2 * BoardSize * (BoardSize + 1);
+};
 
 }  // namespace dab

@@ -24,9 +24,9 @@ class SearchScoreMap {
   Span<Edge<BoardSize>>
   Export();
 
-  Array<ScoreType, Edge<BoardSize>::Max> Time;
-  Array<ScoreType, Edge<BoardSize>::Max> Score;
-  List<Edge<BoardSize>, Edge<BoardSize>::Max> BestEdges;
+  Array<ScoreType, Limits<Edge<BoardSize>>::Max> Time;
+  Array<ScoreType, Limits<Edge<BoardSize>>::Max> Score;
+  List<Edge<BoardSize>, Limits<Edge<BoardSize>>::Max> BestEdges;
 };
 
 template <int64_t BoardSize, typename ScoreType>

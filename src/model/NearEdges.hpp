@@ -16,7 +16,7 @@ class NearEdgesMapper {
   NearEdgesMapper();
 
   private:
-  Array<Array<Edge<BoardSize>, 4>, Box<BoardSize>::Max> BoxNearEdges;
+  Array<Array<Edge<BoardSize>, 4>, Limits<Box<BoardSize>>::Max> BoxNearEdges;
 
   static Array<Edge<BoardSize>, 4>
   GetNearEdges(const Box<BoardSize> box);

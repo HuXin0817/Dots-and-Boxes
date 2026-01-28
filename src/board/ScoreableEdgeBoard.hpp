@@ -19,7 +19,7 @@ class ScoreableEdgeBoard : public EdgeCountableBoard<BoardSize> {
   MaxObtainableScore(const SizeType<BoardSize> minScore);
 
   private:
-  Queue<Edge<BoardSize>, Edge<BoardSize>::Max> ScoreableEdges;
+  Queue<Edge<BoardSize>, Limits<Edge<BoardSize>>::Max> ScoreableEdges;
 };
 
 template <int64_t BoardSize>

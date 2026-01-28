@@ -1,15 +1,12 @@
 #pragma once
 
-#include "SizeType.hpp"
+#include "Types.hpp"
 
 namespace dab {
 
 template <int64_t BoardSize, int64_t Length>
 class Square {
   public:
-  static constexpr SizeType<BoardSize> Size = Length;
-  static constexpr SizeType<BoardSize> Max = Size * Size;
-
   Square() = default;
   Square(SizeType<BoardSize> v);
   Square(SizeType<BoardSize> x, SizeType<BoardSize> y);
@@ -29,7 +26,7 @@ Square<BoardSize, Length>::Square(SizeType<BoardSize> v) : v(v) {
 }
 
 template <int64_t BoardSize, int64_t Length>
-Square<BoardSize, Length>::Square(SizeType<BoardSize> x, SizeType<BoardSize> y) : v(x * Size + y) {
+Square<BoardSize, Length>::Square(SizeType<BoardSize> x, SizeType<BoardSize> y) : v(x * Length + y) {
 }
 
 template <int64_t BoardSize, int64_t Length>
@@ -41,14 +38,20 @@ operator SizeType<BoardSize>() const {
 template <int64_t BoardSize, int64_t Length>
 SizeType<BoardSize>
 Square<BoardSize, Length>::X() const {
-  return v / Size;
+  return v / Length;
 }
 
 template <int64_t BoardSize, int64_t Length>
 SizeType<BoardSize>
 Square<BoardSize, Length>::Y() const {
-  return v % Size;
+  return v % Length;
 }
+
+template <int64_t BoardSize, int64_t Length>
+class Limits<Square<BoardSize, Length>> {
+  public:
+  static constexpr SizeType<BoardSize> Max = Length * Length;
+};
 
 template <int64_t BoardSize>
 using Box = Square<BoardSize, BoardSize>;

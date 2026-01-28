@@ -127,7 +127,7 @@ Dots-and-Boxes/
 │   │   ├── NearBoxes.hpp
 │   │   ├── NearEdges.hpp
 │   │   ├── SearchScoreMap.hpp
-│   │   ├── SizeType.hpp
+│   │   ├── Types.hpp
 │   │   ├── Square.hpp
 │   │   ├── Step.hpp
 │   │   └── Turn.hpp

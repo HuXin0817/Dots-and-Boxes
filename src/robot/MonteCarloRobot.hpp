@@ -7,7 +7,7 @@
 
 namespace dab {
 
-template <int64_t BoardSize, int64_t SearchTime = static_cast<int64_t>(Edge<BoardSize>::Max) << 8>
+template <int64_t BoardSize, int64_t SearchTime = static_cast<int64_t>(Limits<Edge<BoardSize>>::Max) << 8>
 class MonteCarloRobot final : public Robot<BoardSize> {
   public:
   MonteCarloRobot() = default;

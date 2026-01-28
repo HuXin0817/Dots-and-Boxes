@@ -1,7 +1,7 @@
 #pragma once
 
-#include "SizeType.hpp"
 #include "Turn.hpp"
+#include "Types.hpp"
 
 namespace dab {
 

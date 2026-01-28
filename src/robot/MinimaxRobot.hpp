@@ -31,8 +31,8 @@ MinimaxRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>
     return edges;
   }
 
-  SizeType<BoardSize> minScore = Box<BoardSize>::Max + 1;
-  Array<Edge<BoardSize>, Edge<BoardSize>::Max>& candidateEdges = SubRobot.GetEdgeBuffer();
+  SizeType<BoardSize> minScore = Limits<Box<BoardSize>>::Max + 1;
+  Array<Edge<BoardSize>, Limits<Edge<BoardSize>>::Max>& candidateEdges = SubRobot.GetEdgeBuffer();
   SizeType<BoardSize> candidateEdgesSize = 0;
 
   for (const Edge<BoardSize> edge : board.EmptyEdges()) {
