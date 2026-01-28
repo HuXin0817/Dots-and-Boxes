@@ -12,10 +12,10 @@ class MonteCarloRobot final : public Robot<BoardSize> {
   public:
   MonteCarloRobot() = default;
 
-  Span<Edge<BoardSize>>
+  Span<const Edge<BoardSize>>
   BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override;
   bool
-  CanEarlyExit(const ScoreCountableBoard<BoardSize>& board, Span<Edge<BoardSize>>& result);
+  CanEarlyExit(const ScoreCountableBoard<BoardSize>& board, Span<const Edge<BoardSize>>& result);
   const SearchScoreMap<BoardSize, Int<2 * SearchTime>>&
   GetSearchResult() const;
 
@@ -26,9 +26,9 @@ class MonteCarloRobot final : public Robot<BoardSize> {
 };
 
 template <int64_t BoardSize, int64_t SearchTime>
-Span<Edge<BoardSize>>
+Span<const Edge<BoardSize>>
 MonteCarloRobot<BoardSize, SearchTime>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) {
-  if (Span<Edge<BoardSize>> edges; CanEarlyExit(board, edges)) {
+  if (Span<const Edge<BoardSize>> edges; CanEarlyExit(board, edges)) {
     return edges;
   }
 
@@ -51,7 +51,7 @@ MonteCarloRobot<BoardSize, SearchTime>::BestCandidateEdges(const ScoreCountableB
 template <int64_t BoardSize, int64_t SearchTime>
 bool
 MonteCarloRobot<BoardSize, SearchTime>::CanEarlyExit(const ScoreCountableBoard<BoardSize>& board,
-                                                     Span<Edge<BoardSize>>& result) {
+                                                     Span<const Edge<BoardSize>>& result) {
   result = SubRobot.BestCandidateEdges(board);
   return result.Size() == 1;
 }

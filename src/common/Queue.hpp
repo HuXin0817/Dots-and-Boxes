@@ -4,13 +4,14 @@
 #include <cstddef>
 
 #include "Array.hpp"
+#include "IterableWapper.hpp"
 
 namespace dab {
 
 template <typename T, size_t Cap>
-class Queue {
+class QueueImpl : public Iterable<T> {
   public:
-  Queue() = default;
+  QueueImpl() = default;
 
   void
   Clear();
@@ -18,81 +19,76 @@ class Queue {
   Append(const T item);
   T
   Pop();
-  size_t
-  Size() const;
-  bool
-  Empty() const;
 
+  size_t
+  Size() const override;
   T*
-  begin();
+  Begin() override;
   const T*
-  begin() const;
+  Begin() const override;
   T*
-  end();
+  End() override;
   const T*
-  end() const;
+  End() const override;
 
   private:
   Array<T, Cap> Data;
-  size_t Begin = 0;
-  size_t End = 0;
+  size_t beginIdx = 0;
+  size_t endIdx = 0;
 };
 
 template <typename T, size_t Cap>
 void
-Queue<T, Cap>::Clear() {
-  Begin = 0;
-  End = 0;
+QueueImpl<T, Cap>::Clear() {
+  beginIdx = 0;
+  endIdx = 0;
 }
 
 template <typename T, size_t Cap>
 void
-Queue<T, Cap>::Append(const T item) {
-  assert(End < Cap);
-  Data.At(End++) = item;
+QueueImpl<T, Cap>::Append(const T item) {
+  assert(endIdx < Cap);
+  Data.At(endIdx++) = item;
 }
 
 template <typename T, size_t Cap>
 T
-Queue<T, Cap>::Pop() {
-  assert(!Empty());
-  return Data.At(Begin++);
+QueueImpl<T, Cap>::Pop() {
+  assert(Size() > 0);
+  return Data.At(beginIdx++);
 }
 
 template <typename T, size_t Cap>
 size_t
-Queue<T, Cap>::Size() const {
-  return End - Begin;
-}
-
-template <typename T, size_t Cap>
-bool
-Queue<T, Cap>::Empty() const {
-  return Begin == End;
+QueueImpl<T, Cap>::Size() const {
+  return endIdx - beginIdx;
 }
 
 template <typename T, size_t Cap>
 T*
-Queue<T, Cap>::begin() {
-  return Data.begin() + Begin;
+QueueImpl<T, Cap>::Begin() {
+  return Data.Begin() + beginIdx;
 }
 
 template <typename T, size_t Cap>
 const T*
-Queue<T, Cap>::begin() const {
-  return Data.begin() + Begin;
+QueueImpl<T, Cap>::Begin() const {
+  return Data.Begin() + beginIdx;
 }
 
 template <typename T, size_t Cap>
 T*
-Queue<T, Cap>::end() {
-  return Data.begin() + End;
+QueueImpl<T, Cap>::End() {
+  return Data.Begin() + endIdx;
 }
 
 template <typename T, size_t Cap>
 const T*
-Queue<T, Cap>::end() const {
-  return Data.begin() + End;
+QueueImpl<T, Cap>::End() const {
+  return Data.Begin() + endIdx;
 }
+
+template <typename T, size_t Cap>
+using Queue = IterableWapper<QueueImpl<T, Cap>>;
 
 }  // namespace dab

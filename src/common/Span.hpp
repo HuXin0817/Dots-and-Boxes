@@ -2,71 +2,75 @@
 
 #include <cassert>
 #include <cstddef>
+#include <type_traits>
+
+#include "IterableWapper.hpp"
 
 namespace dab {
 
 template <typename T>
-class Span {
+class SpanImpl : public Iterable<T> {
   public:
-  Span() = default;
-  Span(const T* begin, const T* end);
+  SpanImpl() = default;
+  SpanImpl(T* begin, T* end);
 
   size_t
-  Size() const;
-  bool
-  Empty() const;
-  const T&
-  At(const size_t i) const;
-
+  Size() const override;
+  T*
+  Begin() override;
   const T*
-  begin() const;
+  Begin() const override;
+  T*
+  End() override;
   const T*
-  end() const;
+  End() const override;
 
   private:
-  const T* Begin = nullptr;
-  const T* End = nullptr;
+  T* BeginPtr = nullptr;
+  T* EndPtr = nullptr;
 };
 
 template <typename T>
-Span<T>::Span(const T* begin, const T* end) : Begin(begin), End(end) {
+SpanImpl<T>::SpanImpl(T* begin, T* end) : BeginPtr(begin), EndPtr(end) {
 }
 
 template <typename T>
 size_t
-Span<T>::Size() const {
-  return End - Begin;
+SpanImpl<T>::Size() const {
+  return EndPtr - BeginPtr;
 }
 
 template <typename T>
-bool
-Span<T>::Empty() const {
-  return Begin == End;
-}
-
-template <typename T>
-const T&
-Span<T>::At(const size_t i) const {
-  assert(i < Size());
-  return Begin[i];
+T*
+SpanImpl<T>::Begin() {
+  return BeginPtr;
 }
 
 template <typename T>
 const T*
-Span<T>::begin() const {
-  return Begin;
+SpanImpl<T>::Begin() const {
+  return BeginPtr;
+}
+
+template <typename T>
+T*
+SpanImpl<T>::End() {
+  return EndPtr;
 }
 
 template <typename T>
 const T*
-Span<T>::end() const {
-  return End;
+SpanImpl<T>::End() const {
+  return EndPtr;
 }
 
 template <typename T>
+using Span = IterableWapper<SpanImpl<T>>;
+
+template <typename T, typename Ele = std::remove_reference_t<decltype(T().At(0))>>
 auto
 Export(const T& arr) {
-  return Span(arr.begin(), arr.end());
+  return Span<const Ele>(arr.begin(), arr.end());
 }
 
 }  // namespace dab

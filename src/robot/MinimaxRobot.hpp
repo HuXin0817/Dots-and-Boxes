@@ -11,7 +11,7 @@ class MinimaxRobot final : public Robot<BoardSize> {
   public:
   MinimaxRobot() = default;
 
-  Span<Edge<BoardSize>>
+  Span<const Edge<BoardSize>>
   BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override;
   bool
   EnemyUnscoreable() const;
@@ -24,9 +24,9 @@ class MinimaxRobot final : public Robot<BoardSize> {
 };
 
 template <int64_t BoardSize>
-Span<Edge<BoardSize>>
+Span<const Edge<BoardSize>>
 MinimaxRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) {
-  if (const Span<Edge<BoardSize>> edges = SubRobot.BestCandidateEdges(board);
+  if (const Span<const Edge<BoardSize>> edges = SubRobot.BestCandidateEdges(board);
       SubRobot.EnemyUnscoreable() || SubRobot.Scoreable()) {
     return edges;
   }
@@ -47,7 +47,7 @@ MinimaxRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>
     }
   }
 
-  return Span(candidateEdges.begin(), candidateEdges.begin() + candidateEdgesSize);
+  return Span<const Edge<BoardSize>>(candidateEdges.begin(), candidateEdges.begin() + candidateEdgesSize);
 }
 
 template <int64_t BoardSize>

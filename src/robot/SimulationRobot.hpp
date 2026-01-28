@@ -11,7 +11,7 @@ class SimulationRobot final : public Robot<BoardSize> {
   public:
   SimulationRobot() = default;
 
-  Span<Edge<BoardSize>>
+  Span<const Edge<BoardSize>>
   BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override;
 
   private:
@@ -21,9 +21,9 @@ class SimulationRobot final : public Robot<BoardSize> {
 };
 
 template <int64_t BoardSize>
-Span<Edge<BoardSize>>
+Span<const Edge<BoardSize>>
 SimulationRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) {
-  if (const Span<Edge<BoardSize>> edges = SubRobot.BestCandidateEdges(board); SubRobot.EnemyUnscoreable()) {
+  if (const Span<const Edge<BoardSize>> edges = SubRobot.BestCandidateEdges(board); SubRobot.EnemyUnscoreable()) {
     return edges;
   }
 
@@ -45,7 +45,7 @@ SimulationRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSi
     }
   }
 
-  return Export(SearchEdges);
+  return Export<List<Edge<BoardSize>, Edge<BoardSize>::Max>>(SearchEdges);
 }
 
 }  // namespace dab

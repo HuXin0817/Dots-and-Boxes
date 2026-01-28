@@ -15,7 +15,7 @@ class ParallelSearchRobot final : public Robot<BoardSize> {
   public:
   ParallelSearchRobot() = default;
 
-  Span<Edge<BoardSize>>
+  Span<const Edge<BoardSize>>
   BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override;
 
   private:
@@ -24,9 +24,9 @@ class ParallelSearchRobot final : public Robot<BoardSize> {
 };
 
 template <int64_t BoardSize>
-Span<Edge<BoardSize>>
+Span<const Edge<BoardSize>>
 ParallelSearchRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) {
-  if (Span<Edge<BoardSize>> edges; SubRobots.At(0).CanEarlyExit(board, edges)) {
+  if (Span<const Edge<BoardSize>> edges; SubRobots.At(0).CanEarlyExit(board, edges)) {
     return edges;
   }
 

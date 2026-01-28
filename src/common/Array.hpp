@@ -4,82 +4,76 @@
 #include <cassert>
 #include <cstddef>
 
+#include "IterableWapper.hpp"
+
 namespace dab {
 
 template <typename T, size_t Length>
-class Array {
+class ArrayImpl : public Iterable<T> {
   public:
-  Array() = default;
-  Array(const Array& other);
+  ArrayImpl() = default;
+  ArrayImpl(const ArrayImpl& other);
 
   void
-  operator=(const Array& other);
+  operator=(const ArrayImpl& other);
 
-  T&
-  At(const size_t i);
-  const T&
-  At(const size_t i) const;
-
+  size_t
+  Size() const override;
   T*
-  begin();
+  Begin() override;
   const T*
-  begin() const;
+  Begin() const override;
   T*
-  end();
+  End() override;
   const T*
-  end() const;
+  End() const override;
 
   private:
   T Data[Length];
 };
 
 template <typename T, size_t Length>
-Array<T, Length>::Array(const Array& other) {
+ArrayImpl<T, Length>::ArrayImpl(const ArrayImpl& other) {
   std::copy(other.Data, other.Data + Length, Data);
 }
 
 template <typename T, size_t Length>
 void
-Array<T, Length>::operator=(const Array& other) {
+ArrayImpl<T, Length>::operator=(const ArrayImpl& other) {
   std::copy(other.Data, other.Data + Length, Data);
 }
 
 template <typename T, size_t Length>
-T&
-Array<T, Length>::At(const size_t i) {
-  assert(i < Length);
-  return Data[i];
-}
-
-template <typename T, size_t Length>
-const T&
-Array<T, Length>::At(const size_t i) const {
-  assert(i < Length);
-  return Data[i];
+size_t
+ArrayImpl<T, Length>::Size() const {
+  return Length;
 }
 
 template <typename T, size_t Length>
 T*
-Array<T, Length>::begin() {
+ArrayImpl<T, Length>::Begin() {
   return Data;
 }
 
 template <typename T, size_t Length>
 const T*
-Array<T, Length>::begin() const {
+ArrayImpl<T, Length>::Begin() const {
   return Data;
 }
 
 template <typename T, size_t Length>
 T*
-Array<T, Length>::end() {
+ArrayImpl<T, Length>::End() {
   return Data + Length;
 }
 
 template <typename T, size_t Length>
 const T*
-Array<T, Length>::end() const {
+ArrayImpl<T, Length>::End() const {
   return Data + Length;
 }
+
+template <typename T, size_t Length>
+using Array = IterableWapper<ArrayImpl<T, Length>>;
 
 }  // namespace dab

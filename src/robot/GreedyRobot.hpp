@@ -12,7 +12,7 @@ class GreedyRobot : public Robot<BoardSize> {
   public:
   GreedyRobot() = default;
 
-  Span<Edge<BoardSize>>
+  Span<const Edge<BoardSize>>
   BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override;
   bool
   EnemyUnscoreable() const;
@@ -28,12 +28,12 @@ class GreedyRobot : public Robot<BoardSize> {
 };
 
 template <int64_t BoardSize>
-Span<Edge<BoardSize>>
+Span<const Edge<BoardSize>>
 GreedyRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) {
   ScoreableIndex = 0;
   EnemyUnscoreableIndex = Edge<BoardSize>::Max;
 
-  const Span<Edge<BoardSize>> emptyEdges = board.EmptyEdges();
+  const Span<const Edge<BoardSize>> emptyEdges = board.EmptyEdges();
   for (const Edge<BoardSize> edge : emptyEdges) {
     if (const uint8_t maxCount = board.MaxEdgeCount(edge); maxCount == 3) {
       Edges.At(ScoreableIndex++) = edge;
@@ -44,13 +44,13 @@ GreedyRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>&
   assert(ScoreableIndex <= EnemyUnscoreableIndex);
 
   if (Scoreable()) {
-    return Span(Edges.begin(), Edges.begin() + ScoreableIndex);
+    return Span<const Edge<BoardSize>>(Edges.begin(), Edges.begin() + ScoreableIndex);
   }
   if (EnemyUnscoreable()) {
-    return Span(Edges.begin() + EnemyUnscoreableIndex, Edges.end());
+    return Span<const Edge<BoardSize>>(Edges.begin() + EnemyUnscoreableIndex, Edges.end());
   }
 
-  return Span(emptyEdges.begin(), emptyEdges.end());
+  return Span<const Edge<BoardSize>>(emptyEdges.begin(), emptyEdges.end());
 }
 
 template <int64_t BoardSize>
