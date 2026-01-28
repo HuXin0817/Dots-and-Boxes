@@ -4,14 +4,13 @@
 #include <cstddef>
 
 #include "Array.hpp"
-#include "IterableWapper.hpp"
 
 namespace dab {
 
 template <typename T, size_t Cap>
-class ListImpl : public Iterable<T> {
+class List : public Iterable<List<T, Cap>> {
   public:
-  ListImpl() = default;
+  List() = default;
 
   void
   ClearAndSet(const T item);
@@ -21,15 +20,15 @@ class ListImpl : public Iterable<T> {
   Append(const T item);
 
   size_t
-  Size() const override;
+  Size() const;
   T*
-  Begin() override;
+  Begin();
   const T*
-  Begin() const override;
+  Begin() const;
   T*
-  End() override;
+  End();
   const T*
-  End() const override;
+  End() const;
 
   private:
   Array<T, Cap> Data;
@@ -38,55 +37,52 @@ class ListImpl : public Iterable<T> {
 
 template <typename T, size_t Cap>
 void
-ListImpl<T, Cap>::ClearAndSet(const T item) {
+List<T, Cap>::ClearAndSet(const T item) {
   Data.At(0) = item;
   Length = 1;
 }
 
 template <typename T, size_t Cap>
 void
-ListImpl<T, Cap>::Clear() {
+List<T, Cap>::Clear() {
   Length = 0;
 }
 
 template <typename T, size_t Cap>
 void
-ListImpl<T, Cap>::Append(const T item) {
+List<T, Cap>::Append(const T item) {
   assert(Length < Cap);
   Data.At(Length++) = item;
 }
 
 template <typename T, size_t Cap>
 size_t
-ListImpl<T, Cap>::Size() const {
+List<T, Cap>::Size() const {
   return Length;
 }
 
 template <typename T, size_t Cap>
 T*
-ListImpl<T, Cap>::Begin() {
+List<T, Cap>::Begin() {
   return Data.Begin();
 }
 
 template <typename T, size_t Cap>
 const T*
-ListImpl<T, Cap>::Begin() const {
+List<T, Cap>::Begin() const {
   return Data.Begin();
 }
 
 template <typename T, size_t Cap>
 T*
-ListImpl<T, Cap>::End() {
+List<T, Cap>::End() {
   return Data.Begin() + Length;
 }
 
 template <typename T, size_t Cap>
 const T*
-ListImpl<T, Cap>::End() const {
+List<T, Cap>::End() const {
   return Data.Begin() + Length;
 }
-
-template <typename T, size_t Cap>
-using List = IterableWapper<ListImpl<T, Cap>>;
 
 }  // namespace dab

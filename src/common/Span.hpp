@@ -4,26 +4,26 @@
 #include <cstddef>
 #include <type_traits>
 
-#include "IterableWapper.hpp"
+#include "Iterable.hpp"
 
 namespace dab {
 
 template <typename T>
-class SpanImpl : public Iterable<T> {
+class Span : public Iterable<Span<T>> {
   public:
-  SpanImpl() = default;
-  SpanImpl(T* begin, T* end);
+  Span() = default;
+  Span(T* begin, T* end);
 
   size_t
-  Size() const override;
+  Size() const;
   T*
-  Begin() override;
+  Begin();
   const T*
-  Begin() const override;
+  Begin() const;
   T*
-  End() override;
+  End();
   const T*
-  End() const override;
+  End() const;
 
   private:
   T* BeginPtr = nullptr;
@@ -31,41 +31,38 @@ class SpanImpl : public Iterable<T> {
 };
 
 template <typename T>
-SpanImpl<T>::SpanImpl(T* begin, T* end) : BeginPtr(begin), EndPtr(end) {
+Span<T>::Span(T* begin, T* end) : BeginPtr(begin), EndPtr(end) {
 }
 
 template <typename T>
 size_t
-SpanImpl<T>::Size() const {
+Span<T>::Size() const {
   return EndPtr - BeginPtr;
 }
 
 template <typename T>
 T*
-SpanImpl<T>::Begin() {
+Span<T>::Begin() {
   return BeginPtr;
 }
 
 template <typename T>
 const T*
-SpanImpl<T>::Begin() const {
+Span<T>::Begin() const {
   return BeginPtr;
 }
 
 template <typename T>
 T*
-SpanImpl<T>::End() {
+Span<T>::End() {
   return EndPtr;
 }
 
 template <typename T>
 const T*
-SpanImpl<T>::End() const {
+Span<T>::End() const {
   return EndPtr;
 }
-
-template <typename T>
-using Span = IterableWapper<SpanImpl<T>>;
 
 template <typename T, typename Ele = std::remove_reference_t<decltype(T().At(0))>>
 auto

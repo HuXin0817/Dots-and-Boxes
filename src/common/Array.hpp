@@ -4,76 +4,73 @@
 #include <cassert>
 #include <cstddef>
 
-#include "IterableWapper.hpp"
+#include "Iterable.hpp"
 
 namespace dab {
 
 template <typename T, size_t Length>
-class ArrayImpl : public Iterable<T> {
+class Array : public Iterable<Array<T, Length>> {
   public:
-  ArrayImpl() = default;
-  ArrayImpl(const ArrayImpl& other);
+  Array() = default;
+  Array(const Array& other);
 
   void
-  operator=(const ArrayImpl& other);
+  operator=(const Array& other);
 
   size_t
-  Size() const override;
+  Size() const;
   T*
-  Begin() override;
+  Begin();
   const T*
-  Begin() const override;
+  Begin() const;
   T*
-  End() override;
+  End();
   const T*
-  End() const override;
+  End() const;
 
   private:
   T Data[Length];
 };
 
 template <typename T, size_t Length>
-ArrayImpl<T, Length>::ArrayImpl(const ArrayImpl& other) {
+Array<T, Length>::Array(const Array& other) {
   std::copy(other.Data, other.Data + Length, Data);
 }
 
 template <typename T, size_t Length>
 void
-ArrayImpl<T, Length>::operator=(const ArrayImpl& other) {
+Array<T, Length>::operator=(const Array& other) {
   std::copy(other.Data, other.Data + Length, Data);
 }
 
 template <typename T, size_t Length>
 size_t
-ArrayImpl<T, Length>::Size() const {
+Array<T, Length>::Size() const {
   return Length;
 }
 
 template <typename T, size_t Length>
 T*
-ArrayImpl<T, Length>::Begin() {
+Array<T, Length>::Begin() {
   return Data;
 }
 
 template <typename T, size_t Length>
 const T*
-ArrayImpl<T, Length>::Begin() const {
+Array<T, Length>::Begin() const {
   return Data;
 }
 
 template <typename T, size_t Length>
 T*
-ArrayImpl<T, Length>::End() {
+Array<T, Length>::End() {
   return Data + Length;
 }
 
 template <typename T, size_t Length>
 const T*
-ArrayImpl<T, Length>::End() const {
+Array<T, Length>::End() const {
   return Data + Length;
 }
-
-template <typename T, size_t Length>
-using Array = IterableWapper<ArrayImpl<T, Length>>;
 
 }  // namespace dab
