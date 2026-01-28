@@ -20,11 +20,18 @@ class Iterable {
   Size() const;
   bool
   Empty() const;
-
   auto&
   operator[](size_t i);
   const auto&
   operator[](size_t i) const;
+  auto&
+  Front();
+  const auto&
+  Front() const;
+  auto&
+  Back();
+  const auto&
+  Back() const;
 
   protected:
   ~Iterable() = default;
@@ -69,13 +76,37 @@ Iterable<Derived>::Empty() const {
 template <typename Derived>
 auto&
 Iterable<Derived>::operator[](size_t i) {
-  return static_cast<Derived*>(this)->Begin()[i];
+  return begin()[i];
 }
 
 template <typename Derived>
 const auto&
 Iterable<Derived>::operator[](size_t i) const {
-  return static_cast<const Derived*>(this)->Begin()[i];
+  return begin()[i];
+}
+
+template <typename Derived>
+auto&
+Iterable<Derived>::Front() {
+  return begin()[0];
+}
+
+template <typename Derived>
+const auto&
+Iterable<Derived>::Front() const {
+  return begin()[0];
+}
+
+template <typename Derived>
+auto&
+Iterable<Derived>::Back() {
+  return begin()[Size() - 1];
+}
+
+template <typename Derived>
+const auto&
+Iterable<Derived>::Back() const {
+  return begin()[Size() - 1];
 }
 
 }  // namespace dab

@@ -26,7 +26,7 @@ class ParallelSearchRobot final : public Robot<BoardSize> {
 template <int64_t BoardSize>
 Span<Edge<BoardSize>>
 ParallelSearchRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) {
-  if (Span<Edge<BoardSize>> edges; SubRobots[0].CanEarlyExit(board, edges)) {
+  if (Span<Edge<BoardSize>> edges; SubRobots.Front().CanEarlyExit(board, edges)) {
     return edges;
   }
 
