@@ -14,7 +14,7 @@ class Span : public Iterable<Span<T>> {
   Span(T* begin, T* end);
 
   template <typename Other>
-  operator Span<Other>();
+  operator Span<Other>() const;
 
   size_t
   Size() const;
@@ -39,8 +39,9 @@ Span<T>::Span(T* begin, T* end) : BeginPtr(begin), EndPtr(end) {
 template <typename T>
 template <typename Other>
 Span<T>::
-operator Span<Other>() {
-  return Span(const_cast<Other*>(Begin()), const_cast<Other*>(End()));
+operator Span<Other>() const {
+  return Span(const_cast<Other*>(reinterpret_cast<const Other*>(Begin())),
+              const_cast<Other*>(reinterpret_cast<const Other*>(End())));
 }
 
 template <typename T>
