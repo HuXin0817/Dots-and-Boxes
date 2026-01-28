@@ -11,7 +11,7 @@ class SimulationRobot final : public Robot<BoardSize> {
   public:
   SimulationRobot() = default;
 
-  Span<const Edge<BoardSize>>
+  Span<Edge<BoardSize>>
   BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override;
 
   private:
@@ -21,9 +21,9 @@ class SimulationRobot final : public Robot<BoardSize> {
 };
 
 template <int64_t BoardSize>
-Span<const Edge<BoardSize>>
+Span<Edge<BoardSize>>
 SimulationRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) {
-  if (const Span<const Edge<BoardSize>> edges = SubRobot.BestCandidateEdges(board); SubRobot.EnemyUnscoreable()) {
+  if (Span<Edge<BoardSize>> edges = SubRobot.BestCandidateEdges(board); SubRobot.EnemyUnscoreable()) {
     return edges;
   }
 

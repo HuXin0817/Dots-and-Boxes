@@ -22,7 +22,7 @@ class SearchScoreMap {
   template <typename OtherSearchScoreMap>
   void
   Add(const OtherSearchScoreMap& other);
-  const Span<const Edge<BoardSize>>
+  Span<Edge<BoardSize>>
   Export();
 
   Array<ScoreType, Edge<BoardSize>::Max> Time;
@@ -56,7 +56,7 @@ SearchScoreMap<BoardSize, ScoreType>::Add(const OtherSearchScoreMap& other) {
 }
 
 template <int64_t BoardSize, typename ScoreType>
-const Span<const Edge<BoardSize>>
+Span<Edge<BoardSize>>
 SearchScoreMap<BoardSize, ScoreType>::Export() {
   float maxScore = 0.0;
   for (const Edge<BoardSize> edge : Iota(Edge<BoardSize>::Max)) {

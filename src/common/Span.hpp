@@ -2,7 +2,6 @@
 
 #include <cassert>
 #include <cstddef>
-#include <type_traits>
 
 #include "Iterable.hpp"
 
@@ -13,6 +12,9 @@ class Span : public Iterable<Span<T>> {
   public:
   Span() = default;
   Span(T* begin, T* end);
+
+  template <typename Other>
+  operator Span<Other>();
 
   size_t
   Size() const;
@@ -32,6 +34,13 @@ class Span : public Iterable<Span<T>> {
 
 template <typename T>
 Span<T>::Span(T* begin, T* end) : BeginPtr(begin), EndPtr(end) {
+}
+
+template <typename T>
+template <typename Other>
+Span<T>::
+operator Span<Other>() {
+  return Span(const_cast<Other*>(Begin()), const_cast<Other*>(End()));
 }
 
 template <typename T>
@@ -64,10 +73,10 @@ Span<T>::End() const {
   return EndPtr;
 }
 
-template <typename T, typename Ele = std::remove_reference_t<decltype(T().At(0))>>
+template <typename T>
 auto
 Export(const T& arr) {
-  return Span<const Ele>(arr.begin(), arr.end());
+  return Span(arr.begin(), arr.end());
 }
 
 }  // namespace dab

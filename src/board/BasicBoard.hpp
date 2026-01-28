@@ -18,9 +18,9 @@ class BasicBoard : public Step<BoardSize> {
   Add(const Edge<BoardSize> edge);
   bool
   Contains(const Edge<BoardSize> edge) const;
-  Span<const Edge<BoardSize>>
+  Span<Edge<BoardSize>>
   EmptyEdges() const;
-  Span<const Edge<BoardSize>>
+  Span<Edge<BoardSize>>
   MoveRecord() const;
 
   private:
@@ -62,15 +62,15 @@ BasicBoard<BoardSize>::Contains(const Edge<BoardSize> edge) const {
 }
 
 template <int64_t BoardSize>
-Span<const Edge<BoardSize>>
+Span<Edge<BoardSize>>
 BasicBoard<BoardSize>::EmptyEdges() const {
-  return Span<const Edge<BoardSize>>(Edges.begin() + Step<BoardSize>::NowStep(), Edges.begin() + Edge<BoardSize>::Max);
+  return Span(Edges.begin() + Step<BoardSize>::NowStep(), Edges.begin() + Edge<BoardSize>::Max);
 }
 
 template <int64_t BoardSize>
-Span<const Edge<BoardSize>>
+Span<Edge<BoardSize>>
 BasicBoard<BoardSize>::MoveRecord() const {
-  return Span<const Edge<BoardSize>>(Edges.begin(), Edges.begin() + Step<BoardSize>::NowStep());
+  return Span(Edges.begin(), Edges.begin() + Step<BoardSize>::NowStep());
 }
 
 }  // namespace dab
