@@ -13,7 +13,6 @@ class Array : public Iterable<Array<T, Length>> {
   public:
   Array() = default;
   Array(const Array& other);
-
   void
   operator=(const Array& other);
 
@@ -34,7 +33,7 @@ class Array : public Iterable<Array<T, Length>> {
 
 template <typename T, size_t Length>
 Array<T, Length>::Array(const Array& other) {
-  std::copy(other.Data, other.Data + Length, Data);
+  operator=(other);
 }
 
 template <typename T, size_t Length>
