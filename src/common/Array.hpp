@@ -1,6 +1,5 @@
 #pragma once
 
-#include <algorithm>
 #include <cassert>
 #include <cstddef>
 
@@ -12,9 +11,6 @@ template <typename T, size_t Length>
 class Array : public Iterable<Array<T, Length>> {
   public:
   Array() = default;
-  Array(const Array& other);
-  void
-  operator=(const Array& other);
 
   size_t
   Size() const;
@@ -30,17 +26,6 @@ class Array : public Iterable<Array<T, Length>> {
   private:
   T Data[Length];
 };
-
-template <typename T, size_t Length>
-Array<T, Length>::Array(const Array& other) {
-  operator=(other);
-}
-
-template <typename T, size_t Length>
-void
-Array<T, Length>::operator=(const Array& other) {
-  std::copy(other.Data, other.Data + Length, Data);
-}
 
 template <typename T, size_t Length>
 size_t
