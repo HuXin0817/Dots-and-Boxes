@@ -1,7 +1,5 @@
 #pragma once
 
-#include <QCommandLineParser>
-
 #include "MainWindow.hpp"
 
 namespace dab::detail::frontend {
