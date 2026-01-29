@@ -2,7 +2,7 @@
 
 #include "MonteCarloRobot.hpp"
 
-namespace dab {
+namespace dab::detail::robot {
 
 template <int64_t BoardSize>
 class ParallelSearchRobot final : public Robot<BoardSize> {
@@ -44,4 +44,4 @@ ParallelSearchRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<Boa
   return SearchResult.Export();
 }
 
-}  // namespace dab
+}  // namespace dab::detail::robot

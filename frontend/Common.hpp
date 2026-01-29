@@ -7,9 +7,9 @@
 #include <QStyleHints>
 #include <QWidget>
 
-#include "../src/model/Turn.hpp"
+#include "Model.hpp"
 
-namespace dab::frontend {
+namespace dab::detail::frontend {
 
 template <int64_t BoardSize>
 static constexpr int UnitSize = 6 + 16 / BoardSize;
@@ -38,4 +38,4 @@ ThemeColor(const QColor& DarkThemeColor, const QColor& LightThemeColor) {
   }
 }
 
-}  // namespace dab::frontend
+}  // namespace dab::detail::frontend

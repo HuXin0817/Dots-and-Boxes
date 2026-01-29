@@ -1,6 +1,4 @@
-#include "frontend/CommandParser.hpp"
-
-using namespace dab::frontend;
+#include "Dab.hpp"
 
 int
 main(int argc, char* argv[]) {
@@ -10,8 +8,8 @@ main(int argc, char* argv[]) {
   application.setApplicationVersion("1.0.0");
   application.setOrganizationName("Dots and Boxes");
 
-  const Config config = CommandParser().Process(application);
-  if (QPointer<QWidget> mainWindow = MainWindowCreator().CreateMainWindow(config)) {
+  const dab::Config config = dab::CommandParser().Process(application);
+  if (QPointer<QWidget> mainWindow = dab::MainWindowCreator().CreateMainWindow(config)) {
     mainWindow->show();
   }
 

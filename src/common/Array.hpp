@@ -5,7 +5,7 @@
 
 #include "Iterable.hpp"
 
-namespace dab {
+namespace dab::detail::common {
 
 template <typename T, size_t Length>
 class Array : public Iterable<Array<T, Length>> {
@@ -63,4 +63,4 @@ Array<T, Length>::End() const {
   return Data + Length;
 }
 
-}  // namespace dab
+}  // namespace dab::detail::common

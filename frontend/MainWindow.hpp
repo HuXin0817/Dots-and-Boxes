@@ -7,12 +7,12 @@
 #include <QTime>
 #include <QTimer>
 
-#include "../src/robot/PlayerType.hpp"
 #include "BoxCanvas.hpp"
 #include "DotCanvas.hpp"
 #include "EdgeCanvas.hpp"
+#include "Robot.hpp"
 
-namespace dab::frontend {
+namespace dab::detail::frontend {
 
 template <int64_t BoardSize>
 class MainWindow final : public QWidget {
@@ -237,4 +237,4 @@ MainWindow<BoardSize>::Add(const Edge<BoardSize> edge) {
   QApplication::beep();
 }
 
-}  // namespace dab::frontend
+}  // namespace dab::detail::frontend

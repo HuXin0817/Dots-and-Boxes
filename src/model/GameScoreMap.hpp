@@ -3,7 +3,7 @@
 #include "Turn.hpp"
 #include "Types.hpp"
 
-namespace dab {
+namespace dab::detail::model {
 
 template <int64_t BoardSize>
 class GameScoreMap : public Turn {
@@ -71,4 +71,4 @@ GameScoreMap<BoardSize>::GetPlayer2Score() const {
   return Player2Score;
 }
 
-}  // namespace dab
+}  // namespace dab::detail::model

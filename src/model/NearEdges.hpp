@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../common/Array.hpp"
+#include "Common.hpp"
 #include "Edge.hpp"
 #include "Iota.hpp"
 #include "Square.hpp"
 
-namespace dab {
+namespace dab::detail::model {
 
 template <int64_t BoardSize>
 const Array<Edge<BoardSize>, 4>&
@@ -58,4 +58,4 @@ NearEdges(const Box<BoardSize> box) {
   return Instance.BoxNearEdges[box];
 }
 
-}  // namespace dab
+}  // namespace dab::detail::model

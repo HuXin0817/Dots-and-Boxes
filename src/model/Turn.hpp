@@ -1,6 +1,6 @@
 #pragma once
 
-namespace dab {
+namespace dab::detail::model {
 
 class Turn {
   public:
@@ -44,4 +44,4 @@ Turn::IsPlayer2Turn() const {
   return !v;
 }
 
-}  // namespace dab
+}  // namespace dab::detail::model

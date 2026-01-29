@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../board/ScoreCountableBoard.hpp"
-#include "../common/Span.hpp"
-#include "../model/Edge.hpp"
+#include "Board.hpp"
+#include "Common.hpp"
+#include "Model.hpp"
 
-namespace dab {
+namespace dab::detail::robot {
 
 template <int64_t BoardSize>
 class Robot {
@@ -15,4 +15,4 @@ class Robot {
   BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) = 0;
 };
 
-}  // namespace dab
+}  // namespace dab::detail::robot

@@ -6,7 +6,7 @@
 #include <limits>
 #include <type_traits>
 
-namespace dab {
+namespace dab::detail::model {
 
 template <typename T>
 class Limits {
@@ -62,4 +62,4 @@ SizeTypeWapper<BoardSize>::operator++() {
   ++v;
 }
 
-}  // namespace dab
+}  // namespace dab::detail::model

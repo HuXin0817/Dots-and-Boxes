@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../board/ScoreCountableBoard.hpp"
-#include "../common/Random.hpp"
-#include "../model/SearchScoreMap.hpp"
+#include "Board.hpp"
+#include "Common.hpp"
+#include "Model.hpp"
 #include "SimulationRobot.hpp"
 
-namespace dab {
+namespace dab::detail::robot {
 
 template <int64_t BoardSize, int64_t SearchTime = static_cast<int64_t>(Limits<Edge<BoardSize>>::Max) << 8>
 class MonteCarloRobot final : public Robot<BoardSize> {
@@ -62,4 +62,4 @@ MonteCarloRobot<BoardSize, SearchTime>::GetSearchResult() const {
   return SearchResult;
 }
 
-}  // namespace dab
+}  // namespace dab::detail::robot

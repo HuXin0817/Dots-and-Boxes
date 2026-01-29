@@ -1,12 +1,9 @@
 #pragma once
 
-#include "../model/Edge.hpp"
-#include "../model/EdgeCounter.hpp"
-#include "../model/NearEdges.hpp"
-#include "../model/Square.hpp"
 #include "BasicBoard.hpp"
+#include "Model.hpp"
 
-namespace dab {
+namespace dab::detail::board {
 
 template <int64_t BoardSize>
 class EdgeCountableBoard : public BasicBoard<BoardSize>, public EdgeCounter<BoardSize> {
@@ -66,4 +63,4 @@ EdgeCountableBoard<BoardSize>::FindScoreableEdge() const {
   return InvalidEdge<BoardSize>();
 }
 
-}  // namespace dab
+}  // namespace dab::detail::board

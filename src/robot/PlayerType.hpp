@@ -2,7 +2,7 @@
 
 #include "ParallelSearchRobot.hpp"
 
-namespace dab {
+namespace dab::detail::robot {
 
 enum class PlayerType : uint8_t {
   Human = 0,
@@ -57,4 +57,4 @@ CreateRobot(const PlayerType playerType) {
   return nullptr;
 }
 
-}  // namespace dab
+}  // namespace dab::detail::robot

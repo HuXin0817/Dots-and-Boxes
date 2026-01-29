@@ -4,11 +4,11 @@
 #include <cassert>
 #include <cstdint>
 
-#include "../common/Array.hpp"
+#include "Common.hpp"
 #include "NearBoxes.hpp"
 #include "Square.hpp"
 
-namespace dab {
+namespace dab::detail::model {
 
 template <int64_t BoardSize>
 class EdgeCounter {
@@ -70,4 +70,4 @@ EdgeCounter<BoardSize>::MaxEdgeCount(const Edge<BoardSize> edge) const {
   return maxCount;
 }
 
-}  // namespace dab
+}  // namespace dab::detail::model

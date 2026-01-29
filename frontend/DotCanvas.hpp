@@ -2,7 +2,7 @@
 
 #include "Common.hpp"
 
-namespace dab::frontend {
+namespace dab::detail::frontend {
 
 template <int64_t BoardSize>
 class DotCanvas final : public QWidget {
@@ -46,4 +46,4 @@ DotCanvas<BoardSize>::Color() const {
   return ThemeColor(DarkThemeColor, LightThemeColor);
 }
 
-}  // namespace dab::frontend
+}  // namespace dab::detail::frontend

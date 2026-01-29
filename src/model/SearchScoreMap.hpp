@@ -2,13 +2,11 @@
 
 #include <algorithm>
 
-#include "../common/Array.hpp"
-#include "../common/List.hpp"
-#include "../common/Span.hpp"
+#include "Common.hpp"
 #include "Edge.hpp"
 #include "Iota.hpp"
 
-namespace dab {
+namespace dab::detail::model {
 
 template <int64_t BoardSize, typename ScoreType>
 class SearchScoreMap {
@@ -73,4 +71,4 @@ SearchScoreMap<BoardSize, ScoreType>::Export() {
   return ::dab::Export(BestEdges);
 }
 
-}  // namespace dab
+}  // namespace dab::detail::model

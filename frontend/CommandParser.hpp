@@ -4,7 +4,7 @@
 
 #include "MainWindow.hpp"
 
-namespace dab::frontend {
+namespace dab::detail::frontend {
 
 static constexpr int64_t DefaultBoardSize = 6;
 static constexpr int64_t MinBoardSize = 2;
@@ -182,4 +182,4 @@ MainWindowCreator::CreateMainWindow(const Config& config, QPointer<QWidget> pare
   return CreateMainWindowImpl<MaxBoardSize>(config, parent);
 }
 
-}  // namespace dab::frontend
+}  // namespace dab::detail::frontend

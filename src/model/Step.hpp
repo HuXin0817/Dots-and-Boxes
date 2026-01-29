@@ -2,7 +2,7 @@
 
 #include "Edge.hpp"
 
-namespace dab {
+namespace dab::detail::model {
 
 template <int64_t BoardSize>
 class Step {
@@ -54,4 +54,4 @@ Step<BoardSize>::NowStep() const {
   return v;
 }
 
-}  // namespace dab
+}  // namespace dab::detail::model

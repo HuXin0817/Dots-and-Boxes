@@ -2,7 +2,7 @@
 
 #include "Common.hpp"
 
-namespace dab::frontend {
+namespace dab::detail::frontend {
 
 template <int64_t BoardSize>
 class EdgeCanvas final : public QWidget {
@@ -127,4 +127,4 @@ EdgeCanvas<BoardSize>::Color() const {
   return color;
 }
 
-}  // namespace dab::frontend
+}  // namespace dab::detail::frontend

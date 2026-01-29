@@ -2,7 +2,7 @@
 
 #include <cstddef>
 
-namespace dab {
+namespace dab::detail::common {
 
 template <typename Derived>
 class Iterable {
@@ -109,4 +109,4 @@ Iterable<Derived>::Back() const {
   return begin()[Size() - 1];
 }
 
-}  // namespace dab
+}  // namespace dab::detail::common

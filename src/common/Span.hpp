@@ -5,7 +5,7 @@
 
 #include "Iterable.hpp"
 
-namespace dab {
+namespace dab::detail::common {
 
 template <typename T>
 class Span : public Iterable<Span<T>> {
@@ -81,4 +81,4 @@ Export(const T& arr) {
   return Span(arr.begin(), arr.end());
 }
 
-}  // namespace dab
+}  // namespace dab::detail::common

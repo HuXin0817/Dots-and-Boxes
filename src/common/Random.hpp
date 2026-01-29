@@ -4,7 +4,7 @@
 #include <chrono>
 #include <random>
 
-namespace dab {
+namespace dab::detail::common {
 
 class Random {
   public:
@@ -42,4 +42,4 @@ Random::Choice(const T& data) {
   return data[Range(0, data.Size() - 1)];
 }
 
-}  // namespace dab
+}  // namespace dab::detail::common

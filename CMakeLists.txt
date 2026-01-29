@@ -17,6 +17,7 @@ find_package(Qt6 COMPONENTS
 )
 
 add_executable(${PROJECT_NAME} main.cpp)
+target_include_directories(${PROJECT_NAME} PRIVATE include)
 
 set_target_properties(${PROJECT_NAME}
         PROPERTIES

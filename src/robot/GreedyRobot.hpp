@@ -1,11 +1,10 @@
 #pragma once
 
-#include "../board/ScoreCountableBoard.hpp"
-#include "../common/Array.hpp"
-#include "../common/Span.hpp"
+#include "Board.hpp"
+#include "Common.hpp"
 #include "Robot.hpp"
 
-namespace dab {
+namespace dab::detail::robot {
 
 template <int64_t BoardSize>
 class GreedyRobot : public Robot<BoardSize> {
@@ -71,4 +70,4 @@ GreedyRobot<BoardSize>::GetEdgeBuffer() {
   return Edges;
 }
 
-}  // namespace dab
+}  // namespace dab::detail::robot

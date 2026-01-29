@@ -2,7 +2,7 @@
 
 #include "Types.hpp"
 
-namespace dab {
+namespace dab::detail::model {
 
 template <typename T>
 class IotaViewIterator {
@@ -64,4 +64,4 @@ Iota<T>::end() {
   return IotaViewIterator<T>(Limits<T>::Max);
 }
 
-}  // namespace dab
+}  // namespace dab::detail::model

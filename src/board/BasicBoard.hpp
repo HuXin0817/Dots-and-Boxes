@@ -1,12 +1,9 @@
 #pragma once
 
-#include "../common/Array.hpp"
-#include "../common/Span.hpp"
-#include "../model/Edge.hpp"
-#include "../model/Iota.hpp"
-#include "../model/Step.hpp"
+#include "Common.hpp"
+#include "Model.hpp"
 
-namespace dab {
+namespace dab::detail::board {
 
 template <int64_t BoardSize>
 class BasicBoard : public Step<BoardSize> {
@@ -74,4 +71,4 @@ BasicBoard<BoardSize>::MoveRecord() const {
   return Span(Edges.begin(), Edges.begin() + Step<BoardSize>::NowStep());
 }
 
-}  // namespace dab
+}  // namespace dab::detail::board

@@ -5,7 +5,7 @@
 
 #include "Array.hpp"
 
-namespace dab {
+namespace dab::detail::common {
 
 template <typename T, size_t Cap>
 class List : public Iterable<List<T, Cap>> {
@@ -91,4 +91,4 @@ List<T, Cap>::End() const {
   return Data.Begin() + Length;
 }
 
-}  // namespace dab
+}  // namespace dab::detail::common

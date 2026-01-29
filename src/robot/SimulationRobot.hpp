@@ -1,10 +1,9 @@
 #pragma once
 
-#include "../common/List.hpp"
-#include "../common/Span.hpp"
+#include "Common.hpp"
 #include "MinimaxRobot.hpp"
 
-namespace dab {
+namespace dab::detail::robot {
 
 template <int64_t BoardSize>
 class SimulationRobot final : public Robot<BoardSize> {
@@ -48,4 +47,4 @@ SimulationRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSi
   return Export(SearchEdges);
 }
 
-}  // namespace dab
+}  // namespace dab::detail::robot

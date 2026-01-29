@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../model/GameScoreMap.hpp"
 #include "EdgeCountableBoard.hpp"
+#include "Model.hpp"
 
-namespace dab {
+namespace dab::detail::board {
 
 template <int64_t BoardSize>
 class ScoreCountableBoard : public EdgeCountableBoard<BoardSize>, public GameScoreMap<BoardSize> {
@@ -36,4 +36,4 @@ ScoreCountableBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
   return score;
 }
 
-}  // namespace dab
+}  // namespace dab::detail::board

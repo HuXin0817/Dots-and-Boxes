@@ -5,7 +5,7 @@
 #include "Square.hpp"
 #include "Types.hpp"
 
-namespace dab {
+namespace dab::detail::model {
 
 template <int64_t BoardSize>
 class Edge : public SizeTypeWapper<BoardSize> {
@@ -73,4 +73,4 @@ class Limits<Edge<BoardSize>> {
   static constexpr Edge<BoardSize> Max = 2 * BoardSize * (BoardSize + 1);
 };
 
-}  // namespace dab
+}  // namespace dab::detail::model

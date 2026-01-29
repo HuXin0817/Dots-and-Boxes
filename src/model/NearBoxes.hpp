@@ -1,12 +1,11 @@
 #pragma once
 
-#include "../common/Array.hpp"
-#include "../common/List.hpp"
+#include "Common.hpp"
 #include "Edge.hpp"
 #include "Iota.hpp"
 #include "Square.hpp"
 
-namespace dab {
+namespace dab::detail::model {
 
 template <int64_t BoardSize>
 const List<Box<BoardSize>, 2>&
@@ -62,4 +61,4 @@ NearBoxes(const Edge<BoardSize> edge) {
   return Instance.EdgeNearBoxes[edge];
 }
 
-}  // namespace dab
+}  // namespace dab::detail::model

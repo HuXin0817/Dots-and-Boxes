@@ -3,7 +3,7 @@
 #include "Common.hpp"
 #include "EdgeCanvas.hpp"
 
-namespace dab::frontend {
+namespace dab::detail::frontend {
 
 template <int64_t BoardSize>
 class BoxCanvas final : public QWidget {
@@ -64,4 +64,4 @@ BoxCanvas<BoardSize>::Color() const {
   return QColor(0, 0, 0, 0);
 }
 
-}  // namespace dab::frontend
+}  // namespace dab::detail::frontend

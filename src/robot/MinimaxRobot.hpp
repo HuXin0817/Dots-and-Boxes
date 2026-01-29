@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../board/ScoreableEdgeBoard.hpp"
-#include "../common/Span.hpp"
+#include "Board.hpp"
+#include "Common.hpp"
 #include "GreedyRobot.hpp"
 
-namespace dab {
+namespace dab::detail::robot {
 
 template <int64_t BoardSize>
 class MinimaxRobot final : public Robot<BoardSize> {
@@ -62,4 +62,4 @@ MinimaxRobot<BoardSize>::Scoreable() const {
   return SubRobot.Scoreable();
 }
 
-}  // namespace dab
+}  // namespace dab::detail::robot

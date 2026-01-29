@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../common/Queue.hpp"
-#include "../model/Edge.hpp"
+#include "Common.hpp"
 #include "EdgeCountableBoard.hpp"
+#include "Model.hpp"
 
-namespace dab {
+namespace dab::detail::board {
 
 template <int64_t BoardSize>
 class ScoreableEdgeBoard : public EdgeCountableBoard<BoardSize> {
@@ -73,4 +73,4 @@ ScoreableEdgeBoard<BoardSize>::MaxObtainableScore(const SizeType<BoardSize> minS
   return score;
 }
 
-}  // namespace dab
+}  // namespace dab::detail::board
