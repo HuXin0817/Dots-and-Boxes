@@ -10,21 +10,21 @@ namespace dab {
 template <typename T>
 class Span : public Iterable<Span<T>> {
   public:
-  Span() = default;
-  Span(T* begin, T* end);
+  constexpr Span() = default;
+  constexpr Span(T* begin, T* end);
 
   template <typename Other>
-  operator Span<Other>() const;
+  constexpr operator Span<Other>() const;
 
-  size_t
+  constexpr size_t
   Size() const;
-  T*
+  constexpr T*
   Begin();
-  const T*
+  constexpr const T*
   Begin() const;
-  T*
+  constexpr T*
   End();
-  const T*
+  constexpr const T*
   End() const;
 
   private:
@@ -33,49 +33,49 @@ class Span : public Iterable<Span<T>> {
 };
 
 template <typename T>
-Span<T>::Span(T* begin, T* end) : BeginPtr(begin), EndPtr(end) {
+constexpr Span<T>::Span(T* begin, T* end) : BeginPtr(begin), EndPtr(end) {
 }
 
 template <typename T>
 template <typename Other>
-Span<T>::
+constexpr Span<T>::
 operator Span<Other>() const {
   return Span<Other>(const_cast<Other*>(reinterpret_cast<const Other*>(Begin())),
                      const_cast<Other*>(reinterpret_cast<const Other*>(End())));
 }
 
 template <typename T>
-size_t
+constexpr size_t
 Span<T>::Size() const {
   return EndPtr - BeginPtr;
 }
 
 template <typename T>
-T*
+constexpr T*
 Span<T>::Begin() {
   return BeginPtr;
 }
 
 template <typename T>
-const T*
+constexpr const T*
 Span<T>::Begin() const {
   return BeginPtr;
 }
 
 template <typename T>
-T*
+constexpr T*
 Span<T>::End() {
   return EndPtr;
 }
 
 template <typename T>
-const T*
+constexpr const T*
 Span<T>::End() const {
   return EndPtr;
 }
 
 template <typename T>
-auto
+constexpr auto
 Export(const T& arr) {
   return Span(arr.begin(), arr.end());
 }

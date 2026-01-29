@@ -4,15 +4,15 @@ namespace dab {
 
 class Turn {
   public:
-  Turn();
+  constexpr Turn();
 
   void
   Reset();
   void
   Add();
-  bool
+  constexpr bool
   IsPlayer1Turn() const;
-  bool
+  constexpr bool
   IsPlayer2Turn() const;
 
   private:
@@ -21,7 +21,7 @@ class Turn {
   static constexpr bool Player1 = true;
 };
 
-inline Turn::Turn() {
+inline constexpr Turn::Turn() {
   Reset();
 }
 
@@ -35,12 +35,12 @@ Turn::Add() {
   v = !v;
 }
 
-inline bool
+inline constexpr bool
 Turn::IsPlayer1Turn() const {
   return v;
 }
 
-inline bool
+inline constexpr bool
 Turn::IsPlayer2Turn() const {
   return !v;
 }

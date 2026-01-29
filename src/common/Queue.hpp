@@ -10,24 +10,28 @@ namespace dab {
 template <typename T, size_t Cap>
 class Queue : public Iterable<Queue<T, Cap>> {
   public:
-  Queue() = default;
+  constexpr Queue() = default;
+  constexpr Queue(const Queue& other) = default;
+  constexpr Queue(Queue&& other) = default;
+  constexpr Queue& operator=(const Queue& other) = default;
+  constexpr Queue& operator=(Queue&& other) = default;
 
-  void
+  constexpr void
   Clear();
-  void
+  constexpr void
   Append(const T item);
-  T
+  constexpr T
   Pop();
 
-  size_t
+  constexpr size_t
   Size() const;
-  T*
+  constexpr T*
   Begin();
-  const T*
+  constexpr const T*
   Begin() const;
-  T*
+  constexpr T*
   End();
-  const T*
+  constexpr const T*
   End() const;
 
   private:
@@ -37,52 +41,52 @@ class Queue : public Iterable<Queue<T, Cap>> {
 };
 
 template <typename T, size_t Cap>
-void
+constexpr void
 Queue<T, Cap>::Clear() {
   BeginIndex = 0;
   EndIndex = 0;
 }
 
 template <typename T, size_t Cap>
-void
+constexpr void
 Queue<T, Cap>::Append(const T item) {
   assert(EndIndex < Cap);
   Data[EndIndex++] = item;
 }
 
 template <typename T, size_t Cap>
-T
+constexpr T
 Queue<T, Cap>::Pop() {
   assert(Size() > 0);
   return Data[BeginIndex++];
 }
 
 template <typename T, size_t Cap>
-size_t
+constexpr size_t
 Queue<T, Cap>::Size() const {
   return EndIndex - BeginIndex;
 }
 
 template <typename T, size_t Cap>
-T*
+constexpr T*
 Queue<T, Cap>::Begin() {
   return Data.Begin() + BeginIndex;
 }
 
 template <typename T, size_t Cap>
-const T*
+constexpr const T*
 Queue<T, Cap>::Begin() const {
   return Data.Begin() + BeginIndex;
 }
 
 template <typename T, size_t Cap>
-T*
+constexpr T*
 Queue<T, Cap>::End() {
   return Data.Begin() + EndIndex;
 }
 
 template <typename T, size_t Cap>
-const T*
+constexpr const T*
 Queue<T, Cap>::End() const {
   return Data.Begin() + EndIndex;
 }

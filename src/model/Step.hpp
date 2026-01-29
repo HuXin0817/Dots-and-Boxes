@@ -7,17 +7,17 @@ namespace dab {
 template <int64_t BoardSize>
 class Step {
   public:
-  Step() = default;
+  constexpr Step() = default;
 
   void
   Reset();
   void
   Add();
-  bool
+  constexpr bool
   Gaming() const;
-  SizeType<BoardSize>
+  constexpr SizeType<BoardSize>
   RemainStep() const;
-  SizeType<BoardSize>
+  constexpr SizeType<BoardSize>
   NowStep() const;
 
   private:
@@ -37,19 +37,19 @@ Step<BoardSize>::Add() {
 }
 
 template <int64_t BoardSize>
-bool
+constexpr bool
 Step<BoardSize>::Gaming() const {
   return v < Limits<Edge<BoardSize>>::Max;
 }
 
 template <int64_t BoardSize>
-SizeType<BoardSize>
+constexpr SizeType<BoardSize>
 Step<BoardSize>::RemainStep() const {
   return Limits<Edge<BoardSize>>::Max - v;
 }
 
 template <int64_t BoardSize>
-SizeType<BoardSize>
+constexpr SizeType<BoardSize>
 Step<BoardSize>::NowStep() const {
   return v;
 }
