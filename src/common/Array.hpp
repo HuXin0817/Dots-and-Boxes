@@ -10,17 +10,23 @@ namespace dab {
 template <typename T, size_t Length>
 class Array : public Iterable<Array<T, Length>> {
   public:
-  Array() = default;
+  constexpr Array() = default;
+  constexpr Array(const Array& other) = default;
+  constexpr Array(Array&& other) = default;
+  constexpr Array&
+  operator=(const Array& other) = default;
+  constexpr Array&
+  operator=(Array&& other) = default;
 
-  size_t
+  constexpr size_t
   Size() const;
-  T*
+  constexpr T*
   Begin();
-  const T*
+  constexpr const T*
   Begin() const;
-  T*
+  constexpr T*
   End();
-  const T*
+  constexpr const T*
   End() const;
 
   private:
@@ -28,31 +34,31 @@ class Array : public Iterable<Array<T, Length>> {
 };
 
 template <typename T, size_t Length>
-size_t
+constexpr size_t
 Array<T, Length>::Size() const {
   return Length;
 }
 
 template <typename T, size_t Length>
-T*
+constexpr T*
 Array<T, Length>::Begin() {
   return Data;
 }
 
 template <typename T, size_t Length>
-const T*
+constexpr const T*
 Array<T, Length>::Begin() const {
   return Data;
 }
 
 template <typename T, size_t Length>
-T*
+constexpr T*
 Array<T, Length>::End() {
   return Data + Length;
 }
 
 template <typename T, size_t Length>
-const T*
+constexpr const T*
 Array<T, Length>::End() const {
   return Data + Length;
 }

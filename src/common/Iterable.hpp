@@ -7,30 +7,30 @@ namespace dab {
 template <typename Derived>
 class Iterable {
   public:
-  auto
+  constexpr auto
   begin();
-  auto
+  constexpr auto
   begin() const;
-  auto
+  constexpr auto
   end();
-  auto
+  constexpr auto
   end() const;
 
-  size_t
+  constexpr size_t
   Size() const;
-  bool
+  constexpr bool
   Empty() const;
-  auto&
+  constexpr auto&
   operator[](size_t i);
-  const auto&
+  constexpr const auto&
   operator[](size_t i) const;
-  auto&
+  constexpr auto&
   Front();
-  const auto&
+  constexpr const auto&
   Front() const;
-  auto&
+  constexpr auto&
   Back();
-  const auto&
+  constexpr const auto&
   Back() const;
 
   protected:
@@ -38,73 +38,73 @@ class Iterable {
 };
 
 template <typename Derived>
-auto
+constexpr auto
 Iterable<Derived>::begin() {
   return static_cast<Derived*>(this)->Begin();
 }
 
 template <typename Derived>
-auto
+constexpr auto
 Iterable<Derived>::begin() const {
   return static_cast<const Derived*>(this)->Begin();
 }
 
 template <typename Derived>
-auto
+constexpr auto
 Iterable<Derived>::end() {
   return static_cast<Derived*>(this)->End();
 }
 
 template <typename Derived>
-auto
+constexpr auto
 Iterable<Derived>::end() const {
   return static_cast<const Derived*>(this)->End();
 }
 
 template <typename Derived>
-size_t
+constexpr size_t
 Iterable<Derived>::Size() const {
   return static_cast<const Derived*>(this)->Size();
 }
 
 template <typename Derived>
-bool
+constexpr bool
 Iterable<Derived>::Empty() const {
   return Size() == 0;
 }
 
 template <typename Derived>
-auto&
+constexpr auto&
 Iterable<Derived>::operator[](size_t i) {
   return begin()[i];
 }
 
 template <typename Derived>
-const auto&
+constexpr const auto&
 Iterable<Derived>::operator[](size_t i) const {
   return begin()[i];
 }
 
 template <typename Derived>
-auto&
+constexpr auto&
 Iterable<Derived>::Front() {
   return begin()[0];
 }
 
 template <typename Derived>
-const auto&
+constexpr const auto&
 Iterable<Derived>::Front() const {
   return begin()[0];
 }
 
 template <typename Derived>
-auto&
+constexpr auto&
 Iterable<Derived>::Back() {
   return begin()[Size() - 1];
 }
 
 template <typename Derived>
-const auto&
+constexpr const auto&
 Iterable<Derived>::Back() const {
   return begin()[Size() - 1];
 }

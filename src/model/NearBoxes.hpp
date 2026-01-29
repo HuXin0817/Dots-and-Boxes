@@ -3,6 +3,7 @@
 #include "../common/Array.hpp"
 #include "../common/List.hpp"
 #include "Edge.hpp"
+#include "Iota.hpp"
 #include "Square.hpp"
 
 namespace dab {
@@ -14,12 +15,12 @@ NearBoxes(const Edge<BoardSize> edge);
 template <int64_t BoardSize>
 class NearBoxesMapper {
   public:
-  NearBoxesMapper();
+  constexpr NearBoxesMapper();
 
   private:
   Array<List<Box<BoardSize>, 2>, Limits<Edge<BoardSize>>::Max> EdgeNearBoxes;
 
-  static List<Box<BoardSize>, 2>
+  static constexpr List<Box<BoardSize>, 2>
   GetNearBoxes(const Edge<BoardSize> edge);
 
   friend const List<Box<BoardSize>, 2>&
@@ -27,14 +28,14 @@ class NearBoxesMapper {
 };
 
 template <int64_t BoardSize>
-NearBoxesMapper<BoardSize>::NearBoxesMapper() {
+constexpr NearBoxesMapper<BoardSize>::NearBoxesMapper() {
   for (const Edge<BoardSize> edge : Iota<Edge<BoardSize>>()) {
     EdgeNearBoxes[edge] = GetNearBoxes(edge);
   }
 }
 
 template <int64_t BoardSize>
-List<Box<BoardSize>, 2>
+constexpr List<Box<BoardSize>, 2>
 NearBoxesMapper<BoardSize>::GetNearBoxes(const Edge<BoardSize> edge) {
   List<Box<BoardSize>, 2> result;
 
@@ -56,7 +57,7 @@ NearBoxesMapper<BoardSize>::GetNearBoxes(const Edge<BoardSize> edge) {
 template <int64_t BoardSize>
 const List<Box<BoardSize>, 2>&
 NearBoxes(const Edge<BoardSize> edge) {
-  static NearBoxesMapper<BoardSize> Instance;
+  static constexpr NearBoxesMapper<BoardSize> Instance;
 
   return Instance.EdgeNearBoxes[edge];
 }

@@ -8,34 +8,25 @@
 namespace dab {
 
 template <int64_t BoardSize>
-class Edge {
+class Edge : public SizeTypeWapper<BoardSize> {
   public:
-  Edge() = default;
-  Edge(SizeType<BoardSize> v);
-  Edge(const Dot<BoardSize> dot1, const Dot<BoardSize> dot2);
+  using SizeTypeWapper<BoardSize>::SizeTypeWapper;
+  constexpr Edge(const Dot<BoardSize> dot1, const Dot<BoardSize> dot2);
 
-  operator SizeType<BoardSize>() const;
-  Dot<BoardSize>
+  constexpr Dot<BoardSize>
   Dot1() const;
-  Dot<BoardSize>
+  constexpr Dot<BoardSize>
   Dot2() const;
-  bool
+  constexpr bool
   Rotate() const;
-
-  private:
-  SizeType<BoardSize> v;
 };
 
 template <int64_t BoardSize>
-Edge<BoardSize>::Edge(SizeType<BoardSize> v) : v(v) {
-}
-
-template <int64_t BoardSize>
-Edge<BoardSize>::Edge(const Dot<BoardSize> dot1, const Dot<BoardSize> dot2) {
+constexpr Edge<BoardSize>::Edge(const Dot<BoardSize> dot1, const Dot<BoardSize> dot2) {
   if (dot2 - dot1 == 1) {
-    v = 2 * (dot1 - dot1 / (BoardSize + 1)) + 1;
+    SizeTypeWapper<BoardSize>::v = 2 * (dot1 - dot1 / (BoardSize + 1)) + 1;
   } else {
-    v = 2 * dot1;
+    SizeTypeWapper<BoardSize>::v = 2 * dot1;
   }
 
   assert(Dot1() == dot1);
@@ -43,26 +34,20 @@ Edge<BoardSize>::Edge(const Dot<BoardSize> dot1, const Dot<BoardSize> dot2) {
 }
 
 template <int64_t BoardSize>
-Edge<BoardSize>::
-operator SizeType<BoardSize>() const {
-  return v;
-}
-
-template <int64_t BoardSize>
-Dot<BoardSize>
+constexpr Dot<BoardSize>
 Edge<BoardSize>::Dot1() const {
-  SizeType<BoardSize> dot = v >> 1;
-  if (v & 1) {
+  SizeType<BoardSize> dot = SizeTypeWapper<BoardSize>::v >> 1;
+  if (SizeTypeWapper<BoardSize>::v & 1) {
     dot += dot / BoardSize;
   }
   return dot;
 }
 
 template <int64_t BoardSize>
-Dot<BoardSize>
+constexpr Dot<BoardSize>
 Edge<BoardSize>::Dot2() const {
-  SizeType<BoardSize> dot = v >> 1;
-  if (v & 1) {
+  SizeType<BoardSize> dot = SizeTypeWapper<BoardSize>::v >> 1;
+  if (SizeTypeWapper<BoardSize>::v & 1) {
     dot += dot / BoardSize + 1;
   } else {
     dot += BoardSize + 1;
@@ -71,13 +56,13 @@ Edge<BoardSize>::Dot2() const {
 }
 
 template <int64_t BoardSize>
-bool
+constexpr bool
 Edge<BoardSize>::Rotate() const {
-  return v & 1;
+  return SizeTypeWapper<BoardSize>::v & 1;
 }
 
 template <int64_t BoardSize>
-Edge<BoardSize>
+constexpr Edge<BoardSize>
 InvalidEdge() {
   return -1;
 }
@@ -85,7 +70,7 @@ InvalidEdge() {
 template <int64_t BoardSize>
 class Limits<Edge<BoardSize>> {
   public:
-  static constexpr SizeType<BoardSize> Max = 2 * BoardSize * (BoardSize + 1);
+  static constexpr Edge<BoardSize> Max = 2 * BoardSize * (BoardSize + 1);
 };
 
 }  // namespace dab

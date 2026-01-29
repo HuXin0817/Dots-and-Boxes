@@ -6,6 +6,7 @@
 #include "../common/List.hpp"
 #include "../common/Span.hpp"
 #include "Edge.hpp"
+#include "Iota.hpp"
 
 namespace dab {
 

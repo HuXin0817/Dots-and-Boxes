@@ -4,7 +4,6 @@
 #include <cstddef>
 #include <cstdint>
 #include <limits>
-#include <ranges>
 #include <type_traits>
 
 namespace dab {
@@ -25,10 +24,42 @@ using Int = std::conditional_t<Max <= Limits<int8_t>::Max,
 template <int64_t BoardSize>
 using SizeType = Int<2 * BoardSize*(BoardSize + 1)>;
 
-template <typename T>
-auto
-Iota() {
-  return std::views::iota(0, Limits<T>::Max);
+template <int64_t BoardSize>
+class SizeTypeWapper {
+  public:
+  constexpr SizeTypeWapper() = default;
+  constexpr SizeTypeWapper(SizeType<BoardSize> v);
+  constexpr
+  operator SizeType<BoardSize>();
+  constexpr
+  operator SizeType<BoardSize>() const;
+  constexpr void
+  operator++();
+
+  protected:
+  SizeType<BoardSize> v = 0;
+};
+
+template <int64_t BoardSize>
+constexpr SizeTypeWapper<BoardSize>::SizeTypeWapper(SizeType<BoardSize> v) : v(v) {
+}
+
+template <int64_t BoardSize>
+constexpr SizeTypeWapper<BoardSize>::
+operator SizeType<BoardSize>() {
+  return v;
+}
+
+template <int64_t BoardSize>
+constexpr SizeTypeWapper<BoardSize>::
+operator SizeType<BoardSize>() const {
+  return v;
+}
+
+template <int64_t BoardSize>
+constexpr void
+SizeTypeWapper<BoardSize>::operator++() {
+  ++v;
 }
 
 }  // namespace dab

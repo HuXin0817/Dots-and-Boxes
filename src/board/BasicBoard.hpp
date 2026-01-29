@@ -4,6 +4,7 @@
 #include "../common/Span.hpp"
 #include "../model/Edge.hpp"
 #include "../model/Step.hpp"
+#include "../model/Iota.hpp"
 
 namespace dab {
 
