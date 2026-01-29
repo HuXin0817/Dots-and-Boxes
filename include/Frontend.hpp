@@ -6,11 +6,10 @@
 #include "../frontend/DotCanvas.hpp"
 #include "../frontend/EdgeCanvas.hpp"
 #include "../frontend/MainWindow.hpp"
+#include "../frontend/MainWindowCreator.hpp"
 
 namespace dab {
 
 using detail::frontend::CommandParser;
-using detail::frontend::Config;
-using detail::frontend::MainWindowCreator;
 
 }  // namespace dab
