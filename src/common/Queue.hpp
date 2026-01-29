@@ -13,8 +13,10 @@ class Queue : public Iterable<Queue<T, Cap>> {
   constexpr Queue() = default;
   constexpr Queue(const Queue& other) = default;
   constexpr Queue(Queue&& other) = default;
-  constexpr Queue& operator=(const Queue& other) = default;
-  constexpr Queue& operator=(Queue&& other) = default;
+  constexpr Queue&
+  operator=(const Queue& other) = default;
+  constexpr Queue&
+  operator=(Queue&& other) = default;
 
   constexpr void
   Clear();

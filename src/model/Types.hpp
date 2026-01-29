@@ -11,7 +11,7 @@ namespace dab {
 template <typename T>
 class Limits {
   public:
-  static constexpr auto Max = std::numeric_limits<T>::max();
+  static constexpr T Max = std::numeric_limits<T>::max();
 };
 
 template <int64_t Max>

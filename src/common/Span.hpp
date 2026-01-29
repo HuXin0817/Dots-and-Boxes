@@ -14,7 +14,8 @@ class Span : public Iterable<Span<T>> {
   constexpr Span(T* begin, T* end);
 
   template <typename Other>
-  constexpr operator Span<Other>() const;
+  constexpr
+  operator Span<Other>() const;
 
   constexpr size_t
   Size() const;

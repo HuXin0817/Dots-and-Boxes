@@ -3,8 +3,8 @@
 #include "../common/Array.hpp"
 #include "../common/Span.hpp"
 #include "../model/Edge.hpp"
-#include "../model/Step.hpp"
 #include "../model/Iota.hpp"
+#include "../model/Step.hpp"
 
 namespace dab {
 

@@ -9,9 +9,9 @@ class Step {
   public:
   constexpr Step() = default;
 
-  void
+  constexpr void
   Reset();
-  void
+  constexpr void
   Add();
   constexpr bool
   Gaming() const;
@@ -25,13 +25,13 @@ class Step {
 };
 
 template <int64_t BoardSize>
-void
+constexpr void
 Step<BoardSize>::Reset() {
   v = 0;
 }
 
 template <int64_t BoardSize>
-void
+constexpr void
 Step<BoardSize>::Add() {
   v++;
 }

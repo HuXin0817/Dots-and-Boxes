@@ -6,9 +6,9 @@ class Turn {
   public:
   constexpr Turn();
 
-  void
+  constexpr void
   Reset();
-  void
+  constexpr void
   Add();
   constexpr bool
   IsPlayer1Turn() const;
@@ -21,16 +21,15 @@ class Turn {
   static constexpr bool Player1 = true;
 };
 
-inline constexpr Turn::Turn() {
-  Reset();
+inline constexpr Turn::Turn() : v(Player1) {
 }
 
-inline void
+inline constexpr void
 Turn::Reset() {
   v = Player1;
 }
 
-inline void
+inline constexpr void
 Turn::Add() {
   v = !v;
 }
