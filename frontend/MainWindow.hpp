@@ -56,14 +56,14 @@ MainWindow<BoardSize>::MainWindow(const PlayerType player1Type, const PlayerType
   resize(WindowSize, WindowSize);
   setMinimumSize(WindowSize, WindowSize);
 
-  for (const Dot<BoardSize> dot : Iota<Box<BoardSize>>()) {
+  for (const Box<BoardSize> box : Iota<Box<BoardSize>>()) {
     BoxCanvases.emplace_back(new BoxCanvas<BoardSize>(this));
   }
   for (const Edge<BoardSize> edge : Iota<Edge<BoardSize>>()) {
     EdgeCanvases.emplace_back(
         new EdgeCanvas<BoardSize>(edge.Rotate(), [edge, this]() -> void { SetPlayerMoveEdge(edge); }, this));
   }
-  for (const Box<BoardSize> box : Iota<Dot<BoardSize>>()) {
+  for (const Dot<BoardSize> dot : Iota<Dot<BoardSize>>()) {
     DotCanvases.emplace_back(new DotCanvas<BoardSize>(this));
   }
 
