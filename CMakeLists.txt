@@ -16,8 +16,20 @@ find_package(Qt6 COMPONENTS
         REQUIRED
 )
 
-add_executable(${PROJECT_NAME} main.cpp)
-target_include_directories(${PROJECT_NAME} PRIVATE include)
+foreach(i RANGE 1 36)
+    set(GEN_FILE "${CMAKE_SOURCE_DIR}/autogen/MainWindow${i}.cpp")
+    file(WRITE "${GEN_FILE}"
+"#include \"Frontend.hpp\"
+
+template class dab::detail::frontend::MainWindow<${i}>;
+")
+endforeach()
+
+file(GLOB_RECURSE SRC_FILES "${CMAKE_SOURCE_DIR}/autogen/*.cpp")
+add_executable(${PROJECT_NAME} main.cpp ${SRC_FILES})
+target_include_directories(${PROJECT_NAME} PRIVATE 
+    "${CMAKE_SOURCE_DIR}/include"
+)
 
 set_target_properties(${PROJECT_NAME}
         PROPERTIES
