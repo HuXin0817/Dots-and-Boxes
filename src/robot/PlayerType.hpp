@@ -7,7 +7,7 @@ namespace dab::detail::robot {
 enum class PlayerType : uint8_t {
   Human = 0,
   GreedyRobot,
-  MinimaxRobot,
+  ImproveGreedyRobot,
   SimulationRobot,
   MonteCarloRobot,
   ParallelSearchRobot,
@@ -25,8 +25,8 @@ GetPlayerTypeString(const PlayerType playerType) {
       return "Human";
     case PlayerType::GreedyRobot:
       return "GreedyRobot";
-    case PlayerType::MinimaxRobot:
-      return "MinimaxRobot";
+    case PlayerType::ImproveGreedyRobot:
+      return "ImproveGreedyRobot";
     case PlayerType::SimulationRobot:
       return "SimulationRobot";
     case PlayerType::MonteCarloRobot:
@@ -43,8 +43,8 @@ CreateRobot(const PlayerType playerType) {
   switch (playerType) {
     case PlayerType::GreedyRobot:
       return new GreedyRobot<BoardSize>();
-    case PlayerType::MinimaxRobot:
-      return new MinimaxRobot<BoardSize>();
+    case PlayerType::ImproveGreedyRobot:
+      return new ImproveGreedyRobot<BoardSize>();
     case PlayerType::SimulationRobot:
       return new SimulationRobot<BoardSize>();
     case PlayerType::MonteCarloRobot:

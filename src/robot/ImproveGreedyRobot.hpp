@@ -7,32 +7,27 @@
 namespace dab::detail::robot {
 
 template <int64_t BoardSize>
-class MinimaxRobot final : public Robot<BoardSize> {
+class ImproveGreedyRobot final : public GreedyRobot<BoardSize> {
   public:
-  MinimaxRobot() = default;
+  ImproveGreedyRobot() = default;
 
   Span<Edge<BoardSize>>
   BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override;
-  bool
-  EnemyUnscoreable() const;
-  bool
-  Scoreable() const;
 
   private:
-  GreedyRobot<BoardSize> SubRobot;
   ScoreableEdgeBoard<BoardSize> SimulationBoard;
 };
 
 template <int64_t BoardSize>
 Span<Edge<BoardSize>>
-MinimaxRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) {
-  if (Span<Edge<BoardSize>> edges = SubRobot.BestCandidateEdges(board);
-      SubRobot.EnemyUnscoreable() || SubRobot.Scoreable()) {
+ImproveGreedyRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) {
+  if (Span<Edge<BoardSize>> edges = GreedyRobot<BoardSize>::BestCandidateEdges(board);
+      GreedyRobot<BoardSize>::EnemyUnscoreable() || GreedyRobot<BoardSize>::Scoreable()) {
     return edges;
   }
 
   SizeType<BoardSize> minScore = Limits<Box<BoardSize>>::Max + 1;
-  Array<Edge<BoardSize>, Limits<Edge<BoardSize>>::Max>& candidateEdges = SubRobot.GetEdgeBuffer();
+  Array<Edge<BoardSize>, Limits<Edge<BoardSize>>::Max>& candidateEdges = GreedyRobot<BoardSize>::GetEdgeBuffer();
   SizeType<BoardSize> candidateEdgesSize = 0;
 
   for (const Edge<BoardSize> edge : board.EmptyEdges()) {
@@ -48,18 +43,6 @@ MinimaxRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>
   }
 
   return Span(candidateEdges.begin(), candidateEdges.begin() + candidateEdgesSize);
-}
-
-template <int64_t BoardSize>
-bool
-MinimaxRobot<BoardSize>::EnemyUnscoreable() const {
-  return SubRobot.EnemyUnscoreable();
-}
-
-template <int64_t BoardSize>
-bool
-MinimaxRobot<BoardSize>::Scoreable() const {
-  return SubRobot.Scoreable();
 }
 
 }  // namespace dab::detail::robot

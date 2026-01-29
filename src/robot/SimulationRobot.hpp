@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Common.hpp"
-#include "MinimaxRobot.hpp"
+#include "ImproveGreedyRobot.hpp"
 
 namespace dab::detail::robot {
 
@@ -14,7 +14,7 @@ class SimulationRobot final : public Robot<BoardSize> {
   BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override;
 
   private:
-  MinimaxRobot<BoardSize> SubRobot;
+  ImproveGreedyRobot<BoardSize> SubRobot;
   ScoreCountableBoard<BoardSize> SimulationBoard;
   List<Edge<BoardSize>, Limits<Edge<BoardSize>>::Max> SearchEdges;
 };

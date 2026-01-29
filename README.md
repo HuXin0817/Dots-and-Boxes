@@ -132,7 +132,7 @@ Dots-and-Boxes/
 │   │   ├── Step.hpp
 │   │   └── Turn.hpp
 │   └── robot/          # AI implementations
-│       ├── MinimaxRobot.hpp
+│       ├── ImproveGreedyRobot.hpp
 │       ├── SimulationRobot.hpp
 │       ├── MonteCarloRobot.hpp
 │       ├── ParallelSearchRobot.hpp
