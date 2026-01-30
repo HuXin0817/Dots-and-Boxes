@@ -16,13 +16,13 @@ class MonteCarloRobot final : public Robot<BoardSize> {
   BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override;
   bool
   CanEarlyExit(const ScoreCountableBoard<BoardSize>& board, Span<Edge<BoardSize>>& result);
-  const SearchScoreMap<BoardSize, Int<2 * SearchTime>>&
+  const SearchScoreMap<BoardSize>&
   GetSearchResult() const;
 
   private:
   SimulationRobot<BoardSize> SubRobot;
   ScoreCountableBoard<BoardSize> SimulationBoard;
-  SearchScoreMap<BoardSize, Int<2 * SearchTime>> SearchResult;
+  SearchScoreMap<BoardSize> SearchResult;
 };
 
 template <int64_t BoardSize, int64_t SearchTime>
@@ -57,7 +57,7 @@ MonteCarloRobot<BoardSize, SearchTime>::CanEarlyExit(const ScoreCountableBoard<B
 }
 
 template <int64_t BoardSize, int64_t SearchTime>
-const SearchScoreMap<BoardSize, Int<2 * SearchTime>>&
+const SearchScoreMap<BoardSize>&
 MonteCarloRobot<BoardSize, SearchTime>::GetSearchResult() const {
   return SearchResult;
 }
