@@ -19,7 +19,6 @@ using detail::model::Dot;
 using detail::model::Edge;
 using detail::model::EdgeCounter;
 using detail::model::GameScoreMap;
-using detail::model::Int;
 using detail::model::InvalidEdge;
 using detail::model::Iota;
 using detail::model::Limits;

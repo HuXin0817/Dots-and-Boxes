@@ -14,15 +14,12 @@ class Limits {
   static constexpr T Max = std::numeric_limits<T>::max();
 };
 
-template <int64_t Max>
-using Int = std::conditional_t<Max <= Limits<int8_t>::Max,
-                               int8_t,
-                               std::conditional_t<Max <= Limits<int16_t>::Max,
-                                                  int16_t,
-                                                  std::conditional_t<Max <= Limits<int32_t>::Max, int32_t, int64_t>>>;
-
-template <int64_t BoardSize>
-using SizeType = Int<2 * BoardSize*(BoardSize + 1)>;
+template <int64_t BoardSize,
+          int64_t Max = 2 * BoardSize * (BoardSize + 1),
+          typename CondInt32 = std::conditional_t<Max <= Limits<int32_t>::Max, int_fast32_t, int_fast64_t>,
+          typename CondInt16 = std::conditional_t<Max <= Limits<int16_t>::Max, int_fast16_t, CondInt32>,
+          typename CondInt8 = std::conditional_t<Max <= Limits<int8_t>::Max, int_fast8_t, CondInt16>>
+using SizeType = CondInt8;
 
 template <int64_t BoardSize>
 class SizeTypeWapper {
