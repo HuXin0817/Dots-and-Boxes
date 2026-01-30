@@ -67,7 +67,7 @@ SearchScoreMap<BoardSize>::Export() {
       }
     }
   }
-  return ::dab::Export(BestEdges);
+  return dab::Export(BestEdges);
 }
 
 }  // namespace dab::detail::model
