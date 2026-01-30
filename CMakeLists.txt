@@ -1,31 +1,12 @@
 cmake_minimum_required(VERSION 3.16)
 project(Dots_and_Boxes)
-
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
 
 find_package(OpenMP REQUIRED)
-find_package(Qt6 COMPONENTS
-        Core
-        Gui
-        Widgets
-        REQUIRED
-)
+find_package(Qt6 COMPONENTS Core Gui Widgets REQUIRED)
 
 add_executable(${PROJECT_NAME} main.cpp)
-target_include_directories(${PROJECT_NAME} PRIVATE 
-    "${CMAKE_SOURCE_DIR}/include"
-)
-
-set_target_properties(${PROJECT_NAME}
-        PROPERTIES
-        AUTOMOC ON
-        AUTORCC ON
-        AUTOUIC ON
-)
+target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/include")
 
 target_link_libraries(${PROJECT_NAME}
         PRIVATE
