@@ -19,43 +19,43 @@ template <int64_t BoardSize,
           typename CondInt32 = std::conditional_t<Max <= Limits<int32_t>::Max, int_fast32_t, int_fast64_t>,
           typename CondInt16 = std::conditional_t<Max <= Limits<int16_t>::Max, int_fast16_t, CondInt32>,
           typename CondInt8 = std::conditional_t<Max <= Limits<int8_t>::Max, int_fast8_t, CondInt16>>
-using SizeType = CondInt8;
+using Int = CondInt8;
 
 template <int64_t BoardSize>
-class SizeTypeWapper {
+class IntWapper {
   public:
-  constexpr SizeTypeWapper() = default;
-  constexpr SizeTypeWapper(SizeType<BoardSize> v);
+  constexpr IntWapper() = default;
+  constexpr IntWapper(Int<BoardSize> v);
   constexpr
-  operator SizeType<BoardSize>();
+  operator Int<BoardSize>();
   constexpr
-  operator SizeType<BoardSize>() const;
+  operator Int<BoardSize>() const;
   constexpr void
   operator++();
 
   protected:
-  SizeType<BoardSize> v = 0;
+  Int<BoardSize> v = 0;
 };
 
 template <int64_t BoardSize>
-constexpr SizeTypeWapper<BoardSize>::SizeTypeWapper(SizeType<BoardSize> v) : v(v) {
+constexpr IntWapper<BoardSize>::IntWapper(Int<BoardSize> v) : v(v) {
 }
 
 template <int64_t BoardSize>
-constexpr SizeTypeWapper<BoardSize>::
-operator SizeType<BoardSize>() {
+constexpr IntWapper<BoardSize>::
+operator Int<BoardSize>() {
   return v;
 }
 
 template <int64_t BoardSize>
-constexpr SizeTypeWapper<BoardSize>::
-operator SizeType<BoardSize>() const {
+constexpr IntWapper<BoardSize>::
+operator Int<BoardSize>() const {
   return v;
 }
 
 template <int64_t BoardSize>
 constexpr void
-SizeTypeWapper<BoardSize>::operator++() {
+IntWapper<BoardSize>::operator++() {
   ++v;
 }
 

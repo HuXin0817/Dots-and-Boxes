@@ -8,9 +8,9 @@
 namespace dab::detail::model {
 
 template <int64_t BoardSize>
-class Edge : public SizeTypeWapper<BoardSize> {
+class Edge : public IntWapper<BoardSize> {
   public:
-  using SizeTypeWapper<BoardSize>::SizeTypeWapper;
+  using IntWapper<BoardSize>::IntWapper;
   constexpr Edge(const Dot<BoardSize> dot1, const Dot<BoardSize> dot2);
 
   constexpr Dot<BoardSize>
@@ -24,9 +24,9 @@ class Edge : public SizeTypeWapper<BoardSize> {
 template <int64_t BoardSize>
 constexpr Edge<BoardSize>::Edge(const Dot<BoardSize> dot1, const Dot<BoardSize> dot2) {
   if (dot2 - dot1 == 1) {
-    SizeTypeWapper<BoardSize>::v = 2 * (dot1 - dot1 / (BoardSize + 1)) + 1;
+    IntWapper<BoardSize>::v = 2 * (dot1 - dot1 / (BoardSize + 1)) + 1;
   } else {
-    SizeTypeWapper<BoardSize>::v = 2 * dot1;
+    IntWapper<BoardSize>::v = 2 * dot1;
   }
 
   assert(Dot1() == dot1);
@@ -36,8 +36,8 @@ constexpr Edge<BoardSize>::Edge(const Dot<BoardSize> dot1, const Dot<BoardSize> 
 template <int64_t BoardSize>
 constexpr Dot<BoardSize>
 Edge<BoardSize>::Dot1() const {
-  SizeType<BoardSize> dot = SizeTypeWapper<BoardSize>::v >> 1;
-  if (SizeTypeWapper<BoardSize>::v & 1) {
+  Int<BoardSize> dot = IntWapper<BoardSize>::v >> 1;
+  if (IntWapper<BoardSize>::v & 1) {
     dot += dot / BoardSize;
   }
   return dot;
@@ -46,8 +46,8 @@ Edge<BoardSize>::Dot1() const {
 template <int64_t BoardSize>
 constexpr Dot<BoardSize>
 Edge<BoardSize>::Dot2() const {
-  SizeType<BoardSize> dot = SizeTypeWapper<BoardSize>::v >> 1;
-  if (SizeTypeWapper<BoardSize>::v & 1) {
+  Int<BoardSize> dot = IntWapper<BoardSize>::v >> 1;
+  if (IntWapper<BoardSize>::v & 1) {
     dot += dot / BoardSize + 1;
   } else {
     dot += BoardSize + 1;
@@ -58,7 +58,7 @@ Edge<BoardSize>::Dot2() const {
 template <int64_t BoardSize>
 constexpr bool
 Edge<BoardSize>::Rotate() const {
-  return SizeTypeWapper<BoardSize>::v & 1;
+  return IntWapper<BoardSize>::v & 1;
 }
 
 template <int64_t BoardSize>

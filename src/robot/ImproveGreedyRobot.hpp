@@ -26,14 +26,14 @@ ImproveGreedyRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<Boar
     return edges;
   }
 
-  SizeType<BoardSize> minScore = Limits<Box<BoardSize>>::Max + 1;
+  Int<BoardSize> minScore = Limits<Box<BoardSize>>::Max + 1;
   Array<Edge<BoardSize>, Limits<Edge<BoardSize>>::Max>& candidateEdges = GreedyRobot<BoardSize>::GetEdgeBuffer();
-  SizeType<BoardSize> candidateEdgesSize = 0;
+  Int<BoardSize> candidateEdgesSize = 0;
 
   for (const Edge<BoardSize> edge : board.EmptyEdges()) {
     SimulationBoard.Reset(static_cast<EdgeCountableBoard<BoardSize>>(board));
     SimulationBoard.Add(edge);
-    if (const SizeType<BoardSize> score = SimulationBoard.MaxObtainableScore(minScore); score < minScore) {
+    if (const Int<BoardSize> score = SimulationBoard.MaxObtainableScore(minScore); score < minScore) {
       minScore = score;
       candidateEdgesSize = 1;
       candidateEdges[0] = edge;

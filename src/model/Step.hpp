@@ -15,13 +15,13 @@ class Step {
   Add();
   constexpr bool
   Gaming() const;
-  constexpr SizeType<BoardSize>
+  constexpr Int<BoardSize>
   RemainStep() const;
-  constexpr SizeType<BoardSize>
+  constexpr Int<BoardSize>
   NowStep() const;
 
   private:
-  SizeType<BoardSize> v = 0;
+  Int<BoardSize> v = 0;
 };
 
 template <int64_t BoardSize>
@@ -43,13 +43,13 @@ Step<BoardSize>::Gaming() const {
 }
 
 template <int64_t BoardSize>
-constexpr SizeType<BoardSize>
+constexpr Int<BoardSize>
 Step<BoardSize>::RemainStep() const {
   return Limits<Edge<BoardSize>>::Max - v;
 }
 
 template <int64_t BoardSize>
-constexpr SizeType<BoardSize>
+constexpr Int<BoardSize>
 Step<BoardSize>::NowStep() const {
   return v;
 }

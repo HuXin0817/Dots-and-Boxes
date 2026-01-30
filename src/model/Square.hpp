@@ -5,32 +5,31 @@
 namespace dab::detail::model {
 
 template <int64_t BoardSize, int64_t Length>
-class Square : public SizeTypeWapper<BoardSize> {
+class Square : public IntWapper<BoardSize> {
   public:
-  using SizeTypeWapper<BoardSize>::SizeTypeWapper;
-  constexpr Square(SizeType<BoardSize> x, SizeType<BoardSize> y);
+  using IntWapper<BoardSize>::IntWapper;
+  constexpr Square(Int<BoardSize> x, Int<BoardSize> y);
 
-  constexpr SizeType<BoardSize>
+  constexpr Int<BoardSize>
   X() const;
-  constexpr SizeType<BoardSize>
+  constexpr Int<BoardSize>
   Y() const;
 };
 
 template <int64_t BoardSize, int64_t Length>
-constexpr Square<BoardSize, Length>::Square(SizeType<BoardSize> x, SizeType<BoardSize> y)
-    : SizeTypeWapper<BoardSize>(x * Length + y) {
+constexpr Square<BoardSize, Length>::Square(Int<BoardSize> x, Int<BoardSize> y) : IntWapper<BoardSize>(x * Length + y) {
 }
 
 template <int64_t BoardSize, int64_t Length>
-constexpr SizeType<BoardSize>
+constexpr Int<BoardSize>
 Square<BoardSize, Length>::X() const {
-  return SizeTypeWapper<BoardSize>::v / Length;
+  return IntWapper<BoardSize>::v / Length;
 }
 
 template <int64_t BoardSize, int64_t Length>
-constexpr SizeType<BoardSize>
+constexpr Int<BoardSize>
 Square<BoardSize, Length>::Y() const {
-  return SizeTypeWapper<BoardSize>::v % Length;
+  return IntWapper<BoardSize>::v % Length;
 }
 
 template <int64_t BoardSize, int64_t Length>

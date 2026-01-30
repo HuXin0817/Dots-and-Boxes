@@ -151,7 +151,7 @@ MainWindow<BoardSize>::showEvent(QShowEvent* event) {
       QJsonObject moveRecord;
       moveRecord.insert("Step", Board.NowStep());
       moveRecord.insert("Turn", turn.IsPlayer1Turn() ? 1 : 2);
-      moveRecord.insert("Move", SizeType<BoardSize>(PlayerMoveEdge));
+      moveRecord.insert("Move", Int<BoardSize>(PlayerMoveEdge));
       moveRecord.insert("Score", playerScore);
       moveRecord.insert("Time", seconds);
 

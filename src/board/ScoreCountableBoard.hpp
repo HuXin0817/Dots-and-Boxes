@@ -12,7 +12,7 @@ class ScoreCountableBoard : public EdgeCountableBoard<BoardSize>, public GameSco
 
   void
   Reset(const EdgeCountableBoard<BoardSize>& newBoard = EdgeCountableBoard<BoardSize>());
-  SizeType<BoardSize>
+  Int<BoardSize>
   Add(const Edge<BoardSize> edge);
 };
 
@@ -29,9 +29,9 @@ ScoreCountableBoard<BoardSize>::Reset(const EdgeCountableBoard<BoardSize>& newBo
 }
 
 template <int64_t BoardSize>
-SizeType<BoardSize>
+Int<BoardSize>
 ScoreCountableBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
-  const SizeType<BoardSize> score = EdgeCountableBoard<BoardSize>::Add(edge);
+  const Int<BoardSize> score = EdgeCountableBoard<BoardSize>::Add(edge);
   GameScoreMap<BoardSize>::Add(score);
   return score;
 }

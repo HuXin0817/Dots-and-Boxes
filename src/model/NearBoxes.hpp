@@ -38,8 +38,8 @@ constexpr List<Box<BoardSize>, 2>
 NearBoxesMapper<BoardSize>::GetNearBoxes(const Edge<BoardSize> edge) {
   List<Box<BoardSize>, 2> result;
 
-  SizeType<BoardSize> x = edge.Dot2().X() - 1;
-  SizeType<BoardSize> y = edge.Dot2().Y() - 1;
+  Int<BoardSize> x = edge.Dot2().X() - 1;
+  Int<BoardSize> y = edge.Dot2().Y() - 1;
   if (x >= 0 && y >= 0) {
     result.Append(Box<BoardSize>(x, y));
   }

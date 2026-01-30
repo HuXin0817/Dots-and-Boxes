@@ -13,17 +13,17 @@ class GameScoreMap : public Turn {
   void
   Reset();
   void
-  Add(const SizeType<BoardSize> score);
-  SizeType<BoardSize>
+  Add(const Int<BoardSize> score);
+  Int<BoardSize>
   Score() const;
-  SizeType<BoardSize>
+  Int<BoardSize>
   GetPlayer1Score() const;
-  SizeType<BoardSize>
+  Int<BoardSize>
   GetPlayer2Score() const;
 
   private:
-  SizeType<BoardSize> Player1Score = 0;
-  SizeType<BoardSize> Player2Score = 0;
+  Int<BoardSize> Player1Score = 0;
+  Int<BoardSize> Player2Score = 0;
 };
 
 template <int64_t BoardSize>
@@ -41,7 +41,7 @@ GameScoreMap<BoardSize>::Reset() {
 
 template <int64_t BoardSize>
 void
-GameScoreMap<BoardSize>::Add(const SizeType<BoardSize> score) {
+GameScoreMap<BoardSize>::Add(const Int<BoardSize> score) {
   if (score == 0) {
     Turn::Add();
     return;
@@ -54,19 +54,19 @@ GameScoreMap<BoardSize>::Add(const SizeType<BoardSize> score) {
 }
 
 template <int64_t BoardSize>
-SizeType<BoardSize>
+Int<BoardSize>
 GameScoreMap<BoardSize>::Score() const {
   return Player1Score - Player2Score;
 }
 
 template <int64_t BoardSize>
-SizeType<BoardSize>
+Int<BoardSize>
 GameScoreMap<BoardSize>::GetPlayer1Score() const {
   return Player1Score;
 }
 
 template <int64_t BoardSize>
-SizeType<BoardSize>
+Int<BoardSize>
 GameScoreMap<BoardSize>::GetPlayer2Score() const {
   return Player2Score;
 }

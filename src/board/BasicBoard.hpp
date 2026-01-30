@@ -23,7 +23,7 @@ class BasicBoard : public Step<BoardSize> {
 
   private:
   Array<Edge<BoardSize>, Limits<Edge<BoardSize>>::Max> Edges;
-  Array<SizeType<BoardSize>, Limits<Edge<BoardSize>>::Max> EdgeIndexes;
+  Array<Int<BoardSize>, Limits<Edge<BoardSize>>::Max> EdgeIndexes;
 };
 
 template <int64_t BoardSize>
@@ -46,7 +46,7 @@ void
 BasicBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
   assert(!Contains(edge));
   const Edge<BoardSize> nowEdge = Edges[Step<BoardSize>::NowStep()];
-  const SizeType<BoardSize> edgeIndex = EdgeIndexes[edge];
+  const Int<BoardSize> edgeIndex = EdgeIndexes[edge];
   std::swap(Edges[edgeIndex], Edges[Step<BoardSize>::NowStep()]);
   EdgeIndexes[edge] = Step<BoardSize>::NowStep();
   EdgeIndexes[nowEdge] = edgeIndex;

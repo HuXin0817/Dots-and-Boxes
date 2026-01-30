@@ -17,7 +17,7 @@ class EdgeCounter {
 
   void
   Reset();
-  SizeType<BoardSize>
+  Int<BoardSize>
   Add(const Edge<BoardSize> edge);
   uint8_t
   EdgeCount(const Box<BoardSize> box) const;
@@ -40,9 +40,9 @@ EdgeCounter<BoardSize>::Reset() {
 }
 
 template <int64_t BoardSize>
-SizeType<BoardSize>
+Int<BoardSize>
 EdgeCounter<BoardSize>::Add(const Edge<BoardSize> edge) {
-  SizeType<BoardSize> score = 0;
+  Int<BoardSize> score = 0;
   for (const Box<BoardSize> box : NearBoxes(edge)) {
     Counter[box]++;
     const uint8_t num = Counter[box];

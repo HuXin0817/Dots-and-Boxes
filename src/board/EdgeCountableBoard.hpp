@@ -12,7 +12,7 @@ class EdgeCountableBoard : public BasicBoard<BoardSize>, public EdgeCounter<Boar
 
   void
   Reset();
-  SizeType<BoardSize>
+  Int<BoardSize>
   Add(const Edge<BoardSize> edge);
   Edge<BoardSize>
   FindNotContainsEdgeInBox(const Box<BoardSize> box) const;
@@ -33,7 +33,7 @@ EdgeCountableBoard<BoardSize>::Reset() {
 }
 
 template <int64_t BoardSize>
-SizeType<BoardSize>
+Int<BoardSize>
 EdgeCountableBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
   BasicBoard<BoardSize>::Add(edge);
   return EdgeCounter<BoardSize>::Add(edge);

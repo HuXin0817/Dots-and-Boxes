@@ -37,8 +37,8 @@ template <int64_t BoardSize>
 constexpr Array<Edge<BoardSize>, 4>
 NearEdgesMapper<BoardSize>::GetNearEdges(const Box<BoardSize> box) {
   Array<Edge<BoardSize>, 4> NearEdges;
-  const SizeType<BoardSize> x = box.X();
-  const SizeType<BoardSize> y = box.Y();
+  const Int<BoardSize> x = box.X();
+  const Int<BoardSize> y = box.Y();
   const Dot<BoardSize> topLeft(x, y);
   const Dot<BoardSize> topRight(x + 1, y);
   const Dot<BoardSize> bottomLeft(x, y + 1);

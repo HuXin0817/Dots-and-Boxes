@@ -21,8 +21,8 @@ class GreedyRobot : public Robot<BoardSize> {
   GetEdgeBuffer();
 
   private:
-  SizeType<BoardSize> EnemyUnscoreableIndex;
-  SizeType<BoardSize> ScoreableIndex;
+  Int<BoardSize> EnemyUnscoreableIndex;
+  Int<BoardSize> ScoreableIndex;
   Array<Edge<BoardSize>, Limits<Edge<BoardSize>>::Max> Edges;
 };
 
