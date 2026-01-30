@@ -6,11 +6,11 @@ A sophisticated implementation of the classic Dots and Boxes game with multiple 
 
 - Interactive graphical interface using Qt6
 - Multiple AI opponents with different strategies:
-  - Simple Strategy Robot
-  - Basic Search Robot
-  - Improved Search Robot
-  - Monte Carlo Search Robot
-  - Parallel Search Robot
+  - GreedyRobot
+  - ImproveGreedyRobot
+  - SimulationRobot
+  - MonteCarloRobot
+  - ParallelSearchRobot
 - Configurable game settings
 - Score tracking and display
 - Visual representation of the game board
@@ -64,7 +64,7 @@ The game supports the following command line arguments:
 
 | Option | Short | Long | Description | Default |
 |--------|-------|------|-------------|---------|
-| Board Size | `-s` | `--size` | Set board size ranging from [2, 36] | 6 |
+| Board Size | `-s` | `--size` | Set board size ranging from [1, 36] | 6 |
 | Player 1 Type | `-p1` | `--player1` | Set type of player 1 | robot |
 | Player 2 Type | `-p2` | `--player2` | Set type of player 2 | robot |
 
@@ -73,11 +73,11 @@ The game supports the following command line arguments:
 | Value | Description |
 |-------|-------------|
 | `human` | Human player |
-| `robot:easy` | Simple Strategy Robot |
-| `robot:medium` | Basic Search Robot |
-| `robot:hard` | Improved Search Robot |
-| `robot:expert` | Monte Carlo Search Robot |
-| `robot:master` | Parallel Search Robot |
+| `robot:easy` | GreedyRobot |
+| `robot:medium` | ImproveGreedyRobot |
+| `robot:hard` | SimulationRobot |
+| `robot:expert` | MonteCarloRobot |
+| `robot:master` | ParallelSearchRobot |
 | `robot` | Equivalent to `robot:master` |
 
 #### Example Usage
@@ -100,13 +100,23 @@ The game supports the following command line arguments:
 
 ```
 Dots-and-Boxes/
+├── .github/            # GitHub workflows
+│   └── workflows/
+│       └── macos-build.yml
 ├── frontend/           # GUI-related files
 │   ├── BoxCanvas.hpp   # Canvas for drawing boxes
 │   ├── CommandParser.hpp # Command line argument parser
 │   ├── Common.hpp      # Common frontend utilities
 │   ├── DotCanvas.hpp   # Canvas for drawing dots
 │   ├── EdgeCanvas.hpp  # Canvas for drawing edges
-│   └── MainWindow.hpp  # Main window implementation
+│   ├── MainWindow.hpp  # Main window implementation
+│   └── MainWindowCreator.hpp # Main window creator
+├── include/            # Header files
+│   ├── Board.hpp
+│   ├── Common.hpp
+│   ├── Frontend.hpp
+│   ├── Model.hpp
+│   └── Robot.hpp
 ├── src/                # Core game logic
 │   ├── board/          # Board implementations
 │   │   ├── BasicBoard.hpp
@@ -115,7 +125,7 @@ Dots-and-Boxes/
 │   │   └── ScoreableEdgeBoard.hpp
 │   ├── common/         # Utility classes
 │   │   ├── Array.hpp
-│   │   ├── Iota.hpp
+│   │   ├── Iterable.hpp
 │   │   ├── List.hpp
 │   │   ├── Queue.hpp
 │   │   ├── Random.hpp
@@ -124,34 +134,36 @@ Dots-and-Boxes/
 │   │   ├── Edge.hpp
 │   │   ├── EdgeCounter.hpp
 │   │   ├── GameScoreMap.hpp
+│   │   ├── Iota.hpp
 │   │   ├── NearBoxes.hpp
 │   │   ├── NearEdges.hpp
 │   │   ├── SearchScoreMap.hpp
-│   │   ├── Types.hpp
 │   │   ├── Square.hpp
 │   │   ├── Step.hpp
-│   │   └── Turn.hpp
+│   │   ├── Turn.hpp
+│   │   └── Types.hpp
 │   └── robot/          # AI implementations
+│       ├── GreedyRobot.hpp
 │       ├── ImproveGreedyRobot.hpp
-│       ├── SimulationRobot.hpp
 │       ├── MonteCarloRobot.hpp
 │       ├── ParallelSearchRobot.hpp
 │       ├── PlayerType.hpp
 │       ├── Robot.hpp
-│       └── GreedyRobot.hpp
+│       └── SimulationRobot.hpp
 ├── main.cpp            # Entry point
 ├── CMakeLists.txt      # Build configuration
 ├── LICENSE             # License file
-└── README.md           # This file
+├── README.md           # This file
+└── demo.png            # Game demo screenshot
 ```
 
 ## AI Strategies
 
-1. **Simple Strategy Robot**: Follows basic game rules without advanced planning
-2. **Basic Search Robot**: Implements a basic search algorithm to evaluate moves
-3. **Improved Search Robot**: Enhanced version with better move evaluation
-4. **Monte Carlo Search Robot**: Uses Monte Carlo simulation for move selection
-5. **Parallel Search Robot**: Leverages multi-core processing for faster search
+1. **GreedyRobot**: Follows basic game rules without advanced planning
+2. **ImproveGreedyRobot**: Implements a basic search algorithm to evaluate moves
+3. **SimulationRobot**: Enhanced version with better move evaluation
+4. **MonteCarloRobot**: Uses Monte Carlo simulation for move selection
+5. **ParallelSearchRobot**: Leverages multi-core processing for faster search
 
 ## Technical Details
 
