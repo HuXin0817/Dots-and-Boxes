@@ -213,7 +213,7 @@ MainWindow<BoardSize>::Add(const Edge<BoardSize> edge) {
   if (Board.NowStep() > 0) {
     EdgeCanvases[LastEdge]->SetHighLight(false);
   }
-  EdgeCanvases[edge]->SetState(static_cast<const Turn>(Board));
+  EdgeCanvases[edge]->SetOwner(static_cast<const Turn>(Board));
   EdgeCanvases[edge]->raise();
   for (Dot<BoardSize> dot = 0; dot < Dot<BoardSize>::Max; ++dot) {
     DotCanvases[dot]->raise();
@@ -227,7 +227,7 @@ MainWindow<BoardSize>::Add(const Edge<BoardSize> edge) {
       }
     }
     if (count == 3) {
-      BoxCanvases[box]->SetState(static_cast<const Turn>(Board));
+      BoxCanvases[box]->SetOwner(static_cast<const Turn>(Board));
     }
   }
 

@@ -14,14 +14,14 @@ class BoxCanvas final : public QWidget {
   explicit BoxCanvas(QPointer<QWidget> parent);
 
   void
-  SetState(const Turn turn);
+  SetOwner(const Turn turn);
 
   protected:
   void
   paintEvent(QPaintEvent* event) override;
 
   private:
-  std::optional<Turn> State;
+  std::optional<Turn> Owner;
 
   QColor
   Color() const;
@@ -34,8 +34,8 @@ BoxCanvas<BoardSize>::BoxCanvas(QPointer<QWidget> parent) : QWidget(parent) {
 
 template <int64_t BoardSize>
 void
-BoxCanvas<BoardSize>::SetState(const Turn turn) {
-  State = turn;
+BoxCanvas<BoardSize>::SetOwner(const Turn turn) {
+  Owner = turn;
 }
 
 template <int64_t BoardSize>
@@ -56,11 +56,11 @@ BoxCanvas<BoardSize>::Color() const {
   static const QColor Player1OccupyColor = QColor(64, 64, 255, 64);
   static const QColor Player2OccupyColor = QColor(255, 64, 64, 64);
 
-  if (State.has_value()) {
-    if (State->IsPlayer1Turn()) {
+  if (Owner.has_value()) {
+    if (Owner->IsPlayer1Turn()) {
       return Player1OccupyColor;
     }
-    if (State->IsPlayer2Turn()) {
+    if (Owner->IsPlayer2Turn()) {
       return Player2OccupyColor;
     }
   }

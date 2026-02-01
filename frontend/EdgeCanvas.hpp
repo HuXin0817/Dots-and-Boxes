@@ -16,7 +16,7 @@ class EdgeCanvas final : public QWidget {
   explicit EdgeCanvas(const bool rotate, const std::function<void()>& callBack, QPointer<QWidget> parent);
 
   void
-  SetState(const Turn turn);
+  SetOwner(const Turn turn);
   void
   SetHighLight(const bool highLight);
 
@@ -33,7 +33,7 @@ class EdgeCanvas final : public QWidget {
   private:
   bool Hovered = false;
   bool HighLight = true;
-  std::optional<Turn> State;
+  std::optional<Turn> Owner;
   const std::function<void()> CallBack;
 
   QColor
@@ -48,8 +48,8 @@ EdgeCanvas<BoardSize>::EdgeCanvas(const bool rotate, const std::function<void()>
 
 template <int64_t BoardSize>
 void
-EdgeCanvas<BoardSize>::SetState(const Turn turn) {
-  State = turn;
+EdgeCanvas<BoardSize>::SetOwner(const Turn turn) {
+  Owner = turn;
 }
 
 template <int64_t BoardSize>
@@ -106,7 +106,7 @@ EdgeCanvas<BoardSize>::Color() const {
   static const QColor Player1OccupyColor = QColor(64, 64, 255, 255);
   static const QColor Player2OccupyColor = QColor(255, 64, 64, 255);
 
-  if (!State.has_value()) {
+  if (!Owner.has_value()) {
     if (Hovered) {
       return ThemeColor(DarkThemeHoveredColor, LightThemeHoveredColor);
     }
@@ -114,9 +114,9 @@ EdgeCanvas<BoardSize>::Color() const {
   }
 
   QColor color;
-  if (State->IsPlayer1Turn()) {
+  if (Owner->IsPlayer1Turn()) {
     color = Player1OccupyColor;
-  } else if (State->IsPlayer2Turn()) {
+  } else if (Owner->IsPlayer2Turn()) {
     color = Player2OccupyColor;
   }
   if (HighLight) {
