@@ -13,6 +13,8 @@ class Edge : public IntWapper<BoardSize> {
   using IntWapper<BoardSize>::IntWapper;
   constexpr Edge(const Dot<BoardSize> dot1, const Dot<BoardSize> dot2);
 
+  static constexpr Int<BoardSize> Max = 2 * BoardSize * (BoardSize + 1);
+
   constexpr Dot<BoardSize>
   Dot1() const;
   constexpr Dot<BoardSize>
@@ -66,11 +68,5 @@ constexpr Edge<BoardSize>
 InvalidEdge() {
   return -1;
 }
-
-template <int64_t BoardSize>
-class Limits<Edge<BoardSize>> {
-  public:
-  static constexpr Edge<BoardSize> Max = 2 * BoardSize * (BoardSize + 1);
-};
 
 }  // namespace dab::detail::model

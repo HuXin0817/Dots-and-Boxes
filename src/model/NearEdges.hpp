@@ -2,7 +2,6 @@
 
 #include "Common.hpp"
 #include "Edge.hpp"
-#include "Iota.hpp"
 #include "Square.hpp"
 
 namespace dab::detail::model {
@@ -17,7 +16,7 @@ class NearEdgesMapper {
   constexpr NearEdgesMapper();
 
   private:
-  Array<Array<Edge<BoardSize>, 4>, Limits<Box<BoardSize>>::Max> BoxNearEdges;
+  Array<Array<Edge<BoardSize>, 4>, Box<BoardSize>::Max> BoxNearEdges;
 
   static constexpr Array<Edge<BoardSize>, 4>
   GetNearEdges(const Box<BoardSize> box);
@@ -28,7 +27,7 @@ class NearEdgesMapper {
 
 template <int64_t BoardSize>
 constexpr NearEdgesMapper<BoardSize>::NearEdgesMapper() {
-  for (const Box<BoardSize> box : Iota<Box<BoardSize>>()) {
+  for (Box<BoardSize> box = 0; box < Box<BoardSize>::Max; ++box) {
     BoxNearEdges[box] = GetNearEdges(box);
   }
 }

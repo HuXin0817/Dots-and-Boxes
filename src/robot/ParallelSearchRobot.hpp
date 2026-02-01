@@ -5,7 +5,7 @@
 namespace dab::detail::robot {
 
 template <int64_t BoardSize,
-          int64_t SubRobotSearchTime = static_cast<int64_t>(Limits<Edge<BoardSize>>::Max) << 5,
+          int64_t SubRobotSearchTime = static_cast<int64_t>(Edge<BoardSize>::Max) << 5,
           int64_t SubRobotNumber = 64>
 class ParallelSearchRobot final : public Robot<BoardSize> {
   public:

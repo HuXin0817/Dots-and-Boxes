@@ -25,7 +25,7 @@ class EdgeCounter {
   MaxEdgeCount(const Edge<BoardSize> edge) const;
 
   private:
-  Array<uint8_t, Limits<Box<BoardSize>>::Max> Counter;
+  Array<uint8_t, Box<BoardSize>::Max> Counter;
 };
 
 template <int64_t BoardSize>
@@ -36,7 +36,7 @@ EdgeCounter<BoardSize>::EdgeCounter() {
 template <int64_t BoardSize>
 void
 EdgeCounter<BoardSize>::Reset() {
-  Counter = Array<uint8_t, Limits<Box<BoardSize>>::Max>();
+  Counter = Array<uint8_t, Box<BoardSize>::Max>();
 }
 
 template <int64_t BoardSize>

@@ -10,6 +10,8 @@ class Square : public IntWapper<BoardSize> {
   using IntWapper<BoardSize>::IntWapper;
   constexpr Square(Int<BoardSize> x, Int<BoardSize> y);
 
+  static constexpr Int<BoardSize> Max = Length * Length;
+
   constexpr Int<BoardSize>
   X() const;
   constexpr Int<BoardSize>
@@ -31,12 +33,6 @@ constexpr Int<BoardSize>
 Square<BoardSize, Length>::Y() const {
   return IntWapper<BoardSize>::v % Length;
 }
-
-template <int64_t BoardSize, int64_t Length>
-class Limits<Square<BoardSize, Length>> {
-  public:
-  static constexpr Square<BoardSize, Length> Max = Length * Length;
-};
 
 template <int64_t BoardSize>
 using Box = Square<BoardSize, BoardSize>;

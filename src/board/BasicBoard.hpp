@@ -22,8 +22,8 @@ class BasicBoard : public Step<BoardSize> {
   MoveRecord() const;
 
   private:
-  Array<Edge<BoardSize>, Limits<Edge<BoardSize>>::Max> Edges;
-  Array<Int<BoardSize>, Limits<Edge<BoardSize>>::Max> EdgeIndexes;
+  Array<Edge<BoardSize>, Edge<BoardSize>::Max> Edges;
+  Array<Int<BoardSize>, Edge<BoardSize>::Max> EdgeIndexes;
 };
 
 template <int64_t BoardSize>
@@ -35,7 +35,7 @@ template <int64_t BoardSize>
 void
 BasicBoard<BoardSize>::Reset() {
   Step<BoardSize>::Reset();
-  for (const Edge<BoardSize> edge : Iota<Edge<BoardSize>>()) {
+  for (Edge<BoardSize> edge = 0; edge < Edge<BoardSize>::Max; ++edge) {
     EdgeIndexes[edge] = edge;
     Edges[edge] = edge;
   }
@@ -62,7 +62,7 @@ BasicBoard<BoardSize>::Contains(const Edge<BoardSize> edge) const {
 template <int64_t BoardSize>
 Span<Edge<BoardSize>>
 BasicBoard<BoardSize>::EmptyEdges() const {
-  return Span(Edges.begin() + Step<BoardSize>::NowStep(), Edges.begin() + Limits<Edge<BoardSize>>::Max);
+  return Span(Edges.begin() + Step<BoardSize>::NowStep(), Edges.begin() + Edge<BoardSize>::Max);
 }
 
 template <int64_t BoardSize>

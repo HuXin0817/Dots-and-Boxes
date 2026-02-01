@@ -7,7 +7,7 @@
 
 namespace dab::detail::robot {
 
-template <int64_t BoardSize, int64_t SearchTime = static_cast<int64_t>(Limits<Edge<BoardSize>>::Max) << 8>
+template <int64_t BoardSize, int64_t SearchTime = static_cast<int64_t>(Edge<BoardSize>::Max) << 8>
 class MonteCarloRobot final : public Robot<BoardSize> {
   public:
   MonteCarloRobot() = default;
@@ -34,8 +34,7 @@ MonteCarloRobot<BoardSize, SearchTime>::BestCandidateEdges(const ScoreCountableB
 
   Random Random;
   SearchResult.Reset();
-  int64_t times = SearchTime / board.RemainStep() + 1;
-  while (times--) {
+  for (int64_t i = 0; i < SearchTime / board.RemainStep() + 1; ++i) {
     SimulationBoard.Reset(static_cast<EdgeCountableBoard<BoardSize>>(board));
     const Edge<BoardSize> edge = Random.Choice(SubRobot.BestCandidateEdges(SimulationBoard));
     SimulationBoard.Add(edge);

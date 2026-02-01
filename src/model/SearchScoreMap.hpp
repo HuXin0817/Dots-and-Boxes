@@ -4,7 +4,6 @@
 
 #include "Common.hpp"
 #include "Edge.hpp"
-#include "Iota.hpp"
 
 namespace dab::detail::model {
 
@@ -23,9 +22,9 @@ class SearchScoreMap {
   Export();
 
   private:
-  Array<int, Limits<Edge<BoardSize>>::Max> Time;
-  Array<int, Limits<Edge<BoardSize>>::Max> Score;
-  List<Edge<BoardSize>, Limits<Edge<BoardSize>>::Max> BestEdges;
+  Array<int, Edge<BoardSize>::Max> Time;
+  Array<int, Edge<BoardSize>::Max> Score;
+  List<Edge<BoardSize>, Edge<BoardSize>::Max> BestEdges;
 };
 
 template <int64_t BoardSize>
@@ -46,7 +45,7 @@ SearchScoreMap<BoardSize>::Add(const Edge<BoardSize> edge, const Int<BoardSize> 
 template <int64_t BoardSize>
 void
 SearchScoreMap<BoardSize>::Add(const SearchScoreMap& other) {
-  for (const Int<BoardSize> i : Iota<Edge<BoardSize>>()) {
+  for (Int<BoardSize> i = 0; i < Edge<BoardSize>::Max; ++i) {
     Time[i] += other.Time[i];
     Score[i] += other.Score[i];
   }
@@ -56,7 +55,7 @@ template <int64_t BoardSize>
 Span<Edge<BoardSize>>
 SearchScoreMap<BoardSize>::Export() {
   float maxScore = 0.0;
-  for (const Edge<BoardSize> edge : Iota<Edge<BoardSize>>()) {
+  for (Edge<BoardSize> edge = 0; edge < Edge<BoardSize>::Max; ++edge) {
     if (Time[edge] > 0) {
       if (const float score = static_cast<float>(Score[edge]) / static_cast<float>(Time[edge]);
           score > maxScore || BestEdges.Empty()) {

@@ -3,7 +3,6 @@
 #include "../src/model/Edge.hpp"
 #include "../src/model/EdgeCounter.hpp"
 #include "../src/model/GameScoreMap.hpp"
-#include "../src/model/Iota.hpp"
 #include "../src/model/NearBoxes.hpp"
 #include "../src/model/NearEdges.hpp"
 #include "../src/model/SearchScoreMap.hpp"
@@ -21,8 +20,6 @@ using detail::model::EdgeCounter;
 using detail::model::GameScoreMap;
 using detail::model::Int;
 using detail::model::InvalidEdge;
-using detail::model::Iota;
-using detail::model::Limits;
 using detail::model::NearBoxes;
 using detail::model::NearEdges;
 using detail::model::SearchScoreMap;

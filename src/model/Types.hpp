@@ -4,22 +4,27 @@
 #include <cstddef>
 #include <cstdint>
 #include <limits>
-#include <type_traits>
 
 namespace dab::detail::model {
 
-template <typename T>
-class Limits {
-  public:
-  static constexpr T Max = std::numeric_limits<T>::max();
-};
+template <int64_t BoardSize>
+constexpr auto
+SelectIntType() {
+  constexpr int64_t MaxValue = 2 * BoardSize * (BoardSize + 1);
 
-template <int64_t BoardSize,
-          int64_t Max = 2 * BoardSize * (BoardSize + 1),
-          typename CondInt32 = std::conditional_t<Max <= Limits<int32_t>::Max, int_fast32_t, int_fast64_t>,
-          typename CondInt16 = std::conditional_t<Max <= Limits<int16_t>::Max, int_fast16_t, CondInt32>,
-          typename CondInt8 = std::conditional_t<Max <= Limits<int8_t>::Max, int_fast8_t, CondInt16>>
-using Int = CondInt8;
+  if constexpr (MaxValue <= std::numeric_limits<int8_t>::max()) {
+    return int_fast8_t();
+  } else if constexpr (MaxValue <= std::numeric_limits<int16_t>::max()) {
+    return int_fast16_t();
+  } else if constexpr (MaxValue <= std::numeric_limits<int32_t>::max()) {
+    return int_fast32_t();
+  } else {
+    return int_fast64_t();
+  }
+}
+
+template <int64_t BoardSize>
+using Int = decltype(SelectIntType<BoardSize>());
 
 template <int64_t BoardSize>
 class IntWapper {
