@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cassert>
 #include <cstddef>
 
 namespace dab::detail::common {
@@ -76,12 +77,14 @@ Iterable<Derived>::Empty() const {
 template <typename Derived>
 constexpr auto&
 Iterable<Derived>::operator[](size_t i) {
+  assert(i < Size());
   return begin()[i];
 }
 
 template <typename Derived>
 constexpr const auto&
 Iterable<Derived>::operator[](size_t i) const {
+  assert(i < Size());
   return begin()[i];
 }
 
