@@ -8,8 +8,6 @@ template <int64_t BoardSize,
           int64_t SubRobotSearchTime = static_cast<int64_t>(Limits<Edge<BoardSize>>::Max) << 5,
           int64_t SubRobotNumber = 64>
 class ParallelSearchRobot final : public Robot<BoardSize> {
-  using SubRobotType = MonteCarloRobot<BoardSize, SubRobotSearchTime>;
-
   public:
   ParallelSearchRobot() = default;
 
@@ -17,7 +15,7 @@ class ParallelSearchRobot final : public Robot<BoardSize> {
   BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override;
 
   private:
-  Array<SubRobotType, SubRobotNumber> SubRobots;
+  Array<MonteCarloRobot<BoardSize, SubRobotSearchTime>, SubRobotNumber> SubRobots;
   SearchScoreMap<BoardSize> SearchResult;
 };
 
@@ -32,11 +30,11 @@ ParallelSearchRobot<BoardSize, SubRobotSearchTime, SubRobotNumber>::BestCandidat
   SearchResult.Reset();
 
 #pragma omp parallel for schedule(dynamic, 4)
-  for (SubRobotType& model : SubRobots) {
+  for (MonteCarloRobot<BoardSize, SubRobotSearchTime>& model : SubRobots) {
     model.BestCandidateEdges(board);
   }
 
-  for (const SubRobotType& model : SubRobots) {
+  for (const MonteCarloRobot<BoardSize, SubRobotSearchTime>& model : SubRobots) {
     SearchResult.Add(model.GetSearchResult());
   }
 
