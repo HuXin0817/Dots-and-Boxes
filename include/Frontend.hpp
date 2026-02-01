@@ -1,8 +1,8 @@
 #pragma once
 
+#include "../frontend/BaseCanvas.hpp"
 #include "../frontend/BoxCanvas.hpp"
 #include "../frontend/CommandParser.hpp"
-#include "../frontend/Common.hpp"
 #include "../frontend/DotCanvas.hpp"
 #include "../frontend/EdgeCanvas.hpp"
 #include "../frontend/MainWindow.hpp"

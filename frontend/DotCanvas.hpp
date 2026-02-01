@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Common.hpp"
+#include "BaseCanvas.hpp"
 
 namespace dab::detail::frontend {
 
 template <int64_t BoardSize>
-class DotCanvas final : public QWidget {
+class DotCanvas final : public BaseCanvas<BoardSize> {
   public:
-  static constexpr int Width = 2 * UnitSize<BoardSize>;
+  static constexpr int Width = 2 * BaseCanvas<BoardSize>::UnitSize;
 
   explicit DotCanvas(QPointer<QWidget> parent);
 
@@ -21,8 +21,8 @@ class DotCanvas final : public QWidget {
 };
 
 template <int64_t BoardSize>
-DotCanvas<BoardSize>::DotCanvas(QPointer<QWidget> parent) : QWidget(parent) {
-  setFixedSize(Width, Width);
+DotCanvas<BoardSize>::DotCanvas(QPointer<QWidget> parent) : BaseCanvas<BoardSize>(parent) {
+  BaseCanvas<BoardSize>::setFixedSize(Width, Width);
 }
 
 template <int64_t BoardSize>
@@ -34,7 +34,10 @@ DotCanvas<BoardSize>::paintEvent(QPaintEvent* event) {
   painter.setRenderHint(QPainter::Antialiasing);
   painter.setBrush(QBrush(Color()));
   painter.setPen(Qt::NoPen);
-  painter.drawEllipse(QPoint(width() / 2, height() / 2), UnitSize<BoardSize>, UnitSize<BoardSize>);
+
+  int x = BaseCanvas<BoardSize>::width() / 2;
+  int y = BaseCanvas<BoardSize>::height() / 2;
+  painter.drawEllipse(QPoint(x, y), BaseCanvas<BoardSize>::UnitSize, BaseCanvas<BoardSize>::UnitSize);
 }
 
 template <int64_t BoardSize>
@@ -43,7 +46,7 @@ DotCanvas<BoardSize>::Color() const {
   static const QColor DarkThemeColor = QColor(202, 202, 202, 255);
   static const QColor LightThemeColor = QColor(255, 255, 255, 255);
 
-  return ThemeColor(DarkThemeColor, LightThemeColor);
+  return BaseCanvas<BoardSize>::ThemeColor(DarkThemeColor, LightThemeColor);
 }
 
 }  // namespace dab::detail::frontend

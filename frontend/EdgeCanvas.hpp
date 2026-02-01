@@ -1,22 +1,17 @@
 #pragma once
 
-#include <optional>
-
-#include "Common.hpp"
-#include "Model.hpp"
+#include "BaseCanvas.hpp"
 
 namespace dab::detail::frontend {
 
 template <int64_t BoardSize>
-class EdgeCanvas final : public QWidget {
+class EdgeCanvas final : public BaseCanvas<BoardSize> {
   public:
-  static constexpr int Width = UnitSize<BoardSize> * 2;
+  static constexpr int Width = BaseCanvas<BoardSize>::UnitSize * 2;
   static constexpr int Height = Width * 5;
 
   explicit EdgeCanvas(const bool rotate, const std::function<void()>& callBack, QPointer<QWidget> parent);
 
-  void
-  SetOwner(const Turn turn);
   void
   SetHighLight(const bool highLight);
 
@@ -25,15 +20,9 @@ class EdgeCanvas final : public QWidget {
   mousePressEvent(QMouseEvent* event) override;
   void
   paintEvent(QPaintEvent* event) override;
-  void
-  enterEvent(QEnterEvent* event) override;
-  void
-  leaveEvent(QEvent* event) override;
 
   private:
-  bool Hovered = false;
   bool HighLight = true;
-  std::optional<Turn> Owner;
   const std::function<void()> CallBack;
 
   QColor
@@ -42,14 +31,8 @@ class EdgeCanvas final : public QWidget {
 
 template <int64_t BoardSize>
 EdgeCanvas<BoardSize>::EdgeCanvas(const bool rotate, const std::function<void()>& callBack, QPointer<QWidget> parent)
-    : QWidget(parent), CallBack(callBack) {
-  setFixedSize(rotate ? Width : Height, rotate ? Height : Width);
-}
-
-template <int64_t BoardSize>
-void
-EdgeCanvas<BoardSize>::SetOwner(const Turn turn) {
-  Owner = turn;
+    : BaseCanvas<BoardSize>(parent), CallBack(callBack) {
+  BaseCanvas<BoardSize>::setFixedSize(rotate ? Width : Height, rotate ? Height : Width);
 }
 
 template <int64_t BoardSize>
@@ -75,25 +58,7 @@ EdgeCanvas<BoardSize>::paintEvent(QPaintEvent* event) {
   painter.setRenderHint(QPainter::Antialiasing);
   painter.setPen(Qt::NoPen);
   painter.setBrush(QBrush(Color()));
-  painter.drawRect(rect());
-}
-
-template <int64_t BoardSize>
-void
-EdgeCanvas<BoardSize>::enterEvent(QEnterEvent* event) {
-  QWidget::enterEvent(event);
-
-  Hovered = true;
-  update();
-}
-
-template <int64_t BoardSize>
-void
-EdgeCanvas<BoardSize>::leaveEvent(QEvent* event) {
-  QWidget::leaveEvent(event);
-
-  Hovered = false;
-  update();
+  painter.drawRect(BaseCanvas<BoardSize>::rect());
 }
 
 template <int64_t BoardSize>
@@ -106,22 +71,22 @@ EdgeCanvas<BoardSize>::Color() const {
   static const QColor Player1OccupyColor = QColor(64, 64, 255, 255);
   static const QColor Player2OccupyColor = QColor(255, 64, 64, 255);
 
-  if (!Owner.has_value()) {
-    if (Hovered) {
-      return ThemeColor(DarkThemeHoveredColor, LightThemeHoveredColor);
+  if (!BaseCanvas<BoardSize>::Owner.has_value()) {
+    if (BaseCanvas<BoardSize>::Hovered()) {
+      return BaseCanvas<BoardSize>::ThemeColor(DarkThemeHoveredColor, LightThemeHoveredColor);
     }
-    return ThemeColor(DarkThemeColor, LightThemeColor);
+    return BaseCanvas<BoardSize>::ThemeColor(DarkThemeColor, LightThemeColor);
   }
 
   QColor color;
-  if (Owner->IsPlayer1Turn()) {
+  if (BaseCanvas<BoardSize>::Owner->IsPlayer1Turn()) {
     color = Player1OccupyColor;
-  } else if (Owner->IsPlayer2Turn()) {
+  } else if (BaseCanvas<BoardSize>::Owner->IsPlayer2Turn()) {
     color = Player2OccupyColor;
   }
   if (HighLight) {
     color.setAlpha(255);
-  } else if (Hovered) {
+  } else if (BaseCanvas<BoardSize>::Hovered()) {
     color.setAlpha(144);
   } else {
     color.setAlpha(128);

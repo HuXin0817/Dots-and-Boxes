@@ -1,41 +1,28 @@
 #pragma once
 
-#include <optional>
-
 #include "EdgeCanvas.hpp"
 
 namespace dab::detail::frontend {
 
 template <int64_t BoardSize>
-class BoxCanvas final : public QWidget {
+class BoxCanvas final : public BaseCanvas<BoardSize> {
   public:
-  static constexpr int Width = EdgeCanvas<BoardSize>::Height - 2 * UnitSize<BoardSize>;
+  static constexpr int Width = EdgeCanvas<BoardSize>::Height - 2 * BaseCanvas<BoardSize>::UnitSize;
 
   explicit BoxCanvas(QPointer<QWidget> parent);
-
-  void
-  SetOwner(const Turn turn);
 
   protected:
   void
   paintEvent(QPaintEvent* event) override;
 
   private:
-  std::optional<Turn> Owner;
-
   QColor
   Color() const;
 };
 
 template <int64_t BoardSize>
-BoxCanvas<BoardSize>::BoxCanvas(QPointer<QWidget> parent) : QWidget(parent) {
-  setFixedSize(Width, Width);
-}
-
-template <int64_t BoardSize>
-void
-BoxCanvas<BoardSize>::SetOwner(const Turn turn) {
-  Owner = turn;
+BoxCanvas<BoardSize>::BoxCanvas(QPointer<QWidget> parent) : BaseCanvas<BoardSize>(parent) {
+  BaseCanvas<BoardSize>::setFixedSize(Width, Width);
 }
 
 template <int64_t BoardSize>
@@ -47,7 +34,7 @@ BoxCanvas<BoardSize>::paintEvent(QPaintEvent* event) {
   painter.setRenderHint(QPainter::Antialiasing);
   painter.setPen(Qt::NoPen);
   painter.setBrush(QBrush(Color()));
-  painter.drawRect(rect());
+  painter.drawRect(BaseCanvas<BoardSize>::rect());
 }
 
 template <int64_t BoardSize>
@@ -56,11 +43,11 @@ BoxCanvas<BoardSize>::Color() const {
   static const QColor Player1OccupyColor = QColor(64, 64, 255, 64);
   static const QColor Player2OccupyColor = QColor(255, 64, 64, 64);
 
-  if (Owner.has_value()) {
-    if (Owner->IsPlayer1Turn()) {
+  if (BaseCanvas<BoardSize>::Owner.has_value()) {
+    if (BaseCanvas<BoardSize>::Owner->IsPlayer1Turn()) {
       return Player1OccupyColor;
     }
-    if (Owner->IsPlayer2Turn()) {
+    if (BaseCanvas<BoardSize>::Owner->IsPlayer2Turn()) {
       return Player2OccupyColor;
     }
   }

@@ -15,7 +15,7 @@
 namespace dab::detail::frontend {
 
 template <int64_t BoardSize>
-class MainWindow final : public QWidget {
+class MainWindow final : public BaseCanvas<BoardSize> {
   static constexpr int BoardWidth = BoardSize * EdgeCanvas<BoardSize>::Height;
   static constexpr int WindowSize = BoardWidth + 2 * BoxCanvas<BoardSize>::Width;
 
@@ -52,9 +52,9 @@ class MainWindow final : public QWidget {
 
 template <int64_t BoardSize>
 MainWindow<BoardSize>::MainWindow(const PlayerType player1Type, const PlayerType player2Type, QPointer<QWidget> parent)
-    : QWidget(parent), Player1Type(player1Type), Player2Type(player2Type) {
-  resize(WindowSize, WindowSize);
-  setMinimumSize(WindowSize, WindowSize);
+    : BaseCanvas<BoardSize>(parent), Player1Type(player1Type), Player2Type(player2Type) {
+  BaseCanvas<BoardSize>::resize(WindowSize, WindowSize);
+  BaseCanvas<BoardSize>::setMinimumSize(WindowSize, WindowSize);
 
   for (Box<BoardSize> box = 0; box < Box<BoardSize>::Max; ++box) {
     BoxCanvases.emplace_back(new BoxCanvas<BoardSize>(this));
@@ -81,7 +81,7 @@ MainWindow<BoardSize>::paintEvent(QPaintEvent* event) {
   QWidget::paintEvent(event);
 
   QPainter painter(this);
-  painter.fillRect(rect(), Color());
+  painter.fillRect(BaseCanvas<BoardSize>::rect(), Color());
 }
 
 template <int64_t BoardSize>
@@ -89,12 +89,12 @@ void
 MainWindow<BoardSize>::resizeEvent(QResizeEvent* event) {
   QWidget::resizeEvent(event);
 
-  const int x0 = (width() - BoardWidth) / 2 - UnitSize<BoardSize>;
-  const int y0 = (height() - BoardWidth) / 2 - UnitSize<BoardSize>;
+  const int x0 = (BaseCanvas<BoardSize>::width() - BoardWidth) / 2 - BaseCanvas<BoardSize>::UnitSize;
+  const int y0 = (BaseCanvas<BoardSize>::height() - BoardWidth) / 2 - BaseCanvas<BoardSize>::UnitSize;
 
   for (Box<BoardSize> box = 0; box < Box<BoardSize>::Max; ++box) {
-    const int x = x0 + box.X() * EdgeCanvas<BoardSize>::Height + 2 * UnitSize<BoardSize>;
-    const int y = y0 + box.Y() * EdgeCanvas<BoardSize>::Height + 2 * UnitSize<BoardSize>;
+    const int x = x0 + box.X() * EdgeCanvas<BoardSize>::Height + 2 * BaseCanvas<BoardSize>::UnitSize;
+    const int y = y0 + box.Y() * EdgeCanvas<BoardSize>::Height + 2 * BaseCanvas<BoardSize>::UnitSize;
     BoxCanvases[box]->move(x, y);
   }
 
@@ -102,9 +102,9 @@ MainWindow<BoardSize>::resizeEvent(QResizeEvent* event) {
     int x = x0 + edge.Dot1().X() * EdgeCanvas<BoardSize>::Height;
     int y = y0 + edge.Dot1().Y() * EdgeCanvas<BoardSize>::Height;
     if (edge.Rotate()) {
-      y += UnitSize<BoardSize>;
+      y += BaseCanvas<BoardSize>::UnitSize;
     } else {
-      x += UnitSize<BoardSize>;
+      x += BaseCanvas<BoardSize>::UnitSize;
     }
     EdgeCanvases[edge]->move(x, y);
   }
@@ -175,7 +175,7 @@ MainWindow<BoardSize>::showEvent(QShowEvent* event) {
         [this]() -> void {
           QTimer::singleShot(2000, this, [this]() -> void {
             EdgeCanvases[LastEdge]->SetHighLight(false);
-            update();
+            BaseCanvas<BoardSize>::update();
             QTimer::singleShot(2000, this, &MainWindow::close);
           });
         },
@@ -204,7 +204,7 @@ MainWindow<BoardSize>::Color() const {
   static const QColor DarkThemeColor = QColor(43, 43, 43, 255);
   static const QColor LightThemeColor = QColor(242, 242, 242, 255);
 
-  return ThemeColor(DarkThemeColor, LightThemeColor);
+  return BaseCanvas<BoardSize>::ThemeColor(DarkThemeColor, LightThemeColor);
 }
 
 template <int64_t BoardSize>
@@ -213,7 +213,7 @@ MainWindow<BoardSize>::Add(const Edge<BoardSize> edge) {
   if (Board.NowStep() > 0) {
     EdgeCanvases[LastEdge]->SetHighLight(false);
   }
-  EdgeCanvases[edge]->SetOwner(static_cast<const Turn>(Board));
+  EdgeCanvases[edge]->Owner = static_cast<const Turn>(Board);
   EdgeCanvases[edge]->raise();
   for (Dot<BoardSize> dot = 0; dot < Dot<BoardSize>::Max; ++dot) {
     DotCanvases[dot]->raise();
@@ -227,13 +227,13 @@ MainWindow<BoardSize>::Add(const Edge<BoardSize> edge) {
       }
     }
     if (count == 3) {
-      BoxCanvases[box]->SetOwner(static_cast<const Turn>(Board));
+      BoxCanvases[box]->Owner = static_cast<const Turn>(Board);
     }
   }
 
   Board.Add(edge);
   LastEdge = edge;
-  update();
+  BaseCanvas<BoardSize>::update();
   QApplication::beep();
 }
 
