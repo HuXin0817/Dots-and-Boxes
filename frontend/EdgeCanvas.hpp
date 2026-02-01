@@ -1,6 +1,9 @@
 #pragma once
 
+#include <optional>
+
 #include "Common.hpp"
+#include "Model.hpp"
 
 namespace dab::detail::frontend {
 
@@ -30,7 +33,7 @@ class EdgeCanvas final : public QWidget {
   private:
   bool Hovered = false;
   bool HighLight = true;
-  State State = State::Free;
+  std::optional<Turn> State;
   const std::function<void()> CallBack;
 
   QColor
@@ -46,7 +49,7 @@ EdgeCanvas<BoardSize>::EdgeCanvas(const bool rotate, const std::function<void()>
 template <int64_t BoardSize>
 void
 EdgeCanvas<BoardSize>::SetState(const Turn turn) {
-  State = StateFromTurn(turn);
+  State = turn;
 }
 
 template <int64_t BoardSize>
@@ -103,7 +106,7 @@ EdgeCanvas<BoardSize>::Color() const {
   static const QColor Player1OccupyColor = QColor(64, 64, 255, 255);
   static const QColor Player2OccupyColor = QColor(255, 64, 64, 255);
 
-  if (State == State::Free) {
+  if (!State.has_value()) {
     if (Hovered) {
       return ThemeColor(DarkThemeHoveredColor, LightThemeHoveredColor);
     }
@@ -111,9 +114,9 @@ EdgeCanvas<BoardSize>::Color() const {
   }
 
   QColor color;
-  if (State == State::Player1Occupy) {
+  if (State->IsPlayer1Turn()) {
     color = Player1OccupyColor;
-  } else if (State == State::Player2Occupy) {
+  } else if (State->IsPlayer2Turn()) {
     color = Player2OccupyColor;
   }
   if (HighLight) {
