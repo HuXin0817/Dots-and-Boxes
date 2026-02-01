@@ -2,6 +2,8 @@
 
 #include "MonteCarloRobot.hpp"
 
+#include <QTime>
+
 namespace dab::detail::robot {
 
 template <int64_t BoardSize,
@@ -31,7 +33,7 @@ ParallelSearchRobot<BoardSize, SubRobotSearchTime, SubRobotNumber>::BestCandidat
 
   SearchResult.Reset();
 
-#pragma omp parallel for
+#pragma omp parallel for schedule(dynamic, 4)
   for (SubRobotType& model : SubRobots) {
     model.BestCandidateEdges(board);
   }
