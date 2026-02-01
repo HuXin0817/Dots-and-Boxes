@@ -2,8 +2,6 @@
 
 #include "MonteCarloRobot.hpp"
 
-#include <QTime>
-
 namespace dab::detail::robot {
 
 template <int64_t BoardSize,
