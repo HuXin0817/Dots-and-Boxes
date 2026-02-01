@@ -7,22 +7,14 @@
 namespace dab::detail::model {
 
 template <int64_t BoardSize>
-const List<Box<BoardSize>, 2>&
-NearBoxes(const Edge<BoardSize> edge);
-
-template <int64_t BoardSize>
 class NearBoxesMapper {
   public:
   constexpr NearBoxesMapper();
 
-  private:
-  Array<List<Box<BoardSize>, 2>, Edge<BoardSize>::Max> EdgeNearBoxes;
-
   static constexpr List<Box<BoardSize>, 2>
   GetNearBoxes(const Edge<BoardSize> edge);
 
-  friend const List<Box<BoardSize>, 2>&
-  NearBoxes<BoardSize>(const Edge<BoardSize> edge);
+  Array<List<Box<BoardSize>, 2>, Edge<BoardSize>::Max> EdgeNearBoxes;
 };
 
 template <int64_t BoardSize>

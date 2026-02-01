@@ -7,22 +7,14 @@
 namespace dab::detail::model {
 
 template <int64_t BoardSize>
-const Array<Edge<BoardSize>, 4>&
-NearEdges(const Box<BoardSize> box);
-
-template <int64_t BoardSize>
 class NearEdgesMapper {
   public:
   constexpr NearEdgesMapper();
 
-  private:
-  Array<Array<Edge<BoardSize>, 4>, Box<BoardSize>::Max> BoxNearEdges;
-
   static constexpr Array<Edge<BoardSize>, 4>
   GetNearEdges(const Box<BoardSize> box);
 
-  friend const Array<Edge<BoardSize>, 4>&
-  NearEdges<BoardSize>(const Box<BoardSize> box);
+  Array<Array<Edge<BoardSize>, 4>, Box<BoardSize>::Max> BoxNearEdges;
 };
 
 template <int64_t BoardSize>
