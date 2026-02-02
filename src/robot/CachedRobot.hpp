@@ -19,7 +19,7 @@ class CachedRobot : public Robot<BoardSize> {
 
   private:
   SubRobotType SubRobot;
-  
+
   static inline LRUCache<HashBoard<BoardSize>, std::vector<Edge<BoardSize>>> GlobalCache =
       LRUCache<HashBoard<BoardSize>, std::vector<Edge<BoardSize>>>(1 << 14);
 };

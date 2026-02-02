@@ -1,5 +1,7 @@
 #pragma once
 
+#include <tbb/parallel_for.h>
+
 #include "MonteCarloRobot.hpp"
 
 namespace dab::detail::robot {
@@ -29,10 +31,11 @@ ParallelSearchRobot<BoardSize, SubRobotSearchTime, SubRobotNumber>::BestCandidat
 
   SearchResult.Reset();
 
-#pragma omp parallel for schedule(dynamic, 4)
-  for (MonteCarloRobot<BoardSize, SubRobotSearchTime>& model : SubRobots) {
-    model.BestCandidateEdges(board);
-  }
+  tbb::parallel_for(tbb::blocked_range<size_t>(0, SubRobots.Size()), [&](const tbb::blocked_range<size_t>& r) {
+    for (size_t i = r.begin(); i != r.end(); ++i) {
+      SubRobots.Begin()[i].BestCandidateEdges(board);
+    }
+  });
 
   for (const MonteCarloRobot<BoardSize, SubRobotSearchTime>& model : SubRobots) {
     SearchResult.Add(model.GetSearchResult());
