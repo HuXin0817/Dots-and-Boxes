@@ -1,9 +1,10 @@
 #pragma once
 
 #include <cstddef>
-#include <cstdio>
 #include <mutex>
 #include <vector>
+#include <list>
+#include <unordered_map>
 
 #include "Board.hpp"
 #include "Common.hpp"
@@ -15,41 +16,54 @@ template <int64_t BoardSize>
 class RobotCacheEntry {
   public:
   RobotCacheEntry() = default;
-  RobotCacheEntry(const BasicBoard<BoardSize>& board, const std::vector<Edge<BoardSize>>& result)
-      : Board(board), Result(result) {
+  RobotCacheEntry(const std::vector<Edge<BoardSize>>& result)
+      : Result(result) {
   }
 
-  BasicBoard<BoardSize> Board;
   std::vector<Edge<BoardSize>> Result;
+  size_t Hash;
 };
 
 template <int64_t BoardSize>
 class RobotCache {
   public:
-  RobotCache() {
-    Entrise.reserve(Edge<BoardSize>::Max);
-  }
+  RobotCache(size_t capacity = 1024) : Capacity(capacity) {}
 
   void
-  Find(const BasicBoard<BoardSize>& board, Span<Edge<BoardSize>>& result) {
-    for (size_t i = 0; i < Entrise.size(); i++) {
-      RobotCacheEntry<BoardSize>& entry = Entrise[i];
-      if (entry.Board == board) {
-        result = Span(entry.Result.data(), entry.Result.data() + entry.Result.size());
-      }
+  Find(size_t hash, Span<Edge<BoardSize>>& result) {
+    std::lock_guard lock(Mutex);
+    auto it = CacheMap.find(hash);
+    if (it != CacheMap.end()) {
+      LRUList.splice(LRUList.begin(), LRUList, it->second);
+      result = Span(it->second->Result.data(), it->second->Result.data() + it->second->Result.size());
     }
   }
 
   void
-  Add(const BasicBoard<BoardSize>& board, const Span<Edge<BoardSize>>& result) {
+  Add(size_t hash, const Span<Edge<BoardSize>>& result) {
     std::vector<Edge<BoardSize>> resultDump(result.Begin(), result.End());
     std::lock_guard lock(Mutex);
-    Entrise.emplace_back(board, resultDump);
+    
+    auto it = CacheMap.find(hash);
+    if (it != CacheMap.end()) {
+      LRUList.splice(LRUList.begin(), LRUList, it->second);
+      it->second->Result = resultDump;
+    } else {
+      if (LRUList.size() >= Capacity) {
+        CacheMap.erase(LRUList.back().Hash);
+        LRUList.pop_back();
+      }
+      LRUList.emplace_front(resultDump);
+      LRUList.front().Hash = hash;
+      CacheMap[hash] = LRUList.begin();
+    }
   }
 
   private:
+  size_t Capacity;
   std::mutex Mutex;
-  std::vector<RobotCacheEntry<BoardSize>> Entrise;
+  std::list<RobotCacheEntry<BoardSize>> LRUList;
+  std::unordered_map<size_t, typename std::list<RobotCacheEntry<BoardSize>>::iterator> CacheMap;
 };
 
 template <int64_t BoardSize, typename SubRobotType, size_t HashSize = 1 << 14>
@@ -69,13 +83,14 @@ class CachedRobot : public Robot<BoardSize> {
 template <int64_t BoardSize, typename SubRobotType, size_t HashSize>
 Span<Edge<BoardSize>>
 CachedRobot<BoardSize, SubRobotType, HashSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) {
-  RobotCache<BoardSize>& CacheList = GlobalCache[board.Hash() % HashSize];
+  size_t hash = board.Hash();
+  RobotCache<BoardSize>& CacheList = GlobalCache[hash % HashSize];
 
   Span<Edge<BoardSize>> result;
-  CacheList.Find(board, result);
+  CacheList.Find(hash, result);
   if (result.Empty()) {
     result = SubRobot.BestCandidateEdges(board);
-    CacheList.Add(board, result);
+    CacheList.Add(hash, result);
   }
 
   return result;
