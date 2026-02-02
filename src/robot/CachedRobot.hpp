@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cstddef>
-#include <cstdio>
 #include <vector>
 
 #include "Board.hpp"
@@ -10,7 +9,7 @@
 
 namespace dab::detail::robot {
 
-template <int64_t BoardSize, typename SubRobotType, size_t HashSize = 1 << 8>
+template <int64_t BoardSize, typename SubRobotType>
 class CachedRobot : public Robot<BoardSize> {
   public:
   CachedRobot() = default;
@@ -20,18 +19,21 @@ class CachedRobot : public Robot<BoardSize> {
 
   private:
   SubRobotType SubRobot;
-  LRUCache<HashBoard<BoardSize>, std::vector<Edge<BoardSize>>, HashSize> Cache;
+  static inline LRUCache<HashBoard<BoardSize>, std::vector<Edge<BoardSize>>> Cache =
+      LRUCache<HashBoard<BoardSize>, std::vector<Edge<BoardSize>>>(1 << 14);
 };
 
-template <int64_t BoardSize, typename SubRobotType, size_t HashSize>
+template <int64_t BoardSize, typename SubRobotType>
 Span<Edge<BoardSize>>
-CachedRobot<BoardSize, SubRobotType, HashSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) {
-  if (std::vector<Edge<BoardSize>>* cached = Cache.Get(board)) {
-    return Span<Edge<BoardSize>>(cached->data(), cached->data() + cached->size());
+CachedRobot<BoardSize, SubRobotType>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) {
+  typename dab::LRUCache<HashBoard<BoardSize>, std::vector<Edge<BoardSize>>>::ConstAccessor ac;
+  if (Cache.find(ac, board)) {
+    const std::vector<Edge<BoardSize>>& cached = *ac;
+    return Span(cached.data(), cached.data() + cached.size());
   }
 
   Span<Edge<BoardSize>> result = SubRobot.BestCandidateEdges(board);
-  Cache.Put(board, std::vector(result.Begin(), result.End()));
+  Cache.insert(board, std::vector<Edge<BoardSize>>(result.Begin(), result.End()));
   return result;
 }
 
