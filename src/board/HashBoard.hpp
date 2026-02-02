@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>
+#include <functional>
 #include <limits>
 
 #include "BasicBoard.hpp"
@@ -18,6 +19,8 @@ class HashBoard : public BasicBoard<BoardSize> {
   Add(const Edge<BoardSize> edge);
   size_t
   Hash() const;
+  bool
+  operator==(const HashBoard& other) const;
 
   private:
   static Array<size_t, Edge<BoardSize>::Max>
@@ -53,6 +56,12 @@ HashBoard<BoardSize>::Hash() const {
 }
 
 template <int64_t BoardSize>
+bool
+HashBoard<BoardSize>::operator==(const HashBoard& other) const {
+  return BasicBoard<BoardSize>::operator==(other);
+}
+
+template <int64_t BoardSize>
 Array<size_t, Edge<BoardSize>::Max>
 HashBoard<BoardSize>::CreateHashValueTable() {
   Random random;
@@ -64,3 +73,15 @@ HashBoard<BoardSize>::CreateHashValueTable() {
 }
 
 }  // namespace dab::detail::board
+
+namespace std {
+
+template <int64_t BoardSize>
+struct hash<dab::detail::board::HashBoard<BoardSize>> {
+  size_t
+  operator()(const dab::detail::board::HashBoard<BoardSize>& board) const {
+    return board.Hash();
+  }
+};
+
+}  // namespace std
