@@ -49,7 +49,7 @@ EdgeCountableBoard<BoardSize>::FindNotContainsEdgeInBox(const Box<BoardSize> box
     }
   }
   assert(false);
-  return InvalidEdge<BoardSize>();
+  return InvalidEdge<BoardSize>;
 }
 
 template <int64_t BoardSize>
@@ -60,7 +60,7 @@ EdgeCountableBoard<BoardSize>::FindScoreableEdge() const {
       return FindNotContainsEdgeInBox(box);
     }
   }
-  return InvalidEdge<BoardSize>();
+  return InvalidEdge<BoardSize>;
 }
 
 }  // namespace dab::detail::board

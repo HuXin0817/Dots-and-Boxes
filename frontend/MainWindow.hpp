@@ -132,8 +132,8 @@ MainWindow<BoardSize>::showEvent(QShowEvent* event) {
       } else if (PlayerTypeIsRobot(Player2Type) && Board.IsPlayer2Turn()) {
         PlayerMoveEdge = Random.Choice(Robot2->BestCandidateEdges(Board));
       } else {
-        PlayerMoveEdge = InvalidEdge<BoardSize>();
-        while (PlayerMoveEdge == InvalidEdge<BoardSize>()) {
+        PlayerMoveEdge = InvalidEdge<BoardSize>;
+        while (PlayerMoveEdge == InvalidEdge<BoardSize>) {
           QThread::yieldCurrentThread();
         }
       }

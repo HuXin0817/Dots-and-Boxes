@@ -64,9 +64,6 @@ Edge<BoardSize>::Rotate() const {
 }
 
 template <int64_t BoardSize>
-constexpr Edge<BoardSize>
-InvalidEdge() {
-  return -1;
-}
+static constexpr Edge<BoardSize> InvalidEdge = -1;
 
 }  // namespace dab::detail::model
