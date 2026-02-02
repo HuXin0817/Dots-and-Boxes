@@ -26,9 +26,6 @@ class CachedRobot : public Robot<BoardSize> {
   private:
   SubRobotType SubRobot;
 
-  static bool
-  IsEqual(const BasicBoard<BoardSize>& board1, const BasicBoard<BoardSize>& board2);
-
   static inline std::atomic<int> CachedCount = 0;
   static inline std::atomic<int> TotalCount = 0;
 
@@ -57,7 +54,7 @@ CachedRobot<BoardSize, SubRobotType, HashSize>::BestCandidateEdges(const ScoreCo
 
   std::vector<std::pair<BasicBoard<BoardSize>, std::vector<Edge<BoardSize>>>>& CacheList = GlobalCache[HashOffset];
   for (const std::pair<BasicBoard<BoardSize>, std::vector<Edge<BoardSize>>>& entry : CacheList) {
-    if (IsEqual(entry.first, static_cast<BasicBoard<BoardSize>>(board))) {
+    if (entry.first == static_cast<BasicBoard<BoardSize>>(board)) {
       CachedCount++;
       return Span(entry.second.data(), entry.second.data() + entry.second.size());
     }
@@ -69,21 +66,6 @@ CachedRobot<BoardSize, SubRobotType, HashSize>::BestCandidateEdges(const ScoreCo
   std::unique_lock lock(GlobalCacheMutex[HashOffset]);
   CacheList.emplace_back(static_cast<BasicBoard<BoardSize>>(board), resultDump);
   return result;
-}
-
-template <int64_t BoardSize, typename SubRobotType, size_t HashSize>
-bool
-CachedRobot<BoardSize, SubRobotType, HashSize>::IsEqual(const BasicBoard<BoardSize>& board1,
-                                                        const BasicBoard<BoardSize>& board2) {
-  if (board1.NowStep() != board2.NowStep()) {
-    return false;
-  }
-  for (Edge<BoardSize> edge : board2.MoveRecord()) {
-    if (!board1.Contains(edge)) {
-      return false;
-    }
-  }
-  return true;
 }
 
 template <int64_t BoardSize, typename SubRobotType, size_t HashSize>
