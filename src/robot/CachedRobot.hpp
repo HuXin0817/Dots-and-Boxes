@@ -24,10 +24,10 @@ class RobotCacheEntry {
   size_t Hash;
 };
 
-template <int64_t BoardSize>
+template <int64_t BoardSize, size_t Cap = 1 << 10>
 class RobotCache {
   public:
-  RobotCache(size_t capacity = 1024) : Capacity(capacity) {}
+  RobotCache() = default;
 
   void
   Find(size_t hash, Span<Edge<BoardSize>>& result) {
@@ -49,7 +49,7 @@ class RobotCache {
       LRUList.splice(LRUList.begin(), LRUList, it->second);
       it->second->Result = resultDump;
     } else {
-      if (LRUList.size() >= Capacity) {
+      if (LRUList.size() >= Cap) {
         CacheMap.erase(LRUList.back().Hash);
         LRUList.pop_back();
       }
@@ -60,7 +60,6 @@ class RobotCache {
   }
 
   private:
-  size_t Capacity;
   std::mutex Mutex;
   std::list<RobotCacheEntry<BoardSize>> LRUList;
   std::unordered_map<size_t, typename std::list<RobotCacheEntry<BoardSize>>::iterator> CacheMap;
