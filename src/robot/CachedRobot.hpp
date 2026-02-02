@@ -29,10 +29,10 @@ class CachedRobot : public Robot<BoardSize> {
   static inline std::atomic<int> CachedCount = 0;
   static inline std::atomic<int> TotalCount = 0;
 
-  static Array<std::vector<std::pair<BasicBoard<BoardSize>, std::vector<Edge<BoardSize>>>>, HashSize>
+  static std::vector<std::vector<std::pair<BasicBoard<BoardSize>, std::vector<Edge<BoardSize>>>>>
   CreateCache();
-  static inline Array<std::vector<std::pair<BasicBoard<BoardSize>, std::vector<Edge<BoardSize>>>>, HashSize>
-      GlobalCache = CreateCache();
+  static inline std::vector<std::vector<std::pair<BasicBoard<BoardSize>, std::vector<Edge<BoardSize>>>>> GlobalCache =
+      CreateCache();
   static inline Array<std::shared_mutex, HashSize> GlobalCacheMutex;
 };
 
@@ -69,9 +69,9 @@ CachedRobot<BoardSize, SubRobotType, HashSize>::BestCandidateEdges(const ScoreCo
 }
 
 template <int64_t BoardSize, typename SubRobotType, size_t HashSize>
-Array<std::vector<std::pair<BasicBoard<BoardSize>, std::vector<Edge<BoardSize>>>>, HashSize>
+std::vector<std::vector<std::pair<BasicBoard<BoardSize>, std::vector<Edge<BoardSize>>>>>
 CachedRobot<BoardSize, SubRobotType, HashSize>::CreateCache() {
-  Array<std::vector<std::pair<BasicBoard<BoardSize>, std::vector<Edge<BoardSize>>>>, HashSize> Cache;
+  std::vector<std::vector<std::pair<BasicBoard<BoardSize>, std::vector<Edge<BoardSize>>>>> Cache(HashSize);
   for (std::vector<std::pair<BasicBoard<BoardSize>, std::vector<Edge<BoardSize>>>>& arr : Cache) {
     arr.reserve(Edge<BoardSize>::Max);
   }
