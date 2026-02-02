@@ -11,8 +11,8 @@
 namespace dab {
 
 using detail::robot::CreateRobot;
-using detail::robot::GetPlayerTypeString;
 using detail::robot::PlayerType;
+using detail::robot::PlayerTypeString;
 using detail::robot::Robot;
 
 }  // namespace dab

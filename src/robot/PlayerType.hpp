@@ -4,7 +4,7 @@
 
 namespace dab::detail::robot {
 
-enum class PlayerType : uint8_t {
+enum class PlayerType {
   Human = 0,
   GreedyRobot,
   ImproveGreedyRobot,
@@ -13,28 +13,18 @@ enum class PlayerType : uint8_t {
   ParallelSearchRobot,
 };
 
+static constexpr const char* PlayerTypeString[] = {
+    "Human",
+    "GreedyRobot",
+    "ImproveGreedyRobot",
+    "SimulationRobot",
+    "MonteCarloRobot",
+    "ParallelSearchRobot",
+};
+
 inline bool
 PlayerTypeIsRobot(const PlayerType playerType) {
   return playerType != PlayerType::Human;
-}
-
-inline const char*
-GetPlayerTypeString(const PlayerType playerType) {
-  switch (playerType) {
-    case PlayerType::Human:
-      return "Human";
-    case PlayerType::GreedyRobot:
-      return "GreedyRobot";
-    case PlayerType::ImproveGreedyRobot:
-      return "ImproveGreedyRobot";
-    case PlayerType::SimulationRobot:
-      return "SimulationRobot";
-    case PlayerType::MonteCarloRobot:
-      return "MonteCarloRobot";
-    case PlayerType::ParallelSearchRobot:
-      return "ParallelSearchRobot";
-  }
-  return "";
 }
 
 template <int64_t BoardSize>

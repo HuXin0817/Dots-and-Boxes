@@ -24,8 +24,8 @@ inline QString
 Config::ToString() const {
   QJsonObject configData;
   configData.insert("BoardSize", BoardSize);
-  configData.insert("Player1Type", GetPlayerTypeString(Player1Type));
-  configData.insert("Player2Type", GetPlayerTypeString(Player2Type));
+  configData.insert("Player1Type", PlayerTypeString[static_cast<int>(Player1Type)]);
+  configData.insert("Player2Type", PlayerTypeString[static_cast<int>(Player2Type)]);
   QJsonObject config;
   config.insert("Config", configData);
   return QJsonDocument(config).toJson(QJsonDocument::Compact);
