@@ -1,11 +1,10 @@
 #pragma once
 
 #include <tbb/concurrent_hash_map.h>
+#include <tbb/spin_mutex.h>
 
 #include <atomic>
-#include <mutex>
 #include <thread>
-#include <vector>
 
 namespace dab::detail::common {
 
@@ -96,12 +95,9 @@ private:
   void
   Clear();
 
-  void
-  SnapshotKeys(std::vector<TKey>& keys);
-
   size_t
   Size() const {
-    return Size_.load();
+    return Length.load();
   }
 
   private:
@@ -115,12 +111,11 @@ private:
   Evict();
 
   size_t MaxSize;
-  std::atomic<size_t> Size_;
+  std::atomic<size_t> Length;
   HashMap Map;
   ListNode Head;
   ListNode Tail;
-  typedef std::mutex ListMutex;
-  ListMutex ListMutex_;
+  tbb::spin_mutex ListMutex;
 };
 
 template <class TKey, class TValue, class THash>
@@ -128,7 +123,7 @@ typename LRUCache<TKey, TValue, THash>::ListNode* const LRUCache<TKey, TValue, T
 
 template <class TKey, class TValue, class THash>
 LRUCache<TKey, TValue, THash>::LRUCache(size_t maxSize)
-    : MaxSize(maxSize), Size_(0), Map(std::thread::hardware_concurrency() * 4) {
+    : MaxSize(maxSize), Length(0), Map(std::thread::hardware_concurrency() * 4) {
   Head.Prev = nullptr;
   Head.Next = &Tail;
   Tail.Prev = &Head;
@@ -142,7 +137,7 @@ LRUCache<TKey, TValue, THash>::Find(ConstAccessor& ac, const TKey& key) {
     return false;
   }
 
-  std::unique_lock<ListMutex> lock(ListMutex_, std::try_to_lock);
+  std::unique_lock<tbb::spin_mutex> lock(ListMutex, std::try_to_lock);
   if (lock) {
     ListNode* node = hashAccessor->second.Node;
     if (node->IsInList()) {
@@ -166,21 +161,21 @@ LRUCache<TKey, TValue, THash>::Insert(const TKey& key, const TValue& value) {
   }
   hashAccessor.release();
 
-  size_t size = Size_.load();
+  size_t size = Length.load();
   bool evictionDone = false;
   if (size >= MaxSize) {
     Evict();
     evictionDone = true;
   }
 
-  std::unique_lock<ListMutex> lock(ListMutex_);
+  std::unique_lock<tbb::spin_mutex> lock(ListMutex);
   PushFront(node);
   lock.unlock();
   if (!evictionDone) {
-    size = Size_++;
+    size = Length++;
   }
   if (size > MaxSize) {
-    if (Size_.compare_exchange_strong(size, size - 1)) {
+    if (Length.compare_exchange_strong(size, size - 1)) {
       Evict();
     }
   }
@@ -200,17 +195,7 @@ LRUCache<TKey, TValue, THash>::Clear() {
   }
   Head.Next = &Tail;
   Tail.Prev = &Head;
-  Size_ = 0;
-}
-
-template <class TKey, class TValue, class THash>
-void
-LRUCache<TKey, TValue, THash>::SnapshotKeys(std::vector<TKey>& keys) {
-  keys.reserve(keys.size() + Size_.load());
-  std::lock_guard<ListMutex> lock(ListMutex_);
-  for (ListNode* node = Head.Next; node != &Tail; node = node->Next) {
-    keys.push_back(node->Key);
-  }
+  Length = 0;
 }
 
 template <class TKey, class TValue, class THash>
@@ -236,7 +221,7 @@ LRUCache<TKey, TValue, THash>::PushFront(ListNode* node) {
 template <class TKey, class TValue, class THash>
 void
 LRUCache<TKey, TValue, THash>::Evict() {
-  std::unique_lock<ListMutex> lock(ListMutex_);
+  std::unique_lock<tbb::spin_mutex> lock(ListMutex);
   ListNode* moribund = Tail.Prev;
   if (moribund == &Head) {
     return;
