@@ -1,12 +1,12 @@
 #pragma once
 
-#include "BasicBoard.hpp"
+#include "HashBoard.hpp"
 #include "Model.hpp"
 
 namespace dab::detail::board {
 
 template <int64_t BoardSize>
-class EdgeCountableBoard : public BasicBoard<BoardSize>, public EdgeCounter<BoardSize> {
+class EdgeCountableBoard : public HashBoard<BoardSize>, public EdgeCounter<BoardSize> {
   public:
   EdgeCountableBoard();
 
@@ -28,14 +28,14 @@ EdgeCountableBoard<BoardSize>::EdgeCountableBoard() {
 template <int64_t BoardSize>
 void
 EdgeCountableBoard<BoardSize>::Reset() {
-  BasicBoard<BoardSize>::Reset();
+  HashBoard<BoardSize>::Reset();
   EdgeCounter<BoardSize>::Reset();
 }
 
 template <int64_t BoardSize>
 Int<BoardSize>
 EdgeCountableBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
-  BasicBoard<BoardSize>::Add(edge);
+  HashBoard<BoardSize>::Add(edge);
   return EdgeCounter<BoardSize>::Add(edge);
 }
 
@@ -44,7 +44,7 @@ Edge<BoardSize>
 EdgeCountableBoard<BoardSize>::FindNotContainsEdgeInBox(const Box<BoardSize> box) const {
   assert(EdgeCounter<BoardSize>::EdgeCount(box) == 3);
   for (const Edge<BoardSize> edge : NearEdges(box)) {
-    if (!BasicBoard<BoardSize>::Contains(edge)) {
+    if (!HashBoard<BoardSize>::Contains(edge)) {
       return edge;
     }
   }

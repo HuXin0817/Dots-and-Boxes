@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Board.hpp"
+#include "CachedRobot.hpp"
 #include "Common.hpp"
 #include "Model.hpp"
 #include "SimulationRobot.hpp"
@@ -20,7 +21,7 @@ class MonteCarloRobot final : public Robot<BoardSize> {
   GetSearchResult() const;
 
   private:
-  SimulationRobot<BoardSize> SubRobot;
+  CachedRobot<BoardSize, SimulationRobot<BoardSize>> SubRobot;
   ScoreCountableBoard<BoardSize> SimulationBoard;
   SearchScoreMap<BoardSize> SearchResult;
 };
