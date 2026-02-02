@@ -7,7 +7,6 @@
 #include "../src/model/NearEdges.hpp"
 #include "../src/model/SearchScoreMap.hpp"
 #include "../src/model/Square.hpp"
-#include "../src/model/Step.hpp"
 #include "../src/model/Turn.hpp"
 #include "../src/model/Types.hpp"
 
@@ -23,7 +22,6 @@ using detail::model::InvalidEdge;
 using detail::model::NearBoxes;
 using detail::model::NearEdges;
 using detail::model::SearchScoreMap;
-using detail::model::Step;
 using detail::model::Turn;
 
 }  // namespace dab
