@@ -17,18 +17,14 @@ class HashBoard : public BasicBoard<BoardSize> {
   void
   Add(const Edge<BoardSize> edge);
   size_t
-  Hash1() const;
-  size_t
-  Hash2() const;
+  Hash() const;
 
   private:
   static Array<size_t, Edge<BoardSize>::Max>
-  HashValueTable();
-  static inline Array<size_t, Edge<BoardSize>::Max> HashValueTable1 = HashValueTable();
-  static inline Array<size_t, Edge<BoardSize>::Max> HashValueTable2 = HashValueTable();
+  CreateHashValueTable();
+  static inline Array<size_t, Edge<BoardSize>::Max> HashValueTable = CreateHashValueTable();
 
-  size_t HashValue1 = 0;
-  size_t HashValue2 = 0;
+  size_t HashValue = 0;
 };
 
 template <int64_t BoardSize>
@@ -40,33 +36,25 @@ template <int64_t BoardSize>
 void
 HashBoard<BoardSize>::Reset() {
   BasicBoard<BoardSize>::Reset();
-  HashValue1 = 0;
-  HashValue2 = 0;
+  HashValue = 0;
 }
 
 template <int64_t BoardSize>
 void
 HashBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
   BasicBoard<BoardSize>::Add(edge);
-  HashValue1 += HashValueTable1[edge];
-  HashValue2 += HashValueTable2[edge];
+  HashValue += HashValueTable[edge];
 }
 
 template <int64_t BoardSize>
 size_t
-HashBoard<BoardSize>::Hash1() const {
-  return HashValue1;
-}
-
-template <int64_t BoardSize>
-size_t
-HashBoard<BoardSize>::Hash2() const {
-  return HashValue2;
+HashBoard<BoardSize>::Hash() const {
+  return HashValue;
 }
 
 template <int64_t BoardSize>
 Array<size_t, Edge<BoardSize>::Max>
-HashBoard<BoardSize>::HashValueTable() {
+HashBoard<BoardSize>::CreateHashValueTable() {
   Random random;
   Array<size_t, Edge<BoardSize>::Max> table;
   for (size_t& v : table) {

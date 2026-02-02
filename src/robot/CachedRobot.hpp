@@ -15,7 +15,7 @@
 
 namespace dab::detail::robot {
 
-template <int64_t BoardSize, typename SubRobotType, size_t Hash1Size = 64, size_t Hash2Size = 64>
+template <int64_t BoardSize, typename SubRobotType, size_t HashSize = 1 << 12>
 class CachedRobot : public Robot<BoardSize> {
   public:
   CachedRobot() = default;
@@ -32,37 +32,30 @@ class CachedRobot : public Robot<BoardSize> {
   static inline std::atomic<int> CachedCount = 0;
   static inline std::atomic<int> TotalCount = 0;
 
-  static Array<Array<std::vector<std::pair<BasicBoard<BoardSize>, std::vector<Edge<BoardSize>>>>, Hash2Size>, Hash1Size>
+  static Array<std::vector<std::pair<BasicBoard<BoardSize>, std::vector<Edge<BoardSize>>>>, HashSize>
   CreateCache();
-  static inline Array<Array<std::vector<std::pair<BasicBoard<BoardSize>, std::vector<Edge<BoardSize>>>>, Hash2Size>,
-                      Hash1Size>
+  static inline Array<std::vector<std::pair<BasicBoard<BoardSize>, std::vector<Edge<BoardSize>>>>, HashSize>
       GlobalCache = CreateCache();
-  static inline Array<Array<std::shared_mutex, Hash2Size>, Hash1Size> GlobalCacheMutex;
+  static inline Array<std::shared_mutex, HashSize> GlobalCacheMutex;
 };
 
-template <int64_t BoardSize, typename SubRobotType, size_t Hash1Size, size_t Hash2Size>
+template <int64_t BoardSize, typename SubRobotType, size_t HashSize>
 Span<Edge<BoardSize>>
-CachedRobot<BoardSize, SubRobotType, Hash1Size, Hash2Size>::BestCandidateEdges(
-    const ScoreCountableBoard<BoardSize>& board) {
+CachedRobot<BoardSize, SubRobotType, HashSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) {
   TotalCount++;
   if (TotalCount % 100000 == 0) {
     size_t MaxSize = 0;
-    for (size_t i = 0; i < Hash1Size; i++) {
-      for (size_t j = 0; j < Hash2Size; j++) {
-        MaxSize = std::max(MaxSize, GlobalCache[i][j].size());
-      }
+    for (size_t i = 0; i < HashSize; i++) {
+      MaxSize = std::max(MaxSize, GlobalCache[i].size());
     }
 
     printf("[CachedRobot] Cached:Total %d:%d MaxSize %lu\n", CachedCount.load(), TotalCount.load(), MaxSize);
   }
 
-  size_t HashValue1 = board.Hash1();
-  size_t HashValue2 = board.Hash2();
-  size_t Hash1Offset = HashValue1 % Hash1Size;
-  size_t Hash2Offset = HashValue2 % Hash2Size;
+  size_t HashValue = board.Hash();
+  size_t HashOffset = HashValue % HashSize;
 
-  std::vector<std::pair<BasicBoard<BoardSize>, std::vector<Edge<BoardSize>>>>& CacheList =
-      GlobalCache[Hash1Offset][Hash2Offset];
+  std::vector<std::pair<BasicBoard<BoardSize>, std::vector<Edge<BoardSize>>>>& CacheList = GlobalCache[HashOffset];
   for (const std::pair<BasicBoard<BoardSize>, std::vector<Edge<BoardSize>>>& entry : CacheList) {
     if (IsEqual(entry.first, static_cast<BasicBoard<BoardSize>>(board))) {
       CachedCount++;
@@ -73,15 +66,15 @@ CachedRobot<BoardSize, SubRobotType, Hash1Size, Hash2Size>::BestCandidateEdges(
   Span<Edge<BoardSize>> result = SubRobot.BestCandidateEdges(board);
   std::vector<Edge<BoardSize>> resultDump(result.begin(), result.end());
 
-  std::unique_lock lock(GlobalCacheMutex[Hash1Offset][Hash2Offset]);
+  std::unique_lock lock(GlobalCacheMutex[HashOffset]);
   CacheList.emplace_back(static_cast<BasicBoard<BoardSize>>(board), resultDump);
   return result;
 }
 
-template <int64_t BoardSize, typename SubRobotType, size_t Hash1Size, size_t Hash2Size>
+template <int64_t BoardSize, typename SubRobotType, size_t HashSize>
 bool
-CachedRobot<BoardSize, SubRobotType, Hash1Size, Hash2Size>::IsEqual(const BasicBoard<BoardSize>& board1,
-                                                                    const BasicBoard<BoardSize>& board2) {
+CachedRobot<BoardSize, SubRobotType, HashSize>::IsEqual(const BasicBoard<BoardSize>& board1,
+                                                        const BasicBoard<BoardSize>& board2) {
   if (board1.NowStep() != board2.NowStep()) {
     return false;
   }
@@ -93,14 +86,12 @@ CachedRobot<BoardSize, SubRobotType, Hash1Size, Hash2Size>::IsEqual(const BasicB
   return true;
 }
 
-template <int64_t BoardSize, typename SubRobotType, size_t Hash1Size, size_t Hash2Size>
-Array<Array<std::vector<std::pair<BasicBoard<BoardSize>, std::vector<Edge<BoardSize>>>>, Hash2Size>, Hash1Size>
-CachedRobot<BoardSize, SubRobotType, Hash1Size, Hash2Size>::CreateCache() {
-  Array<Array<std::vector<std::pair<BasicBoard<BoardSize>, std::vector<Edge<BoardSize>>>>, Hash2Size>, Hash1Size> Cache;
-  for (Array<std::vector<std::pair<BasicBoard<BoardSize>, std::vector<Edge<BoardSize>>>>, Hash2Size>& arr1 : Cache) {
-    for (std::vector<std::pair<BasicBoard<BoardSize>, std::vector<Edge<BoardSize>>>>& arr2 : arr1) {
-      arr2.reserve(Edge<BoardSize>::Max);
-    }
+template <int64_t BoardSize, typename SubRobotType, size_t HashSize>
+Array<std::vector<std::pair<BasicBoard<BoardSize>, std::vector<Edge<BoardSize>>>>, HashSize>
+CachedRobot<BoardSize, SubRobotType, HashSize>::CreateCache() {
+  Array<std::vector<std::pair<BasicBoard<BoardSize>, std::vector<Edge<BoardSize>>>>, HashSize> Cache;
+  for (std::vector<std::pair<BasicBoard<BoardSize>, std::vector<Edge<BoardSize>>>>& arr : Cache) {
+    arr.reserve(Edge<BoardSize>::Max);
   }
   return Cache;
 }
