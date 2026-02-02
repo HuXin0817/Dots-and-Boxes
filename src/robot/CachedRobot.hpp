@@ -2,7 +2,6 @@
 
 #include <cstddef>
 #include <cstdio>
-#include <unordered_map>
 #include <vector>
 
 #include "Board.hpp"
@@ -21,18 +20,18 @@ class CachedRobot : public Robot<BoardSize> {
 
   private:
   SubRobotType SubRobot;
-  std::unordered_map<HashBoard<BoardSize>, std::vector<Edge<BoardSize>>> Cache;
+  LRUCache<HashBoard<BoardSize>, std::vector<Edge<BoardSize>>, HashSize> Cache;
 };
 
 template <int64_t BoardSize, typename SubRobotType, size_t HashSize>
 Span<Edge<BoardSize>>
 CachedRobot<BoardSize, SubRobotType, HashSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) {
-  if (auto it = Cache.find(board); it != Cache.end()) {
-    return Span<Edge<BoardSize>>(it->second.data(), it->second.data() + it->second.size());
+  if (std::vector<Edge<BoardSize>>* cached = Cache.Get(board)) {
+    return Span<Edge<BoardSize>>(cached->data(), cached->data() + cached->size());
   }
 
   Span<Edge<BoardSize>> result = SubRobot.BestCandidateEdges(board);
-  Cache[board] = std::vector(result.Begin(), result.End());
+  Cache.Put(board, std::vector(result.Begin(), result.End()));
   return result;
 }
 
