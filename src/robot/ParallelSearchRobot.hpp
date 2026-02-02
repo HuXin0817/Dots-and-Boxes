@@ -33,7 +33,7 @@ ParallelSearchRobot<BoardSize, SubRobotSearchTime, SubRobotNumber>::BestCandidat
 
   tbb::parallel_for(tbb::blocked_range<size_t>(0, SubRobots.Size()), [&](const tbb::blocked_range<size_t>& r) {
     for (size_t i = r.begin(); i != r.end(); ++i) {
-      SubRobots.Begin()[i].BestCandidateEdges(board);
+      SubRobots[i].BestCandidateEdges(board);
     }
   });
 
