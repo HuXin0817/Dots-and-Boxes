@@ -1,7 +1,5 @@
 #pragma once
 
-#include <type_traits>
-
 #include "Board.hpp"
 #include "CachedRobot.hpp"
 #include "Common.hpp"
@@ -10,14 +8,8 @@
 
 namespace dab::detail::robot {
 
-template <int64_t BoardSize,
-          bool UseCachedRobot = false,
-          int64_t SearchTime = static_cast<int64_t>(Edge<BoardSize>::Max) << 8>
+template <int64_t BoardSize, int64_t SearchTime = static_cast<int64_t>(Edge<BoardSize>::Max) << 8>
 class MonteCarloRobot final : public Robot<BoardSize> {
-  using SubRobotType = std::conditional_t<UseCachedRobot,
-                                          CachedRobot<BoardSize, SimulationRobot<BoardSize>>,
-                                          class SimulationRobot<BoardSize>>;
-
   public:
   MonteCarloRobot() = default;
 
@@ -29,15 +21,14 @@ class MonteCarloRobot final : public Robot<BoardSize> {
   GetSearchResult() const;
 
   private:
-  SubRobotType SubRobot;
+  CachedRobot<BoardSize, SimulationRobot<BoardSize>> SubRobot;
   ScoreCountableBoard<BoardSize> SimulationBoard;
   SearchScoreMap<BoardSize> SearchResult;
 };
 
-template <int64_t BoardSize, bool UseCachedRobot, int64_t SearchTime>
+template <int64_t BoardSize, int64_t SearchTime>
 Span<Edge<BoardSize>>
-MonteCarloRobot<BoardSize, UseCachedRobot, SearchTime>::BestCandidateEdges(
-    const ScoreCountableBoard<BoardSize>& board) {
+MonteCarloRobot<BoardSize, SearchTime>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) {
   if (Span<Edge<BoardSize>> edges; CanEarlyExit(board, edges)) {
     return edges;
   }
@@ -57,17 +48,17 @@ MonteCarloRobot<BoardSize, UseCachedRobot, SearchTime>::BestCandidateEdges(
   return SearchResult.Export();
 }
 
-template <int64_t BoardSize, bool UseCachedRobot, int64_t SearchTime>
+template <int64_t BoardSize, int64_t SearchTime>
 bool
-MonteCarloRobot<BoardSize, UseCachedRobot, SearchTime>::CanEarlyExit(const ScoreCountableBoard<BoardSize>& board,
-                                                                     Span<Edge<BoardSize>>& result) {
+MonteCarloRobot<BoardSize, SearchTime>::CanEarlyExit(const ScoreCountableBoard<BoardSize>& board,
+                                                     Span<Edge<BoardSize>>& result) {
   result = SubRobot.BestCandidateEdges(board);
   return result.Size() == 1;
 }
 
-template <int64_t BoardSize, bool UseCachedRobot, int64_t SearchTime>
+template <int64_t BoardSize, int64_t SearchTime>
 const SearchScoreMap<BoardSize>&
-MonteCarloRobot<BoardSize, UseCachedRobot, SearchTime>::GetSearchResult() const {
+MonteCarloRobot<BoardSize, SearchTime>::GetSearchResult() const {
   return SearchResult;
 }
 
