@@ -75,10 +75,4 @@ Span<T>::End() const {
   return EndPtr;
 }
 
-template <typename T>
-constexpr auto
-Export(const T& arr) {
-  return Span(arr.begin(), arr.end());
-}
-
 }  // namespace dab::detail::common
