@@ -2,7 +2,6 @@
 
 #include <atomic>
 #include <mutex>
-#include <new>
 #include <thread>
 #include <vector>
 
@@ -11,33 +10,33 @@ namespace dab::detail::common {
 template <class TKey, class TValue, class THash = tbb::tbb_hash_compare<TKey>>
 class LRUCache {
   struct ListNode {
-    ListNode() : m_prev(OutOfListMarker), m_next(nullptr) {
+    ListNode() : Prev(OutOfListMarker), Next(nullptr) {
     }
 
-    ListNode(const TKey& key) : m_key(key), m_prev(OutOfListMarker), m_next(nullptr) {
+    ListNode(const TKey& key) : Key(key), Prev(OutOfListMarker), Next(nullptr) {
     }
 
-    TKey m_key;
-    ListNode* m_prev;
-    ListNode* m_next;
+    TKey Key;
+    ListNode* Prev;
+    ListNode* Next;
 
     bool
-    isInList() const {
-      return m_prev != OutOfListMarker;
+    IsInList() const {
+      return Prev != OutOfListMarker;
     }
   };
 
   static ListNode* const OutOfListMarker;
 
   struct HashMapValue {
-    HashMapValue() : m_listNode(nullptr) {
+    HashMapValue() : Node(nullptr) {
     }
 
-    HashMapValue(const TValue& value, ListNode* node) : m_value(value), m_listNode(node) {
+    HashMapValue(const TValue& value, ListNode* node) : Value(value), Node(node) {
     }
 
-    TValue m_value;
-    ListNode* m_listNode;
+    TValue Value;
+    ListNode* Node;
   };
 
   typedef tbb::concurrent_hash_map<TKey, HashMapValue, THash> HashMap;
@@ -53,27 +52,27 @@ class LRUCache {
 
     const TValue&
     operator*() const {
-      return *get();
+      return *Get();
     }
 
     const TValue*
     operator->() const {
-      return get();
+      return Get();
     }
 
     const TValue*
-    get() const {
-      return &m_hashAccessor->second.m_value;
+    Get() const {
+      return &HashAccessor->second.Value;
     }
 
     bool
-    empty() const {
-      return m_hashAccessor.empty();
+    Empty() const {
+      return HashAccessor.empty();
     }
 
 private:
     friend class LRUCache;
-    HashMapConstAccessor m_hashAccessor;
+    HashMapConstAccessor HashAccessor;
   };
 
   explicit LRUCache(size_t maxSize);
@@ -83,43 +82,43 @@ private:
   operator=(const LRUCache&) = delete;
 
   ~LRUCache() {
-    clear();
+    Clear();
   }
 
   bool
-  find(ConstAccessor& ac, const TKey& key);
+  Find(ConstAccessor& ac, const TKey& key);
 
   bool
-  insert(const TKey& key, const TValue& value);
+  Insert(const TKey& key, const TValue& value);
 
   void
-  clear();
+  Clear();
 
   void
-  snapshotKeys(std::vector<TKey>& keys);
+  SnapshotKeys(std::vector<TKey>& keys);
 
   size_t
-  size() const {
-    return m_size.load();
+  Size() const {
+    return Size_.load();
   }
 
   private:
   void
-  delink(ListNode* node);
+  Delink(ListNode* node);
 
   void
-  pushFront(ListNode* node);
+  PushFront(ListNode* node);
 
   void
-  evict();
+  Evict();
 
-  size_t m_maxSize;
-  std::atomic<size_t> m_size;
-  HashMap m_map;
-  ListNode m_head;
-  ListNode m_tail;
+  size_t MaxSize;
+  std::atomic<size_t> Size_;
+  HashMap Map;
+  ListNode Head;
+  ListNode Tail;
   typedef std::mutex ListMutex;
-  ListMutex m_listMutex;
+  ListMutex ListMutex_;
 };
 
 template <class TKey, class TValue, class THash>
@@ -127,26 +126,26 @@ typename LRUCache<TKey, TValue, THash>::ListNode* const LRUCache<TKey, TValue, T
 
 template <class TKey, class TValue, class THash>
 LRUCache<TKey, TValue, THash>::LRUCache(size_t maxSize)
-    : m_maxSize(maxSize), m_size(0), m_map(std::thread::hardware_concurrency() * 4) {
-  m_head.m_prev = nullptr;
-  m_head.m_next = &m_tail;
-  m_tail.m_prev = &m_head;
+    : MaxSize(maxSize), Size_(0), Map(std::thread::hardware_concurrency() * 4) {
+  Head.Prev = nullptr;
+  Head.Next = &Tail;
+  Tail.Prev = &Head;
 }
 
 template <class TKey, class TValue, class THash>
 bool
-LRUCache<TKey, TValue, THash>::find(ConstAccessor& ac, const TKey& key) {
-  HashMapConstAccessor& hashAccessor = ac.m_hashAccessor;
-  if (!m_map.find(hashAccessor, key)) {
+LRUCache<TKey, TValue, THash>::Find(ConstAccessor& ac, const TKey& key) {
+  HashMapConstAccessor& hashAccessor = ac.HashAccessor;
+  if (!Map.find(hashAccessor, key)) {
     return false;
   }
 
-  std::unique_lock<ListMutex> lock(m_listMutex, std::try_to_lock);
+  std::unique_lock<ListMutex> lock(ListMutex_, std::try_to_lock);
   if (lock) {
-    ListNode* node = hashAccessor->second.m_listNode;
-    if (node->isInList()) {
-      delink(node);
-      pushFront(node);
+    ListNode* node = hashAccessor->second.Node;
+    if (node->IsInList()) {
+      Delink(node);
+      PushFront(node);
     }
     lock.unlock();
   }
@@ -155,32 +154,32 @@ LRUCache<TKey, TValue, THash>::find(ConstAccessor& ac, const TKey& key) {
 
 template <class TKey, class TValue, class THash>
 bool
-LRUCache<TKey, TValue, THash>::insert(const TKey& key, const TValue& value) {
+LRUCache<TKey, TValue, THash>::Insert(const TKey& key, const TValue& value) {
   ListNode* node = new ListNode(key);
   HashMapAccessor hashAccessor;
   HashMapValuePair hashMapValue(key, HashMapValue(value, node));
-  if (!m_map.insert(hashAccessor, hashMapValue)) {
+  if (!Map.insert(hashAccessor, hashMapValue)) {
     delete node;
     return false;
   }
   hashAccessor.release();
 
-  size_t size = m_size.load();
+  size_t size = Size_.load();
   bool evictionDone = false;
-  if (size >= m_maxSize) {
-    evict();
+  if (size >= MaxSize) {
+    Evict();
     evictionDone = true;
   }
 
-  std::unique_lock<ListMutex> lock(m_listMutex);
-  pushFront(node);
+  std::unique_lock<ListMutex> lock(ListMutex_);
+  PushFront(node);
   lock.unlock();
   if (!evictionDone) {
-    size = m_size++;
+    size = Size_++;
   }
-  if (size > m_maxSize) {
-    if (m_size.compare_exchange_strong(size, size - 1)) {
-      evict();
+  if (size > MaxSize) {
+    if (Size_.compare_exchange_strong(size, size - 1)) {
+      Evict();
     }
   }
   return true;
@@ -188,66 +187,66 @@ LRUCache<TKey, TValue, THash>::insert(const TKey& key, const TValue& value) {
 
 template <class TKey, class TValue, class THash>
 void
-LRUCache<TKey, TValue, THash>::clear() {
-  m_map.clear();
-  ListNode* node = m_head.m_next;
+LRUCache<TKey, TValue, THash>::Clear() {
+  Map.clear();
+  ListNode* node = Head.Next;
   ListNode* next;
-  while (node != &m_tail) {
-    next = node->m_next;
+  while (node != &Tail) {
+    next = node->Next;
     delete node;
     node = next;
   }
-  m_head.m_next = &m_tail;
-  m_tail.m_prev = &m_head;
-  m_size = 0;
+  Head.Next = &Tail;
+  Tail.Prev = &Head;
+  Size_ = 0;
 }
 
 template <class TKey, class TValue, class THash>
 void
-LRUCache<TKey, TValue, THash>::snapshotKeys(std::vector<TKey>& keys) {
-  keys.reserve(keys.size() + m_size.load());
-  std::lock_guard<ListMutex> lock(m_listMutex);
-  for (ListNode* node = m_head.m_next; node != &m_tail; node = node->m_next) {
-    keys.push_back(node->m_key);
+LRUCache<TKey, TValue, THash>::SnapshotKeys(std::vector<TKey>& keys) {
+  keys.reserve(keys.size() + Size_.load());
+  std::lock_guard<ListMutex> lock(ListMutex_);
+  for (ListNode* node = Head.Next; node != &Tail; node = node->Next) {
+    keys.push_back(node->Key);
   }
 }
 
 template <class TKey, class TValue, class THash>
 inline void
-LRUCache<TKey, TValue, THash>::delink(ListNode* node) {
-  ListNode* prev = node->m_prev;
-  ListNode* next = node->m_next;
-  prev->m_next = next;
-  next->m_prev = prev;
-  node->m_prev = OutOfListMarker;
+LRUCache<TKey, TValue, THash>::Delink(ListNode* node) {
+  ListNode* prev = node->Prev;
+  ListNode* next = node->Next;
+  prev->Next = next;
+  next->Prev = prev;
+  node->Prev = OutOfListMarker;
 }
 
 template <class TKey, class TValue, class THash>
 inline void
-LRUCache<TKey, TValue, THash>::pushFront(ListNode* node) {
-  ListNode* oldRealHead = m_head.m_next;
-  node->m_prev = &m_head;
-  node->m_next = oldRealHead;
-  oldRealHead->m_prev = node;
-  m_head.m_next = node;
+LRUCache<TKey, TValue, THash>::PushFront(ListNode* node) {
+  ListNode* oldRealHead = Head.Next;
+  node->Prev = &Head;
+  node->Next = oldRealHead;
+  oldRealHead->Prev = node;
+  Head.Next = node;
 }
 
 template <class TKey, class TValue, class THash>
 void
-LRUCache<TKey, TValue, THash>::evict() {
-  std::unique_lock<ListMutex> lock(m_listMutex);
-  ListNode* moribund = m_tail.m_prev;
-  if (moribund == &m_head) {
+LRUCache<TKey, TValue, THash>::Evict() {
+  std::unique_lock<ListMutex> lock(ListMutex_);
+  ListNode* moribund = Tail.Prev;
+  if (moribund == &Head) {
     return;
   }
-  delink(moribund);
+  Delink(moribund);
   lock.unlock();
 
   HashMapAccessor hashAccessor;
-  if (!m_map.find(hashAccessor, moribund->m_key)) {
+  if (!Map.find(hashAccessor, moribund->Key)) {
     return;
   }
-  m_map.erase(hashAccessor);
+  Map.erase(hashAccessor);
   delete moribund;
 }
 
