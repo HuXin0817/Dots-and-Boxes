@@ -7,6 +7,7 @@
 #include "../src/common/Queue.hpp"
 #include "../src/common/Random.hpp"
 #include "../src/common/Span.hpp"
+#include "../src/common/Vector.hpp"
 
 namespace dab {
 
@@ -16,5 +17,6 @@ using detail::common::LRUCache;
 using detail::common::Queue;
 using detail::common::Random;
 using detail::common::Span;
+using detail::common::Vector;
 
 }  // namespace dab
