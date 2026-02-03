@@ -11,65 +11,44 @@ namespace dab::detail::common {
 template <class TKey, class TValue, class THash = tbb::tbb_hash_compare<TKey>>
 class LRUCache {
   struct ListNode {
-    ListNode() : Prev(OutOfListMarker), Next(nullptr) {
-    }
-
-    ListNode(const TKey& key) : Key(key), Prev(OutOfListMarker), Next(nullptr) {
-    }
+    ListNode();
+    ListNode(const TKey& key);
 
     TKey Key;
     ListNode* Prev;
     ListNode* Next;
 
     bool
-    IsInList() const {
-      return Prev != OutOfListMarker;
-    }
+    IsInList() const;
   };
 
   static ListNode* const OutOfListMarker;
 
   struct HashMapValue {
-    HashMapValue() : Node(nullptr) {
-    }
-
-    HashMapValue(const TValue& value, ListNode* node) : Value(value), Node(node) {
-    }
+    HashMapValue();
+    HashMapValue(const TValue& value, ListNode* node);
 
     TValue Value;
     ListNode* Node;
   };
 
-  typedef tbb::concurrent_hash_map<TKey, HashMapValue, THash> HashMap;
-  typedef typename HashMap::const_accessor HashMapConstAccessor;
-  typedef typename HashMap::accessor HashMapAccessor;
-  typedef typename HashMap::value_type HashMapValuePair;
-  typedef std::pair<const TKey, TValue> SnapshotValue;
+  using HashMap = tbb::concurrent_hash_map<TKey, HashMapValue, THash>;
+  using HashMapConstAccessor = typename HashMap::const_accessor;
+  using HashMapAccessor = typename HashMap::accessor;
+  using HashMapValuePair = typename HashMap::value_type;
 
   public:
   struct ConstAccessor {
-    ConstAccessor() {
-    }
+    ConstAccessor();
 
     const TValue&
-    operator*() const {
-      return *Get();
-    }
-
+    operator*() const;
     const TValue*
-    operator->() const {
-      return Get();
-    }
-
+    operator->() const;
     const TValue*
-    Get() const {
-      return &HashAccessor->second.Value;
-    }
-
+    Get() const;
     bool
-    Empty() const {
-      return HashAccessor.empty();
-    }
+    Empty() const;
 
 private:
     friend class LRUCache;
@@ -82,31 +61,23 @@ private:
   LRUCache&
   operator=(const LRUCache&) = delete;
 
-  ~LRUCache() {
-    Clear();
-  }
+  ~LRUCache();
 
   bool
   Find(ConstAccessor& ac, const TKey& key);
-
   bool
   Insert(const TKey& key, const TValue& value);
-
   void
   Clear();
 
   size_t
-  Size() const {
-    return Length.load();
-  }
+  Size() const;
 
   private:
   void
   Delink(ListNode* node);
-
   void
   PushFront(ListNode* node);
-
   void
   Evict();
 
@@ -119,7 +90,58 @@ private:
 };
 
 template <class TKey, class TValue, class THash>
-typename LRUCache<TKey, TValue, THash>::ListNode* const LRUCache<TKey, TValue, THash>::OutOfListMarker = (ListNode*)-1;
+typename LRUCache<TKey, TValue, THash>::ListNode* const LRUCache<TKey, TValue, THash>::OutOfListMarker =
+    reinterpret_cast<typename LRUCache<TKey, TValue, THash>::ListNode*>(-1);
+
+template <class TKey, class TValue, class THash>
+LRUCache<TKey, TValue, THash>::ListNode::ListNode() : Prev(OutOfListMarker), Next(nullptr) {
+}
+
+template <class TKey, class TValue, class THash>
+LRUCache<TKey, TValue, THash>::ListNode::ListNode(const TKey& key) : Key(key), Prev(OutOfListMarker), Next(nullptr) {
+}
+
+template <class TKey, class TValue, class THash>
+bool
+LRUCache<TKey, TValue, THash>::ListNode::IsInList() const {
+  return Prev != OutOfListMarker;
+}
+
+template <class TKey, class TValue, class THash>
+LRUCache<TKey, TValue, THash>::HashMapValue::HashMapValue() : Node(nullptr) {
+}
+
+template <class TKey, class TValue, class THash>
+LRUCache<TKey, TValue, THash>::HashMapValue::HashMapValue(const TValue& value, ListNode* node)
+    : Value(value), Node(node) {
+}
+
+template <class TKey, class TValue, class THash>
+LRUCache<TKey, TValue, THash>::ConstAccessor::ConstAccessor() = default;
+
+template <class TKey, class TValue, class THash>
+const TValue&
+LRUCache<TKey, TValue, THash>::ConstAccessor::operator*() const {
+  return *Get();
+}
+
+template <class TKey, class TValue, class THash>
+const TValue*
+LRUCache<TKey, TValue, THash>::ConstAccessor::operator->() const {
+  return Get();
+}
+
+template <class TKey, class TValue, class THash>
+const TValue*
+LRUCache<TKey, TValue, THash>::ConstAccessor::Get() const {
+  return &HashAccessor->second.Value;
+}
+
+template <class TKey, class TValue, class THash>
+bool
+LRUCache<TKey, TValue, THash>::ConstAccessor::Empty() const {
+  return HashAccessor.empty();
+}
 
 template <class TKey, class TValue, class THash>
 LRUCache<TKey, TValue, THash>::LRUCache(size_t maxSize)
@@ -127,6 +149,11 @@ LRUCache<TKey, TValue, THash>::LRUCache(size_t maxSize)
   Head.Prev = nullptr;
   Head.Next = &Tail;
   Tail.Prev = &Head;
+}
+
+template <class TKey, class TValue, class THash>
+LRUCache<TKey, TValue, THash>::~LRUCache() {
+  Clear();
 }
 
 template <class TKey, class TValue, class THash>
@@ -171,6 +198,7 @@ LRUCache<TKey, TValue, THash>::Insert(const TKey& key, const TValue& value) {
   std::unique_lock<tbb::spin_mutex> lock(ListMutex);
   PushFront(node);
   lock.unlock();
+
   if (!evictionDone) {
     size = Length++;
   }
@@ -199,7 +227,13 @@ LRUCache<TKey, TValue, THash>::Clear() {
 }
 
 template <class TKey, class TValue, class THash>
-inline void
+size_t
+LRUCache<TKey, TValue, THash>::Size() const {
+  return Length.load();
+}
+
+template <class TKey, class TValue, class THash>
+void
 LRUCache<TKey, TValue, THash>::Delink(ListNode* node) {
   ListNode* prev = node->Prev;
   ListNode* next = node->Next;
@@ -209,7 +243,7 @@ LRUCache<TKey, TValue, THash>::Delink(ListNode* node) {
 }
 
 template <class TKey, class TValue, class THash>
-inline void
+void
 LRUCache<TKey, TValue, THash>::PushFront(ListNode* node) {
   ListNode* oldRealHead = Head.Next;
   node->Prev = &Head;
@@ -224,6 +258,7 @@ LRUCache<TKey, TValue, THash>::Evict() {
   std::unique_lock<tbb::spin_mutex> lock(ListMutex);
   ListNode* moribund = Tail.Prev;
   if (moribund == &Head) {
+    lock.unlock();
     return;
   }
   Delink(moribund);
