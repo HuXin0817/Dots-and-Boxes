@@ -104,9 +104,17 @@ BasicBoard<BoardSize>::operator==(const BasicBoard& other) const {
   if (other.Step != Step) {
     return false;
   }
-  for (const Edge<BoardSize>& edge : other.MoveRecord()) {
-    if (!Contains(edge)) {
-      return false;
+  if (Step < RemainStep()) {
+    for (const Edge<BoardSize> edge : other.MoveRecord()) {
+      if (!Contains(edge)) {
+        return false;
+      }
+    }
+  } else {
+    for (const Edge<BoardSize> edge : other.EmptyEdges()) {
+      if (Contains(edge)) {
+        return false;
+      }
     }
   }
   return true;
