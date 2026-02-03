@@ -28,11 +28,11 @@ Span<Edge<BoardSize>>
 CachedRobot<BoardSize, SubRobotType>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) {
   if (typename dab::LRUCache<HashBoard<BoardSize>, Vector<Edge<BoardSize>>>::ConstAccessor ac;
       GlobalCache.Find(ac, board)) {
-    return Span(ac->Begin(), ac->End());
+    return Span(ac->begin(), ac->end());
   }
 
   Span<Edge<BoardSize>> result = SubRobot.BestCandidateEdges(board);
-  GlobalCache.Insert(board, Vector<Edge<BoardSize>>(result.Begin(), result.End()));
+  GlobalCache.Insert(board, Vector<Edge<BoardSize>>(result.begin(), result.end()));
   return result;
 }
 

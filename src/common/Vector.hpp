@@ -14,13 +14,13 @@ class Vector : public Iterable<Vector<T>> {
   constexpr uint32_t
   Size() const;
   constexpr T*
-  Begin();
+  begin();
   constexpr const T*
-  Begin() const;
+  begin() const;
   constexpr T*
-  End();
+  end();
   constexpr const T*
-  End() const;
+  end() const;
   ~Vector();
 
   private:
@@ -64,25 +64,25 @@ Vector<T>::Size() const {
 
 template <typename T>
 constexpr T*
-Vector<T>::Begin() {
+Vector<T>::begin() {
   return Data;
 }
 
 template <typename T>
 constexpr const T*
-Vector<T>::Begin() const {
+Vector<T>::begin() const {
   return Data;
 }
 
 template <typename T>
 constexpr T*
-Vector<T>::End() {
+Vector<T>::end() {
   return Data + Length;
 }
 
 template <typename T>
 constexpr const T*
-Vector<T>::End() const {
+Vector<T>::end() const {
   return Data + Length;
 }
 

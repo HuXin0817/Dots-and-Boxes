@@ -44,7 +44,7 @@ SimulationRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSi
     }
   }
 
-  return Span(SearchEdges.Begin(), SearchEdges.End());
+  return Span(SearchEdges.begin(), SearchEdges.end());
 }
 
 }  // namespace dab::detail::robot

@@ -20,13 +20,13 @@ class Span : public Iterable<Span<T>> {
   constexpr uint32_t
   Size() const;
   constexpr T*
-  Begin();
+  begin();
   constexpr const T*
-  Begin() const;
+  begin() const;
   constexpr T*
-  End();
+  end();
   constexpr const T*
-  End() const;
+  end() const;
 
   private:
   T* BeginPtr = nullptr;
@@ -41,8 +41,8 @@ template <typename T>
 template <typename Other>
 constexpr Span<T>::
 operator Span<Other>() const {
-  return Span<Other>(const_cast<Other*>(reinterpret_cast<const Other*>(Begin())),
-                     const_cast<Other*>(reinterpret_cast<const Other*>(End())));
+  return Span<Other>(const_cast<Other*>(reinterpret_cast<const Other*>(begin())),
+                     const_cast<Other*>(reinterpret_cast<const Other*>(end())));
 }
 
 template <typename T>
@@ -53,25 +53,25 @@ Span<T>::Size() const {
 
 template <typename T>
 constexpr T*
-Span<T>::Begin() {
+Span<T>::begin() {
   return BeginPtr;
 }
 
 template <typename T>
 constexpr const T*
-Span<T>::Begin() const {
+Span<T>::begin() const {
   return BeginPtr;
 }
 
 template <typename T>
 constexpr T*
-Span<T>::End() {
+Span<T>::end() {
   return EndPtr;
 }
 
 template <typename T>
 constexpr const T*
-Span<T>::End() const {
+Span<T>::end() const {
   return EndPtr;
 }
 

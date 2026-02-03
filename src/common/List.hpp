@@ -28,13 +28,13 @@ class List : public Iterable<List<T, Cap>> {
   constexpr uint32_t
   Size() const;
   constexpr T*
-  Begin();
+  begin();
   constexpr const T*
-  Begin() const;
+  begin() const;
   constexpr T*
-  End();
+  end();
   constexpr const T*
-  End() const;
+  end() const;
 
   private:
   Array<T, Cap> Data;
@@ -69,26 +69,26 @@ List<T, Cap>::Size() const {
 
 template <typename T, uint32_t Cap>
 constexpr T*
-List<T, Cap>::Begin() {
-  return Data.Begin();
+List<T, Cap>::begin() {
+  return Data.begin();
 }
 
 template <typename T, uint32_t Cap>
 constexpr const T*
-List<T, Cap>::Begin() const {
-  return Data.Begin();
+List<T, Cap>::begin() const {
+  return Data.begin();
 }
 
 template <typename T, uint32_t Cap>
 constexpr T*
-List<T, Cap>::End() {
-  return Data.Begin() + Length;
+List<T, Cap>::end() {
+  return Data.begin() + Length;
 }
 
 template <typename T, uint32_t Cap>
 constexpr const T*
-List<T, Cap>::End() const {
-  return Data.Begin() + Length;
+List<T, Cap>::end() const {
+  return Data.begin() + Length;
 }
 
 }  // namespace dab::detail::common

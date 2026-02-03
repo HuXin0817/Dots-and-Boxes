@@ -28,13 +28,13 @@ class Queue : public Iterable<Queue<T, Cap>> {
   constexpr uint32_t
   Size() const;
   constexpr T*
-  Begin();
+  begin();
   constexpr const T*
-  Begin() const;
+  begin() const;
   constexpr T*
-  End();
+  end();
   constexpr const T*
-  End() const;
+  end() const;
 
   private:
   Array<T, Cap> Data;
@@ -52,7 +52,7 @@ Queue<T, Cap>::Clear() {
 template <typename T, uint32_t Cap>
 constexpr void
 Queue<T, Cap>::Append(const T item) {
-  assert(EndIndex < Cap);
+  assert(endIndex < Cap);
   Data[EndIndex++] = item;
 }
 
@@ -71,26 +71,26 @@ Queue<T, Cap>::Size() const {
 
 template <typename T, uint32_t Cap>
 constexpr T*
-Queue<T, Cap>::Begin() {
-  return Data.Begin() + BeginIndex;
+Queue<T, Cap>::begin() {
+  return Data.begin() + BeginIndex;
 }
 
 template <typename T, uint32_t Cap>
 constexpr const T*
-Queue<T, Cap>::Begin() const {
-  return Data.Begin() + BeginIndex;
+Queue<T, Cap>::begin() const {
+  return Data.begin() + BeginIndex;
 }
 
 template <typename T, uint32_t Cap>
 constexpr T*
-Queue<T, Cap>::End() {
-  return Data.Begin() + EndIndex;
+Queue<T, Cap>::end() {
+  return Data.begin() + EndIndex;
 }
 
 template <typename T, uint32_t Cap>
 constexpr const T*
-Queue<T, Cap>::End() const {
-  return Data.Begin() + EndIndex;
+Queue<T, Cap>::end() const {
+  return Data.begin() + EndIndex;
 }
 
 }  // namespace dab::detail::common

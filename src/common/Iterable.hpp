@@ -42,25 +42,25 @@ class Iterable {
 template <typename Derived>
 constexpr auto
 Iterable<Derived>::begin() {
-  return static_cast<Derived*>(this)->Begin();
+  return static_cast<Derived*>(this)->begin();
 }
 
 template <typename Derived>
 constexpr auto
 Iterable<Derived>::begin() const {
-  return static_cast<const Derived*>(this)->Begin();
+  return static_cast<const Derived*>(this)->begin();
 }
 
 template <typename Derived>
 constexpr auto
 Iterable<Derived>::end() {
-  return static_cast<Derived*>(this)->End();
+  return static_cast<Derived*>(this)->end();
 }
 
 template <typename Derived>
 constexpr auto
 Iterable<Derived>::end() const {
-  return static_cast<const Derived*>(this)->End();
+  return static_cast<const Derived*>(this)->end();
 }
 
 template <typename Derived>

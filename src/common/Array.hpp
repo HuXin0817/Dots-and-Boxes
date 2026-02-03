@@ -22,13 +22,13 @@ class Array : public Iterable<Array<T, Length>> {
   constexpr uint32_t
   Size() const;
   constexpr T*
-  Begin();
+  begin();
   constexpr const T*
-  Begin() const;
+  begin() const;
   constexpr T*
-  End();
+  end();
   constexpr const T*
-  End() const;
+  end() const;
 
   private:
   T Data[Length];
@@ -42,25 +42,25 @@ Array<T, Length>::Size() const {
 
 template <typename T, uint32_t Length>
 constexpr T*
-Array<T, Length>::Begin() {
+Array<T, Length>::begin() {
   return Data;
 }
 
 template <typename T, uint32_t Length>
 constexpr const T*
-Array<T, Length>::Begin() const {
+Array<T, Length>::begin() const {
   return Data;
 }
 
 template <typename T, uint32_t Length>
 constexpr T*
-Array<T, Length>::End() {
+Array<T, Length>::end() {
   return Data + Length;
 }
 
 template <typename T, uint32_t Length>
 constexpr const T*
-Array<T, Length>::End() const {
+Array<T, Length>::end() const {
   return Data + Length;
 }
 
