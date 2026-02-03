@@ -11,7 +11,7 @@ class Vector : public Iterable<Vector<T>> {
   constexpr Vector(const Vector& other);
   constexpr Vector&
   operator=(const Vector& other);
-  constexpr size_t
+  constexpr uint32_t
   Size() const;
   constexpr T*
   Begin();
@@ -24,20 +24,20 @@ class Vector : public Iterable<Vector<T>> {
   ~Vector();
 
   private:
-  size_t Length;
+  uint32_t Length;
   T* Data;
 };
 
 template <typename T>
 constexpr Vector<T>::Vector(T* begin, T* end) : Length(end - begin), Data(new T[Length]) {
-  for (size_t i = 0; i < Length; ++i) {
+  for (uint32_t i = 0; i < Length; ++i) {
     Data[i] = begin[i];
   }
 }
 
 template <typename T>
 constexpr Vector<T>::Vector(const Vector& other) : Length(other.Length), Data(new T[other.Length]) {
-  for (size_t i = 0; i < Length; ++i) {
+  for (uint32_t i = 0; i < Length; ++i) {
     Data[i] = other.Data[i];
   }
 }
@@ -49,7 +49,7 @@ Vector<T>::operator=(const Vector& other) {
     delete[] Data;
     Length = other.Length;
     Data = new T[Length];
-    for (size_t i = 0; i < Length; ++i) {
+    for (uint32_t i = 0; i < Length; ++i) {
       Data[i] = other.Data[i];
     }
   }
@@ -57,7 +57,7 @@ Vector<T>::operator=(const Vector& other) {
 }
 
 template <typename T>
-constexpr size_t
+constexpr uint32_t
 Vector<T>::Size() const {
   return Length;
 }

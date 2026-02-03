@@ -54,7 +54,7 @@ private:
     HashMapConstAccessor HashAccessor;
   };
 
-  explicit LRUCache(size_t maxSize);
+  explicit LRUCache(uint32_t maxSize);
 
   LRUCache(const LRUCache& other) = delete;
   LRUCache&
@@ -69,7 +69,7 @@ private:
   void
   Clear();
 
-  size_t
+  uint32_t
   Size() const;
 
   private:
@@ -80,8 +80,8 @@ private:
   void
   Evict();
 
-  size_t MaxSize;
-  std::atomic<size_t> Length;
+  uint32_t MaxSize;
+  std::atomic<uint32_t> Length;
   HashMap Map;
   ListNode Head;
   ListNode Tail;
@@ -143,7 +143,7 @@ LRUCache<TKey, TValue, THash>::ConstAccessor::Empty() const {
 }
 
 template <class TKey, class TValue, class THash>
-LRUCache<TKey, TValue, THash>::LRUCache(size_t maxSize) : MaxSize(maxSize), Length(0), Map(maxSize) {
+LRUCache<TKey, TValue, THash>::LRUCache(uint32_t maxSize) : MaxSize(maxSize), Length(0), Map(maxSize) {
   Head.Prev = nullptr;
   Head.Next = &Tail;
   Tail.Prev = &Head;
@@ -186,7 +186,7 @@ LRUCache<TKey, TValue, THash>::Insert(const TKey& key, const TValue& value) {
   }
   hashAccessor.release();
 
-  size_t size = Length.load();
+  uint32_t size = Length.load();
   bool evictionDone = false;
   if (size >= MaxSize) {
     Evict();
@@ -225,7 +225,7 @@ LRUCache<TKey, TValue, THash>::Clear() {
 }
 
 template <class TKey, class TValue, class THash>
-size_t
+uint32_t
 LRUCache<TKey, TValue, THash>::Size() const {
   return Length.load();
 }

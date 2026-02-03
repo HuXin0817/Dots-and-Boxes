@@ -18,17 +18,17 @@ class HashBoard : public BasicBoard<BoardSize> {
   Reset();
   void
   Add(const Edge<BoardSize> edge);
-  size_t
+  uint32_t
   Hash() const;
   bool
   operator==(const HashBoard& other) const;
 
   private:
-  static Array<size_t, Edge<BoardSize>::Max>
+  static Array<uint32_t, Edge<BoardSize>::Max>
   CreateHashValueTable();
-  static inline Array<size_t, Edge<BoardSize>::Max> HashValueTable = CreateHashValueTable();
+  static inline Array<uint32_t, Edge<BoardSize>::Max> HashValueTable = CreateHashValueTable();
 
-  size_t HashValue = 0;
+  uint32_t HashValue = 0;
 };
 
 template <int64_t BoardSize>
@@ -51,7 +51,7 @@ HashBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
 }
 
 template <int64_t BoardSize>
-size_t
+uint32_t
 HashBoard<BoardSize>::Hash() const {
   return HashValue;
 }
@@ -64,12 +64,12 @@ HashBoard<BoardSize>::operator==(const HashBoard& other) const {
 }
 
 template <int64_t BoardSize>
-Array<size_t, Edge<BoardSize>::Max>
+Array<uint32_t, Edge<BoardSize>::Max>
 HashBoard<BoardSize>::CreateHashValueTable() {
   Random random;
-  Array<size_t, Edge<BoardSize>::Max> table;
-  for (size_t& v : table) {
-    v = random.Range(0, std::numeric_limits<size_t>::max());
+  Array<uint32_t, Edge<BoardSize>::Max> table;
+  for (uint32_t& v : table) {
+    v = random.Range(0, std::numeric_limits<uint32_t>::max());
   }
   return table;
 }
@@ -80,7 +80,7 @@ namespace std {
 
 template <int64_t BoardSize>
 struct hash<dab::detail::board::HashBoard<BoardSize>> {
-  size_t
+  uint32_t
   operator()(const dab::detail::board::HashBoard<BoardSize>& board) const {
     return board.Hash();
   }

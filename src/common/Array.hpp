@@ -2,12 +2,13 @@
 
 #include <cassert>
 #include <cstddef>
+#include <cstdint>
 
 #include "Iterable.hpp"
 
 namespace dab::detail::common {
 
-template <typename T, size_t Length>
+template <typename T, uint32_t Length>
 class Array : public Iterable<Array<T, Length>> {
   public:
   constexpr Array() = default;
@@ -18,7 +19,7 @@ class Array : public Iterable<Array<T, Length>> {
   constexpr Array&
   operator=(Array&& other) = default;
 
-  constexpr size_t
+  constexpr uint32_t
   Size() const;
   constexpr T*
   Begin();
@@ -33,31 +34,31 @@ class Array : public Iterable<Array<T, Length>> {
   T Data[Length];
 };
 
-template <typename T, size_t Length>
-constexpr size_t
+template <typename T, uint32_t Length>
+constexpr uint32_t
 Array<T, Length>::Size() const {
   return Length;
 }
 
-template <typename T, size_t Length>
+template <typename T, uint32_t Length>
 constexpr T*
 Array<T, Length>::Begin() {
   return Data;
 }
 
-template <typename T, size_t Length>
+template <typename T, uint32_t Length>
 constexpr const T*
 Array<T, Length>::Begin() const {
   return Data;
 }
 
-template <typename T, size_t Length>
+template <typename T, uint32_t Length>
 constexpr T*
 Array<T, Length>::End() {
   return Data + Length;
 }
 
-template <typename T, size_t Length>
+template <typename T, uint32_t Length>
 constexpr const T*
 Array<T, Length>::End() const {
   return Data + Length;

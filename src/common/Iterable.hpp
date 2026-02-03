@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <cstddef>
+#include <cstdint>
 
 namespace dab::detail::common {
 
@@ -17,14 +18,14 @@ class Iterable {
   constexpr auto
   end() const;
 
-  constexpr size_t
+  constexpr uint32_t
   Size() const;
   constexpr bool
   Empty() const;
   constexpr auto&
-  operator[](size_t i);
+  operator[](uint32_t i);
   constexpr const auto&
-  operator[](size_t i) const;
+  operator[](uint32_t i) const;
   constexpr auto&
   Front();
   constexpr const auto&
@@ -63,7 +64,7 @@ Iterable<Derived>::end() const {
 }
 
 template <typename Derived>
-constexpr size_t
+constexpr uint32_t
 Iterable<Derived>::Size() const {
   return static_cast<const Derived*>(this)->Size();
 }
@@ -76,14 +77,14 @@ Iterable<Derived>::Empty() const {
 
 template <typename Derived>
 constexpr auto&
-Iterable<Derived>::operator[](size_t i) {
+Iterable<Derived>::operator[](uint32_t i) {
   assert(i < Size());
   return begin()[i];
 }
 
 template <typename Derived>
 constexpr const auto&
-Iterable<Derived>::operator[](size_t i) const {
+Iterable<Derived>::operator[](uint32_t i) const {
   assert(i < Size());
   return begin()[i];
 }
