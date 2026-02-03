@@ -57,7 +57,7 @@ template <int64_t BoardSize>
 QPointer<QWidget>
 MainWindowCreator<MaxBoardSize>::CreateMainWindowImpl(const Config& config, QPointer<QWidget> parent) {
   if (config.BoardSize == BoardSize) {
-    return new MainWindow<BoardSize>(config.Player1Type, config.Player2Type, config.BoardSize, parent);
+    return new MainWindow<BoardSize>(config.Player1Type, config.Player2Type, config.BackgroundMode, parent);
   }
   if constexpr (BoardSize > 1) {
     return CreateMainWindowImpl<BoardSize - 1>(config, parent);
