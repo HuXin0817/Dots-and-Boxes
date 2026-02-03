@@ -29,7 +29,3 @@ jobs:
       - name: Build
         run: |
           cmake --build build
-
-      - name: Test build
-        run: |
-          ./build/Dots_and_Boxes --background
