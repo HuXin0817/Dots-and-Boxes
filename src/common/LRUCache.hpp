@@ -4,7 +4,6 @@
 #include <tbb/spin_mutex.h>
 
 #include <atomic>
-#include <thread>
 
 namespace dab::detail::common {
 
@@ -144,8 +143,7 @@ LRUCache<TKey, TValue, THash>::ConstAccessor::Empty() const {
 }
 
 template <class TKey, class TValue, class THash>
-LRUCache<TKey, TValue, THash>::LRUCache(size_t maxSize)
-    : MaxSize(maxSize), Length(0), Map(std::thread::hardware_concurrency() * 4) {
+LRUCache<TKey, TValue, THash>::LRUCache(size_t maxSize) : MaxSize(maxSize), Length(0), Map(maxSize) {
   Head.Prev = nullptr;
   Head.Next = &Tail;
   Tail.Prev = &Head;
