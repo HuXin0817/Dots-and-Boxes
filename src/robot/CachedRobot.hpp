@@ -8,7 +8,7 @@
 
 namespace dab::detail::robot {
 
-template <int64_t BoardSize, typename SubRobotType>
+template <int64_t BoardSize, typename SubRobotType, uint32_t Cap>
 class CachedRobot : public Robot<BoardSize> {
   public:
   CachedRobot() = default;
@@ -19,14 +19,13 @@ class CachedRobot : public Robot<BoardSize> {
   private:
   SubRobotType SubRobot;
 
-  static inline LRUCache<HashBoard<BoardSize>, Vector<Edge<BoardSize>>> GlobalCache =
-      LRUCache<HashBoard<BoardSize>, Vector<Edge<BoardSize>>>(1 << 14);
+  static inline LRUCache<HashBoard<BoardSize>, Vector<Edge<BoardSize>>, Cap> GlobalCache;
 };
 
-template <int64_t BoardSize, typename SubRobotType>
+template <int64_t BoardSize, typename SubRobotType, uint32_t Cap>
 Span<Edge<BoardSize>>
-CachedRobot<BoardSize, SubRobotType>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) {
-  if (typename dab::LRUCache<HashBoard<BoardSize>, Vector<Edge<BoardSize>>>::ConstAccessor ac;
+CachedRobot<BoardSize, SubRobotType, Cap>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) {
+  if (typename dab::LRUCache<HashBoard<BoardSize>, Vector<Edge<BoardSize>>, Cap>::ConstAccessor ac;
       GlobalCache.Find(ac, board)) {
     return Span(ac->begin(), ac->end());
   }

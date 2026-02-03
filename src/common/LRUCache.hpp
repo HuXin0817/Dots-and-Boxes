@@ -7,7 +7,7 @@
 
 namespace dab::detail::common {
 
-template <class TKey, class TValue, class THash = tbb::tbb_hash_compare<TKey>>
+template <class TKey, class TValue, uint32_t Cap, class THash = tbb::tbb_hash_compare<TKey>>
 class LRUCache {
   struct ListNode {
     ListNode();
@@ -54,7 +54,7 @@ private:
     HashMapConstAccessor HashAccessor;
   };
 
-  explicit LRUCache(uint32_t maxSize);
+  LRUCache();
 
   LRUCache(const LRUCache& other) = delete;
   LRUCache&
@@ -80,7 +80,6 @@ private:
   void
   Evict();
 
-  uint32_t MaxSize;
   std::atomic<uint32_t> Length;
   HashMap Map;
   ListNode Head;
@@ -88,75 +87,76 @@ private:
   tbb::spin_mutex ListMutex;
 };
 
-template <class TKey, class TValue, class THash>
-typename LRUCache<TKey, TValue, THash>::ListNode* const LRUCache<TKey, TValue, THash>::OutOfListMarker =
-    reinterpret_cast<typename LRUCache<TKey, TValue, THash>::ListNode*>(-1);
+template <class TKey, class TValue, uint32_t Cap, class THash>
+typename LRUCache<TKey, TValue, Cap, THash>::ListNode* const LRUCache<TKey, TValue, Cap, THash>::OutOfListMarker =
+    reinterpret_cast<typename LRUCache<TKey, TValue, Cap, THash>::ListNode*>(-1);
 
-template <class TKey, class TValue, class THash>
-LRUCache<TKey, TValue, THash>::ListNode::ListNode() : Prev(OutOfListMarker), Next(nullptr) {
+template <class TKey, class TValue, uint32_t Cap, class THash>
+LRUCache<TKey, TValue, Cap, THash>::ListNode::ListNode() : Prev(OutOfListMarker), Next(nullptr) {
 }
 
-template <class TKey, class TValue, class THash>
-LRUCache<TKey, TValue, THash>::ListNode::ListNode(const TKey& key) : Key(key), Prev(OutOfListMarker), Next(nullptr) {
+template <class TKey, class TValue, uint32_t Cap, class THash>
+LRUCache<TKey, TValue, Cap, THash>::ListNode::ListNode(const TKey& key)
+    : Key(key), Prev(OutOfListMarker), Next(nullptr) {
 }
 
-template <class TKey, class TValue, class THash>
+template <class TKey, class TValue, uint32_t Cap, class THash>
 bool
-LRUCache<TKey, TValue, THash>::ListNode::IsInList() const {
+LRUCache<TKey, TValue, Cap, THash>::ListNode::IsInList() const {
   return Prev != OutOfListMarker;
 }
 
-template <class TKey, class TValue, class THash>
-LRUCache<TKey, TValue, THash>::HashMapValue::HashMapValue() : Node(nullptr) {
+template <class TKey, class TValue, uint32_t Cap, class THash>
+LRUCache<TKey, TValue, Cap, THash>::HashMapValue::HashMapValue() : Node(nullptr) {
 }
 
-template <class TKey, class TValue, class THash>
-LRUCache<TKey, TValue, THash>::HashMapValue::HashMapValue(const TValue& value, ListNode* node)
+template <class TKey, class TValue, uint32_t Cap, class THash>
+LRUCache<TKey, TValue, Cap, THash>::HashMapValue::HashMapValue(const TValue& value, ListNode* node)
     : Value(value), Node(node) {
 }
 
-template <class TKey, class TValue, class THash>
-LRUCache<TKey, TValue, THash>::ConstAccessor::ConstAccessor() = default;
+template <class TKey, class TValue, uint32_t Cap, class THash>
+LRUCache<TKey, TValue, Cap, THash>::ConstAccessor::ConstAccessor() = default;
 
-template <class TKey, class TValue, class THash>
+template <class TKey, class TValue, uint32_t Cap, class THash>
 const TValue&
-LRUCache<TKey, TValue, THash>::ConstAccessor::operator*() const {
+LRUCache<TKey, TValue, Cap, THash>::ConstAccessor::operator*() const {
   return *Get();
 }
 
-template <class TKey, class TValue, class THash>
+template <class TKey, class TValue, uint32_t Cap, class THash>
 const TValue*
-LRUCache<TKey, TValue, THash>::ConstAccessor::operator->() const {
+LRUCache<TKey, TValue, Cap, THash>::ConstAccessor::operator->() const {
   return Get();
 }
 
-template <class TKey, class TValue, class THash>
+template <class TKey, class TValue, uint32_t Cap, class THash>
 const TValue*
-LRUCache<TKey, TValue, THash>::ConstAccessor::Get() const {
+LRUCache<TKey, TValue, Cap, THash>::ConstAccessor::Get() const {
   return &HashAccessor->second.Value;
 }
 
-template <class TKey, class TValue, class THash>
+template <class TKey, class TValue, uint32_t Cap, class THash>
 bool
-LRUCache<TKey, TValue, THash>::ConstAccessor::Empty() const {
+LRUCache<TKey, TValue, Cap, THash>::ConstAccessor::Empty() const {
   return HashAccessor.empty();
 }
 
-template <class TKey, class TValue, class THash>
-LRUCache<TKey, TValue, THash>::LRUCache(uint32_t maxSize) : MaxSize(maxSize), Length(0), Map(maxSize) {
+template <class TKey, class TValue, uint32_t Cap, class THash>
+LRUCache<TKey, TValue, Cap, THash>::LRUCache() : Length(0), Map(Cap) {
   Head.Prev = nullptr;
   Head.Next = &Tail;
   Tail.Prev = &Head;
 }
 
-template <class TKey, class TValue, class THash>
-LRUCache<TKey, TValue, THash>::~LRUCache() {
+template <class TKey, class TValue, uint32_t Cap, class THash>
+LRUCache<TKey, TValue, Cap, THash>::~LRUCache() {
   Clear();
 }
 
-template <class TKey, class TValue, class THash>
+template <class TKey, class TValue, uint32_t Cap, class THash>
 bool
-LRUCache<TKey, TValue, THash>::Find(ConstAccessor& ac, const TKey& key) {
+LRUCache<TKey, TValue, Cap, THash>::Find(ConstAccessor& ac, const TKey& key) {
   HashMapConstAccessor& hashAccessor = ac.HashAccessor;
   if (!Map.find(hashAccessor, key)) {
     return false;
@@ -174,9 +174,9 @@ LRUCache<TKey, TValue, THash>::Find(ConstAccessor& ac, const TKey& key) {
   return true;
 }
 
-template <class TKey, class TValue, class THash>
+template <class TKey, class TValue, uint32_t Cap, class THash>
 bool
-LRUCache<TKey, TValue, THash>::Insert(const TKey& key, const TValue& value) {
+LRUCache<TKey, TValue, Cap, THash>::Insert(const TKey& key, const TValue& value) {
   ListNode* node = new ListNode(key);
   HashMapAccessor hashAccessor;
   HashMapValuePair hashMapValue(key, HashMapValue(value, node));
@@ -188,7 +188,7 @@ LRUCache<TKey, TValue, THash>::Insert(const TKey& key, const TValue& value) {
 
   uint32_t size = Length.load();
   bool evictionDone = false;
-  if (size >= MaxSize) {
+  if (size >= Cap) {
     Evict();
     evictionDone = true;
   }
@@ -200,7 +200,7 @@ LRUCache<TKey, TValue, THash>::Insert(const TKey& key, const TValue& value) {
   if (!evictionDone) {
     size = Length++;
   }
-  if (size > MaxSize) {
+  if (size > Cap) {
     if (Length.compare_exchange_strong(size, size - 1)) {
       Evict();
     }
@@ -208,9 +208,9 @@ LRUCache<TKey, TValue, THash>::Insert(const TKey& key, const TValue& value) {
   return true;
 }
 
-template <class TKey, class TValue, class THash>
+template <class TKey, class TValue, uint32_t Cap, class THash>
 void
-LRUCache<TKey, TValue, THash>::Clear() {
+LRUCache<TKey, TValue, Cap, THash>::Clear() {
   Map.clear();
   ListNode* node = Head.Next;
   ListNode* next;
@@ -224,15 +224,15 @@ LRUCache<TKey, TValue, THash>::Clear() {
   Length = 0;
 }
 
-template <class TKey, class TValue, class THash>
+template <class TKey, class TValue, uint32_t Cap, class THash>
 uint32_t
-LRUCache<TKey, TValue, THash>::Size() const {
+LRUCache<TKey, TValue, Cap, THash>::Size() const {
   return Length.load();
 }
 
-template <class TKey, class TValue, class THash>
+template <class TKey, class TValue, uint32_t Cap, class THash>
 void
-LRUCache<TKey, TValue, THash>::Delink(ListNode* node) {
+LRUCache<TKey, TValue, Cap, THash>::Delink(ListNode* node) {
   ListNode* prev = node->Prev;
   ListNode* next = node->Next;
   prev->Next = next;
@@ -240,9 +240,9 @@ LRUCache<TKey, TValue, THash>::Delink(ListNode* node) {
   node->Prev = OutOfListMarker;
 }
 
-template <class TKey, class TValue, class THash>
+template <class TKey, class TValue, uint32_t Cap, class THash>
 void
-LRUCache<TKey, TValue, THash>::PushFront(ListNode* node) {
+LRUCache<TKey, TValue, Cap, THash>::PushFront(ListNode* node) {
   ListNode* oldRealHead = Head.Next;
   node->Prev = &Head;
   node->Next = oldRealHead;
@@ -250,9 +250,9 @@ LRUCache<TKey, TValue, THash>::PushFront(ListNode* node) {
   Head.Next = node;
 }
 
-template <class TKey, class TValue, class THash>
+template <class TKey, class TValue, uint32_t Cap, class THash>
 void
-LRUCache<TKey, TValue, THash>::Evict() {
+LRUCache<TKey, TValue, Cap, THash>::Evict() {
   std::unique_lock<tbb::spin_mutex> lock(ListMutex);
   ListNode* moribund = Tail.Prev;
   if (moribund == &Head) {
