@@ -59,7 +59,9 @@ HashBoard<BoardSize>::Hash() const {
 template <int64_t BoardSize>
 bool
 HashBoard<BoardSize>::operator==(const HashBoard& other) const {
-  assert(HashValue == other.HashValue);
+  if (HashValue != other.HashValue) {
+    return false;
+  }
   return BasicBoard<BoardSize>::operator==(other);
 }
 
