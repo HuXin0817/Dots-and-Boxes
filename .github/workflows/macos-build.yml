@@ -17,7 +17,7 @@ jobs:
 
       - name: Install requirements
         run: |
-          brew install qt@6 tbb
+          brew install coreutils qt@6 tbb
           echo "CMAKE_PREFIX_PATH=$(brew --prefix qt@6)/lib/cmake" >> $GITHUB_ENV
           echo "PATH=$(brew --prefix qt@6)/bin:$PATH" >> $GITHUB_ENV
 
