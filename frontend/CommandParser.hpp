@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QCommandLineParser>
+#include <cstdlib>
 
 #include "MainWindowCreator.hpp"
 
@@ -62,6 +63,11 @@ CommandParser<MaxBoardSize, DefaultBoardSize, DefaultPlayerType>::Process(const 
                 ParsePlayerType(parser.value(player1Option)),
                 ParsePlayerType(parser.value(player2Option)),
                 parser.isSet(backgroundModeOption));
+  if (Config.BackgroundMode && (!PlayerTypeIsRobot(Config.Player1Type) || !PlayerTypeIsRobot(Config.Player2Type))) {
+    qInfo("Error: player type 'human' is not allow in background mode.");
+    exit(EXIT_FAILURE);
+  }
+
   qInfo() << Config.ToString().toLocal8Bit().constData();
 
   QPointer<QWidget> MainWindow = MainWindowCreator<MaxBoardSize>().CreateMainWindow(Config);

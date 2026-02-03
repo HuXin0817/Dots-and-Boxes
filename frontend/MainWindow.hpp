@@ -20,7 +20,12 @@ class MainWindow final : public BaseCanvas<BoardSize> {
   static constexpr int WindowSize = BoardWidth + 2 * BoxCanvas<BoardSize>::Width;
 
   public:
-  explicit MainWindow(const PlayerType player1Type, const PlayerType player2Type, QPointer<QWidget> parent);
+  explicit MainWindow(const PlayerType player1Type,
+                      const PlayerType player2Type,
+                      const bool backgroundMode,
+                      QPointer<QWidget> parent);
+  void
+  Run();
 
   protected:
   void
@@ -33,6 +38,7 @@ class MainWindow final : public BaseCanvas<BoardSize> {
   private:
   const PlayerType Player1Type;
   const PlayerType Player2Type;
+  const bool BackgroundMode;
   QScopedPointer<Robot<BoardSize>> Robot1;
   QScopedPointer<Robot<BoardSize>> Robot2;
   Edge<BoardSize> PlayerMoveEdge;
@@ -51,8 +57,25 @@ class MainWindow final : public BaseCanvas<BoardSize> {
 };
 
 template <int64_t BoardSize>
-MainWindow<BoardSize>::MainWindow(const PlayerType player1Type, const PlayerType player2Type, QPointer<QWidget> parent)
-    : BaseCanvas<BoardSize>(parent), Player1Type(player1Type), Player2Type(player2Type) {
+MainWindow<BoardSize>::MainWindow(const PlayerType player1Type,
+                                  const PlayerType player2Type,
+                                  const bool backgroundMode,
+                                  QPointer<QWidget> parent)
+    : BaseCanvas<BoardSize>(parent),
+      Player1Type(player1Type),
+      Player2Type(player2Type),
+      BackgroundMode(backgroundMode) {
+  if (PlayerTypeIsRobot(Player1Type)) {
+    Robot1.reset(CreateRobot<BoardSize>(Player1Type));
+  }
+  if (PlayerTypeIsRobot(Player2Type)) {
+    Robot2.reset(CreateRobot<BoardSize>(Player2Type));
+  }
+  if (backgroundMode) {
+    Run();
+    return;
+  }
+
   BaseCanvas<BoardSize>::resize(WindowSize, WindowSize);
   BaseCanvas<BoardSize>::setMinimumSize(WindowSize, WindowSize);
 
@@ -66,13 +89,77 @@ MainWindow<BoardSize>::MainWindow(const PlayerType player1Type, const PlayerType
   for (Dot<BoardSize> dot = 0; dot < Dot<BoardSize>::Max; ++dot) {
     DotCanvases.emplace_back(new DotCanvas<BoardSize>(this));
   }
+}
 
-  if (PlayerTypeIsRobot(Player1Type)) {
-    Robot1.reset(CreateRobot<BoardSize>(Player1Type));
+template <int64_t BoardSize>
+void
+MainWindow<BoardSize>::Run() {
+  Random Random;
+  while (Board.Gaming()) {
+    const QTime startTime = QTime::currentTime();
+    const Turn turn = static_cast<Turn>(Board);
+
+    if ((PlayerTypeIsRobot(Player1Type) && Board.IsPlayer1Turn())) {
+      PlayerMoveEdge = Random.Choice(Robot1->BestCandidateEdges(Board));
+    } else if (PlayerTypeIsRobot(Player2Type) && Board.IsPlayer2Turn()) {
+      PlayerMoveEdge = Random.Choice(Robot2->BestCandidateEdges(Board));
+    } else {
+      PlayerMoveEdge = InvalidEdge<BoardSize>;
+      while (PlayerMoveEdge == InvalidEdge<BoardSize>) {
+        QThread::yieldCurrentThread();
+      }
+    }
+
+    assert(!Board.Contains(PlayerMoveEdge));
+    if (BackgroundMode) {
+      Add(PlayerMoveEdge);
+    } else {
+      QMetaObject::invokeMethod(this, [this]() -> void { Add(PlayerMoveEdge); }, Qt::BlockingQueuedConnection);
+    }
+    assert(Board.Contains(PlayerMoveEdge));
+
+    const double seconds = static_cast<double>(startTime.msecsTo(QTime::currentTime())) / 1000.0;
+
+    QJsonObject playerScore;
+    playerScore.insert("Player1", Board.GetPlayer1Score());
+    playerScore.insert("Player2", Board.GetPlayer2Score());
+
+    QJsonObject moveRecord;
+    moveRecord.insert("Step", Board.NowStep());
+    moveRecord.insert("Turn", turn.IsPlayer1Turn() ? 1 : 2);
+    moveRecord.insert("Move", Int<BoardSize>(PlayerMoveEdge));
+    moveRecord.insert("Score", playerScore);
+    moveRecord.insert("Time", seconds);
+
+    QJsonObject info;
+    info.insert("Info", moveRecord);
+    qInfo() << QJsonDocument(info).toJson(QJsonDocument::Compact).constData();
   }
-  if (PlayerTypeIsRobot(Player2Type)) {
-    Robot2.reset(CreateRobot<BoardSize>(Player2Type));
+
+  QJsonObject winner;
+  if (Board.GetPlayer1Score() > Board.GetPlayer2Score()) {
+    winner.insert("Winner", "Player1");
+  } else if (Board.GetPlayer2Score() > Board.GetPlayer1Score()) {
+    winner.insert("Winner", "Player2");
+  } else {
+    winner.insert("Winner", "Draw");
   }
+  qInfo() << QJsonDocument(winner).toJson(QJsonDocument::Compact).constData();
+
+  if (BackgroundMode) {
+    exit(0);
+  }
+
+  QMetaObject::invokeMethod(
+      this,
+      [this]() -> void {
+        QTimer::singleShot(2000, this, [this]() -> void {
+          EdgeCanvases[LastEdge]->SetHighLight(false);
+          BaseCanvas<BoardSize>::update();
+          QTimer::singleShot(2000, this, &MainWindow::close);
+        });
+      },
+      Qt::BlockingQueuedConnection);
 }
 
 template <int64_t BoardSize>
@@ -121,66 +208,7 @@ void
 MainWindow<BoardSize>::showEvent(QShowEvent* event) {
   QWidget::showEvent(event);
 
-  QThreadPool::globalInstance()->start([this]() -> void {
-    Random Random;
-    while (Board.Gaming()) {
-      const QTime startTime = QTime::currentTime();
-      const Turn turn = static_cast<Turn>(Board);
-
-      if ((PlayerTypeIsRobot(Player1Type) && Board.IsPlayer1Turn())) {
-        PlayerMoveEdge = Random.Choice(Robot1->BestCandidateEdges(Board));
-      } else if (PlayerTypeIsRobot(Player2Type) && Board.IsPlayer2Turn()) {
-        PlayerMoveEdge = Random.Choice(Robot2->BestCandidateEdges(Board));
-      } else {
-        PlayerMoveEdge = InvalidEdge<BoardSize>;
-        while (PlayerMoveEdge == InvalidEdge<BoardSize>) {
-          QThread::yieldCurrentThread();
-        }
-      }
-
-      assert(!Board.Contains(PlayerMoveEdge));
-      QMetaObject::invokeMethod(this, [this]() -> void { Add(PlayerMoveEdge); }, Qt::BlockingQueuedConnection);
-      assert(Board.Contains(PlayerMoveEdge));
-
-      const double seconds = static_cast<double>(startTime.msecsTo(QTime::currentTime())) / 1000.0;
-
-      QJsonObject playerScore;
-      playerScore.insert("Player1", Board.GetPlayer1Score());
-      playerScore.insert("Player2", Board.GetPlayer2Score());
-
-      QJsonObject moveRecord;
-      moveRecord.insert("Step", Board.NowStep());
-      moveRecord.insert("Turn", turn.IsPlayer1Turn() ? 1 : 2);
-      moveRecord.insert("Move", Int<BoardSize>(PlayerMoveEdge));
-      moveRecord.insert("Score", playerScore);
-      moveRecord.insert("Time", seconds);
-
-      QJsonObject info;
-      info.insert("Info", moveRecord);
-      qInfo() << QJsonDocument(info).toJson(QJsonDocument::Compact).constData();
-    }
-
-    QJsonObject winner;
-    if (Board.GetPlayer1Score() > Board.GetPlayer2Score()) {
-      winner.insert("Winner", "Player1");
-    } else if (Board.GetPlayer2Score() > Board.GetPlayer1Score()) {
-      winner.insert("Winner", "Player2");
-    } else {
-      winner.insert("Winner", "Draw");
-    }
-    qInfo() << QJsonDocument(winner).toJson(QJsonDocument::Compact).constData();
-
-    QMetaObject::invokeMethod(
-        this,
-        [this]() -> void {
-          QTimer::singleShot(2000, this, [this]() -> void {
-            EdgeCanvases[LastEdge]->SetHighLight(false);
-            BaseCanvas<BoardSize>::update();
-            QTimer::singleShot(2000, this, &MainWindow::close);
-          });
-        },
-        Qt::BlockingQueuedConnection);
-  });
+  QThreadPool::globalInstance()->start([this]() -> void { Run(); });
 }
 
 template <int64_t BoardSize>
@@ -210,31 +238,35 @@ MainWindow<BoardSize>::Color() const {
 template <int64_t BoardSize>
 void
 MainWindow<BoardSize>::Add(const Edge<BoardSize> edge) {
-  if (Board.NowStep() > 0) {
-    EdgeCanvases[LastEdge]->SetHighLight(false);
-  }
-  EdgeCanvases[edge]->Owner = static_cast<const Turn>(Board);
-  EdgeCanvases[edge]->raise();
-  for (Dot<BoardSize> dot = 0; dot < Dot<BoardSize>::Max; ++dot) {
-    DotCanvases[dot]->raise();
-  }
+  if (!BackgroundMode) {
+    if (Board.NowStep() > 0) {
+      EdgeCanvases[LastEdge]->SetHighLight(false);
+    }
+    EdgeCanvases[edge]->Owner = static_cast<const Turn>(Board);
+    EdgeCanvases[edge]->raise();
+    for (Dot<BoardSize> dot = 0; dot < Dot<BoardSize>::Max; ++dot) {
+      DotCanvases[dot]->raise();
+    }
 
-  for (const Box<BoardSize> box : NearBoxes(edge)) {
-    int count = 0;
-    for (const Edge<BoardSize> nearEdge : NearEdges(box)) {
-      if (Board.Contains(nearEdge)) {
-        count++;
+    for (const Box<BoardSize> box : NearBoxes(edge)) {
+      int count = 0;
+      for (const Edge<BoardSize> nearEdge : NearEdges(box)) {
+        if (Board.Contains(nearEdge)) {
+          count++;
+        }
+      }
+      if (count == 3) {
+        BoxCanvases[box]->Owner = static_cast<const Turn>(Board);
       }
     }
-    if (count == 3) {
-      BoxCanvases[box]->Owner = static_cast<const Turn>(Board);
-    }
+    LastEdge = edge;
   }
 
   Board.Add(edge);
-  LastEdge = edge;
-  BaseCanvas<BoardSize>::update();
-  QApplication::beep();
+  if (!BackgroundMode) {
+    BaseCanvas<BoardSize>::update();
+    QApplication::beep();
+  }
 }
 
 }  // namespace dab::detail::frontend
