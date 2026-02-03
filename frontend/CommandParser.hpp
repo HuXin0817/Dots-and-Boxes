@@ -33,6 +33,8 @@ class CommandParser {
   BoardSizeOption();
   QCommandLineOption
   PlayerTypeOption(int8_t player);
+  QCommandLineOption
+  BackgroundModeOption();
   int64_t
   ParseBoardSize(const QString& arg);
   PlayerType
@@ -45,6 +47,7 @@ CommandParser<MaxBoardSize, DefaultBoardSize, DefaultPlayerType>::Process(const 
   const QCommandLineOption boardSizeOption = BoardSizeOption();
   const QCommandLineOption player1Option = PlayerTypeOption(1);
   const QCommandLineOption player2Option = PlayerTypeOption(2);
+  const QCommandLineOption backgroundModeOption = BackgroundModeOption();
 
   QCommandLineParser parser;
   parser.addHelpOption();
@@ -52,11 +55,13 @@ CommandParser<MaxBoardSize, DefaultBoardSize, DefaultPlayerType>::Process(const 
   parser.addOption(boardSizeOption);
   parser.addOption(player1Option);
   parser.addOption(player2Option);
+  parser.addOption(backgroundModeOption);
   parser.process(application);
 
   Config Config(ParseBoardSize(parser.value(boardSizeOption)),
                 ParsePlayerType(parser.value(player1Option)),
-                ParsePlayerType(parser.value(player2Option)));
+                ParsePlayerType(parser.value(player2Option)),
+                parser.isSet(backgroundModeOption));
   qInfo() << Config.ToString().toLocal8Bit().constData();
 
   QPointer<QWidget> MainWindow = MainWindowCreator<MaxBoardSize>().CreateMainWindow(Config);
@@ -101,6 +106,12 @@ CommandParser<MaxBoardSize, DefaultBoardSize, DefaultPlayerType>::PlayerTypeOpti
           .arg(QString::fromUtf8(PlayerTypeOptionStrings[static_cast<int>(DefaultPlayerType)])),
       "Type",
       "robot");
+}
+
+template <int64_t MaxBoardSize, int64_t DefaultBoardSize, PlayerType DefaultPlayerType>
+inline QCommandLineOption
+CommandParser<MaxBoardSize, DefaultBoardSize, DefaultPlayerType>::BackgroundModeOption() {
+  return QCommandLineOption(QStringList() << "b" << "background", "Run in background mode.");
 }
 
 template <int64_t MaxBoardSize, int64_t DefaultBoardSize, PlayerType DefaultPlayerType>
