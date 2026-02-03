@@ -6,7 +6,6 @@
 #include "../../../frontend/DotCanvas.hpp"
 #include "../../../frontend/EdgeCanvas.hpp"
 #include "../../../frontend/MainWindow.hpp"
-#include "../../../frontend/MainWindowCreator.hpp"
 
 namespace dab {
 
