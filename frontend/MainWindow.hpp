@@ -7,6 +7,7 @@
 #include <QThreadPool>
 #include <QTime>
 #include <QTimer>
+#include <cassert>
 
 #include "BoxCanvas.hpp"
 #include "DotCanvas.hpp"
@@ -72,22 +73,28 @@ MainWindow<BoardSize>::MainWindow(const PlayerType player1Type,
     Robot2.reset(CreateRobot<BoardSize>(Player2Type));
   }
   if (backgroundMode) {
+    assert(Robot1);
+    assert(Robot2);
     Run();
-    return;
-  }
+  } else {
+    BaseCanvas<BoardSize>::resize(WindowSize, WindowSize);
+    BaseCanvas<BoardSize>::setMinimumSize(WindowSize, WindowSize);
 
-  BaseCanvas<BoardSize>::resize(WindowSize, WindowSize);
-  BaseCanvas<BoardSize>::setMinimumSize(WindowSize, WindowSize);
+    BoxCanvases.reserve(Box<BoardSize>::Max);
+    for (Box<BoardSize> box = 0; box < Box<BoardSize>::Max; ++box) {
+      BoxCanvases.emplace_back(new BoxCanvas<BoardSize>(this));
+    }
 
-  for (Box<BoardSize> box = 0; box < Box<BoardSize>::Max; ++box) {
-    BoxCanvases.emplace_back(new BoxCanvas<BoardSize>(this));
-  }
-  for (Edge<BoardSize> edge = 0; edge < Edge<BoardSize>::Max; ++edge) {
-    EdgeCanvases.emplace_back(
-        new EdgeCanvas<BoardSize>(edge.Rotate(), [edge, this]() -> void { SetPlayerMoveEdge(edge); }, this));
-  }
-  for (Dot<BoardSize> dot = 0; dot < Dot<BoardSize>::Max; ++dot) {
-    DotCanvases.emplace_back(new DotCanvas<BoardSize>(this));
+    EdgeCanvases.reserve(Edge<BoardSize>::Max);
+    for (Edge<BoardSize> edge = 0; edge < Edge<BoardSize>::Max; ++edge) {
+      EdgeCanvases.emplace_back(
+          new EdgeCanvas<BoardSize>(edge.Rotate(), [edge, this]() -> void { SetPlayerMoveEdge(edge); }, this));
+    }
+
+    DotCanvases.reserve(Dot<BoardSize>::Max);
+    for (Dot<BoardSize> dot = 0; dot < Dot<BoardSize>::Max; ++dot) {
+      DotCanvases.emplace_back(new DotCanvas<BoardSize>(this));
+    }
   }
 }
 
@@ -148,18 +155,18 @@ MainWindow<BoardSize>::Run() {
 
   if (BackgroundMode) {
     exit(0);
+  } else {
+    QMetaObject::invokeMethod(
+        this,
+        [this]() -> void {
+          QTimer::singleShot(2000, this, [this]() -> void {
+            EdgeCanvases[LastEdge]->SetHighLight(false);
+            BaseCanvas<BoardSize>::update();
+            QTimer::singleShot(2000, this, &MainWindow::close);
+          });
+        },
+        Qt::BlockingQueuedConnection);
   }
-
-  QMetaObject::invokeMethod(
-      this,
-      [this]() -> void {
-        QTimer::singleShot(2000, this, [this]() -> void {
-          EdgeCanvases[LastEdge]->SetHighLight(false);
-          BaseCanvas<BoardSize>::update();
-          QTimer::singleShot(2000, this, &MainWindow::close);
-        });
-      },
-      Qt::BlockingQueuedConnection);
 }
 
 template <int64_t BoardSize>
