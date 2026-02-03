@@ -1,9 +1,8 @@
 #pragma once
 
+#include <Dab/Board.hpp>
 #include <cstddef>
 
-#include "Board.hpp"
-#include "Common.hpp"
 #include "Robot.hpp"
 
 namespace dab::detail::robot {

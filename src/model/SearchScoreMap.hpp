@@ -1,8 +1,8 @@
 #pragma once
 
+#include <Dab/Common.hpp>
 #include <algorithm>
 
-#include "Common.hpp"
 #include "Edge.hpp"
 
 namespace dab::detail::model {

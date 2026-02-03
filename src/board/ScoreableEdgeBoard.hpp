@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Common.hpp"
+#include <Dab/Model.hpp>
+
 #include "EdgeCountableBoard.hpp"
-#include "Model.hpp"
 
 namespace dab::detail::board {
 

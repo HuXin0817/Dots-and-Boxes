@@ -1,14 +1,14 @@
 #pragma once
 
-#include "../src/model/Edge.hpp"
-#include "../src/model/EdgeCounter.hpp"
-#include "../src/model/GameScoreMap.hpp"
-#include "../src/model/NearBoxes.hpp"
-#include "../src/model/NearEdges.hpp"
-#include "../src/model/SearchScoreMap.hpp"
-#include "../src/model/Square.hpp"
-#include "../src/model/Turn.hpp"
-#include "../src/model/Types.hpp"
+#include "../../src/model/Edge.hpp"
+#include "../../src/model/EdgeCounter.hpp"
+#include "../../src/model/GameScoreMap.hpp"
+#include "../../src/model/NearBoxes.hpp"
+#include "../../src/model/NearEdges.hpp"
+#include "../../src/model/SearchScoreMap.hpp"
+#include "../../src/model/Square.hpp"
+#include "../../src/model/Turn.hpp"
+#include "../../src/model/Types.hpp"
 
 namespace dab {
 

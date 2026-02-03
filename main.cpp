@@ -1,4 +1,4 @@
-#include "Frontend.hpp"
+#include <Dab/Frontend/Frontend.hpp>
 
 int
 main(int argc, char* argv[]) {

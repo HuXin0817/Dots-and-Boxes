@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Common.hpp"
-#include "Model.hpp"
+#include <Dab/Model.hpp>
 
 namespace dab::detail::board {
 

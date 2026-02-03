@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Dab/Robot.hpp>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QPointer>
@@ -10,7 +11,6 @@
 #include "BoxCanvas.hpp"
 #include "DotCanvas.hpp"
 #include "EdgeCanvas.hpp"
-#include "Robot.hpp"
 
 namespace dab::detail::frontend {
 

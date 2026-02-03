@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Common.hpp"
+#include <Dab/Common.hpp>
+
 #include "Edge.hpp"
 #include "Square.hpp"
 

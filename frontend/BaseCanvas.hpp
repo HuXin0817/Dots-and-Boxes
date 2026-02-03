@@ -1,13 +1,12 @@
 #pragma once
 
+#include <Dab/Model.hpp>
 #include <QApplication>
 #include <QPainter>
 #include <QPalette>
 #include <QPointer>
 #include <QStyleHints>
 #include <QWidget>
-
-#include "Model.hpp"
 
 namespace dab::detail::frontend {
 

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Common.hpp"
 #include "ImproveGreedyRobot.hpp"
 
 namespace dab::detail::robot {

@@ -1,10 +1,10 @@
 #pragma once
 
+#include <Dab/Common.hpp>
 #include <algorithm>
 #include <cassert>
 #include <cstdint>
 
-#include "Common.hpp"
 #include "NearBoxes.hpp"
 #include "Square.hpp"
 
