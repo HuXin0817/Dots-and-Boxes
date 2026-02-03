@@ -15,6 +15,7 @@ add_library(autogen_lib STATIC ${AUTOGEN_CPP_FILES})
 target_include_directories(autogen_lib PRIVATE ${COMMON_INCLUDE_DIRS})
 target_compile_definitions(autogen_lib ${COMMON_COMPILE_DEFS})
 target_link_libraries(autogen_lib ${COMMON_LINK_LIBS})
+set_target_properties(autogen_lib PROPERTIES UNITY_BUILD ON)
 
 add_executable(${PROJECT_NAME} main.cpp)
 target_include_directories(${PROJECT_NAME} PRIVATE ${COMMON_INCLUDE_DIRS})
