@@ -52,7 +52,7 @@ Queue<T, Cap>::Clear() {
 template <typename T, uint32_t Cap>
 constexpr void
 Queue<T, Cap>::Append(const T item) {
-  assert(endIndex < Cap);
+  assert(EndIndex < Cap);
   Data[EndIndex++] = item;
 }
 
