@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cassert>
 #include <cstddef>
 #include <functional>
 #include <limits>
@@ -58,6 +59,7 @@ HashBoard<BoardSize>::Hash() const {
 template <int64_t BoardSize>
 bool
 HashBoard<BoardSize>::operator==(const HashBoard& other) const {
+  assert(HashValue == other.HashValue);
   return BasicBoard<BoardSize>::operator==(other);
 }
 
