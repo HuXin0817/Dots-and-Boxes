@@ -30,10 +30,6 @@ jobs:
         run: |
           cmake --build build
 
-      - name: Test build output
+      - name: Test build
         run: |
-          if [ -f build/Dots_and_Boxes ]; then
-            file build/Dots_and_Boxes
-          else
-            exit 1
-          fi
+          ./build/Dots_and_Boxes --background
