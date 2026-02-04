@@ -46,7 +46,6 @@ Config::ToString() const {
   return QJsonDocument(config).toJson(QJsonDocument::Compact);
 }
 
-template <int64_t MaxBoardSize>
 class MainWindowCreator {
   public:
   QPointer<QWidget>
@@ -58,17 +57,15 @@ class MainWindowCreator {
   CreateMainWindowImpl(const Config& config, QPointer<QWidget> parent);
 };
 
-template <int64_t MaxBoardSize>
 inline QPointer<QWidget>
-MainWindowCreator<MaxBoardSize>::CreateMainWindow(const Config& config, QPointer<QWidget> parent) {
+MainWindowCreator::CreateMainWindow(const Config& config, QPointer<QWidget> parent) {
   assert(config.BoardSize > 0 && config.BoardSize <= MaxBoardSize);
   return CreateMainWindowImpl<MaxBoardSize>(config, parent);
 }
 
-template <int64_t MaxBoardSize>
 template <int64_t BoardSize>
 QPointer<QWidget>
-MainWindowCreator<MaxBoardSize>::CreateMainWindowImpl(const Config& config, QPointer<QWidget> parent) {
+MainWindowCreator::CreateMainWindowImpl(const Config& config, QPointer<QWidget> parent) {
   if (config.BoardSize == BoardSize) {
     return new MainWindow<BoardSize>(config.Player1Type, config.Player2Type, config.BackgroundMode, parent);
   }
@@ -78,17 +75,19 @@ MainWindowCreator<MaxBoardSize>::CreateMainWindowImpl(const Config& config, QPoi
   return nullptr;
 }
 
-template <int64_t DefaultBoardSize = 6, PlayerType DefaultPlayerType = PlayerType::ParallelSearchRobot>
 class CommandParser {
-  static_assert(DefaultBoardSize <= MaxBoardSize);
-
   public:
+  CommandParser(int64_t defaultBoardSize = 6, PlayerType defaultPlayerType = PlayerType::ParallelSearchRobot);
+
   int
   Process(const QApplication& application);
 
   private:
   static constexpr size_t PlayerTypeOptionStringsSize =
       sizeof(PlayerTypeOptionStrings) / sizeof(PlayerTypeOptionStrings[0]);
+
+  int64_t DefaultBoardSize;
+  PlayerType DefaultPlayerType;
 
   QCommandLineOption
   BoardSizeOption();
@@ -102,9 +101,12 @@ class CommandParser {
   ParsePlayerType(const QString& arg);
 };
 
-template <int64_t DefaultBoardSize, PlayerType DefaultPlayerType>
+inline CommandParser::CommandParser(int64_t defaultBoardSize, PlayerType defaultPlayerType)
+    : DefaultBoardSize(defaultBoardSize), DefaultPlayerType(defaultPlayerType) {
+}
+
 inline int
-CommandParser<DefaultBoardSize, DefaultPlayerType>::Process(const QApplication& application) {
+CommandParser::Process(const QApplication& application) {
   const QCommandLineOption boardSizeOption = BoardSizeOption();
   const QCommandLineOption player1Option = PlayerTypeOption(1);
   const QCommandLineOption player2Option = PlayerTypeOption(2);
@@ -130,14 +132,13 @@ CommandParser<DefaultBoardSize, DefaultPlayerType>::Process(const QApplication& 
 
   qInfo() << Config.ToString().toLocal8Bit().constData();
 
-  QPointer<QWidget> MainWindow = MainWindowCreator<MaxBoardSize>().CreateMainWindow(Config);
+  QPointer<QWidget> MainWindow = MainWindowCreator().CreateMainWindow(Config);
   MainWindow->show();
   return application.exec();
 }
 
-template <int64_t DefaultBoardSize, PlayerType DefaultPlayerType>
 inline QCommandLineOption
-CommandParser<DefaultBoardSize, DefaultPlayerType>::BoardSizeOption() {
+CommandParser::BoardSizeOption() {
   return QCommandLineOption(
       QStringList() << "s" << "size",
       QString("Set board size ranging from [1, %2] (default: %3).").arg(MaxBoardSize).arg(DefaultBoardSize),
@@ -145,9 +146,8 @@ CommandParser<DefaultBoardSize, DefaultPlayerType>::BoardSizeOption() {
       QString::number(DefaultBoardSize));
 }
 
-template <int64_t DefaultBoardSize, PlayerType DefaultPlayerType>
 inline QCommandLineOption
-CommandParser<DefaultBoardSize, DefaultPlayerType>::PlayerTypeOption(int8_t player) {
+CommandParser::PlayerTypeOption(int8_t player) {
   QStringList accepted;
   accepted << "human" << "robot";
   for (size_t i = 1; i < PlayerTypeOptionStringsSize; ++i) {
@@ -174,15 +174,13 @@ CommandParser<DefaultBoardSize, DefaultPlayerType>::PlayerTypeOption(int8_t play
       "robot");
 }
 
-template <int64_t DefaultBoardSize, PlayerType DefaultPlayerType>
 inline QCommandLineOption
-CommandParser<DefaultBoardSize, DefaultPlayerType>::BackgroundModeOption() {
+CommandParser::BackgroundModeOption() {
   return QCommandLineOption(QStringList() << "b" << "background", "Run in background mode.");
 }
 
-template <int64_t DefaultBoardSize, PlayerType DefaultPlayerType>
 inline int64_t
-CommandParser<DefaultBoardSize, DefaultPlayerType>::ParseBoardSize(const QString& arg) {
+CommandParser::ParseBoardSize(const QString& arg) {
   bool conversionOk = false;
   const int64_t boardSize = arg.toLongLong(&conversionOk);
   if (!conversionOk || boardSize <= 0 || boardSize > MaxBoardSize) {
@@ -192,9 +190,8 @@ CommandParser<DefaultBoardSize, DefaultPlayerType>::ParseBoardSize(const QString
   return boardSize;
 }
 
-template <int64_t DefaultBoardSize, PlayerType DefaultPlayerType>
 inline PlayerType
-CommandParser<DefaultBoardSize, DefaultPlayerType>::ParsePlayerType(const QString& arg) {
+CommandParser::ParsePlayerType(const QString& arg) {
   if (arg.compare("robot", Qt::CaseInsensitive) == 0) {
     return DefaultPlayerType;
   }
