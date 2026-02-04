@@ -71,7 +71,7 @@ EdgeCanvas<BoardSize>::Color() const {
   static const QColor Player1OccupyColor = QColor(64, 64, 255, 255);
   static const QColor Player2OccupyColor = QColor(255, 64, 64, 255);
 
-  if (!BaseCanvas<BoardSize>::Owner.has_value()) {
+  if (BaseCanvas<BoardSize>::GetOwner() == Owner::None) {
     if (BaseCanvas<BoardSize>::Hovered()) {
       return BaseCanvas<BoardSize>::ThemeColor(DarkThemeHoveredColor, LightThemeHoveredColor);
     }
@@ -79,9 +79,9 @@ EdgeCanvas<BoardSize>::Color() const {
   }
 
   QColor color;
-  if (BaseCanvas<BoardSize>::Owner->IsPlayer1Turn()) {
+  if (BaseCanvas<BoardSize>::GetOwner() == Owner::Player1) {
     color = Player1OccupyColor;
-  } else if (BaseCanvas<BoardSize>::Owner->IsPlayer2Turn()) {
+  } else if (BaseCanvas<BoardSize>::GetOwner() == Owner::Player2) {
     color = Player2OccupyColor;
   }
   if (HighLight) {

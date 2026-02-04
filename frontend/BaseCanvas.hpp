@@ -10,6 +10,12 @@
 
 namespace dab::detail::frontend {
 
+enum class Owner {
+  None,
+  Player1,
+  Player2,
+};
+
 template <int64_t BoardSize>
 class BaseCanvas : public QWidget {
   public:
@@ -21,8 +27,10 @@ class BaseCanvas : public QWidget {
   ThemeColor(const QColor& DarkThemeColor, const QColor& LightThemeColor);
   bool
   Hovered() const;
-
-  std::optional<Turn> Owner;
+  Owner
+  GetOwner() const;
+  void
+  SetOwner(Turn turn);
 
   protected:
   void
@@ -31,6 +39,7 @@ class BaseCanvas : public QWidget {
   leaveEvent(QEvent* event) override;
 
   private:
+  Owner Owner = Owner::None;
   bool HoverState = false;
 };
 
@@ -48,6 +57,22 @@ template <int64_t BoardSize>
 bool
 BaseCanvas<BoardSize>::Hovered() const {
   return HoverState;
+}
+
+template <int64_t BoardSize>
+Owner
+BaseCanvas<BoardSize>::GetOwner() const {
+  return Owner;
+}
+
+template <int64_t BoardSize>
+void
+BaseCanvas<BoardSize>::SetOwner(Turn turn) {
+  if (turn.IsPlayer1Turn()) {
+    Owner = Owner::Player1;
+  } else {
+    Owner = Owner::Player2;
+  }
 }
 
 template <int64_t BoardSize>

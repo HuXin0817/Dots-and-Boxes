@@ -1,5 +1,6 @@
 #pragma once
 
+#include "BaseCanvas.hpp"
 #include "EdgeCanvas.hpp"
 
 namespace dab::detail::frontend {
@@ -43,15 +44,13 @@ BoxCanvas<BoardSize>::Color() const {
   static const QColor Player1OccupyColor = QColor(64, 64, 255, 64);
   static const QColor Player2OccupyColor = QColor(255, 64, 64, 64);
 
-  if (BaseCanvas<BoardSize>::Owner.has_value()) {
-    if (BaseCanvas<BoardSize>::Owner->IsPlayer1Turn()) {
-      return Player1OccupyColor;
-    }
-    if (BaseCanvas<BoardSize>::Owner->IsPlayer2Turn()) {
-      return Player2OccupyColor;
-    }
+  if (BaseCanvas<BoardSize>::GetOwner() == Owner::None) {
+    return QColor(0, 0, 0, 0);
+  } else if (BaseCanvas<BoardSize>::GetOwner() == Owner::Player1) {
+    return Player1OccupyColor;
+  } else {
+    return Player2OccupyColor;
   }
-  return QColor(0, 0, 0, 0);
 }
 
 }  // namespace dab::detail::frontend
