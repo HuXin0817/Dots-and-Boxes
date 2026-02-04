@@ -30,7 +30,7 @@ class BaseCanvas : public QWidget {
   Owner
   GetOwner() const;
   void
-  SetOwner(Turn turn);
+  SetOwner(Turn<BoardSize> turn);
 
   protected:
   void
@@ -67,7 +67,7 @@ BaseCanvas<BoardSize>::GetOwner() const {
 
 template <int64_t BoardSize>
 void
-BaseCanvas<BoardSize>::SetOwner(Turn turn) {
+BaseCanvas<BoardSize>::SetOwner(Turn<BoardSize> turn) {
   if (turn.IsPlayer1Turn()) {
     Owner = Owner::Player1;
   } else {

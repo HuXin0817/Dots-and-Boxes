@@ -104,7 +104,7 @@ MainWindow<BoardSize>::Run() {
   Random Random;
   while (Board.Gaming()) {
     const QTime startTime = QTime::currentTime();
-    const Turn turn = static_cast<Turn>(Board);
+    const Turn turn = static_cast<Turn<BoardSize>>(Board);
 
     if ((PlayerTypeIsRobot(Player1Type) && Board.IsPlayer1Turn())) {
       PlayerMoveEdge = Random.Choice(Robot1->BestCandidateEdges(Board));
@@ -128,8 +128,8 @@ MainWindow<BoardSize>::Run() {
     const double seconds = static_cast<double>(startTime.msecsTo(QTime::currentTime())) / 1000.0;
 
     QJsonObject playerScore;
-    playerScore.insert("Player1", Board.GetPlayer1Score());
-    playerScore.insert("Player2", Board.GetPlayer2Score());
+    playerScore.insert("Player1", Board.Player1Score());
+    playerScore.insert("Player2", Board.Player2Score());
 
     QJsonObject moveRecord;
     moveRecord.insert("Step", Board.NowStep());
@@ -144,9 +144,9 @@ MainWindow<BoardSize>::Run() {
   }
 
   QJsonObject winner;
-  if (Board.GetPlayer1Score() > Board.GetPlayer2Score()) {
+  if (Board.RelativeScore() > 0) {
     winner.insert("Winner", "Player1");
-  } else if (Board.GetPlayer2Score() > Board.GetPlayer1Score()) {
+  } else if (Board.RelativeScore() < 0) {
     winner.insert("Winner", "Player2");
   } else {
     winner.insert("Winner", "Draw");

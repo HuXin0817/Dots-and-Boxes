@@ -35,7 +35,7 @@ SimulationRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSi
       assert(board.MaxEdgeCount(edge) > 1);
       SimulationBoard.Add(edge);
     }
-    if (const Int<BoardSize> score = SimulationBoard.Score(); score > maxScore) {
+    if (const Int<BoardSize> score = SimulationBoard.RelativeScore(); score > maxScore) {
       maxScore = score;
       SearchEdges.ClearAndSet(emptyEdge);
     } else if (score == maxScore) {

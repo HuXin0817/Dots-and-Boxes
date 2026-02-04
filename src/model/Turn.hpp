@@ -1,8 +1,11 @@
 #pragma once
 
+#include "Types.hpp"
+
 namespace dab::detail::model {
 
-class Turn {
+template <int64_t BoardSize>
+class Turn : public IntWapper<BoardSize> {
   public:
   constexpr Turn();
 
@@ -16,32 +19,36 @@ class Turn {
   IsPlayer2Turn() const;
 
   private:
-  bool v;
-
-  static constexpr bool Player1 = true;
+  static constexpr Int<BoardSize> Player1Turn = 1;
+  static constexpr Int<BoardSize> Player2Turn = -Player1Turn;
 };
 
-inline constexpr Turn::Turn() : v(Player1) {
+template <int64_t BoardSize>
+constexpr Turn<BoardSize>::Turn() : IntWapper<BoardSize>(1) {
 }
 
-inline constexpr void
-Turn::Reset() {
-  v = Player1;
+template <int64_t BoardSize>
+constexpr void
+Turn<BoardSize>::Reset() {
+  IntWapper<BoardSize>::v = Player1Turn;
 }
 
-inline constexpr void
-Turn::Add() {
-  v = !v;
+template <int64_t BoardSize>
+constexpr void
+Turn<BoardSize>::Add() {
+  IntWapper<BoardSize>::v = -IntWapper<BoardSize>::v;
 }
 
-inline constexpr bool
-Turn::IsPlayer1Turn() const {
-  return v;
+template <int64_t BoardSize>
+constexpr bool
+Turn<BoardSize>::IsPlayer1Turn() const {
+  return IntWapper<BoardSize>::v == Player1Turn;
 }
 
-inline constexpr bool
-Turn::IsPlayer2Turn() const {
-  return !v;
+template <int64_t BoardSize>
+constexpr bool
+Turn<BoardSize>::IsPlayer2Turn() const {
+  return IntWapper<BoardSize>::v == Player2Turn;
 }
 
 }  // namespace dab::detail::model

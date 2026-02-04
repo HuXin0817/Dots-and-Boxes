@@ -2,7 +2,6 @@
 
 #include "../../src/model/Edge.hpp"
 #include "../../src/model/EdgeCounter.hpp"
-#include "../../src/model/GameScoreMap.hpp"
 #include "../../src/model/NearBoxes.hpp"
 #include "../../src/model/NearEdges.hpp"
 #include "../../src/model/SearchScoreMap.hpp"
@@ -16,7 +15,6 @@ using detail::model::Box;
 using detail::model::Dot;
 using detail::model::Edge;
 using detail::model::EdgeCounter;
-using detail::model::GameScoreMap;
 using detail::model::Int;
 using detail::model::InvalidEdge;
 using detail::model::NearBoxes;

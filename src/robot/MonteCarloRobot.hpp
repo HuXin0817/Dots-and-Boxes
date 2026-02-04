@@ -41,7 +41,7 @@ MonteCarloRobot<BoardSize, SearchTime>::BestCandidateEdges(const ScoreCountableB
     while (SimulationBoard.Gaming()) {
       SimulationBoard.Add(Random.Choice(SubRobot.BestCandidateEdges(SimulationBoard)));
     }
-    SearchResult.Add(edge, SimulationBoard.Score());
+    SearchResult.Add(edge, SimulationBoard.RelativeScore());
   }
 
   return SearchResult.Export();
