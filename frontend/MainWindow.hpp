@@ -44,7 +44,7 @@ class MainWindow final : public BaseCanvas<BoardSize> {
   QScopedPointer<Robot<BoardSize>> Robot2;
   Edge<BoardSize> PlayerMoveEdge;
   Edge<BoardSize> LastEdge;
-  ScoreCountableBoard<BoardSize> Board;
+  AbsoluteScoreBoard<BoardSize> Board;
   QList<QPointer<BoxCanvas<BoardSize>>> BoxCanvases;
   QList<QPointer<DotCanvas<BoardSize>>> DotCanvases;
   QList<QPointer<EdgeCanvas<BoardSize>>> EdgeCanvases;

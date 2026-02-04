@@ -121,7 +121,7 @@ Dots-and-Boxes/
 │   ├── board/          # Board implementations
 │   │   ├── BasicBoard.hpp
 │   │   ├── EdgeCountableBoard.hpp
-│   │   ├── ScoreCountableBoard.hpp
+│   │   ├── RelativeScoreBoard.hpp
 │   │   └── ScoreableEdgeBoard.hpp
 │   ├── common/         # Utility classes
 │   │   ├── Array.hpp

@@ -10,17 +10,17 @@ class SimulationRobot final : public Robot<BoardSize> {
   SimulationRobot() = default;
 
   Span<Edge<BoardSize>>
-  BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) override;
+  BestCandidateEdges(const RelativeScoreBoard<BoardSize>& board) override;
 
   private:
   ImproveGreedyRobot<BoardSize> SubRobot;
-  ScoreCountableBoard<BoardSize> SimulationBoard;
+  RelativeScoreBoard<BoardSize> SimulationBoard;
   List<Edge<BoardSize>, Edge<BoardSize>::Max> SearchEdges;
 };
 
 template <int64_t BoardSize>
 Span<Edge<BoardSize>>
-SimulationRobot<BoardSize>::BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) {
+SimulationRobot<BoardSize>::BestCandidateEdges(const RelativeScoreBoard<BoardSize>& board) {
   if (Span<Edge<BoardSize>> edges = SubRobot.BestCandidateEdges(board); SubRobot.EnemyUnscoreable()) {
     return edges;
   }

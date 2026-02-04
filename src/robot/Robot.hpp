@@ -10,7 +10,7 @@ class Robot {
   virtual ~Robot() = default;
 
   virtual Span<Edge<BoardSize>>
-  BestCandidateEdges(const ScoreCountableBoard<BoardSize>& board) = 0;
+  BestCandidateEdges(const RelativeScoreBoard<BoardSize>& board) = 0;
 };
 
 }  // namespace dab::detail::robot
