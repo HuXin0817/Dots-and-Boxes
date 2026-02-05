@@ -1,6 +1,6 @@
 #pragma once
 
-#include <tbb/parallel_for.h>
+#include <tbb/parallel_for_each.h>
 
 #include "MonteCarloRobot.hpp"
 
@@ -31,10 +31,8 @@ ParallelSearchRobot<BoardSize, SubRobotSearchTime, SubRobotNumber>::BestCandidat
 
   SearchResult.Reset();
 
-  tbb::parallel_for(tbb::blocked_range<uint32_t>(0, SubRobots.Size()), [&](const tbb::blocked_range<uint32_t>& r) {
-    for (uint32_t i = r.begin(); i != r.end(); ++i) {
-      SubRobots[i].BestCandidateEdges(board);
-    }
+  tbb::parallel_for_each(SubRobots, [&](MonteCarloRobot<BoardSize, SubRobotSearchTime>& robot) -> void {
+    robot.BestCandidateEdges(board);
   });
 
   for (const MonteCarloRobot<BoardSize, SubRobotSearchTime>& model : SubRobots) {
