@@ -84,7 +84,7 @@ private:
   HashMap Map;
   ListNode Head;
   ListNode Tail;
-  tbb::spin_mutex ListMutex;
+  tbb::speculative_spin_mutex ListMutex;
 };
 
 template <typename TKey, typename TValue, uint32_t Cap>
