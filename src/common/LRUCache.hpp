@@ -7,7 +7,7 @@
 
 namespace dab::detail::common {
 
-template <class TKey, class TValue, uint32_t Cap, class THash = tbb::tbb_hash_compare<TKey>>
+template <typename TKey, typename TValue, uint32_t Cap, typename THash = tbb::tbb_hash_compare<TKey>>
 class LRUCache {
   struct ListNode {
     ListNode();
@@ -87,74 +87,74 @@ private:
   tbb::spin_mutex ListMutex;
 };
 
-template <class TKey, class TValue, uint32_t Cap, class THash>
+template <typename TKey, typename TValue, uint32_t Cap, typename THash>
 typename LRUCache<TKey, TValue, Cap, THash>::ListNode* const LRUCache<TKey, TValue, Cap, THash>::OutOfListMarker =
     reinterpret_cast<typename LRUCache<TKey, TValue, Cap, THash>::ListNode*>(-1);
 
-template <class TKey, class TValue, uint32_t Cap, class THash>
+template <typename TKey, typename TValue, uint32_t Cap, typename THash>
 LRUCache<TKey, TValue, Cap, THash>::ListNode::ListNode() : Prev(OutOfListMarker), Next(nullptr) {
 }
 
-template <class TKey, class TValue, uint32_t Cap, class THash>
+template <typename TKey, typename TValue, uint32_t Cap, typename THash>
 LRUCache<TKey, TValue, Cap, THash>::ListNode::ListNode(const TKey& key)
     : Key(key), Prev(OutOfListMarker), Next(nullptr) {
 }
 
-template <class TKey, class TValue, uint32_t Cap, class THash>
+template <typename TKey, typename TValue, uint32_t Cap, typename THash>
 bool
 LRUCache<TKey, TValue, Cap, THash>::ListNode::IsInList() const {
   return Prev != OutOfListMarker;
 }
 
-template <class TKey, class TValue, uint32_t Cap, class THash>
+template <typename TKey, typename TValue, uint32_t Cap, typename THash>
 LRUCache<TKey, TValue, Cap, THash>::HashMapValue::HashMapValue() : Node(nullptr) {
 }
 
-template <class TKey, class TValue, uint32_t Cap, class THash>
+template <typename TKey, typename TValue, uint32_t Cap, typename THash>
 LRUCache<TKey, TValue, Cap, THash>::HashMapValue::HashMapValue(const TValue& value, ListNode* node)
     : Value(value), Node(node) {
 }
 
-template <class TKey, class TValue, uint32_t Cap, class THash>
+template <typename TKey, typename TValue, uint32_t Cap, typename THash>
 LRUCache<TKey, TValue, Cap, THash>::ConstAccessor::ConstAccessor() = default;
 
-template <class TKey, class TValue, uint32_t Cap, class THash>
+template <typename TKey, typename TValue, uint32_t Cap, typename THash>
 const TValue&
 LRUCache<TKey, TValue, Cap, THash>::ConstAccessor::operator*() const {
   return *Get();
 }
 
-template <class TKey, class TValue, uint32_t Cap, class THash>
+template <typename TKey, typename TValue, uint32_t Cap, typename THash>
 const TValue*
 LRUCache<TKey, TValue, Cap, THash>::ConstAccessor::operator->() const {
   return Get();
 }
 
-template <class TKey, class TValue, uint32_t Cap, class THash>
+template <typename TKey, typename TValue, uint32_t Cap, typename THash>
 const TValue*
 LRUCache<TKey, TValue, Cap, THash>::ConstAccessor::Get() const {
   return &HashAccessor->second.Value;
 }
 
-template <class TKey, class TValue, uint32_t Cap, class THash>
+template <typename TKey, typename TValue, uint32_t Cap, typename THash>
 bool
 LRUCache<TKey, TValue, Cap, THash>::ConstAccessor::Empty() const {
   return HashAccessor.empty();
 }
 
-template <class TKey, class TValue, uint32_t Cap, class THash>
+template <typename TKey, typename TValue, uint32_t Cap, typename THash>
 LRUCache<TKey, TValue, Cap, THash>::LRUCache() : Length(0), Map(Cap) {
   Head.Prev = nullptr;
   Head.Next = &Tail;
   Tail.Prev = &Head;
 }
 
-template <class TKey, class TValue, uint32_t Cap, class THash>
+template <typename TKey, typename TValue, uint32_t Cap, typename THash>
 LRUCache<TKey, TValue, Cap, THash>::~LRUCache() {
   Clear();
 }
 
-template <class TKey, class TValue, uint32_t Cap, class THash>
+template <typename TKey, typename TValue, uint32_t Cap, typename THash>
 bool
 LRUCache<TKey, TValue, Cap, THash>::Find(ConstAccessor& ac, const TKey& key) {
   HashMapConstAccessor& hashAccessor = ac.HashAccessor;
@@ -174,7 +174,7 @@ LRUCache<TKey, TValue, Cap, THash>::Find(ConstAccessor& ac, const TKey& key) {
   return true;
 }
 
-template <class TKey, class TValue, uint32_t Cap, class THash>
+template <typename TKey, typename TValue, uint32_t Cap, typename THash>
 bool
 LRUCache<TKey, TValue, Cap, THash>::Insert(const TKey& key, const TValue& value) {
   ListNode* node = new ListNode(key);
@@ -208,7 +208,7 @@ LRUCache<TKey, TValue, Cap, THash>::Insert(const TKey& key, const TValue& value)
   return true;
 }
 
-template <class TKey, class TValue, uint32_t Cap, class THash>
+template <typename TKey, typename TValue, uint32_t Cap, typename THash>
 void
 LRUCache<TKey, TValue, Cap, THash>::Clear() {
   Map.clear();
@@ -224,13 +224,13 @@ LRUCache<TKey, TValue, Cap, THash>::Clear() {
   Length = 0;
 }
 
-template <class TKey, class TValue, uint32_t Cap, class THash>
+template <typename TKey, typename TValue, uint32_t Cap, typename THash>
 uint32_t
 LRUCache<TKey, TValue, Cap, THash>::Size() const {
   return Length.load();
 }
 
-template <class TKey, class TValue, uint32_t Cap, class THash>
+template <typename TKey, typename TValue, uint32_t Cap, typename THash>
 void
 LRUCache<TKey, TValue, Cap, THash>::Delink(ListNode* node) {
   ListNode* prev = node->Prev;
@@ -240,7 +240,7 @@ LRUCache<TKey, TValue, Cap, THash>::Delink(ListNode* node) {
   node->Prev = OutOfListMarker;
 }
 
-template <class TKey, class TValue, uint32_t Cap, class THash>
+template <typename TKey, typename TValue, uint32_t Cap, typename THash>
 void
 LRUCache<TKey, TValue, Cap, THash>::PushFront(ListNode* node) {
   ListNode* oldRealHead = Head.Next;
@@ -250,7 +250,7 @@ LRUCache<TKey, TValue, Cap, THash>::PushFront(ListNode* node) {
   Head.Next = node;
 }
 
-template <class TKey, class TValue, uint32_t Cap, class THash>
+template <typename TKey, typename TValue, uint32_t Cap, typename THash>
 void
 LRUCache<TKey, TValue, Cap, THash>::Evict() {
   std::unique_lock<tbb::spin_mutex> lock(ListMutex);
