@@ -12,8 +12,7 @@ class Config {
   public:
   Config(int64_t boardSize, PlayerType player1Type, PlayerType player2Type, bool backgroundMode);
 
-  QString
-  ToString() const;
+  QString ToString() const;
 
   int64_t BoardSize;
   PlayerType Player1Type;
@@ -22,11 +21,9 @@ class Config {
 };
 
 inline Config::Config(int64_t boardSize, PlayerType player1Type, PlayerType player2Type, bool backgroundMode)
-    : BoardSize(boardSize), Player1Type(player1Type), Player2Type(player2Type), BackgroundMode(backgroundMode) {
-}
+    : BoardSize(boardSize), Player1Type(player1Type), Player2Type(player2Type), BackgroundMode(backgroundMode) {}
 
-inline QString
-Config::ToString() const {
+inline QString Config::ToString() const {
   QJsonObject configData;
   configData.insert("BoardSize", BoardSize);
   configData.insert("Player1Type", PlayerTypeString[static_cast<int>(Player1Type)]);

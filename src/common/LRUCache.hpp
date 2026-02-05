@@ -17,8 +17,7 @@ class LRUCache {
     ListNode* Prev;
     ListNode* Next;
 
-    bool
-    IsInList() const;
+    bool IsInList() const;
   };
 
   static ListNode* const OutOfListMarker;
@@ -40,14 +39,10 @@ class LRUCache {
   struct ConstAccessor {
     ConstAccessor();
 
-    const TValue&
-    operator*() const;
-    const TValue*
-    operator->() const;
-    const TValue*
-    Get() const;
-    bool
-    Empty() const;
+    const TValue& operator*() const;
+    const TValue* operator->() const;
+    const TValue* Get() const;
+    bool Empty() const;
 
 private:
     friend class LRUCache;
@@ -57,28 +52,20 @@ private:
   LRUCache();
 
   LRUCache(const LRUCache& other) = delete;
-  LRUCache&
-  operator=(const LRUCache&) = delete;
+  LRUCache& operator=(const LRUCache&) = delete;
 
   ~LRUCache();
 
-  bool
-  Find(ConstAccessor& ac, const TKey& key);
-  bool
-  Insert(const TKey& key, const TValue& value);
-  void
-  Clear();
+  bool Find(ConstAccessor& ac, const TKey& key);
+  bool Insert(const TKey& key, const TValue& value);
+  void Clear();
 
-  uint32_t
-  Size() const;
+  uint32_t Size() const;
 
   private:
-  void
-  Delink(ListNode* node);
-  void
-  PushFront(ListNode* node);
-  void
-  Evict();
+  void Delink(ListNode* node);
+  void PushFront(ListNode* node);
+  void Evict();
 
   std::atomic<uint32_t> Length;
   HashMap Map;
@@ -92,52 +79,43 @@ typename LRUCache<TKey, TValue, Cap>::ListNode* const LRUCache<TKey, TValue, Cap
     reinterpret_cast<typename LRUCache<TKey, TValue, Cap>::ListNode*>(-1);
 
 template <typename TKey, typename TValue, uint32_t Cap>
-LRUCache<TKey, TValue, Cap>::ListNode::ListNode() : Prev(OutOfListMarker), Next(nullptr) {
-}
+LRUCache<TKey, TValue, Cap>::ListNode::ListNode() : Prev(OutOfListMarker), Next(nullptr) {}
 
 template <typename TKey, typename TValue, uint32_t Cap>
-LRUCache<TKey, TValue, Cap>::ListNode::ListNode(const TKey& key) : Key(key), Prev(OutOfListMarker), Next(nullptr) {
-}
+LRUCache<TKey, TValue, Cap>::ListNode::ListNode(const TKey& key) : Key(key), Prev(OutOfListMarker), Next(nullptr) {}
 
 template <typename TKey, typename TValue, uint32_t Cap>
-bool
-LRUCache<TKey, TValue, Cap>::ListNode::IsInList() const {
+bool LRUCache<TKey, TValue, Cap>::ListNode::IsInList() const {
   return Prev != OutOfListMarker;
 }
 
 template <typename TKey, typename TValue, uint32_t Cap>
-LRUCache<TKey, TValue, Cap>::HashMapValue::HashMapValue() : Node(nullptr) {
-}
+LRUCache<TKey, TValue, Cap>::HashMapValue::HashMapValue() : Node(nullptr) {}
 
 template <typename TKey, typename TValue, uint32_t Cap>
 LRUCache<TKey, TValue, Cap>::HashMapValue::HashMapValue(const TValue& value, ListNode* node)
-    : Value(value), Node(node) {
-}
+    : Value(value), Node(node) {}
 
 template <typename TKey, typename TValue, uint32_t Cap>
 LRUCache<TKey, TValue, Cap>::ConstAccessor::ConstAccessor() = default;
 
 template <typename TKey, typename TValue, uint32_t Cap>
-const TValue&
-LRUCache<TKey, TValue, Cap>::ConstAccessor::operator*() const {
+const TValue& LRUCache<TKey, TValue, Cap>::ConstAccessor::operator*() const {
   return *Get();
 }
 
 template <typename TKey, typename TValue, uint32_t Cap>
-const TValue*
-LRUCache<TKey, TValue, Cap>::ConstAccessor::operator->() const {
+const TValue* LRUCache<TKey, TValue, Cap>::ConstAccessor::operator->() const {
   return Get();
 }
 
 template <typename TKey, typename TValue, uint32_t Cap>
-const TValue*
-LRUCache<TKey, TValue, Cap>::ConstAccessor::Get() const {
+const TValue* LRUCache<TKey, TValue, Cap>::ConstAccessor::Get() const {
   return &HashAccessor->second.Value;
 }
 
 template <typename TKey, typename TValue, uint32_t Cap>
-bool
-LRUCache<TKey, TValue, Cap>::ConstAccessor::Empty() const {
+bool LRUCache<TKey, TValue, Cap>::ConstAccessor::Empty() const {
   return HashAccessor.empty();
 }
 
@@ -154,8 +132,7 @@ LRUCache<TKey, TValue, Cap>::~LRUCache() {
 }
 
 template <typename TKey, typename TValue, uint32_t Cap>
-bool
-LRUCache<TKey, TValue, Cap>::Find(ConstAccessor& ac, const TKey& key) {
+bool LRUCache<TKey, TValue, Cap>::Find(ConstAccessor& ac, const TKey& key) {
   HashMapConstAccessor& hashAccessor = ac.HashAccessor;
   if (!Map.find(hashAccessor, key)) {
     return false;
@@ -174,8 +151,7 @@ LRUCache<TKey, TValue, Cap>::Find(ConstAccessor& ac, const TKey& key) {
 }
 
 template <typename TKey, typename TValue, uint32_t Cap>
-bool
-LRUCache<TKey, TValue, Cap>::Insert(const TKey& key, const TValue& value) {
+bool LRUCache<TKey, TValue, Cap>::Insert(const TKey& key, const TValue& value) {
   ListNode* node = new ListNode(key);
   HashMapAccessor hashAccessor;
   HashMapValuePair hashMapValue(key, HashMapValue(value, node));
@@ -208,8 +184,7 @@ LRUCache<TKey, TValue, Cap>::Insert(const TKey& key, const TValue& value) {
 }
 
 template <typename TKey, typename TValue, uint32_t Cap>
-void
-LRUCache<TKey, TValue, Cap>::Clear() {
+void LRUCache<TKey, TValue, Cap>::Clear() {
   Map.clear();
   ListNode* node = Head.Next;
   ListNode* next;
@@ -224,14 +199,12 @@ LRUCache<TKey, TValue, Cap>::Clear() {
 }
 
 template <typename TKey, typename TValue, uint32_t Cap>
-uint32_t
-LRUCache<TKey, TValue, Cap>::Size() const {
+uint32_t LRUCache<TKey, TValue, Cap>::Size() const {
   return Length.load();
 }
 
 template <typename TKey, typename TValue, uint32_t Cap>
-void
-LRUCache<TKey, TValue, Cap>::Delink(ListNode* node) {
+void LRUCache<TKey, TValue, Cap>::Delink(ListNode* node) {
   ListNode* prev = node->Prev;
   ListNode* next = node->Next;
   prev->Next = next;
@@ -240,8 +213,7 @@ LRUCache<TKey, TValue, Cap>::Delink(ListNode* node) {
 }
 
 template <typename TKey, typename TValue, uint32_t Cap>
-void
-LRUCache<TKey, TValue, Cap>::PushFront(ListNode* node) {
+void LRUCache<TKey, TValue, Cap>::PushFront(ListNode* node) {
   ListNode* oldRealHead = Head.Next;
   node->Prev = &Head;
   node->Next = oldRealHead;
@@ -250,8 +222,7 @@ LRUCache<TKey, TValue, Cap>::PushFront(ListNode* node) {
 }
 
 template <typename TKey, typename TValue, uint32_t Cap>
-void
-LRUCache<TKey, TValue, Cap>::Evict() {
+void LRUCache<TKey, TValue, Cap>::Evict() {
   std::unique_lock<tbb::spin_mutex> lock(ListMutex);
   ListNode* moribund = Tail.Prev;
   if (moribund == &Head) {

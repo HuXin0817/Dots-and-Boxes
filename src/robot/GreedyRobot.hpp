@@ -9,14 +9,10 @@ class GreedyRobot : public Robot<BoardSize> {
   public:
   GreedyRobot() = default;
 
-  Span<Edge<BoardSize>>
-  BestCandidateEdges(const RelativeScoreBoard<BoardSize>& board) override;
-  bool
-  EnemyUnscoreable() const;
-  bool
-  Scoreable() const;
-  Array<Edge<BoardSize>, Edge<BoardSize>::Max>&
-  GetEdgeBuffer();
+  Span<Edge<BoardSize>> BestCandidateEdges(const RelativeScoreBoard<BoardSize>& board) override;
+  bool EnemyUnscoreable() const;
+  bool Scoreable() const;
+  Array<Edge<BoardSize>, Edge<BoardSize>::Max>& GetEdgeBuffer();
 
   private:
   Int<BoardSize> EnemyUnscoreableIndex;
@@ -25,8 +21,7 @@ class GreedyRobot : public Robot<BoardSize> {
 };
 
 template <int64_t BoardSize>
-Span<Edge<BoardSize>>
-GreedyRobot<BoardSize>::BestCandidateEdges(const RelativeScoreBoard<BoardSize>& board) {
+Span<Edge<BoardSize>> GreedyRobot<BoardSize>::BestCandidateEdges(const RelativeScoreBoard<BoardSize>& board) {
   ScoreableIndex = 0;
   EnemyUnscoreableIndex = Edge<BoardSize>::Max;
 
@@ -51,20 +46,17 @@ GreedyRobot<BoardSize>::BestCandidateEdges(const RelativeScoreBoard<BoardSize>& 
 }
 
 template <int64_t BoardSize>
-bool
-GreedyRobot<BoardSize>::EnemyUnscoreable() const {
+bool GreedyRobot<BoardSize>::EnemyUnscoreable() const {
   return EnemyUnscoreableIndex < Edge<BoardSize>::Max;
 }
 
 template <int64_t BoardSize>
-bool
-GreedyRobot<BoardSize>::Scoreable() const {
+bool GreedyRobot<BoardSize>::Scoreable() const {
   return ScoreableIndex > 0;
 }
 
 template <int64_t BoardSize>
-Array<Edge<BoardSize>, Edge<BoardSize>::Max>&
-GreedyRobot<BoardSize>::GetEdgeBuffer() {
+Array<Edge<BoardSize>, Edge<BoardSize>::Max>& GreedyRobot<BoardSize>::GetEdgeBuffer() {
   return Edges;
 }
 

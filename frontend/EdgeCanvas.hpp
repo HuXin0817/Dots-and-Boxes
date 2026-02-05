@@ -12,21 +12,17 @@ class EdgeCanvas final : public BaseCanvas<BoardSize> {
 
   explicit EdgeCanvas(const bool rotate, const std::function<void()>& callBack, QPointer<QWidget> parent);
 
-  void
-  SetHighLight(const bool highLight);
+  void SetHighLight(const bool highLight);
 
   protected:
-  void
-  mousePressEvent(QMouseEvent* event) override;
-  void
-  paintEvent(QPaintEvent* event) override;
+  void mousePressEvent(QMouseEvent* event) override;
+  void paintEvent(QPaintEvent* event) override;
 
   private:
   bool HighLight = true;
   const std::function<void()> CallBack;
 
-  QColor
-  Color() const;
+  QColor Color() const;
 };
 
 template <int64_t BoardSize>
@@ -36,22 +32,19 @@ EdgeCanvas<BoardSize>::EdgeCanvas(const bool rotate, const std::function<void()>
 }
 
 template <int64_t BoardSize>
-void
-EdgeCanvas<BoardSize>::SetHighLight(const bool highLight) {
+void EdgeCanvas<BoardSize>::SetHighLight(const bool highLight) {
   HighLight = highLight;
 }
 
 template <int64_t BoardSize>
-void
-EdgeCanvas<BoardSize>::mousePressEvent(QMouseEvent* event) {
+void EdgeCanvas<BoardSize>::mousePressEvent(QMouseEvent* event) {
   QWidget::mousePressEvent(event);
 
   CallBack();
 }
 
 template <int64_t BoardSize>
-void
-EdgeCanvas<BoardSize>::paintEvent(QPaintEvent* event) {
+void EdgeCanvas<BoardSize>::paintEvent(QPaintEvent* event) {
   QWidget::paintEvent(event);
 
   QPainter painter(this);
@@ -62,8 +55,7 @@ EdgeCanvas<BoardSize>::paintEvent(QPaintEvent* event) {
 }
 
 template <int64_t BoardSize>
-QColor
-EdgeCanvas<BoardSize>::Color() const {
+QColor EdgeCanvas<BoardSize>::Color() const {
   static const QColor DarkThemeColor = QColor(65, 65, 65, 255);
   static const QColor LightThemeColor = QColor(217, 217, 217, 255);
   static const QColor DarkThemeHoveredColor = QColor(90, 90, 90, 255);

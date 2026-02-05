@@ -12,12 +12,10 @@ class DotCanvas final : public BaseCanvas<BoardSize> {
   explicit DotCanvas(QPointer<QWidget> parent);
 
   protected:
-  void
-  paintEvent(QPaintEvent* event) override;
+  void paintEvent(QPaintEvent* event) override;
 
   private:
-  QColor
-  Color() const;
+  QColor Color() const;
 };
 
 template <int64_t BoardSize>
@@ -26,8 +24,7 @@ DotCanvas<BoardSize>::DotCanvas(QPointer<QWidget> parent) : BaseCanvas<BoardSize
 }
 
 template <int64_t BoardSize>
-void
-DotCanvas<BoardSize>::paintEvent(QPaintEvent* event) {
+void DotCanvas<BoardSize>::paintEvent(QPaintEvent* event) {
   QWidget::paintEvent(event);
 
   QPainter painter(this);
@@ -41,8 +38,7 @@ DotCanvas<BoardSize>::paintEvent(QPaintEvent* event) {
 }
 
 template <int64_t BoardSize>
-QColor
-DotCanvas<BoardSize>::Color() const {
+QColor DotCanvas<BoardSize>::Color() const {
   static const QColor DarkThemeColor = QColor(202, 202, 202, 255);
   static const QColor LightThemeColor = QColor(255, 255, 255, 255);
 

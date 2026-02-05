@@ -13,8 +13,7 @@ class ParallelSearchRobot final : public Robot<BoardSize> {
   public:
   ParallelSearchRobot() = default;
 
-  Span<Edge<BoardSize>>
-  BestCandidateEdges(const RelativeScoreBoard<BoardSize>& board) override;
+  Span<Edge<BoardSize>> BestCandidateEdges(const RelativeScoreBoard<BoardSize>& board) override;
 
   private:
   Array<MonteCarloRobot<BoardSize>, SubRobotNumber> SubRobots;
@@ -22,17 +21,14 @@ class ParallelSearchRobot final : public Robot<BoardSize> {
 };
 
 template <int64_t BoardSize>
-Span<Edge<BoardSize>>
-ParallelSearchRobot<BoardSize>::BestCandidateEdges(const RelativeScoreBoard<BoardSize>& board) {
+Span<Edge<BoardSize>> ParallelSearchRobot<BoardSize>::BestCandidateEdges(const RelativeScoreBoard<BoardSize>& board) {
   if (Span<Edge<BoardSize>> edges; SubRobots.Front().CanEarlyExit(board, edges)) {
     return edges;
   }
 
   SearchResult.Reset();
-
   tbb::parallel_for_each(SubRobots,
                          [&](MonteCarloRobot<BoardSize>& robot) -> void { robot.BestCandidateEdges(board); });
-
   for (const MonteCarloRobot<BoardSize>& model : SubRobots) {
     SearchResult.Add(model.GetSearchResult());
   }

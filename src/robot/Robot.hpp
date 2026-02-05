@@ -9,8 +9,7 @@ class Robot {
   public:
   virtual ~Robot() = default;
 
-  virtual Span<Edge<BoardSize>>
-  BestCandidateEdges(const RelativeScoreBoard<BoardSize>& board) = 0;
+  virtual Span<Edge<BoardSize>> BestCandidateEdges(const RelativeScoreBoard<BoardSize>& board) = 0;
 };
 
 }  // namespace dab::detail::robot
