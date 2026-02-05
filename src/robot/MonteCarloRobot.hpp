@@ -22,7 +22,7 @@ class MonteCarloRobot final : public Robot<BoardSize> {
   GetSearchResult() const;
 
   private:
-  CachedRobot<BoardSize, SimulationRobot<BoardSize>, SearchTime> SubRobot;
+  CachedRobot<BoardSize, SimulationRobot<BoardSize>> SubRobot;
   RelativeScoreBoard<BoardSize> SimulationBoard;
   SearchScoreMap<BoardSize> SearchResult;
 };

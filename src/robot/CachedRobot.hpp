@@ -2,13 +2,16 @@
 
 #include <Dab/Board.hpp>
 #include <cstddef>
+#include <cstdint>
 
 #include "Robot.hpp"
 
 namespace dab::detail::robot {
 
-template <int64_t BoardSize, typename SubRobotType, uint32_t Cap>
+template <int64_t BoardSize, typename SubRobotType>
 class CachedRobot : public Robot<BoardSize> {
+  static constexpr uint32_t Cap = Edge<BoardSize>::Max << 8;
+
   public:
   CachedRobot() = default;
 
@@ -21,9 +24,9 @@ class CachedRobot : public Robot<BoardSize> {
   static inline LRUCache<HashBoard<BoardSize>, Vector<Edge<BoardSize>>, Cap> GlobalCache;
 };
 
-template <int64_t BoardSize, typename SubRobotType, uint32_t Cap>
+template <int64_t BoardSize, typename SubRobotType>
 Span<Edge<BoardSize>>
-CachedRobot<BoardSize, SubRobotType, Cap>::BestCandidateEdges(const RelativeScoreBoard<BoardSize>& board) {
+CachedRobot<BoardSize, SubRobotType>::BestCandidateEdges(const RelativeScoreBoard<BoardSize>& board) {
   if (typename dab::LRUCache<HashBoard<BoardSize>, Vector<Edge<BoardSize>>, Cap>::ConstAccessor ac;
       GlobalCache.Find(ac, board)) {
     return Span(ac->begin(), ac->end());
