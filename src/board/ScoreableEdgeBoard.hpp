@@ -11,9 +11,12 @@ class ScoreableEdgeBoard : public EdgeCountableBoard<BoardSize> {
   public:
   ScoreableEdgeBoard();
 
-  void Reset(const EdgeCountableBoard<BoardSize>& newBoard = EdgeCountableBoard<BoardSize>());
-  Int<BoardSize> Add(const Edge<BoardSize> edge);
-  Int<BoardSize> MaxObtainableScore(const Int<BoardSize> minScore);
+  void
+  Reset(const EdgeCountableBoard<BoardSize>& newBoard = EdgeCountableBoard<BoardSize>());
+  Int<BoardSize>
+  Add(const Edge<BoardSize> edge);
+  Int<BoardSize>
+  MaxObtainableScore(const Int<BoardSize> minScore);
 
   private:
   Queue<Edge<BoardSize>, Edge<BoardSize>::Max> ScoreableEdges;
@@ -25,13 +28,15 @@ ScoreableEdgeBoard<BoardSize>::ScoreableEdgeBoard() {
 }
 
 template <int64_t BoardSize>
-void ScoreableEdgeBoard<BoardSize>::Reset(const EdgeCountableBoard<BoardSize>& newBoard) {
+void
+ScoreableEdgeBoard<BoardSize>::Reset(const EdgeCountableBoard<BoardSize>& newBoard) {
   EdgeCountableBoard<BoardSize>::operator=(newBoard);
   ScoreableEdges.Clear();
 }
 
 template <int64_t BoardSize>
-Int<BoardSize> ScoreableEdgeBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
+Int<BoardSize>
+ScoreableEdgeBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
   const Int<BoardSize> score = EdgeCountableBoard<BoardSize>::Add(edge);
   for (const Box<BoardSize> box : NearBoxes(edge)) {
     if (EdgeCountableBoard<BoardSize>::EdgeCount(box) == 3) {
@@ -42,7 +47,8 @@ Int<BoardSize> ScoreableEdgeBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
 }
 
 template <int64_t BoardSize>
-Int<BoardSize> ScoreableEdgeBoard<BoardSize>::MaxObtainableScore(const Int<BoardSize> minScore) {
+Int<BoardSize>
+ScoreableEdgeBoard<BoardSize>::MaxObtainableScore(const Int<BoardSize> minScore) {
   Int<BoardSize> score = 0;
   while (EdgeCountableBoard<BoardSize>::Gaming()) {
     if (ScoreableEdges.Empty()) {

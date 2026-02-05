@@ -9,12 +9,18 @@ class Vector : public Iterable<Vector<T>> {
   public:
   constexpr Vector(T* begin, T* end);
   constexpr Vector(const Vector& other);
-  constexpr Vector& operator=(const Vector& other);
-  constexpr uint32_t Size() const;
-  constexpr T* begin();
-  constexpr const T* begin() const;
-  constexpr T* end();
-  constexpr const T* end() const;
+  constexpr Vector&
+  operator=(const Vector& other);
+  constexpr uint32_t
+  Size() const;
+  constexpr T*
+  begin();
+  constexpr const T*
+  begin() const;
+  constexpr T*
+  end();
+  constexpr const T*
+  end() const;
   ~Vector();
 
   private:
@@ -37,7 +43,8 @@ constexpr Vector<T>::Vector(const Vector& other) : Length(other.Length), Data(ne
 }
 
 template <typename T>
-constexpr Vector<T>& Vector<T>::operator=(const Vector& other) {
+constexpr Vector<T>&
+Vector<T>::operator=(const Vector& other) {
   if (this != &other) {
     delete[] Data;
     Length = other.Length;
@@ -50,27 +57,32 @@ constexpr Vector<T>& Vector<T>::operator=(const Vector& other) {
 }
 
 template <typename T>
-constexpr uint32_t Vector<T>::Size() const {
+constexpr uint32_t
+Vector<T>::Size() const {
   return Length;
 }
 
 template <typename T>
-constexpr T* Vector<T>::begin() {
+constexpr T*
+Vector<T>::begin() {
   return Data;
 }
 
 template <typename T>
-constexpr const T* Vector<T>::begin() const {
+constexpr const T*
+Vector<T>::begin() const {
   return Data;
 }
 
 template <typename T>
-constexpr T* Vector<T>::end() {
+constexpr T*
+Vector<T>::end() {
   return Data + Length;
 }
 
 template <typename T>
-constexpr const T* Vector<T>::end() const {
+constexpr const T*
+Vector<T>::end() const {
   return Data + Length;
 }
 

@@ -9,14 +9,16 @@ class ImproveGreedyRobot final : public GreedyRobot<BoardSize> {
   public:
   ImproveGreedyRobot() = default;
 
-  Span<Edge<BoardSize>> BestCandidateEdges(const RelativeScoreBoard<BoardSize>& board) override;
+  Span<Edge<BoardSize>>
+  BestCandidateEdges(const RelativeScoreBoard<BoardSize>& board) override;
 
   private:
   ScoreableEdgeBoard<BoardSize> SimulationBoard;
 };
 
 template <int64_t BoardSize>
-Span<Edge<BoardSize>> ImproveGreedyRobot<BoardSize>::BestCandidateEdges(const RelativeScoreBoard<BoardSize>& board) {
+Span<Edge<BoardSize>>
+ImproveGreedyRobot<BoardSize>::BestCandidateEdges(const RelativeScoreBoard<BoardSize>& board) {
   if (Span<Edge<BoardSize>> edges = GreedyRobot<BoardSize>::BestCandidateEdges(board);
       GreedyRobot<BoardSize>::EnemyUnscoreable() || GreedyRobot<BoardSize>::Scoreable()) {
     return edges;

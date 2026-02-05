@@ -25,12 +25,16 @@ class MainWindow final : public BaseCanvas<BoardSize> {
                       const PlayerType player2Type,
                       const bool backgroundMode,
                       QPointer<QWidget> parent);
-  void Run();
+  void
+  Run();
 
   protected:
-  void paintEvent(QPaintEvent* event) override;
-  void resizeEvent(QResizeEvent* event) override;
-  void showEvent(QShowEvent* event) override;
+  void
+  paintEvent(QPaintEvent* event) override;
+  void
+  resizeEvent(QResizeEvent* event) override;
+  void
+  showEvent(QShowEvent* event) override;
 
   private:
   const PlayerType Player1Type;
@@ -45,9 +49,12 @@ class MainWindow final : public BaseCanvas<BoardSize> {
   QList<QPointer<DotCanvas<BoardSize>>> DotCanvases;
   QList<QPointer<EdgeCanvas<BoardSize>>> EdgeCanvases;
 
-  void SetPlayerMoveEdge(const Edge<BoardSize> edge);
-  QColor Color() const;
-  void Add(const Edge<BoardSize> edge);
+  void
+  SetPlayerMoveEdge(const Edge<BoardSize> edge);
+  QColor
+  Color() const;
+  void
+  Add(const Edge<BoardSize> edge);
 };
 
 template <int64_t BoardSize>
@@ -92,7 +99,8 @@ MainWindow<BoardSize>::MainWindow(const PlayerType player1Type,
 }
 
 template <int64_t BoardSize>
-void MainWindow<BoardSize>::Run() {
+void
+MainWindow<BoardSize>::Run() {
   Random Random;
   while (Board.Gaming()) {
     const QTime startTime = QTime::currentTime();
@@ -162,7 +170,8 @@ void MainWindow<BoardSize>::Run() {
 }
 
 template <int64_t BoardSize>
-void MainWindow<BoardSize>::paintEvent(QPaintEvent* event) {
+void
+MainWindow<BoardSize>::paintEvent(QPaintEvent* event) {
   QWidget::paintEvent(event);
 
   QPainter painter(this);
@@ -170,7 +179,8 @@ void MainWindow<BoardSize>::paintEvent(QPaintEvent* event) {
 }
 
 template <int64_t BoardSize>
-void MainWindow<BoardSize>::resizeEvent(QResizeEvent* event) {
+void
+MainWindow<BoardSize>::resizeEvent(QResizeEvent* event) {
   QWidget::resizeEvent(event);
 
   const int x0 = (BaseCanvas<BoardSize>::width() - BoardWidth) / 2 - BaseCanvas<BoardSize>::UnitSize;
@@ -201,14 +211,16 @@ void MainWindow<BoardSize>::resizeEvent(QResizeEvent* event) {
 }
 
 template <int64_t BoardSize>
-void MainWindow<BoardSize>::showEvent(QShowEvent* event) {
+void
+MainWindow<BoardSize>::showEvent(QShowEvent* event) {
   QWidget::showEvent(event);
 
   QThreadPool::globalInstance()->start([this]() -> void { Run(); });
 }
 
 template <int64_t BoardSize>
-void MainWindow<BoardSize>::SetPlayerMoveEdge(const Edge<BoardSize> edge) {
+void
+MainWindow<BoardSize>::SetPlayerMoveEdge(const Edge<BoardSize> edge) {
   if (Board.Contains(edge)) {
     return;
   }
@@ -222,7 +234,8 @@ void MainWindow<BoardSize>::SetPlayerMoveEdge(const Edge<BoardSize> edge) {
 }
 
 template <int64_t BoardSize>
-QColor MainWindow<BoardSize>::Color() const {
+QColor
+MainWindow<BoardSize>::Color() const {
   static const QColor DarkThemeColor = QColor(43, 43, 43, 255);
   static const QColor LightThemeColor = QColor(242, 242, 242, 255);
 
@@ -230,7 +243,8 @@ QColor MainWindow<BoardSize>::Color() const {
 }
 
 template <int64_t BoardSize>
-void MainWindow<BoardSize>::Add(const Edge<BoardSize> edge) {
+void
+MainWindow<BoardSize>::Add(const Edge<BoardSize> edge) {
   if (!BackgroundMode) {
     if (Board.NowStep() > 0) {
       EdgeCanvases[LastEdge]->SetHighLight(false);

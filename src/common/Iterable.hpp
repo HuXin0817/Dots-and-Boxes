@@ -9,83 +9,107 @@ namespace dab::detail::common {
 template <typename Derived>
 class Iterable {
   public:
-  constexpr auto begin();
-  constexpr auto begin() const;
-  constexpr auto end();
-  constexpr auto end() const;
+  constexpr auto
+  begin();
+  constexpr auto
+  begin() const;
+  constexpr auto
+  end();
+  constexpr auto
+  end() const;
 
-  constexpr uint32_t Size() const;
-  constexpr bool Empty() const;
-  constexpr auto& operator[](uint32_t i);
-  constexpr const auto& operator[](uint32_t i) const;
-  constexpr auto& Front();
-  constexpr const auto& Front() const;
-  constexpr auto& Back();
-  constexpr const auto& Back() const;
+  constexpr uint32_t
+  Size() const;
+  constexpr bool
+  Empty() const;
+  constexpr auto&
+  operator[](uint32_t i);
+  constexpr const auto&
+  operator[](uint32_t i) const;
+  constexpr auto&
+  Front();
+  constexpr const auto&
+  Front() const;
+  constexpr auto&
+  Back();
+  constexpr const auto&
+  Back() const;
 
   protected:
   ~Iterable() = default;
 };
 
 template <typename Derived>
-constexpr auto Iterable<Derived>::begin() {
+constexpr auto
+Iterable<Derived>::begin() {
   return static_cast<Derived*>(this)->begin();
 }
 
 template <typename Derived>
-constexpr auto Iterable<Derived>::begin() const {
+constexpr auto
+Iterable<Derived>::begin() const {
   return static_cast<const Derived*>(this)->begin();
 }
 
 template <typename Derived>
-constexpr auto Iterable<Derived>::end() {
+constexpr auto
+Iterable<Derived>::end() {
   return static_cast<Derived*>(this)->end();
 }
 
 template <typename Derived>
-constexpr auto Iterable<Derived>::end() const {
+constexpr auto
+Iterable<Derived>::end() const {
   return static_cast<const Derived*>(this)->end();
 }
 
 template <typename Derived>
-constexpr uint32_t Iterable<Derived>::Size() const {
+constexpr uint32_t
+Iterable<Derived>::Size() const {
   return static_cast<const Derived*>(this)->Size();
 }
 
 template <typename Derived>
-constexpr bool Iterable<Derived>::Empty() const {
+constexpr bool
+Iterable<Derived>::Empty() const {
   return Size() == 0;
 }
 
 template <typename Derived>
-constexpr auto& Iterable<Derived>::operator[](uint32_t i) {
+constexpr auto&
+Iterable<Derived>::operator[](uint32_t i) {
   assert(i < Size());
   return begin()[i];
 }
 
 template <typename Derived>
-constexpr const auto& Iterable<Derived>::operator[](uint32_t i) const {
+constexpr const auto&
+Iterable<Derived>::operator[](uint32_t i) const {
   assert(i < Size());
   return begin()[i];
 }
 
 template <typename Derived>
-constexpr auto& Iterable<Derived>::Front() {
+constexpr auto&
+Iterable<Derived>::Front() {
   return begin()[0];
 }
 
 template <typename Derived>
-constexpr const auto& Iterable<Derived>::Front() const {
+constexpr const auto&
+Iterable<Derived>::Front() const {
   return begin()[0];
 }
 
 template <typename Derived>
-constexpr auto& Iterable<Derived>::Back() {
+constexpr auto&
+Iterable<Derived>::Back() {
   return begin()[Size() - 1];
 }
 
 template <typename Derived>
-constexpr const auto& Iterable<Derived>::Back() const {
+constexpr const auto&
+Iterable<Derived>::Back() const {
   return begin()[Size() - 1];
 }
 

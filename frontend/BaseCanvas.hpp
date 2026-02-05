@@ -23,14 +23,20 @@ class BaseCanvas : public QWidget {
 
   static constexpr int UnitSize = 6 + 16 / BoardSize;
 
-  static QColor ThemeColor(const QColor& DarkThemeColor, const QColor& LightThemeColor);
-  bool Hovered() const;
-  Owner GetOwner() const;
-  void SetOwner(Turn<BoardSize> turn);
+  static QColor
+  ThemeColor(const QColor& DarkThemeColor, const QColor& LightThemeColor);
+  bool
+  Hovered() const;
+  Owner
+  GetOwner() const;
+  void
+  SetOwner(Turn<BoardSize> turn);
 
   protected:
-  void enterEvent(QEnterEvent* event) override;
-  void leaveEvent(QEvent* event) override;
+  void
+  enterEvent(QEnterEvent* event) override;
+  void
+  leaveEvent(QEvent* event) override;
 
   private:
   Owner Owner = Owner::None;
@@ -38,7 +44,8 @@ class BaseCanvas : public QWidget {
 };
 
 template <int64_t BoardSize>
-QColor BaseCanvas<BoardSize>::ThemeColor(const QColor& DarkThemeColor, const QColor& LightThemeColor) {
+QColor
+BaseCanvas<BoardSize>::ThemeColor(const QColor& DarkThemeColor, const QColor& LightThemeColor) {
   if (QApplication::styleHints()->colorScheme() == Qt::ColorScheme::Dark) {
     return DarkThemeColor;
   } else {
@@ -47,17 +54,20 @@ QColor BaseCanvas<BoardSize>::ThemeColor(const QColor& DarkThemeColor, const QCo
 }
 
 template <int64_t BoardSize>
-bool BaseCanvas<BoardSize>::Hovered() const {
+bool
+BaseCanvas<BoardSize>::Hovered() const {
   return HoverState;
 }
 
 template <int64_t BoardSize>
-Owner BaseCanvas<BoardSize>::GetOwner() const {
+Owner
+BaseCanvas<BoardSize>::GetOwner() const {
   return Owner;
 }
 
 template <int64_t BoardSize>
-void BaseCanvas<BoardSize>::SetOwner(Turn<BoardSize> turn) {
+void
+BaseCanvas<BoardSize>::SetOwner(Turn<BoardSize> turn) {
   if (turn.IsPlayer1Turn()) {
     Owner = Owner::Player1;
   } else {
@@ -66,7 +76,8 @@ void BaseCanvas<BoardSize>::SetOwner(Turn<BoardSize> turn) {
 }
 
 template <int64_t BoardSize>
-void BaseCanvas<BoardSize>::enterEvent(QEnterEvent* event) {
+void
+BaseCanvas<BoardSize>::enterEvent(QEnterEvent* event) {
   QWidget::enterEvent(event);
 
   HoverState = true;
@@ -74,7 +85,8 @@ void BaseCanvas<BoardSize>::enterEvent(QEnterEvent* event) {
 }
 
 template <int64_t BoardSize>
-void BaseCanvas<BoardSize>::leaveEvent(QEvent* event) {
+void
+BaseCanvas<BoardSize>::leaveEvent(QEvent* event) {
   QWidget::leaveEvent(event);
 
   HoverState = false;

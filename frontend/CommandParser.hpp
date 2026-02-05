@@ -26,21 +26,28 @@ class CommandParser {
   public:
   CommandParser() = default;
 
-  int Process(const QApplication& application);
+  int
+  Process(const QApplication& application);
 
   private:
   static constexpr size_t PlayerTypeOptionStringsSize =
       sizeof(PlayerTypeOptionStrings) / sizeof(PlayerTypeOptionStrings[0]);
 
-  QCommandLineOption BoardSizeOption();
-  QCommandLineOption PlayerTypeOption(int8_t player);
-  QCommandLineOption BackgroundModeOption();
-  int64_t ParseBoardSize(const QString& arg);
-  PlayerType ParsePlayerType(const QString& arg);
+  QCommandLineOption
+  BoardSizeOption();
+  QCommandLineOption
+  PlayerTypeOption(int8_t player);
+  QCommandLineOption
+  BackgroundModeOption();
+  int64_t
+  ParseBoardSize(const QString& arg);
+  PlayerType
+  ParsePlayerType(const QString& arg);
 };
 
 template <int64_t MaxBoardSize, int64_t DefaultBoardSize, PlayerType DefaultPlayerType>
-inline int CommandParser<MaxBoardSize, DefaultBoardSize, DefaultPlayerType>::Process(const QApplication& application) {
+inline int
+CommandParser<MaxBoardSize, DefaultBoardSize, DefaultPlayerType>::Process(const QApplication& application) {
   const QCommandLineOption boardSizeOption = BoardSizeOption();
   const QCommandLineOption player1Option = PlayerTypeOption(1);
   const QCommandLineOption player2Option = PlayerTypeOption(2);
@@ -72,7 +79,8 @@ inline int CommandParser<MaxBoardSize, DefaultBoardSize, DefaultPlayerType>::Pro
 }
 
 template <int64_t MaxBoardSize, int64_t DefaultBoardSize, PlayerType DefaultPlayerType>
-inline QCommandLineOption CommandParser<MaxBoardSize, DefaultBoardSize, DefaultPlayerType>::BoardSizeOption() {
+inline QCommandLineOption
+CommandParser<MaxBoardSize, DefaultBoardSize, DefaultPlayerType>::BoardSizeOption() {
   return QCommandLineOption(
       QStringList() << "s" << "size",
       QString("Set board size ranging from [1, %2] (default: %3).").arg(MaxBoardSize).arg(DefaultBoardSize),
@@ -81,8 +89,8 @@ inline QCommandLineOption CommandParser<MaxBoardSize, DefaultBoardSize, DefaultP
 }
 
 template <int64_t MaxBoardSize, int64_t DefaultBoardSize, PlayerType DefaultPlayerType>
-inline QCommandLineOption CommandParser<MaxBoardSize, DefaultBoardSize, DefaultPlayerType>::PlayerTypeOption(
-    int8_t player) {
+inline QCommandLineOption
+CommandParser<MaxBoardSize, DefaultBoardSize, DefaultPlayerType>::PlayerTypeOption(int8_t player) {
   QStringList accepted;
   accepted << "human" << "robot";
   for (size_t i = 1; i < PlayerTypeOptionStringsSize; ++i) {
@@ -110,12 +118,14 @@ inline QCommandLineOption CommandParser<MaxBoardSize, DefaultBoardSize, DefaultP
 }
 
 template <int64_t MaxBoardSize, int64_t DefaultBoardSize, PlayerType DefaultPlayerType>
-inline QCommandLineOption CommandParser<MaxBoardSize, DefaultBoardSize, DefaultPlayerType>::BackgroundModeOption() {
+inline QCommandLineOption
+CommandParser<MaxBoardSize, DefaultBoardSize, DefaultPlayerType>::BackgroundModeOption() {
   return QCommandLineOption(QStringList() << "b" << "background", "Run in background mode.");
 }
 
 template <int64_t MaxBoardSize, int64_t DefaultBoardSize, PlayerType DefaultPlayerType>
-inline int64_t CommandParser<MaxBoardSize, DefaultBoardSize, DefaultPlayerType>::ParseBoardSize(const QString& arg) {
+inline int64_t
+CommandParser<MaxBoardSize, DefaultBoardSize, DefaultPlayerType>::ParseBoardSize(const QString& arg) {
   bool conversionOk = false;
   const int64_t boardSize = arg.toLongLong(&conversionOk);
   if (!conversionOk || boardSize <= 0 || boardSize > MaxBoardSize) {
@@ -126,8 +136,8 @@ inline int64_t CommandParser<MaxBoardSize, DefaultBoardSize, DefaultPlayerType>:
 }
 
 template <int64_t MaxBoardSize, int64_t DefaultBoardSize, PlayerType DefaultPlayerType>
-inline PlayerType CommandParser<MaxBoardSize, DefaultBoardSize, DefaultPlayerType>::ParsePlayerType(
-    const QString& arg) {
+inline PlayerType
+CommandParser<MaxBoardSize, DefaultBoardSize, DefaultPlayerType>::ParsePlayerType(const QString& arg) {
   if (arg.compare("robot", Qt::CaseInsensitive) == 0) {
     return DefaultPlayerType;
   }

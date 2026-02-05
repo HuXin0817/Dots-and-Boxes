@@ -9,15 +9,24 @@ class BasicBoard {
   public:
   BasicBoard();
 
-  void Reset();
-  void Add(const Edge<BoardSize> edge);
-  bool Contains(const Edge<BoardSize> edge) const;
-  Span<Edge<BoardSize>> EmptyEdges() const;
-  Span<Edge<BoardSize>> MoveRecord() const;
-  bool Gaming() const;
-  Int<BoardSize> RemainStep() const;
-  Int<BoardSize> NowStep() const;
-  bool operator==(const BasicBoard& other) const;
+  void
+  Reset();
+  void
+  Add(const Edge<BoardSize> edge);
+  bool
+  Contains(const Edge<BoardSize> edge) const;
+  Span<Edge<BoardSize>>
+  EmptyEdges() const;
+  Span<Edge<BoardSize>>
+  MoveRecord() const;
+  bool
+  Gaming() const;
+  Int<BoardSize>
+  RemainStep() const;
+  Int<BoardSize>
+  NowStep() const;
+  bool
+  operator==(const BasicBoard& other) const;
 
   private:
   Int<BoardSize> Step = 0;
@@ -31,7 +40,8 @@ BasicBoard<BoardSize>::BasicBoard() {
 }
 
 template <int64_t BoardSize>
-void BasicBoard<BoardSize>::Reset() {
+void
+BasicBoard<BoardSize>::Reset() {
   Step = 0;
   for (Edge<BoardSize> edge = 0; edge < Edge<BoardSize>::Max; ++edge) {
     EdgeIndexes[edge] = edge;
@@ -40,7 +50,8 @@ void BasicBoard<BoardSize>::Reset() {
 }
 
 template <int64_t BoardSize>
-void BasicBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
+void
+BasicBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
   assert(!Contains(edge));
   const Edge<BoardSize> nowEdge = Edges[Step];
   const Int<BoardSize> edgeIndex = EdgeIndexes[edge];
@@ -51,37 +62,44 @@ void BasicBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
 }
 
 template <int64_t BoardSize>
-bool BasicBoard<BoardSize>::Contains(const Edge<BoardSize> edge) const {
+bool
+BasicBoard<BoardSize>::Contains(const Edge<BoardSize> edge) const {
   return EdgeIndexes[edge] < Step;
 }
 
 template <int64_t BoardSize>
-Span<Edge<BoardSize>> BasicBoard<BoardSize>::EmptyEdges() const {
+Span<Edge<BoardSize>>
+BasicBoard<BoardSize>::EmptyEdges() const {
   return Span(Edges.begin() + Step, Edges.begin() + Edge<BoardSize>::Max);
 }
 
 template <int64_t BoardSize>
-Span<Edge<BoardSize>> BasicBoard<BoardSize>::MoveRecord() const {
+Span<Edge<BoardSize>>
+BasicBoard<BoardSize>::MoveRecord() const {
   return Span(Edges.begin(), Edges.begin() + Step);
 }
 
 template <int64_t BoardSize>
-bool BasicBoard<BoardSize>::Gaming() const {
+bool
+BasicBoard<BoardSize>::Gaming() const {
   return Step < Edge<BoardSize>::Max;
 }
 
 template <int64_t BoardSize>
-Int<BoardSize> BasicBoard<BoardSize>::RemainStep() const {
+Int<BoardSize>
+BasicBoard<BoardSize>::RemainStep() const {
   return Edge<BoardSize>::Max - Step;
 }
 
 template <int64_t BoardSize>
-Int<BoardSize> BasicBoard<BoardSize>::NowStep() const {
+Int<BoardSize>
+BasicBoard<BoardSize>::NowStep() const {
   return Step;
 }
 
 template <int64_t BoardSize>
-bool BasicBoard<BoardSize>::operator==(const BasicBoard& other) const {
+bool
+BasicBoard<BoardSize>::operator==(const BasicBoard& other) const {
   if (other.Step != Step) {
     return false;
   }

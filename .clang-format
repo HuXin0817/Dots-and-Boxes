@@ -2,9 +2,9 @@
 Language: Cpp
 BasedOnStyle: Google
 AccessModifierOffset: -4
-AlwaysBreakAfterReturnType: None
+AlwaysBreakAfterReturnType: All
 AllowShortBlocksOnASingleLine: false
-AllowShortFunctionsOnASingleLine: true
+AllowShortFunctionsOnASingleLine: false
 AllowShortIfStatementsOnASingleLine: false
 AlignTrailingComments: true
 

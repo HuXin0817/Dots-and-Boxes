@@ -22,10 +22,14 @@ static constexpr const char* PlayerTypeString[] = {
     "ParallelSearchRobot",
 };
 
-inline bool PlayerTypeIsRobot(const PlayerType playerType) { return playerType != PlayerType::Human; }
+inline bool
+PlayerTypeIsRobot(const PlayerType playerType) {
+  return playerType != PlayerType::Human;
+}
 
 template <int64_t BoardSize>
-Robot<BoardSize>* CreateRobot(const PlayerType playerType) {
+Robot<BoardSize>*
+CreateRobot(const PlayerType playerType) {
   switch (playerType) {
     case PlayerType::GreedyRobot:
       return new GreedyRobot<BoardSize>();

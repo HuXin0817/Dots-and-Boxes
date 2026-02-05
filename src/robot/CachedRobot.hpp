@@ -15,7 +15,8 @@ class CachedRobot : public Robot<BoardSize> {
   public:
   CachedRobot() = default;
 
-  Span<Edge<BoardSize>> BestCandidateEdges(const RelativeScoreBoard<BoardSize>& board) override;
+  Span<Edge<BoardSize>>
+  BestCandidateEdges(const RelativeScoreBoard<BoardSize>& board) override;
 
   private:
   SubRobotType SubRobot;
@@ -24,11 +25,11 @@ class CachedRobot : public Robot<BoardSize> {
 };
 
 template <int64_t BoardSize, typename SubRobotType>
-Span<Edge<BoardSize>> CachedRobot<BoardSize, SubRobotType>::BestCandidateEdges(
-    const RelativeScoreBoard<BoardSize>& board) {
-  if (typename dab::LRUCache<HashBoard<BoardSize>, Vector<Edge<BoardSize>>, Cap>::ConstAccessor ac;
-      GlobalCache.Find(ac, board)) {
-    return Span(ac->begin(), ac->end());
+Span<Edge<BoardSize>>
+CachedRobot<BoardSize, SubRobotType>::BestCandidateEdges(const RelativeScoreBoard<BoardSize>& board) {
+  if (typename dab::LRUCache<HashBoard<BoardSize>, Vector<Edge<BoardSize>>, Cap>::ConstAccessor accessor;
+      GlobalCache.Find(accessor, board)) {
+    return Span(accessor->begin(), accessor->end());
   }
 
   Span<Edge<BoardSize>> result = SubRobot.BestCandidateEdges(board);

@@ -15,9 +15,12 @@ class Edge : public IntWapper<BoardSize> {
 
   static constexpr Int<BoardSize> Max = 2 * BoardSize * (BoardSize + 1);
 
-  constexpr Dot<BoardSize> Dot1() const;
-  constexpr Dot<BoardSize> Dot2() const;
-  constexpr bool Rotate() const;
+  constexpr Dot<BoardSize>
+  Dot1() const;
+  constexpr Dot<BoardSize>
+  Dot2() const;
+  constexpr bool
+  Rotate() const;
 };
 
 template <int64_t BoardSize>
@@ -33,7 +36,8 @@ constexpr Edge<BoardSize>::Edge(const Dot<BoardSize> dot1, const Dot<BoardSize> 
 }
 
 template <int64_t BoardSize>
-constexpr Dot<BoardSize> Edge<BoardSize>::Dot1() const {
+constexpr Dot<BoardSize>
+Edge<BoardSize>::Dot1() const {
   Int<BoardSize> dot = IntWapper<BoardSize>::v >> 1;
   if (IntWapper<BoardSize>::v & 1) {
     dot += dot / BoardSize;
@@ -42,7 +46,8 @@ constexpr Dot<BoardSize> Edge<BoardSize>::Dot1() const {
 }
 
 template <int64_t BoardSize>
-constexpr Dot<BoardSize> Edge<BoardSize>::Dot2() const {
+constexpr Dot<BoardSize>
+Edge<BoardSize>::Dot2() const {
   Int<BoardSize> dot = IntWapper<BoardSize>::v >> 1;
   if (IntWapper<BoardSize>::v & 1) {
     dot += dot / BoardSize + 1;
@@ -53,7 +58,8 @@ constexpr Dot<BoardSize> Edge<BoardSize>::Dot2() const {
 }
 
 template <int64_t BoardSize>
-constexpr bool Edge<BoardSize>::Rotate() const {
+constexpr bool
+Edge<BoardSize>::Rotate() const {
   return IntWapper<BoardSize>::v & 1;
 }
 
