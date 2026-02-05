@@ -7,8 +7,10 @@
 
 namespace dab::detail::robot {
 
-template <int64_t BoardSize, int64_t SearchTime = static_cast<int64_t>(Edge<BoardSize>::Max) << 8>
+template <int64_t BoardSize>
 class MonteCarloRobot final : public Robot<BoardSize> {
+  static constexpr int64_t SearchTime = static_cast<int64_t>(Edge<BoardSize>::Max) << 6;
+
   public:
   MonteCarloRobot() = default;
 
@@ -25,9 +27,9 @@ class MonteCarloRobot final : public Robot<BoardSize> {
   SearchScoreMap<BoardSize> SearchResult;
 };
 
-template <int64_t BoardSize, int64_t SearchTime>
+template <int64_t BoardSize>
 Span<Edge<BoardSize>>
-MonteCarloRobot<BoardSize, SearchTime>::BestCandidateEdges(const RelativeScoreBoard<BoardSize>& board) {
+MonteCarloRobot<BoardSize>::BestCandidateEdges(const RelativeScoreBoard<BoardSize>& board) {
   if (Span<Edge<BoardSize>> edges; CanEarlyExit(board, edges)) {
     return edges;
   }
@@ -47,17 +49,16 @@ MonteCarloRobot<BoardSize, SearchTime>::BestCandidateEdges(const RelativeScoreBo
   return SearchResult.Export();
 }
 
-template <int64_t BoardSize, int64_t SearchTime>
+template <int64_t BoardSize>
 bool
-MonteCarloRobot<BoardSize, SearchTime>::CanEarlyExit(const RelativeScoreBoard<BoardSize>& board,
-                                                     Span<Edge<BoardSize>>& result) {
+MonteCarloRobot<BoardSize>::CanEarlyExit(const RelativeScoreBoard<BoardSize>& board, Span<Edge<BoardSize>>& result) {
   result = SubRobot.BestCandidateEdges(board);
   return result.Size() == 1;
 }
 
-template <int64_t BoardSize, int64_t SearchTime>
+template <int64_t BoardSize>
 const SearchScoreMap<BoardSize>&
-MonteCarloRobot<BoardSize, SearchTime>::GetSearchResult() const {
+MonteCarloRobot<BoardSize>::GetSearchResult() const {
   return SearchResult;
 }
 

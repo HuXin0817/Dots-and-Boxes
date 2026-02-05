@@ -6,10 +6,10 @@
 
 namespace dab::detail::robot {
 
-template <int64_t BoardSize,
-          int64_t SubRobotSearchTime = static_cast<int64_t>(Edge<BoardSize>::Max) << 5,
-          int64_t SubRobotNumber = 64>
+template <int64_t BoardSize>
 class ParallelSearchRobot final : public Robot<BoardSize> {
+  static constexpr int64_t SubRobotNumber = 32;
+
   public:
   ParallelSearchRobot() = default;
 
@@ -17,25 +17,23 @@ class ParallelSearchRobot final : public Robot<BoardSize> {
   BestCandidateEdges(const RelativeScoreBoard<BoardSize>& board) override;
 
   private:
-  Array<MonteCarloRobot<BoardSize, SubRobotSearchTime>, SubRobotNumber> SubRobots;
+  Array<MonteCarloRobot<BoardSize>, SubRobotNumber> SubRobots;
   SearchScoreMap<BoardSize> SearchResult;
 };
 
-template <int64_t BoardSize, int64_t SubRobotSearchTime, int64_t SubRobotNumber>
+template <int64_t BoardSize>
 Span<Edge<BoardSize>>
-ParallelSearchRobot<BoardSize, SubRobotSearchTime, SubRobotNumber>::BestCandidateEdges(
-    const RelativeScoreBoard<BoardSize>& board) {
+ParallelSearchRobot<BoardSize>::BestCandidateEdges(const RelativeScoreBoard<BoardSize>& board) {
   if (Span<Edge<BoardSize>> edges; SubRobots.Front().CanEarlyExit(board, edges)) {
     return edges;
   }
 
   SearchResult.Reset();
 
-  tbb::parallel_for_each(SubRobots, [&](MonteCarloRobot<BoardSize, SubRobotSearchTime>& robot) -> void {
-    robot.BestCandidateEdges(board);
-  });
+  tbb::parallel_for_each(SubRobots,
+                         [&](MonteCarloRobot<BoardSize>& robot) -> void { robot.BestCandidateEdges(board); });
 
-  for (const MonteCarloRobot<BoardSize, SubRobotSearchTime>& model : SubRobots) {
+  for (const MonteCarloRobot<BoardSize>& model : SubRobots) {
     SearchResult.Add(model.GetSearchResult());
   }
 
