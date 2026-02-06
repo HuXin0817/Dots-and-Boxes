@@ -7,9 +7,11 @@
 #include <QThreadPool>
 #include <QTime>
 #include <QTimer>
+#include <atomic>
 #include <cassert>
 
 #include "BoxCanvas.hpp"
+#include "Dab/Model.hpp"
 #include "DotCanvas.hpp"
 #include "EdgeCanvas.hpp"
 
@@ -42,7 +44,7 @@ class MainWindow final : public BaseCanvas<BoardSize> {
   const bool BackgroundMode;
   QScopedPointer<Robot<BoardSize>> Robot1;
   QScopedPointer<Robot<BoardSize>> Robot2;
-  Edge<BoardSize> PlayerMoveEdge;
+  std::atomic<Edge<BoardSize>> PlayerMoveEdge;
   Edge<BoardSize> LastEdge;
   AbsoluteScoreBoard<BoardSize> Board;
   QList<QPointer<BoxCanvas<BoardSize>>> BoxCanvases;
@@ -112,18 +114,18 @@ MainWindow<BoardSize>::Run() {
       PlayerMoveEdge = Random.Choice(Robot2->BestCandidateEdges(Board));
     } else {
       PlayerMoveEdge = InvalidEdge<BoardSize>;
-      while (PlayerMoveEdge == InvalidEdge<BoardSize>) {
+      while (PlayerMoveEdge.load() == InvalidEdge<BoardSize>) {
         QThread::yieldCurrentThread();
       }
     }
 
-    assert(!Board.Contains(PlayerMoveEdge));
+    assert(!Board.Contains(PlayerMoveEdge.load()));
     if (BackgroundMode) {
-      Add(PlayerMoveEdge);
+      Add(PlayerMoveEdge.load());
     } else {
-      QMetaObject::invokeMethod(this, [this]() -> void { Add(PlayerMoveEdge); }, Qt::BlockingQueuedConnection);
+      QMetaObject::invokeMethod(this, [this]() -> void { Add(PlayerMoveEdge.load()); }, Qt::BlockingQueuedConnection);
     }
-    assert(Board.Contains(PlayerMoveEdge));
+    assert(Board.Contains(PlayerMoveEdge.load()));
 
     const double seconds = static_cast<double>(startTime.msecsTo(QTime::currentTime())) / 1000.0;
 
@@ -134,7 +136,7 @@ MainWindow<BoardSize>::Run() {
     QJsonObject moveRecord;
     moveRecord.insert("Step", Board.NowStep());
     moveRecord.insert("Turn", turn.IsPlayer1Turn() ? 1 : 2);
-    moveRecord.insert("Move", Int<BoardSize>(PlayerMoveEdge));
+    moveRecord.insert("Move", Int<BoardSize>(PlayerMoveEdge.load()));
     moveRecord.insert("Score", playerScore);
     moveRecord.insert("Time", seconds);
 
@@ -230,7 +232,8 @@ MainWindow<BoardSize>::SetPlayerMoveEdge(const Edge<BoardSize> edge) {
   if (PlayerTypeIsRobot(Player2Type) && Board.IsPlayer2Turn()) {
     return;
   }
-  PlayerMoveEdge = edge;
+  Edge<BoardSize> expected = InvalidEdge<BoardSize>;
+  PlayerMoveEdge.compare_exchange_strong(expected, edge);
 }
 
 template <int64_t BoardSize>
