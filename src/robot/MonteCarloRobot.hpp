@@ -2,7 +2,6 @@
 
 #include <Dab/Board.hpp>
 
-#include "CachedRobot.hpp"
 #include "SimulationRobot.hpp"
 
 namespace dab::detail::robot {
@@ -22,7 +21,7 @@ class MonteCarloRobot final : public Robot<BoardSize> {
   GetSearchResult() const;
 
   private:
-  CachedRobot<BoardSize, SimulationRobot<BoardSize>> SubRobot;
+  SimulationRobot<BoardSize> SubRobot;
   RelativeScoreBoard<BoardSize> SimulationBoard;
   SearchScoreMap<BoardSize> SearchResult;
 };

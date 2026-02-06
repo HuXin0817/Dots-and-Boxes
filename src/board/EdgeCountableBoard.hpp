@@ -2,12 +2,12 @@
 
 #include <Dab/Model.hpp>
 
-#include "HashBoard.hpp"
+#include "BasicBoard.hpp"
 
 namespace dab::detail::board {
 
 template <int64_t BoardSize>
-class EdgeCountableBoard : public HashBoard<BoardSize> {
+class EdgeCountableBoard : public BasicBoard<BoardSize> {
   public:
   EdgeCountableBoard();
 
@@ -36,14 +36,14 @@ EdgeCountableBoard<BoardSize>::EdgeCountableBoard() {
 template <int64_t BoardSize>
 void
 EdgeCountableBoard<BoardSize>::Reset() {
-  HashBoard<BoardSize>::Reset();
+  BasicBoard<BoardSize>::Reset();
   Counter = Array<uint8_t, Box<BoardSize>::Max>();
 }
 
 template <int64_t BoardSize>
 Int<BoardSize>
 EdgeCountableBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
-  HashBoard<BoardSize>::Add(edge);
+  BasicBoard<BoardSize>::Add(edge);
   Int<BoardSize> score = 0;
   for (const Box<BoardSize> box : NearBoxes(edge)) {
     ++Counter[box];
@@ -61,7 +61,7 @@ Edge<BoardSize>
 EdgeCountableBoard<BoardSize>::FindNotContainsEdgeInBox(const Box<BoardSize> box) const {
   assert(EdgeCount(box) == 3);
   for (const Edge<BoardSize> edge : NearEdges(box)) {
-    if (!HashBoard<BoardSize>::Contains(edge)) {
+    if (!BasicBoard<BoardSize>::Contains(edge)) {
       return edge;
     }
   }
