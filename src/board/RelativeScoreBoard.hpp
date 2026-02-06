@@ -39,9 +39,11 @@ template <int64_t BoardSize>
 Int<BoardSize>
 RelativeScoreBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
   const Int<BoardSize> score = EdgeCountableBoard<BoardSize>::Add(edge);
-  Score += score * Turn<BoardSize>::v;
-  const Int<BoardSize> neg = -(score == 0);
-  Turn<BoardSize>::v = Turn<BoardSize>::v + neg ^ neg;
+  if (score > 0) {
+    Score += score * Turn<BoardSize>::v;
+  } else {
+    Turn<BoardSize>::Add();
+  }
   return score;
 }
 
