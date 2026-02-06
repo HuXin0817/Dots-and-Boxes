@@ -55,7 +55,9 @@ BasicBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
   assert(!Contains(edge));
   const Edge<BoardSize> nowEdge = Edges[Step];
   const Int<BoardSize> edgeIndex = EdgeIndexes[edge];
-  Edges[Step] = Edges[edgeIndex];
+  assert(Edges[edgeIndex] == edge);
+  assert(edgeIndex >= Step);
+  Edges[Step] = edge;
   Edges[edgeIndex] = nowEdge;
   EdgeIndexes[edge] = Step;
   EdgeIndexes[nowEdge] = edgeIndex;
