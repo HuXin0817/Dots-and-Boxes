@@ -25,8 +25,6 @@ class BasicBoard {
   RemainStep() const;
   Int<BoardSize>
   NowStep() const;
-  bool
-  operator==(const BasicBoard& other) const;
 
   private:
   Int<BoardSize> Step = 0;
@@ -73,7 +71,7 @@ BasicBoard<BoardSize>::Contains(const Edge<BoardSize> edge) const {
 template <int64_t BoardSize>
 Span<Edge<BoardSize>>
 BasicBoard<BoardSize>::EmptyEdges() const {
-  return Span(Edges.begin() + Step, Edges.begin() + Edge<BoardSize>::Max);
+  return Span(Edges.begin() + Step, Edges.end());
 }
 
 template <int64_t BoardSize>
@@ -98,28 +96,6 @@ template <int64_t BoardSize>
 Int<BoardSize>
 BasicBoard<BoardSize>::NowStep() const {
   return Step;
-}
-
-template <int64_t BoardSize>
-bool
-BasicBoard<BoardSize>::operator==(const BasicBoard& other) const {
-  if (other.Step != Step) {
-    return false;
-  }
-  if (Step < RemainStep()) {
-    for (const Edge<BoardSize> edge : other.MoveRecord()) {
-      if (!Contains(edge)) {
-        return false;
-      }
-    }
-  } else {
-    for (const Edge<BoardSize> edge : other.EmptyEdges()) {
-      if (Contains(edge)) {
-        return false;
-      }
-    }
-  }
-  return true;
 }
 
 }  // namespace dab::detail::board
