@@ -59,7 +59,7 @@ EdgeCountableBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
 template <int64_t BoardSize>
 Edge<BoardSize>
 EdgeCountableBoard<BoardSize>::FindNotContainsEdgeInBox(const Box<BoardSize> box) const {
-  assert(EdgeCount(box) == 3);
+  assert(Counter[box] == 3);
   for (const Edge<BoardSize> edge : NearEdges(box)) {
     if (!BasicBoard<BoardSize>::Contains(edge)) {
       return edge;
@@ -73,7 +73,7 @@ template <int64_t BoardSize>
 Edge<BoardSize>
 EdgeCountableBoard<BoardSize>::FindScoreableEdge() const {
   for (Box<BoardSize> box = 0; box < Box<BoardSize>::Max; ++box) {
-    if (EdgeCount(box) == 3) {
+    if (Counter[box] == 3) {
       return FindNotContainsEdgeInBox(box);
     }
   }
@@ -89,11 +89,8 @@ EdgeCountableBoard<BoardSize>::EdgeCount(const Box<BoardSize> box) const {
 template <int64_t BoardSize>
 uint8_t
 EdgeCountableBoard<BoardSize>::MaxEdgeCount(const Edge<BoardSize> edge) const {
-  uint8_t maxCount = 0;
-  for (const Box<BoardSize> box : NearBoxes(edge)) {
-    maxCount = std::max(maxCount, EdgeCount(box));
-  }
-  return maxCount;
+  const List<Box<BoardSize>, 2>& nearBoxes = NearBoxes(edge);
+  return std::max(Counter[nearBoxes.Front()], Counter[nearBoxes.Back()]);
 }
 
 }  // namespace dab::detail::board
