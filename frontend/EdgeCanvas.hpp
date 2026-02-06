@@ -64,12 +64,12 @@ EdgeCanvas<BoardSize>::paintEvent(QPaintEvent* event) {
 template <int64_t BoardSize>
 QColor
 EdgeCanvas<BoardSize>::Color() const {
-  static const QColor DarkThemeColor = QColor(65, 65, 65, 255);
-  static const QColor LightThemeColor = QColor(217, 217, 217, 255);
-  static const QColor DarkThemeHoveredColor = QColor(90, 90, 90, 255);
-  static const QColor LightThemeHoveredColor = QColor(202, 202, 202, 255);
-  static const QColor Player1OccupyColor = QColor(64, 64, 255, 255);
-  static const QColor Player2OccupyColor = QColor(255, 64, 64, 255);
+  static constexpr QColor DarkThemeColor = QColor(65, 65, 65, 255);
+  static constexpr QColor LightThemeColor = QColor(217, 217, 217, 255);
+  static constexpr QColor DarkThemeHoveredColor = QColor(90, 90, 90, 255);
+  static constexpr QColor LightThemeHoveredColor = QColor(202, 202, 202, 255);
+  static constexpr QColor Player1OccupyColor = QColor(64, 64, 255, 255);
+  static constexpr QColor Player2OccupyColor = QColor(255, 64, 64, 255);
 
   if (BaseCanvas<BoardSize>::GetOwner() == Owner::None) {
     if (BaseCanvas<BoardSize>::Hovered()) {

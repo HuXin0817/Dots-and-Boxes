@@ -10,7 +10,10 @@ namespace dab::detail::frontend {
 
 class Config {
   public:
-  Config(int64_t boardSize, PlayerType player1Type, PlayerType player2Type, bool backgroundMode);
+  Config(const int64_t boardSize,
+         const PlayerType player1Type,
+         const PlayerType player2Type,
+         const bool backgroundMode);
 
   QString
   ToString() const;
@@ -21,7 +24,10 @@ class Config {
   bool BackgroundMode;
 };
 
-inline Config::Config(int64_t boardSize, PlayerType player1Type, PlayerType player2Type, bool backgroundMode)
+inline Config::Config(const int64_t boardSize,
+                      const PlayerType player1Type,
+                      const PlayerType player2Type,
+                      const bool backgroundMode)
     : BoardSize(boardSize), Player1Type(player1Type), Player2Type(player2Type), BackgroundMode(backgroundMode) {
 }
 

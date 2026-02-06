@@ -13,7 +13,7 @@ template <int64_t MaxBoardSize>
 class MainWindowCreator {
   public:
   QPointer<QWidget>
-  CreateMainWindow(const Config& config, QPointer<QWidget> parent = nullptr);
+  CreateMainWindow(const Config& config, const QPointer<QWidget>& parent = nullptr);
 
   private:
   template <int64_t BoardSize>
@@ -22,8 +22,8 @@ class MainWindowCreator {
 };
 
 template <int64_t MaxBoardSize>
-inline QPointer<QWidget>
-MainWindowCreator<MaxBoardSize>::CreateMainWindow(const Config& config, QPointer<QWidget> parent) {
+QPointer<QWidget>
+MainWindowCreator<MaxBoardSize>::CreateMainWindow(const Config& config, const QPointer<QWidget>& parent) {
   assert(config.BoardSize > 0 && config.BoardSize <= MaxBoardSize);
   return CreateMainWindowImpl<MaxBoardSize>(config, parent);
 }

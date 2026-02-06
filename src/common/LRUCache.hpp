@@ -89,7 +89,7 @@ private:
 
 template <typename TKey, typename TValue, uint32_t Cap>
 typename LRUCache<TKey, TValue, Cap>::ListNode* const LRUCache<TKey, TValue, Cap>::OutOfListMarker =
-    reinterpret_cast<typename LRUCache<TKey, TValue, Cap>::ListNode*>(-1);
+    reinterpret_cast<ListNode*>(-1);
 
 template <typename TKey, typename TValue, uint32_t Cap>
 LRUCache<TKey, TValue, Cap>::ListNode::ListNode() : Prev(OutOfListMarker), Next(nullptr) {
@@ -161,7 +161,7 @@ LRUCache<TKey, TValue, Cap>::Find(ConstAccessor& ac, const TKey& key) {
     return false;
   }
 
-  std::unique_lock<tbb::spin_mutex> lock(ListMutex, std::try_to_lock);
+  std::unique_lock lock(ListMutex, std::try_to_lock);
   if (lock) {
     ListNode* node = hashAccessor->second.Node;
     if (node->IsInList()) {
@@ -192,7 +192,7 @@ LRUCache<TKey, TValue, Cap>::Insert(const TKey& key, const TValue& value) {
     evictionDone = true;
   }
 
-  std::unique_lock<tbb::spin_mutex> lock(ListMutex);
+  std::unique_lock lock(ListMutex);
   PushFront(node);
   lock.unlock();
 
@@ -212,9 +212,8 @@ void
 LRUCache<TKey, TValue, Cap>::Clear() {
   Map.clear();
   ListNode* node = Head.Next;
-  ListNode* next;
   while (node != &Tail) {
-    next = node->Next;
+    ListNode* next = node->Next;
     delete node;
     node = next;
   }
@@ -252,7 +251,7 @@ LRUCache<TKey, TValue, Cap>::PushFront(ListNode* node) {
 template <typename TKey, typename TValue, uint32_t Cap>
 void
 LRUCache<TKey, TValue, Cap>::Evict() {
-  std::unique_lock<tbb::spin_mutex> lock(ListMutex);
+  std::unique_lock lock(ListMutex);
   ListNode* moribund = Tail.Prev;
   if (moribund == &Head) {
     lock.unlock();

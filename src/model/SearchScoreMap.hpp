@@ -38,7 +38,7 @@ SearchScoreMap<BoardSize>::Reset() {
 template <int64_t BoardSize>
 void
 SearchScoreMap<BoardSize>::Add(const Edge<BoardSize> edge, const Int<BoardSize> score) {
-  Time[edge]++;
+  ++Time[edge];
   Score[edge] += score;
 }
 

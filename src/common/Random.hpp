@@ -11,7 +11,7 @@ class Random {
   explicit Random();
 
   uint32_t
-  Range(uint32_t min, uint32_t max);
+  Range(const uint32_t min, const uint32_t max);
 
   template <typename T>
   const auto&
@@ -27,7 +27,7 @@ inline Random::Random() {
 }
 
 inline uint32_t
-Random::Range(uint32_t min, uint32_t max) {
+Random::Range(const uint32_t min, const uint32_t max) {
   dist.param(std::uniform_int_distribution<uint32_t>::param_type(min, max));
   return dist(Rng);
 }

@@ -78,14 +78,10 @@ HashBoard<BoardSize>::CreateHashValueTable() {
 
 }  // namespace dab::detail::board
 
-namespace std {
-
 template <int64_t BoardSize>
-struct hash<dab::detail::board::HashBoard<BoardSize>> {
+struct std::hash<dab::detail::board::HashBoard<BoardSize>> {
   uint32_t
   operator()(const dab::detail::board::HashBoard<BoardSize>& board) const {
     return board.Hash();
   }
 };
-
-}  // namespace std

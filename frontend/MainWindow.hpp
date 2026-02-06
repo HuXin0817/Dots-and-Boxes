@@ -108,7 +108,7 @@ MainWindow<BoardSize>::Run() {
     const QTime startTime = QTime::currentTime();
     const Turn turn = static_cast<Turn<BoardSize>>(Board);
 
-    if ((PlayerTypeIsRobot(Player1Type) && Board.IsPlayer1Turn())) {
+    if (PlayerTypeIsRobot(Player1Type) && Board.IsPlayer1Turn()) {
       PlayerMoveEdge = Random.Choice(Robot1->BestCandidateEdges(Board));
     } else if (PlayerTypeIsRobot(Player2Type) && Board.IsPlayer2Turn()) {
       PlayerMoveEdge = Random.Choice(Robot2->BestCandidateEdges(Board));
@@ -239,8 +239,8 @@ MainWindow<BoardSize>::SetPlayerMoveEdge(const Edge<BoardSize> edge) {
 template <int64_t BoardSize>
 QColor
 MainWindow<BoardSize>::Color() const {
-  static const QColor DarkThemeColor = QColor(43, 43, 43, 255);
-  static const QColor LightThemeColor = QColor(242, 242, 242, 255);
+  static constexpr QColor DarkThemeColor = QColor(43, 43, 43, 255);
+  static constexpr QColor LightThemeColor = QColor(242, 242, 242, 255);
 
   return BaseCanvas<BoardSize>::ThemeColor(DarkThemeColor, LightThemeColor);
 }

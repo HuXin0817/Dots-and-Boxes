@@ -46,11 +46,11 @@ EdgeCountableBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
   HashBoard<BoardSize>::Add(edge);
   Int<BoardSize> score = 0;
   for (const Box<BoardSize> box : NearBoxes(edge)) {
-    Counter[box]++;
+    ++Counter[box];
     const uint8_t num = Counter[box];
     assert(num <= 4);
     if (num == 4) {
-      score++;
+      ++score;
     }
   }
   return score;

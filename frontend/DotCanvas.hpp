@@ -35,16 +35,16 @@ DotCanvas<BoardSize>::paintEvent(QPaintEvent* event) {
   painter.setBrush(QBrush(Color()));
   painter.setPen(Qt::NoPen);
 
-  int x = BaseCanvas<BoardSize>::width() / 2;
-  int y = BaseCanvas<BoardSize>::height() / 2;
+  const int x = BaseCanvas<BoardSize>::width() / 2;
+  const int y = BaseCanvas<BoardSize>::height() / 2;
   painter.drawEllipse(QPoint(x, y), BaseCanvas<BoardSize>::UnitSize, BaseCanvas<BoardSize>::UnitSize);
 }
 
 template <int64_t BoardSize>
 QColor
 DotCanvas<BoardSize>::Color() const {
-  static const QColor DarkThemeColor = QColor(202, 202, 202, 255);
-  static const QColor LightThemeColor = QColor(255, 255, 255, 255);
+  static constexpr QColor DarkThemeColor = QColor(202, 202, 202, 255);
+  static constexpr QColor LightThemeColor = QColor(255, 255, 255, 255);
 
   return BaseCanvas<BoardSize>::ThemeColor(DarkThemeColor, LightThemeColor);
 }

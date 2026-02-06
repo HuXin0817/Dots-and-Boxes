@@ -58,7 +58,7 @@ BasicBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
   std::swap(Edges[edgeIndex], Edges[Step]);
   EdgeIndexes[edge] = Step;
   EdgeIndexes[nowEdge] = edgeIndex;
-  Step++;
+  ++Step;
 }
 
 template <int64_t BoardSize>
