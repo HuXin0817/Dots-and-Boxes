@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QCommandLineParser>
-#include <cstdint>
 #include <cstdlib>
 
 #include "MainWindowCreator.hpp"
@@ -27,7 +26,7 @@ class CommandParser {
   CommandParser() = default;
 
   int
-  Process(const QApplication& application);
+  Process(QApplication& application);
 
   private:
   QCommandLineOption
@@ -44,7 +43,7 @@ class CommandParser {
 
 template <int64_t MaxBoardSize, int64_t DefaultBoardSize, PlayerType DefaultPlayerType>
 int
-CommandParser<MaxBoardSize, DefaultBoardSize, DefaultPlayerType>::Process(const QApplication& application) {
+CommandParser<MaxBoardSize, DefaultBoardSize, DefaultPlayerType>::Process(QApplication& application) {
   const QCommandLineOption boardSizeOption = BoardSizeOption();
   const QCommandLineOption player1Option = PlayerTypeOption(1);
   const QCommandLineOption player2Option = PlayerTypeOption(2);

@@ -1,8 +1,5 @@
 #pragma once
 
-#include <cassert>
-#include <cstddef>
-
 #include "Iterable.hpp"
 
 namespace dab::detail::common {

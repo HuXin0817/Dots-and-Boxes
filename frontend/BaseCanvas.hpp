@@ -3,8 +3,6 @@
 #include <Dab/Model.hpp>
 #include <QApplication>
 #include <QPainter>
-#include <QPalette>
-#include <QPointer>
 #include <QStyleHints>
 #include <QWidget>
 
