@@ -55,7 +55,8 @@ BasicBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
   assert(!Contains(edge));
   const Edge<BoardSize> nowEdge = Edges[Step];
   const Int<BoardSize> edgeIndex = EdgeIndexes[edge];
-  std::swap(Edges[edgeIndex], Edges[Step]);
+  Edges[Step] = Edges[edgeIndex];
+  Edges[edgeIndex] = nowEdge;
   EdgeIndexes[edge] = Step;
   EdgeIndexes[nowEdge] = edgeIndex;
   ++Step;
