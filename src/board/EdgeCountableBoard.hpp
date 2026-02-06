@@ -24,7 +24,7 @@ class EdgeCountableBoard : public BasicBoard<BoardSize> {
   uint8_t
   MaxEdgeCount(const Edge<BoardSize> edge) const;
 
-  private:
+  protected:
   Array<uint8_t, Box<BoardSize>::Max> Counter;
 };
 
@@ -46,8 +46,7 @@ EdgeCountableBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
   BasicBoard<BoardSize>::Add(edge);
   Int<BoardSize> score = 0;
   for (const Box<BoardSize> box : NearBoxes(edge)) {
-    ++Counter[box];
-    const uint8_t num = Counter[box];
+    const uint8_t num = ++Counter[box];
     assert(num <= 4);
     if (num == 4) {
       ++score;

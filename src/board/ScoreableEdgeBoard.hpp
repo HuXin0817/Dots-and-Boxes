@@ -37,9 +37,14 @@ ScoreableEdgeBoard<BoardSize>::Reset(const EdgeCountableBoard<BoardSize>& newBoa
 template <int64_t BoardSize>
 Int<BoardSize>
 ScoreableEdgeBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
-  const Int<BoardSize> score = EdgeCountableBoard<BoardSize>::Add(edge);
+  BasicBoard<BoardSize>::Add(edge);
+  Int<BoardSize> score = 0;
   for (const Box<BoardSize> box : NearBoxes(edge)) {
-    if (EdgeCountableBoard<BoardSize>::EdgeCount(box) == 3) {
+    const uint8_t num = ++EdgeCountableBoard<BoardSize>::Counter[box];
+    assert(num <= 4);
+    if (num == 4) {
+      ++score;
+    } else if (num == 3) {
       ScoreableEdges.Append(EdgeCountableBoard<BoardSize>::FindNotContainsEdgeInBox(box));
     }
   }
