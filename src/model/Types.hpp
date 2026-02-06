@@ -13,13 +13,13 @@ SelectIntType() {
   constexpr int64_t MaxValue = 2 * BoardSize * (BoardSize + 1);
 
   if constexpr (MaxValue <= std::numeric_limits<int8_t>::max()) {
-    return int_fast8_t();
+    return static_cast<int8_t>(0);
   } else if constexpr (MaxValue <= std::numeric_limits<int16_t>::max()) {
-    return int_fast16_t();
+    return static_cast<int16_t>(0);
   } else if constexpr (MaxValue <= std::numeric_limits<int32_t>::max()) {
-    return int_fast32_t();
+    return static_cast<int32_t>(0);
   } else {
-    return int_fast64_t();
+    return static_cast<int64_t>(0);
   }
 }
 
