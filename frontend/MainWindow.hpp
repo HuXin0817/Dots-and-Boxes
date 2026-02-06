@@ -119,7 +119,7 @@ MainWindow<BoardSize>::Run() {
       }
     }
 
-    assert(!Board.Contains(PlayerMoveEdge.load()));
+    assert(Board.NotContains(PlayerMoveEdge.load()));
     if (BackgroundMode) {
       Add(PlayerMoveEdge.load());
     } else {

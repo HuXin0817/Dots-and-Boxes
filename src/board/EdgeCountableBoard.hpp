@@ -60,7 +60,7 @@ Edge<BoardSize>
 EdgeCountableBoard<BoardSize>::FindNotContainsEdgeInBox(const Box<BoardSize> box) const {
   assert(Counter[box] == 3);
   for (const Edge<BoardSize> edge : NearEdges(box)) {
-    if (!BasicBoard<BoardSize>::Contains(edge)) {
+    if (BasicBoard<BoardSize>::NotContains(edge)) {
       return edge;
     }
   }

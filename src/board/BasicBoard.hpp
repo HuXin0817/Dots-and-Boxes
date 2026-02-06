@@ -15,6 +15,8 @@ class BasicBoard {
   Add(const Edge<BoardSize> edge);
   bool
   Contains(const Edge<BoardSize> edge) const;
+  bool
+  NotContains(const Edge<BoardSize> edge) const;
   Span<Edge<BoardSize>>
   EmptyEdges() const;
   Span<Edge<BoardSize>>
@@ -50,7 +52,7 @@ BasicBoard<BoardSize>::Reset() {
 template <int64_t BoardSize>
 void
 BasicBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
-  assert(!Contains(edge));
+  assert(NotContains(edge));
   const Edge<BoardSize> nowEdge = Edges[Step];
   const Int<BoardSize> edgeIndex = EdgeIndexes[edge];
   assert(Edges[edgeIndex] == edge);
@@ -66,6 +68,12 @@ template <int64_t BoardSize>
 bool
 BasicBoard<BoardSize>::Contains(const Edge<BoardSize> edge) const {
   return EdgeIndexes[edge] < Step;
+}
+
+template <int64_t BoardSize>
+bool
+BasicBoard<BoardSize>::NotContains(const Edge<BoardSize> edge) const {
+  return EdgeIndexes[edge] >= Step;
 }
 
 template <int64_t BoardSize>
