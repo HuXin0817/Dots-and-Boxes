@@ -28,11 +28,33 @@ THE SOFTWARE.
 
 namespace dab::detail::robot {
 
+enum class PlayerType {
+  Human = 0,
+  GreedyRobot,
+  ImproveGreedyRobot,
+  SimulationRobot,
+  MonteCarloRobot,
+  ParallelSearchRobot,
+};
+
+static constexpr const char* PlayerTypeString[] = {
+    "Human",
+    "GreedyRobot",
+    "ImproveGreedyRobot",
+    "SimulationRobot",
+    "MonteCarloRobot",
+    "ParallelSearchRobot",
+};
+
+inline bool PlayerTypeIsRobot(PlayerType playerType) { return playerType != PlayerType::Human; }
+
 class Robot {
  public:
   virtual ~Robot() = default;
 
   virtual Span<Edge> BestCandidateEdges(const RelativeScoreBoard& board) = 0;
 };
+
+Robot* CreateRobot(PlayerType playerType);
 
 }  // namespace dab::detail::robot

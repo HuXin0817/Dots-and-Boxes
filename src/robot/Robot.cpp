@@ -22,33 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#pragma once
-
 #include "ParallelSearchRobot.hpp"
 
 namespace dab::detail::robot {
 
-enum class PlayerType {
-  Human = 0,
-  GreedyRobot,
-  ImproveGreedyRobot,
-  SimulationRobot,
-  MonteCarloRobot,
-  ParallelSearchRobot,
-};
-
-static constexpr const char* PlayerTypeString[] = {
-    "Human",
-    "GreedyRobot",
-    "ImproveGreedyRobot",
-    "SimulationRobot",
-    "MonteCarloRobot",
-    "ParallelSearchRobot",
-};
-
-inline bool PlayerTypeIsRobot(PlayerType playerType) { return playerType != PlayerType::Human; }
-
-inline Robot* CreateRobot(PlayerType playerType) {
+Robot* CreateRobot(PlayerType playerType) {
   switch (playerType) {
     case PlayerType::GreedyRobot:
       return new GreedyRobot();

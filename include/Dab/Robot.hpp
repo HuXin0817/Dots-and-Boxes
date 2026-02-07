@@ -24,7 +24,6 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "../../src/robot/PlayerType.hpp"
 #include "../../src/robot/Robot.hpp"
 
 namespace dab {

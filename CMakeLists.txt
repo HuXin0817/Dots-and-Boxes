@@ -24,6 +24,7 @@ qt_add_executable(${PROJECT_NAME}
     src/board/RelativeScoreBoard.cpp
     src/board/BasicBoard.cpp
 
+    src/robot/Robot.cpp
     src/robot/GreedyRobot.cpp
     src/robot/ImproveGreedyRobot.cpp
     src/robot/ParallelSearchRobot.cpp
