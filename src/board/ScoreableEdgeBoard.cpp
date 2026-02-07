@@ -39,12 +39,12 @@ Int ScoreableEdgeBoard::Add(Edge edge) {
   BasicBoard::Add(edge);
   Int score = 0;
   for (const Box box : NearBoxes(edge)) {
-    const uint8_t count = ++EdgeCountableBoard::Counter[box];
+    const uint8_t count = ++Counter[box];
     assert(count <= 4);
     if (count == 4) {
       ++score;
     } else if (count == 3) {
-      ScoreableEdges.Append(EdgeCountableBoard::FindNotContainsEdgeInBox(box));
+      ScoreableEdges.Append(FindNotContainsEdgeInBox(box));
     }
   }
   return score;
@@ -52,16 +52,16 @@ Int ScoreableEdgeBoard::Add(Edge edge) {
 
 Int ScoreableEdgeBoard::MaxObtainableScore(Int endScore) {
   Int score = 0;
-  while (EdgeCountableBoard::Gaming()) {
+  while (Gaming()) {
     if (ScoreableEdges.Empty()) {
-      if (const Edge edge = EdgeCountableBoard::FindScoreableEdge(); edge != InvalidEdge) {
+      if (const Edge edge = FindScoreableEdge(); edge != InvalidEdge) {
         ScoreableEdges.Append(edge);
       } else {
         break;
       }
     }
     const Edge edge = ScoreableEdges.Pop();
-    if (EdgeCountableBoard::Contains(edge)) {
+    if (Contains(edge)) {
       continue;
     }
     const Int addScore = Add(edge);

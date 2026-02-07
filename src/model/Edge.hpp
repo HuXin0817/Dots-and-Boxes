@@ -40,9 +40,6 @@ class Edge : public IntWapper {
   constexpr Dot Dot1() const;
   constexpr Dot Dot2() const;
   constexpr bool Rotate() const { return v & 1; }
-
- private:
-  using IntWapper::v;
 };
 
 constexpr Edge::Edge(Dot dot1, Dot dot2) {

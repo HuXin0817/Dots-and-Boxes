@@ -26,25 +26,25 @@ THE SOFTWARE.
 
 namespace dab::detail::frontend {
 
-BoxCanvas::BoxCanvas(QWidget* parent) : BaseCanvas(parent) { BaseCanvas::setFixedSize(Width, Width); }
+BoxCanvas::BoxCanvas(QWidget* parent) : BaseCanvas(parent) { setFixedSize(Width, Width); }
 
 void BoxCanvas::paintEvent(QPaintEvent* event) {
-  QWidget::paintEvent(event);
+  paintEvent(event);
 
   QPainter painter(this);
   painter.setRenderHint(QPainter::Antialiasing);
   painter.setPen(Qt::NoPen);
   painter.setBrush(QBrush(Color()));
-  painter.drawRect(BaseCanvas::rect());
+  painter.drawRect(rect());
 }
 
 QColor BoxCanvas::Color() const {
   static constexpr QColor Player1OccupyColor = QColor(64, 64, 255, 64);
   static constexpr QColor Player2OccupyColor = QColor(255, 64, 64, 64);
 
-  if (BaseCanvas::GetOwner() == Owner::None) {
+  if (GetOwner() == Owner::None) {
     return QColor(0, 0, 0, 0);
-  } else if (BaseCanvas::GetOwner() == Owner::Player1) {
+  } else if (GetOwner() == Owner::Player1) {
     return Player1OccupyColor;
   } else {
     return Player2OccupyColor;

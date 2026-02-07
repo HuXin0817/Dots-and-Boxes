@@ -32,11 +32,11 @@ class GreedyRobot : public Robot {
  public:
   GreedyRobot() = default;
   Span<Edge> BestCandidateEdges(const RelativeScoreBoard& board) override;
-  inline bool EnemyUnscoreable() const { return EnemyUnscoreableIndex < Edge::Max; }
-  inline bool Scoreable() const { return ScoreableIndex > 0; }
+  bool EnemyUnscoreable() const { return EnemyUnscoreableIndex < Edge::Max; }
+  bool Scoreable() const { return ScoreableIndex > 0; }
 
  protected:
-  inline Array<Edge, Edge::Max>& GetEdgeBuffer() { return Edges; }
+  Array<Edge, Edge::Max>& GetEdgeBuffer() { return Edges; }
 
  private:
   Int EnemyUnscoreableIndex;

@@ -36,7 +36,7 @@ class RelativeScoreBoard : public EdgeCountableBoard, public Turn {
 
   void Reset(const EdgeCountableBoard& newBoard = EdgeCountableBoard());
   Int Add(Edge edge);
-  inline Int RelativeScore() const { return Score; }
+  Int RelativeScore() const { return Score; }
 
  private:
   Int Score;

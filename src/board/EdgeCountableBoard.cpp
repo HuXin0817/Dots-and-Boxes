@@ -51,7 +51,7 @@ Int EdgeCountableBoard::Add(Edge edge) {
 Edge EdgeCountableBoard::FindNotContainsEdgeInBox(Box box) const {
   assert(Counter[box] == 3);
   for (const Edge edge : NearEdges(box)) {
-    if (BasicBoard::NotContains(edge)) {
+    if (NotContains(edge)) {
       return edge;
     }
   }

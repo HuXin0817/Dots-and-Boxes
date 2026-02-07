@@ -36,7 +36,7 @@ class EdgeCanvas final : public BaseCanvas {
   static constexpr int Height = Width * 5;
 
   explicit EdgeCanvas(bool rotate, const std::function<void()>& callBack, QWidget* parent);
-  inline void SetHighLight(bool highLight) { HighLight = highLight; }
+  void SetHighLight(bool highLight) { HighLight = highLight; }
 
  protected:
   void mousePressEvent(QMouseEvent* event) override;

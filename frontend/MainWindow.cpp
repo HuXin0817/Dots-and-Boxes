@@ -54,8 +54,8 @@ MainWindow::MainWindow(PlayerType player1Type, PlayerType player2Type, bool back
     assert(Robot2);
     Run();
   } else {
-    BaseCanvas::resize(WindowSize, WindowSize);
-    BaseCanvas::setMinimumSize(WindowSize, WindowSize);
+    resize(WindowSize, WindowSize);
+    setMinimumSize(WindowSize, WindowSize);
 
     BoxCanvases.reserve(Box::Max);
     for (Box box = 0; box < Box::Max; ++box) {
@@ -136,7 +136,7 @@ void MainWindow::Run() {
         [this]() -> void {
           QTimer::singleShot(2000, this, [this]() -> void {
             EdgeCanvases[LastEdge]->SetHighLight(false);
-            BaseCanvas::update();
+            update();
             QTimer::singleShot(2000, this, &MainWindow::close);
           });
         },
@@ -145,21 +145,21 @@ void MainWindow::Run() {
 }
 
 void MainWindow::paintEvent(QPaintEvent* event) {
-  QWidget::paintEvent(event);
+  paintEvent(event);
 
   QPainter painter(this);
-  painter.fillRect(BaseCanvas::rect(), Color());
+  painter.fillRect(rect(), Color());
 }
 
 void MainWindow::resizeEvent(QResizeEvent* event) {
-  QWidget::resizeEvent(event);
+  resizeEvent(event);
 
-  const int x0 = (BaseCanvas::width() - BoardWidth) / 2 - BaseCanvas::UnitSize;
-  const int y0 = (BaseCanvas::height() - BoardWidth) / 2 - BaseCanvas::UnitSize;
+  const int x0 = (width() - BoardWidth) / 2 - UnitSize;
+  const int y0 = (height() - BoardWidth) / 2 - UnitSize;
 
   for (Box box = 0; box < Box::Max; ++box) {
-    const int x = x0 + box.X() * EdgeCanvas::Height + 2 * BaseCanvas::UnitSize;
-    const int y = y0 + box.Y() * EdgeCanvas::Height + 2 * BaseCanvas::UnitSize;
+    const int x = x0 + box.X() * EdgeCanvas::Height + 2 * UnitSize;
+    const int y = y0 + box.Y() * EdgeCanvas::Height + 2 * UnitSize;
     BoxCanvases[box]->move(x, y);
   }
 
@@ -167,9 +167,9 @@ void MainWindow::resizeEvent(QResizeEvent* event) {
     int x = x0 + edge.Dot1().X() * EdgeCanvas::Height;
     int y = y0 + edge.Dot1().Y() * EdgeCanvas::Height;
     if (edge.Rotate()) {
-      y += BaseCanvas::UnitSize;
+      y += UnitSize;
     } else {
-      x += BaseCanvas::UnitSize;
+      x += UnitSize;
     }
     EdgeCanvases[edge]->move(x, y);
   }
@@ -182,7 +182,7 @@ void MainWindow::resizeEvent(QResizeEvent* event) {
 }
 
 void MainWindow::showEvent(QShowEvent* event) {
-  QWidget::showEvent(event);
+  showEvent(event);
 
   QThreadPool::globalInstance()->start([this]() -> void { Run(); });
 }
@@ -205,7 +205,7 @@ QColor MainWindow::Color() const {
   static constexpr QColor DarkThemeColor = QColor(43, 43, 43, 255);
   static constexpr QColor LightThemeColor = QColor(242, 242, 242, 255);
 
-  return BaseCanvas::ThemeColor(DarkThemeColor, LightThemeColor);
+  return ThemeColor(DarkThemeColor, LightThemeColor);
 }
 
 void MainWindow::Add(Edge edge) {
@@ -235,7 +235,7 @@ void MainWindow::Add(Edge edge) {
 
   Board.Add(edge);
   if (!BackgroundMode) {
-    BaseCanvas::update();
+    update();
     QApplication::beep();
   }
 }

@@ -36,9 +36,6 @@ class Turn : public IntWapper {
   constexpr bool IsPlayer1Turn() const { return v == Player1Turn; }
   constexpr bool IsPlayer2Turn() const { return v == Player2Turn; }
 
- protected:
-  using IntWapper::v;
-
  private:
   static constexpr Int Player1Turn = 1;
   static constexpr Int Player2Turn = -Player1Turn;

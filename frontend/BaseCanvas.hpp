@@ -47,8 +47,8 @@ class BaseCanvas : public QWidget {
   using QWidget::QWidget;
 
   static QColor ThemeColor(const QColor& DarkThemeColor, const QColor& LightThemeColor);
-  inline bool Hovered() const { return HoverState; }
-  inline Owner GetOwner() const { return Owner; }
+  bool Hovered() const { return HoverState; }
+  Owner GetOwner() const { return Owner; }
   void SetOwner(Turn turn);
 
  protected:

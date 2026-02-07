@@ -36,10 +36,8 @@ class AbsoluteScoreBoard : public RelativeScoreBoard {
 
   void Reset(const EdgeCountableBoard& newBoard = EdgeCountableBoard());
   Int Add(Edge edge);
-
-  using RelativeScoreBoard::RelativeScore;
-  inline Int Player1Score() const { return (TotalScore + RelativeScore()) / 2; }
-  inline Int Player2Score() const { return (TotalScore - RelativeScore()) / 2; }
+  Int Player1Score() const { return (TotalScore + RelativeScore()) / 2; }
+  Int Player2Score() const { return (TotalScore - RelativeScore()) / 2; }
 
  private:
   Int TotalScore;

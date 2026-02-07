@@ -30,23 +30,23 @@ namespace dab::detail::frontend {
 
 EdgeCanvas::EdgeCanvas(bool rotate, const std::function<void()>& callBack, QWidget* parent)
     : BaseCanvas(parent), CallBack(callBack) {
-  BaseCanvas::setFixedSize(rotate ? Width : Height, rotate ? Height : Width);
+  setFixedSize(rotate ? Width : Height, rotate ? Height : Width);
 }
 
 void EdgeCanvas::mousePressEvent(QMouseEvent* event) {
-  QWidget::mousePressEvent(event);
+  mousePressEvent(event);
 
   CallBack();
 }
 
 void EdgeCanvas::paintEvent(QPaintEvent* event) {
-  QWidget::paintEvent(event);
+  paintEvent(event);
 
   QPainter painter(this);
   painter.setRenderHint(QPainter::Antialiasing);
   painter.setPen(Qt::NoPen);
   painter.setBrush(QBrush(Color()));
-  painter.drawRect(BaseCanvas::rect());
+  painter.drawRect(rect());
 }
 
 QColor EdgeCanvas::Color() const {
@@ -57,22 +57,22 @@ QColor EdgeCanvas::Color() const {
   static constexpr QColor Player1OccupyColor = QColor(64, 64, 255, 255);
   static constexpr QColor Player2OccupyColor = QColor(255, 64, 64, 255);
 
-  if (BaseCanvas::GetOwner() == Owner::None) {
-    if (BaseCanvas::Hovered()) {
-      return BaseCanvas::ThemeColor(DarkThemeHoveredColor, LightThemeHoveredColor);
+  if (GetOwner() == Owner::None) {
+    if (Hovered()) {
+      return ThemeColor(DarkThemeHoveredColor, LightThemeHoveredColor);
     }
-    return BaseCanvas::ThemeColor(DarkThemeColor, LightThemeColor);
+    return ThemeColor(DarkThemeColor, LightThemeColor);
   }
 
   QColor color;
-  if (BaseCanvas::GetOwner() == Owner::Player1) {
+  if (GetOwner() == Owner::Player1) {
     color = Player1OccupyColor;
-  } else if (BaseCanvas::GetOwner() == Owner::Player2) {
+  } else if (GetOwner() == Owner::Player2) {
     color = Player2OccupyColor;
   }
   if (HighLight) {
     color.setAlpha(255);
-  } else if (BaseCanvas::Hovered()) {
+  } else if (Hovered()) {
     color.setAlpha(144);
   } else {
     color.setAlpha(128);

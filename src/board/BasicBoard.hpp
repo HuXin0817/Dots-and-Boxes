@@ -34,13 +34,13 @@ class BasicBoard {
 
   void Reset();
   void Add(Edge edge);
-  inline bool Contains(Edge edge) const { return EdgeIndexes[edge] < Step; }
-  inline bool NotContains(Edge edge) const { return EdgeIndexes[edge] >= Step; }
-  inline Span<Edge> EmptyEdges() const { return Span(Edges.begin() + Step, Edges.end()); }
-  inline Span<Edge> MoveRecord() const { return Span(Edges.begin(), Edges.begin() + Step); }
-  inline bool Gaming() const { return Step < Edge::Max; }
-  inline Int RemainStep() const { return Edge::Max - Step; }
-  inline Int NowStep() const { return Step; }
+  bool Contains(Edge edge) const { return EdgeIndexes[edge] < Step; }
+  bool NotContains(Edge edge) const { return EdgeIndexes[edge] >= Step; }
+  Span<Edge> EmptyEdges() const { return Span(Edges.begin() + Step, Edges.end()); }
+  Span<Edge> MoveRecord() const { return Span(Edges.begin(), Edges.begin() + Step); }
+  bool Gaming() const { return Step < Edge::Max; }
+  Int RemainStep() const { return Edge::Max - Step; }
+  Int NowStep() const { return Step; }
 
  private:
   Int Step = 0;
