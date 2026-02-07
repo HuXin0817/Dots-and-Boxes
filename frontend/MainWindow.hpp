@@ -26,7 +26,7 @@ class MainWindow final : public BaseCanvas<BoardSize> {
   explicit MainWindow(const PlayerType player1Type,
                       const PlayerType player2Type,
                       const bool backgroundMode,
-                      QPointer<QWidget> parent);
+                      QWidget* parent);
   void
   Run();
 
@@ -63,7 +63,7 @@ template <int64_t BoardSize>
 MainWindow<BoardSize>::MainWindow(const PlayerType player1Type,
                                   const PlayerType player2Type,
                                   const bool backgroundMode,
-                                  QPointer<QWidget> parent)
+                                  QWidget* parent)
     : BaseCanvas<BoardSize>(parent),
       Player1Type(player1Type),
       Player2Type(player2Type),

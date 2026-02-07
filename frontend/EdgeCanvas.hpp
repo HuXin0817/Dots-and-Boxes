@@ -10,7 +10,7 @@ class EdgeCanvas final : public BaseCanvas<BoardSize> {
   static constexpr int Width = BaseCanvas<BoardSize>::UnitSize * 2;
   static constexpr int Height = Width * 5;
 
-  explicit EdgeCanvas(const bool rotate, const std::function<void()>& callBack, QPointer<QWidget> parent);
+  explicit EdgeCanvas(const bool rotate, const std::function<void()>& callBack, QWidget* parent);
 
   void
   SetHighLight(const bool highLight);
@@ -30,7 +30,7 @@ class EdgeCanvas final : public BaseCanvas<BoardSize> {
 };
 
 template <int64_t BoardSize>
-EdgeCanvas<BoardSize>::EdgeCanvas(const bool rotate, const std::function<void()>& callBack, QPointer<QWidget> parent)
+EdgeCanvas<BoardSize>::EdgeCanvas(const bool rotate, const std::function<void()>& callBack, QWidget* parent)
     : BaseCanvas<BoardSize>(parent), CallBack(callBack) {
   BaseCanvas<BoardSize>::setFixedSize(rotate ? Width : Height, rotate ? Height : Width);
 }

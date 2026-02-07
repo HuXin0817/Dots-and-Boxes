@@ -10,7 +10,7 @@ class BoxCanvas final : public BaseCanvas<BoardSize> {
  public:
   static constexpr int Width = EdgeCanvas<BoardSize>::Height - 2 * BaseCanvas<BoardSize>::UnitSize;
 
-  explicit BoxCanvas(QPointer<QWidget> parent);
+  explicit BoxCanvas(QWidget* parent);
 
  protected:
   void
@@ -22,7 +22,7 @@ class BoxCanvas final : public BaseCanvas<BoardSize> {
 };
 
 template <int64_t BoardSize>
-BoxCanvas<BoardSize>::BoxCanvas(QPointer<QWidget> parent) : BaseCanvas<BoardSize>(parent) {
+BoxCanvas<BoardSize>::BoxCanvas(QWidget* parent) : BaseCanvas<BoardSize>(parent) {
   BaseCanvas<BoardSize>::setFixedSize(Width, Width);
 }
 

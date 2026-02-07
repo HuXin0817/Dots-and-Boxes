@@ -69,7 +69,7 @@ CommandParser<MaxBoardSize, DefaultBoardSize, DefaultPlayerType>::Process(QAppli
 
   qInfo() << Config.ToString().toLocal8Bit().constData();
 
-  QPointer<QWidget> MainWindow = MainWindowCreator<MaxBoardSize>().CreateMainWindow(Config);
+  QWidget* MainWindow = MainWindowCreator<MaxBoardSize>().CreateMainWindow(Config);
   MainWindow->show();
   return application.exec();
 }
