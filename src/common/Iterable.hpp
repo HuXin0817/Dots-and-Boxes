@@ -48,21 +48,21 @@ class Iterable {
   constexpr const auto& Front() const { return begin()[0]; }
   constexpr auto& Back() { return begin()[Size() - 1]; }
   constexpr const auto& Back() const { return begin()[Size() - 1]; }
-  constexpr auto& operator[](uint32_t i);
-  constexpr const auto& operator[](uint32_t i) const;
+  constexpr auto& operator[](const uint32_t i);
+  constexpr const auto& operator[](const uint32_t i) const;
 
  protected:
   ~Iterable() = default;
 };
 
 template <typename Derived>
-constexpr auto& Iterable<Derived>::operator[](uint32_t i) {
+constexpr auto& Iterable<Derived>::operator[](const uint32_t i) {
   assert(i < Size());
   return begin()[i];
 }
 
 template <typename Derived>
-constexpr const auto& Iterable<Derived>::operator[](uint32_t i) const {
+constexpr const auto& Iterable<Derived>::operator[](const uint32_t i) const {
   assert(i < Size());
   return begin()[i];
 }

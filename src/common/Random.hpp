@@ -40,7 +40,7 @@ class Random {
 
  private:
   std::mt19937_64 Rng;
-  std::uniform_int_distribution<uint32_t> dist;
+  std::uniform_int_distribution<uint32_t> Dist;
 };
 
 inline Random::Random() {
@@ -48,8 +48,8 @@ inline Random::Random() {
 }
 
 inline uint32_t Random::Range(const uint32_t min, const uint32_t max) {
-  dist.param(std::uniform_int_distribution<uint32_t>::param_type(min, max));
-  return dist(Rng);
+  Dist.param(std::uniform_int_distribution<uint32_t>::param_type(min, max));
+  return Dist(Rng);
 }
 
 template <typename T>

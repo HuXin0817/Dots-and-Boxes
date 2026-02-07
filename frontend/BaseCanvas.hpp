@@ -48,7 +48,7 @@ class BaseCanvas : public QWidget {
   static QColor ThemeColor(const QColor& DarkThemeColor, const QColor& LightThemeColor);
   bool Hovered() const { return HoverState; }
   Owner GetOwner() const { return Owner; }
-  void SetOwner(Turn<BoardSize> turn);
+  void SetOwner(const Turn<BoardSize> turn);
 
  protected:
   void enterEvent(QEnterEvent* event) override;
@@ -69,7 +69,7 @@ QColor BaseCanvas<BoardSize>::ThemeColor(const QColor& DarkThemeColor, const QCo
 }
 
 template <int64_t BoardSize>
-void BaseCanvas<BoardSize>::SetOwner(Turn<BoardSize> turn) {
+void BaseCanvas<BoardSize>::SetOwner(const Turn<BoardSize> turn) {
   if (turn.IsPlayer1Turn()) {
     Owner = Owner::Player1;
   } else {
