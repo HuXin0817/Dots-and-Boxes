@@ -34,57 +34,47 @@ namespace dab::detail::model {
 template <int64_t BoardSize>
 class Edge : public IntWapper<BoardSize> {
  public:
+  static constexpr Int<BoardSize> Max = 2 * BoardSize * (BoardSize + 1);
+
   using IntWapper<BoardSize>::IntWapper;
   constexpr Edge(const Dot<BoardSize> dot1, const Dot<BoardSize> dot2);
 
-  static constexpr Int<BoardSize> Max = 2 * BoardSize * (BoardSize + 1);
+  constexpr Dot<BoardSize> Dot1() const;
+  constexpr Dot<BoardSize> Dot2() const;
+  constexpr bool Rotate() const { return v & 1; }
 
-  constexpr Dot<BoardSize>
-  Dot1() const;
-  constexpr Dot<BoardSize>
-  Dot2() const;
-  constexpr bool
-  Rotate() const;
+ private:
+  using IntWapper<BoardSize>::v;
 };
 
 template <int64_t BoardSize>
 constexpr Edge<BoardSize>::Edge(const Dot<BoardSize> dot1, const Dot<BoardSize> dot2) {
   if (dot2 - dot1 == 1) {
-    IntWapper<BoardSize>::v = 2 * (dot1 - dot1 / (BoardSize + 1)) + 1;
+    v = 2 * (dot1 - dot1 / (BoardSize + 1)) + 1;
   } else {
-    IntWapper<BoardSize>::v = 2 * dot1;
+    v = 2 * dot1;
   }
-
-  assert(Dot1() == dot1);
-  assert(Dot2() == dot2);
+  assert(Dot1() == dot1 && Dot2() == dot2);
 }
 
 template <int64_t BoardSize>
-constexpr Dot<BoardSize>
-Edge<BoardSize>::Dot1() const {
-  Int<BoardSize> dot = IntWapper<BoardSize>::v >> 1;
-  if (IntWapper<BoardSize>::v & 1) {
+constexpr Dot<BoardSize> Edge<BoardSize>::Dot1() const {
+  Int<BoardSize> dot = v >> 1;
+  if (v & 1) {
     dot += dot / BoardSize;
   }
   return dot;
 }
 
 template <int64_t BoardSize>
-constexpr Dot<BoardSize>
-Edge<BoardSize>::Dot2() const {
-  Int<BoardSize> dot = IntWapper<BoardSize>::v >> 1;
-  if (IntWapper<BoardSize>::v & 1) {
+constexpr Dot<BoardSize> Edge<BoardSize>::Dot2() const {
+  Int<BoardSize> dot = v >> 1;
+  if (v & 1) {
     dot += dot / BoardSize + 1;
   } else {
     dot += BoardSize + 1;
   }
   return dot;
-}
-
-template <int64_t BoardSize>
-constexpr bool
-Edge<BoardSize>::Rotate() const {
-  return IntWapper<BoardSize>::v & 1;
 }
 
 template <int64_t BoardSize>

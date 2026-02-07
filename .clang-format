@@ -1,9 +1,8 @@
 ---
 Language: Cpp
 BasedOnStyle: Google
-AlwaysBreakAfterReturnType: All
 AllowShortBlocksOnASingleLine: false
-AllowShortFunctionsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: true
 AllowShortIfStatementsOnASingleLine: false
 AlignTrailingComments: true
 

@@ -37,12 +37,10 @@ class BoxCanvas final : public BaseCanvas<BoardSize> {
   explicit BoxCanvas(QWidget* parent);
 
  protected:
-  void
-  paintEvent(QPaintEvent* event) override;
+  void paintEvent(QPaintEvent* event) override;
 
  private:
-  QColor
-  Color() const;
+  QColor Color() const;
 };
 
 template <int64_t BoardSize>
@@ -51,8 +49,7 @@ BoxCanvas<BoardSize>::BoxCanvas(QWidget* parent) : BaseCanvas<BoardSize>(parent)
 }
 
 template <int64_t BoardSize>
-void
-BoxCanvas<BoardSize>::paintEvent(QPaintEvent* event) {
+void BoxCanvas<BoardSize>::paintEvent(QPaintEvent* event) {
   QWidget::paintEvent(event);
 
   QPainter painter(this);
@@ -63,8 +60,7 @@ BoxCanvas<BoardSize>::paintEvent(QPaintEvent* event) {
 }
 
 template <int64_t BoardSize>
-QColor
-BoxCanvas<BoardSize>::Color() const {
+QColor BoxCanvas<BoardSize>::Color() const {
   static constexpr QColor Player1OccupyColor = QColor(64, 64, 255, 64);
   static constexpr QColor Player2OccupyColor = QColor(255, 64, 64, 64);
 

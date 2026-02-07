@@ -24,8 +24,7 @@ THE SOFTWARE.
 
 #include <Dab/Frontend/Frontend.hpp>
 
-int
-main(int argc, char* argv[]) {
+int main(int argc, char* argv[]) {
   QApplication application(argc, argv);
 
   application.setApplicationName("Dots and Boxes");

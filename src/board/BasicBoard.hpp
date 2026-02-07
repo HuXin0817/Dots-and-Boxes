@@ -31,26 +31,17 @@ namespace dab::detail::board {
 template <int64_t BoardSize>
 class BasicBoard {
  public:
-  BasicBoard();
+  BasicBoard() { Reset(); }
 
-  void
-  Reset();
-  void
-  Add(const Edge<BoardSize> edge);
-  bool
-  Contains(const Edge<BoardSize> edge) const;
-  bool
-  NotContains(const Edge<BoardSize> edge) const;
-  Span<Edge<BoardSize>>
-  EmptyEdges() const;
-  Span<Edge<BoardSize>>
-  MoveRecord() const;
-  bool
-  Gaming() const;
-  Int<BoardSize>
-  RemainStep() const;
-  Int<BoardSize>
-  NowStep() const;
+  void Reset();
+  void Add(const Edge<BoardSize> edge);
+  bool Contains(const Edge<BoardSize> edge) const { return EdgeIndexes[edge] < Step; }
+  bool NotContains(const Edge<BoardSize> edge) const { return EdgeIndexes[edge] >= Step; }
+  Span<Edge<BoardSize>> EmptyEdges() const { return Span(Edges.begin() + Step, Edges.end()); }
+  Span<Edge<BoardSize>> MoveRecord() const { return Span(Edges.begin(), Edges.begin() + Step); }
+  bool Gaming() const { return Step < Edge<BoardSize>::Max; }
+  Int<BoardSize> RemainStep() const { return Edge<BoardSize>::Max - Step; }
+  Int<BoardSize> NowStep() const { return Step; }
 
  private:
   Int<BoardSize> Step = 0;
@@ -59,13 +50,7 @@ class BasicBoard {
 };
 
 template <int64_t BoardSize>
-BasicBoard<BoardSize>::BasicBoard() {
-  Reset();
-}
-
-template <int64_t BoardSize>
-void
-BasicBoard<BoardSize>::Reset() {
+void BasicBoard<BoardSize>::Reset() {
   Step = 0;
   for (Edge<BoardSize> edge = 0; edge < Edge<BoardSize>::Max; ++edge) {
     EdgeIndexes[edge] = edge;
@@ -74,8 +59,7 @@ BasicBoard<BoardSize>::Reset() {
 }
 
 template <int64_t BoardSize>
-void
-BasicBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
+void BasicBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
   assert(NotContains(edge));
   const Edge<BoardSize> nowEdge = Edges[Step];
   const Int<BoardSize> edgeIndex = EdgeIndexes[edge];
@@ -86,48 +70,6 @@ BasicBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
   EdgeIndexes[edge] = Step;
   EdgeIndexes[nowEdge] = edgeIndex;
   ++Step;
-}
-
-template <int64_t BoardSize>
-bool
-BasicBoard<BoardSize>::Contains(const Edge<BoardSize> edge) const {
-  return EdgeIndexes[edge] < Step;
-}
-
-template <int64_t BoardSize>
-bool
-BasicBoard<BoardSize>::NotContains(const Edge<BoardSize> edge) const {
-  return EdgeIndexes[edge] >= Step;
-}
-
-template <int64_t BoardSize>
-Span<Edge<BoardSize>>
-BasicBoard<BoardSize>::EmptyEdges() const {
-  return Span(Edges.begin() + Step, Edges.end());
-}
-
-template <int64_t BoardSize>
-Span<Edge<BoardSize>>
-BasicBoard<BoardSize>::MoveRecord() const {
-  return Span(Edges.begin(), Edges.begin() + Step);
-}
-
-template <int64_t BoardSize>
-bool
-BasicBoard<BoardSize>::Gaming() const {
-  return Step < Edge<BoardSize>::Max;
-}
-
-template <int64_t BoardSize>
-Int<BoardSize>
-BasicBoard<BoardSize>::RemainStep() const {
-  return Edge<BoardSize>::Max - Step;
-}
-
-template <int64_t BoardSize>
-Int<BoardSize>
-BasicBoard<BoardSize>::NowStep() const {
-  return Step;
 }
 
 }  // namespace dab::detail::board

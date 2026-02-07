@@ -36,8 +36,7 @@ class NearBoxesMapper {
  public:
   constexpr NearBoxesMapper();
 
-  static constexpr List<Box<BoardSize>, 2>
-  GetNearBoxes(const Edge<BoardSize> edge);
+  static constexpr List<Box<BoardSize>, 2> GetNearBoxes(const Edge<BoardSize> edge);
 
   Array<List<Box<BoardSize>, 2>, Edge<BoardSize>::Max> EdgeNearBoxes;
 };
@@ -50,8 +49,7 @@ constexpr NearBoxesMapper<BoardSize>::NearBoxesMapper() {
 }
 
 template <int64_t BoardSize>
-constexpr List<Box<BoardSize>, 2>
-NearBoxesMapper<BoardSize>::GetNearBoxes(const Edge<BoardSize> edge) {
+constexpr List<Box<BoardSize>, 2> NearBoxesMapper<BoardSize>::GetNearBoxes(const Edge<BoardSize> edge) {
   List<Box<BoardSize>, 2> result;
 
   Int<BoardSize> x = edge.Dot2().X() - 1;
@@ -70,8 +68,7 @@ NearBoxesMapper<BoardSize>::GetNearBoxes(const Edge<BoardSize> edge) {
 }
 
 template <int64_t BoardSize>
-const List<Box<BoardSize>, 2>&
-NearBoxes(const Edge<BoardSize> edge) {
+const List<Box<BoardSize>, 2>& NearBoxes(const Edge<BoardSize> edge) {
   static constexpr NearBoxesMapper<BoardSize> Instance;
 
   return Instance.EdgeNearBoxes[edge];

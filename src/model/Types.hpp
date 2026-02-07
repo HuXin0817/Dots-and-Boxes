@@ -30,8 +30,7 @@ THE SOFTWARE.
 namespace dab::detail::model {
 
 template <int64_t BoardSize>
-constexpr auto
-SelectIntType() {
+constexpr auto SelectIntType() {
   constexpr int64_t MaxValue = 2 * BoardSize * (BoardSize + 1);
 
   if constexpr (MaxValue <= std::numeric_limits<int8_t>::max()) {
@@ -52,38 +51,13 @@ template <int64_t BoardSize>
 class IntWapper {
  public:
   constexpr IntWapper() = default;
-  constexpr IntWapper(Int<BoardSize> v);
-  constexpr
-  operator Int<BoardSize>();
-  constexpr
-  operator Int<BoardSize>() const;
-  constexpr void
-  operator++();
+  constexpr IntWapper(const Int<BoardSize> v) : v(v) {}
+  constexpr operator Int<BoardSize>() { return v; }
+  constexpr operator Int<BoardSize>() const { return v; }
+  constexpr void operator++() { ++v; }
 
  protected:
   Int<BoardSize> v = 0;
 };
-
-template <int64_t BoardSize>
-constexpr IntWapper<BoardSize>::IntWapper(Int<BoardSize> v) : v(v) {
-}
-
-template <int64_t BoardSize>
-constexpr IntWapper<BoardSize>::
-operator Int<BoardSize>() {
-  return v;
-}
-
-template <int64_t BoardSize>
-constexpr IntWapper<BoardSize>::
-operator Int<BoardSize>() const {
-  return v;
-}
-
-template <int64_t BoardSize>
-constexpr void
-IntWapper<BoardSize>::operator++() {
-  ++v;
-}
 
 }  // namespace dab::detail::model
