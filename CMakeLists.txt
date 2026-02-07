@@ -14,6 +14,8 @@ find_package(TBB REQUIRED)
 qt_add_executable(${PROJECT_NAME} 
     main.cpp
 
+    src/model/NearEdges.cpp
+    src/model/NearBoxes.cpp
     src/model/SearchScoreMap.cpp
 
     src/board/AbsoluteScoreBoard.cpp

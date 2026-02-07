@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#pragma once
+#include "NearBoxes.hpp"
 
 #include <Dab/Common.hpp>
 
@@ -31,6 +31,42 @@ THE SOFTWARE.
 
 namespace dab::detail::model {
 
-const Array<Edge, 4>& NearEdges(Box box);
+class NearBoxesMapper {
+ public:
+  constexpr NearBoxesMapper();
+  static constexpr List<Box, 2> GetNearBoxes(Edge edge);
+
+  Array<List<Box, 2>, Edge::Max> EdgeNearBoxes;
+};
+
+constexpr NearBoxesMapper::NearBoxesMapper() {
+  for (Edge edge = 0; edge < Edge::Max; ++edge) {
+    EdgeNearBoxes[edge] = GetNearBoxes(edge);
+  }
+}
+
+constexpr List<Box, 2> NearBoxesMapper::GetNearBoxes(Edge edge) {
+  List<Box, 2> result;
+
+  Int x = edge.Dot2().X() - 1;
+  Int y = edge.Dot2().Y() - 1;
+  if (x >= 0 && y >= 0) {
+    result.Append(Box(x, y));
+  }
+
+  x = edge.Dot1().X();
+  y = edge.Dot1().Y();
+  if (x < BoardSize && y < BoardSize) {
+    result.Append(Box(x, y));
+  }
+
+  return result;
+}
+
+const List<Box, 2>& NearBoxes(Edge edge) {
+  static constexpr NearBoxesMapper Instance;
+
+  return Instance.EdgeNearBoxes[edge];
+}
 
 }  // namespace dab::detail::model

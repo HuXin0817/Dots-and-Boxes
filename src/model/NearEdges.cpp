@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#pragma once
+#include "NearEdges.hpp"
 
 #include <Dab/Common.hpp>
 
@@ -31,6 +31,39 @@ THE SOFTWARE.
 
 namespace dab::detail::model {
 
-const Array<Edge, 4>& NearEdges(Box box);
+class NearEdgesMapper {
+ public:
+  constexpr NearEdgesMapper();
+  static constexpr Array<Edge, 4> GetNearEdges(Box box);
+
+  Array<Array<Edge, 4>, Box::Max> BoxNearEdges;
+};
+
+constexpr NearEdgesMapper::NearEdgesMapper() {
+  for (Box box = 0; box < Box::Max; ++box) {
+    BoxNearEdges[box] = GetNearEdges(box);
+  }
+}
+
+constexpr Array<Edge, 4> NearEdgesMapper::GetNearEdges(Box box) {
+  Array<Edge, 4> NearEdges;
+  const Int x = box.X();
+  const Int y = box.Y();
+  const Dot topLeft(x, y);
+  const Dot topRight(x + 1, y);
+  const Dot bottomLeft(x, y + 1);
+  const Dot bottomRight(x + 1, y + 1);
+  NearEdges[0] = Edge(topLeft, topRight);
+  NearEdges[1] = Edge(topLeft, bottomLeft);
+  NearEdges[2] = Edge(bottomLeft, bottomRight);
+  NearEdges[3] = Edge(topRight, bottomRight);
+  return NearEdges;
+}
+
+const Array<Edge, 4>& NearEdges(Box box) {
+  static constexpr NearEdgesMapper Instance;
+
+  return Instance.BoxNearEdges[box];
+}
 
 }  // namespace dab::detail::model
