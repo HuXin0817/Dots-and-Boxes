@@ -22,41 +22,47 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#pragma once
+#include "SearchScoreMap.hpp"
 
-#include <cstdint>
+#include <Dab/Common.hpp>
+#include <algorithm>
 
-#include "Config.hpp"
-#include "MainWindow.hpp"
+#include "Edge.hpp"
 
-namespace dab::detail::frontend {
+namespace dab::detail::model {
 
-template <int64_t MaxBoardSize>
-class MainWindowCreator {
- public:
-  QWidget* CreateMainWindow(const Config& config, QWidget* parent = nullptr);
-
- private:
-  template <int64_t BoardSize>
-  QWidget* CreateMainWindowImpl(const Config& config, QWidget* parent);
-};
-
-template <int64_t MaxBoardSize>
-QWidget* MainWindowCreator<MaxBoardSize>::CreateMainWindow(const Config& config, QWidget* parent) {
-  assert(config.BoardSize > 0 && config.BoardSize <= MaxBoardSize);
-  return CreateMainWindowImpl<MaxBoardSize>(config, parent);
+void SearchScoreMap::Reset() {
+  std::fill(Time.begin(), Time.end(), 0);
+  std::fill(Score.begin(), Score.end(), 0);
+  BestEdges.Clear();
 }
 
-template <int64_t MaxBoardSize>
-template <int64_t BoardSize>
-QWidget* MainWindowCreator<MaxBoardSize>::CreateMainWindowImpl(const Config& config, QWidget* parent) {
-  if (config.BoardSize == BoardSize) {
-    return new MainWindow<BoardSize>(config.Player1Type, config.Player2Type, config.BackgroundMode, parent);
-  }
-  if constexpr (BoardSize > 1) {
-    return CreateMainWindowImpl<BoardSize - 1>(config, parent);
-  }
-  return nullptr;
+void SearchScoreMap::Add(Edge edge, Int score) {
+  ++Time[edge];
+  Score[edge] += score;
 }
 
-}  // namespace dab::detail::frontend
+void SearchScoreMap::Add(const SearchScoreMap& other) {
+  for (Int i = 0; i < Edge::Max; ++i) {
+    Time[i] += other.Time[i];
+    Score[i] += other.Score[i];
+  }
+}
+
+Span<Edge> SearchScoreMap::Export() {
+  float maxScore = 0.0;
+  for (Edge edge = 0; edge < Edge::Max; ++edge) {
+    if (Time[edge] > 0) {
+      if (const float score = static_cast<float>(Score[edge]) / static_cast<float>(Time[edge]);
+          score > maxScore || BestEdges.Empty()) {
+        maxScore = score;
+        BestEdges.ClearAndSet(edge);
+      } else if (score == maxScore) {
+        BestEdges.Append(edge);
+      }
+    }
+  }
+  return Span(BestEdges.begin(), BestEdges.end());
+}
+
+}  // namespace dab::detail::model

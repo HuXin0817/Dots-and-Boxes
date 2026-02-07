@@ -22,27 +22,56 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#pragma once
+#include "ScoreableEdgeBoard.hpp"
 
 #include <Dab/Model.hpp>
 
-#include "BasicBoard.hpp"
+#include "EdgeCountableBoard.hpp"
 
 namespace dab::detail::board {
 
-class EdgeCountableBoard : public BasicBoard {
- public:
-  EdgeCountableBoard() { Reset(); }
+void ScoreableEdgeBoard::Reset(const EdgeCountableBoard& newBoard) {
+  EdgeCountableBoard::operator=(newBoard);
+  ScoreableEdges.Clear();
+}
 
-  void Reset();
-  Int Add(Edge edge);
-  Edge FindNotContainsEdgeInBox(Box box) const;
-  Edge FindScoreableEdge() const;
-  uint8_t EdgeCount(Box box) const { return Counter[box]; }
-  uint8_t MaxEdgeCount(Edge edge) const;
+Int ScoreableEdgeBoard::Add(Edge edge) {
+  BasicBoard::Add(edge);
+  Int score = 0;
+  for (const Box box : NearBoxes(edge)) {
+    const uint8_t count = ++EdgeCountableBoard::Counter[box];
+    assert(count <= 4);
+    if (count == 4) {
+      ++score;
+    } else if (count == 3) {
+      ScoreableEdges.Append(EdgeCountableBoard::FindNotContainsEdgeInBox(box));
+    }
+  }
+  return score;
+}
 
- protected:
-  Array<uint8_t, Box::Max> Counter;
-};
+Int ScoreableEdgeBoard::MaxObtainableScore(Int endScore) {
+  Int score = 0;
+  while (EdgeCountableBoard::Gaming()) {
+    if (ScoreableEdges.Empty()) {
+      if (const Edge edge = EdgeCountableBoard::FindScoreableEdge(); edge != InvalidEdge) {
+        ScoreableEdges.Append(edge);
+      } else {
+        break;
+      }
+    }
+    const Edge edge = ScoreableEdges.Pop();
+    if (EdgeCountableBoard::Contains(edge)) {
+      continue;
+    }
+    const Int addScore = Add(edge);
+    assert(addScore > 0);
+    score += addScore;
+    if (score >= endScore) {
+      break;
+    }
+  }
+  return score;
+}
 
 }  // namespace dab::detail::board

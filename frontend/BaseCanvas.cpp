@@ -22,56 +22,36 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#pragma once
-
-#include <Dab/Robot.hpp>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QPointer>
-#include <QThreadPool>
-#include <QTime>
-#include <QTimer>
-#include <atomic>
-#include <cassert>
-
-#include "BoxCanvas.hpp"
-#include "Dab/Model.hpp"
-#include "DotCanvas.hpp"
-#include "EdgeCanvas.hpp"
+#include "BaseCanvas.hpp"
 
 namespace dab::detail::frontend {
 
-class MainWindow final : public BaseCanvas {
-  Q_OBJECT
+QColor BaseCanvas::ThemeColor(const QColor& DarkThemeColor, const QColor& LightThemeColor) {
+  if (QApplication::styleHints()->colorScheme() == Qt::ColorScheme::Dark) {
+    return DarkThemeColor;
+  } else {
+    return LightThemeColor;
+  }
+}
 
-  static constexpr int BoardWidth = BoardSize * EdgeCanvas::Height;
-  static constexpr int WindowSize = BoardWidth + 2 * BoxCanvas::Width;
+void BaseCanvas::SetOwner(Turn turn) {
+  if (turn.IsPlayer1Turn()) {
+    Owner = Owner::Player1;
+  } else {
+    Owner = Owner::Player2;
+  }
+}
 
- public:
-  explicit MainWindow(PlayerType player1Type, PlayerType player2Type, bool backgroundMode, QWidget* parent);
-  void Run();
+void BaseCanvas::enterEvent(QEnterEvent* event) {
+  QWidget::enterEvent(event);
+  HoverState = true;
+  update();
+}
 
- protected:
-  void paintEvent(QPaintEvent* event) override;
-  void resizeEvent(QResizeEvent* event) override;
-  void showEvent(QShowEvent* event) override;
-
- private:
-  const PlayerType Player1Type;
-  const PlayerType Player2Type;
-  const bool BackgroundMode;
-  QScopedPointer<Robot> Robot1;
-  QScopedPointer<Robot> Robot2;
-  std::atomic<Edge> PlayerMoveEdge;
-  Edge LastEdge;
-  AbsoluteScoreBoard Board;
-  QList<QPointer<BoxCanvas>> BoxCanvases;
-  QList<QPointer<DotCanvas>> DotCanvases;
-  QList<QPointer<EdgeCanvas>> EdgeCanvases;
-
-  void SetPlayerMoveEdge(Edge edge);
-  QColor Color() const;
-  void Add(Edge edge);
-};
+void BaseCanvas::leaveEvent(QEvent* event) {
+  QWidget::leaveEvent(event);
+  HoverState = false;
+  update();
+}
 
 }  // namespace dab::detail::frontend

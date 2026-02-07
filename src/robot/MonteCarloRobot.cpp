@@ -22,44 +22,37 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#pragma once
+#include "MonteCarloRobot.hpp"
 
-#include <Dab/Robot.hpp>
-#include <QApplication>
-#include <QCommandLineParser>
-#include <cstdlib>
+#include <Dab/Board.hpp>
 
-namespace dab::detail::frontend {
+#include "SimulationRobot.hpp"
 
-static constexpr const char* PlayerTypeOptionStrings[] = {
-    "human",
-    "robot:easy",
-    "robot:medium",
-    "robot:hard",
-    "robot:expert",
-    "robot:master",
-};
+namespace dab::detail::robot {
 
-class Config {
- public:
-  QString ToString() const;
+Span<Edge> MonteCarloRobot::BestCandidateEdges(const RelativeScoreBoard& board) {
+  if (Span<Edge> edges; CanEarlyExit(board, edges)) {
+    return edges;
+  }
 
-  PlayerType Player1Type;
-  PlayerType Player2Type;
-  bool BackgroundMode;
-};
+  Random Random;
+  SearchResult.Reset();
+  for (int64_t i = 0; i < SearchTime / board.RemainStep() + 1; ++i) {
+    SimulationBoard.Reset(static_cast<EdgeCountableBoard>(board));
+    const Edge edge = Random.Choice(SubRobot.BestCandidateEdges(SimulationBoard));
+    SimulationBoard.Add(edge);
+    while (SimulationBoard.Gaming()) {
+      SimulationBoard.Add(Random.Choice(SubRobot.BestCandidateEdges(SimulationBoard)));
+    }
+    SearchResult.Add(edge, SimulationBoard.RelativeScore());
+  }
 
-class CommandParser {
-  static constexpr PlayerType DefaultPlayerType = PlayerType::ParallelSearchRobot;
+  return SearchResult.Export();
+}
 
- public:
-  CommandParser() = default;
-  int Process(QApplication& application);
+bool MonteCarloRobot::CanEarlyExit(const RelativeScoreBoard& board, Span<Edge>& result) {
+  result = SubRobot.BestCandidateEdges(board);
+  return result.Size() == 1;
+}
 
- private:
-  QCommandLineOption PlayerTypeOption(int player);
-  QCommandLineOption BackgroundModeOption();
-  PlayerType ParsePlayerType(const QString& arg);
-};
-
-}  // namespace dab::detail::frontend
+}  // namespace dab::detail::robot

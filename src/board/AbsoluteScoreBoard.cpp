@@ -22,44 +22,23 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#pragma once
+#include "AbsoluteScoreBoard.hpp"
 
-#include <Dab/Robot.hpp>
-#include <QApplication>
-#include <QCommandLineParser>
-#include <cstdlib>
+#include <Dab/Model.hpp>
 
-namespace dab::detail::frontend {
+#include "RelativeScoreBoard.hpp"
 
-static constexpr const char* PlayerTypeOptionStrings[] = {
-    "human",
-    "robot:easy",
-    "robot:medium",
-    "robot:hard",
-    "robot:expert",
-    "robot:master",
-};
+namespace dab::detail::board {
 
-class Config {
- public:
-  QString ToString() const;
+void AbsoluteScoreBoard::Reset(const EdgeCountableBoard& newBoard) {
+  RelativeScoreBoard::Reset(newBoard);
+  TotalScore = 0;
+}
 
-  PlayerType Player1Type;
-  PlayerType Player2Type;
-  bool BackgroundMode;
-};
+Int AbsoluteScoreBoard::Add(Edge edge) {
+  Int score = RelativeScoreBoard::Add(edge);
+  TotalScore += score;
+  return score;
+}
 
-class CommandParser {
-  static constexpr PlayerType DefaultPlayerType = PlayerType::ParallelSearchRobot;
-
- public:
-  CommandParser() = default;
-  int Process(QApplication& application);
-
- private:
-  QCommandLineOption PlayerTypeOption(int player);
-  QCommandLineOption BackgroundModeOption();
-  PlayerType ParsePlayerType(const QString& arg);
-};
-
-}  // namespace dab::detail::frontend
+}  // namespace dab::detail::board

@@ -22,44 +22,31 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#pragma once
+#include "BasicBoard.hpp"
 
-#include <Dab/Robot.hpp>
-#include <QApplication>
-#include <QCommandLineParser>
-#include <cstdlib>
+#include <Dab/Model.hpp>
 
-namespace dab::detail::frontend {
+namespace dab::detail::board {
 
-static constexpr const char* PlayerTypeOptionStrings[] = {
-    "human",
-    "robot:easy",
-    "robot:medium",
-    "robot:hard",
-    "robot:expert",
-    "robot:master",
-};
+void BasicBoard::Reset() {
+  Step = 0;
+  for (Edge edge = 0; edge < Edge::Max; ++edge) {
+    EdgeIndexes[edge] = edge;
+    Edges[edge] = edge;
+  }
+}
 
-class Config {
- public:
-  QString ToString() const;
+void BasicBoard::Add(Edge edge) {
+  assert(NotContains(edge));
+  const Edge nowEdge = Edges[Step];
+  const Int edgeIndex = EdgeIndexes[edge];
+  assert(Edges[edgeIndex] == edge);
+  assert(edgeIndex >= Step);
+  Edges[Step] = edge;
+  Edges[edgeIndex] = nowEdge;
+  EdgeIndexes[edge] = Step;
+  EdgeIndexes[nowEdge] = edgeIndex;
+  ++Step;
+}
 
-  PlayerType Player1Type;
-  PlayerType Player2Type;
-  bool BackgroundMode;
-};
-
-class CommandParser {
-  static constexpr PlayerType DefaultPlayerType = PlayerType::ParallelSearchRobot;
-
- public:
-  CommandParser() = default;
-  int Process(QApplication& application);
-
- private:
-  QCommandLineOption PlayerTypeOption(int player);
-  QCommandLineOption BackgroundModeOption();
-  PlayerType ParsePlayerType(const QString& arg);
-};
-
-}  // namespace dab::detail::frontend
+}  // namespace dab::detail::board

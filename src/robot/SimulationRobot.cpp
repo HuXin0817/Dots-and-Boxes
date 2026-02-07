@@ -22,44 +22,36 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#pragma once
+#include "SimulationRobot.hpp"
 
-#include <Dab/Robot.hpp>
-#include <QApplication>
-#include <QCommandLineParser>
-#include <cstdlib>
+#include "ImproveGreedyRobot.hpp"
 
-namespace dab::detail::frontend {
+namespace dab::detail::robot {
 
-static constexpr const char* PlayerTypeOptionStrings[] = {
-    "human",
-    "robot:easy",
-    "robot:medium",
-    "robot:hard",
-    "robot:expert",
-    "robot:master",
-};
+Span<Edge> SimulationRobot::BestCandidateEdges(const RelativeScoreBoard& board) {
+  if (Span<Edge> edges = SubRobot.BestCandidateEdges(board); SubRobot.EnemyUnscoreable()) {
+    return edges;
+  }
 
-class Config {
- public:
-  QString ToString() const;
+  SearchEdges.Clear();
+  Int maxScore = -Box::Max;
+  for (const Edge emptyEdge : board.EmptyEdges()) {
+    SimulationBoard.Reset(static_cast<EdgeCountableBoard>(board));
+    SimulationBoard.Add(emptyEdge);
+    while (SimulationBoard.Gaming()) {
+      const Edge edge = SubRobot.BestCandidateEdges(SimulationBoard).Front();
+      assert(board.MaxEdgeCount(edge) > 1);
+      SimulationBoard.Add(edge);
+    }
+    if (const Int score = SimulationBoard.RelativeScore(); score > maxScore) {
+      maxScore = score;
+      SearchEdges.ClearAndSet(emptyEdge);
+    } else if (score == maxScore) {
+      SearchEdges.Append(emptyEdge);
+    }
+  }
 
-  PlayerType Player1Type;
-  PlayerType Player2Type;
-  bool BackgroundMode;
-};
+  return Span(SearchEdges.begin(), SearchEdges.end());
+}
 
-class CommandParser {
-  static constexpr PlayerType DefaultPlayerType = PlayerType::ParallelSearchRobot;
-
- public:
-  CommandParser() = default;
-  int Process(QApplication& application);
-
- private:
-  QCommandLineOption PlayerTypeOption(int player);
-  QCommandLineOption BackgroundModeOption();
-  PlayerType ParsePlayerType(const QString& arg);
-};
-
-}  // namespace dab::detail::frontend
+}  // namespace dab::detail::robot

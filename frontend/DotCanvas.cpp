@@ -22,56 +22,32 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#pragma once
-
-#include <Dab/Robot.hpp>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QPointer>
-#include <QThreadPool>
-#include <QTime>
-#include <QTimer>
-#include <atomic>
-#include <cassert>
-
-#include "BoxCanvas.hpp"
-#include "Dab/Model.hpp"
 #include "DotCanvas.hpp"
-#include "EdgeCanvas.hpp"
+
+#include "BaseCanvas.hpp"
 
 namespace dab::detail::frontend {
 
-class MainWindow final : public BaseCanvas {
-  Q_OBJECT
+DotCanvas::DotCanvas(QWidget* parent) : BaseCanvas(parent) { BaseCanvas::setFixedSize(Width, Width); }
 
-  static constexpr int BoardWidth = BoardSize * EdgeCanvas::Height;
-  static constexpr int WindowSize = BoardWidth + 2 * BoxCanvas::Width;
+void DotCanvas::paintEvent(QPaintEvent* event) {
+  QWidget::paintEvent(event);
 
- public:
-  explicit MainWindow(PlayerType player1Type, PlayerType player2Type, bool backgroundMode, QWidget* parent);
-  void Run();
+  QPainter painter(this);
+  painter.setRenderHint(QPainter::Antialiasing);
+  painter.setBrush(QBrush(Color()));
+  painter.setPen(Qt::NoPen);
 
- protected:
-  void paintEvent(QPaintEvent* event) override;
-  void resizeEvent(QResizeEvent* event) override;
-  void showEvent(QShowEvent* event) override;
+  const int x = BaseCanvas::width() / 2;
+  const int y = BaseCanvas::height() / 2;
+  painter.drawEllipse(QPoint(x, y), BaseCanvas::UnitSize, BaseCanvas::UnitSize);
+}
 
- private:
-  const PlayerType Player1Type;
-  const PlayerType Player2Type;
-  const bool BackgroundMode;
-  QScopedPointer<Robot> Robot1;
-  QScopedPointer<Robot> Robot2;
-  std::atomic<Edge> PlayerMoveEdge;
-  Edge LastEdge;
-  AbsoluteScoreBoard Board;
-  QList<QPointer<BoxCanvas>> BoxCanvases;
-  QList<QPointer<DotCanvas>> DotCanvases;
-  QList<QPointer<EdgeCanvas>> EdgeCanvases;
+QColor DotCanvas::Color() const {
+  static constexpr QColor DarkThemeColor = QColor(202, 202, 202, 255);
+  static constexpr QColor LightThemeColor = QColor(255, 255, 255, 255);
 
-  void SetPlayerMoveEdge(Edge edge);
-  QColor Color() const;
-  void Add(Edge edge);
-};
+  return BaseCanvas::ThemeColor(DarkThemeColor, LightThemeColor);
+}
 
 }  // namespace dab::detail::frontend

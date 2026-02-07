@@ -48,19 +48,18 @@ static constexpr const char* PlayerTypeString[] = {
 
 inline bool PlayerTypeIsRobot(PlayerType playerType) { return playerType != PlayerType::Human; }
 
-template <int64_t BoardSize>
-Robot<BoardSize>* CreateRobot(PlayerType playerType) {
+inline Robot* CreateRobot(PlayerType playerType) {
   switch (playerType) {
     case PlayerType::GreedyRobot:
-      return new GreedyRobot<BoardSize>();
+      return new GreedyRobot();
     case PlayerType::ImproveGreedyRobot:
-      return new ImproveGreedyRobot<BoardSize>();
+      return new ImproveGreedyRobot();
     case PlayerType::SimulationRobot:
-      return new SimulationRobot<BoardSize>();
+      return new SimulationRobot();
     case PlayerType::MonteCarloRobot:
-      return new MonteCarloRobot<BoardSize>();
+      return new MonteCarloRobot();
     case PlayerType::ParallelSearchRobot:
-      return new ParallelSearchRobot<BoardSize>();
+      return new ParallelSearchRobot();
     case PlayerType::Human:
       break;
   }

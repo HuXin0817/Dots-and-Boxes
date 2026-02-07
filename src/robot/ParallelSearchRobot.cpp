@@ -22,34 +22,26 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#pragma once
+#include "ParallelSearchRobot.hpp"
 
-#include <Dab/Robot.hpp>
-#include <QJsonObject>
-#include <QString>
-#include <cstdint>
+#include <tbb/parallel_for_each.h>
 
-namespace dab::detail::frontend {
+#include "MonteCarloRobot.hpp"
 
-class Config {
- public:
-  QString ToString() const;
+namespace dab::detail::robot {
 
-  int64_t BoardSize;
-  PlayerType Player1Type;
-  PlayerType Player2Type;
-  bool BackgroundMode;
-};
+Span<Edge> ParallelSearchRobot::BestCandidateEdges(const RelativeScoreBoard& board) {
+  if (Span<Edge> edges; SubRobots.Front().CanEarlyExit(board, edges)) {
+    return edges;
+  }
 
-inline QString Config::ToString() const {
-  QJsonObject configData;
-  configData.insert("BoardSize", BoardSize);
-  configData.insert("Player1Type", PlayerTypeString[static_cast<int>(Player1Type)]);
-  configData.insert("Player2Type", PlayerTypeString[static_cast<int>(Player2Type)]);
-  configData.insert("BackgroundMode", BackgroundMode);
-  QJsonObject config;
-  config.insert("Config", configData);
-  return QJsonDocument(config).toJson(QJsonDocument::Compact);
+  SearchResult.Reset();
+  tbb::parallel_for_each(SubRobots, [&](MonteCarloRobot& robot) -> void { robot.BestCandidateEdges(board); });
+  for (const MonteCarloRobot& model : SubRobots) {
+    SearchResult.Add(model.GetSearchResult());
+  }
+
+  return SearchResult.Export();
 }
 
-}  // namespace dab::detail::frontend
+}  // namespace dab::detail::robot

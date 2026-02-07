@@ -38,17 +38,18 @@ enum class Owner {
   Player2,
 };
 
-template <int64_t BoardSize>
 class BaseCanvas : public QWidget {
+  Q_OBJECT
+
  public:
   static constexpr int UnitSize = 6 + 16 / BoardSize;
 
   using QWidget::QWidget;
 
   static QColor ThemeColor(const QColor& DarkThemeColor, const QColor& LightThemeColor);
-  bool Hovered() const { return HoverState; }
-  Owner GetOwner() const { return Owner; }
-  void SetOwner(Turn<BoardSize> turn);
+  inline bool Hovered() const { return HoverState; }
+  inline Owner GetOwner() const { return Owner; }
+  void SetOwner(Turn turn);
 
  protected:
   void enterEvent(QEnterEvent* event) override;
@@ -58,37 +59,5 @@ class BaseCanvas : public QWidget {
   Owner Owner = Owner::None;
   bool HoverState = false;
 };
-
-template <int64_t BoardSize>
-QColor BaseCanvas<BoardSize>::ThemeColor(const QColor& DarkThemeColor, const QColor& LightThemeColor) {
-  if (QApplication::styleHints()->colorScheme() == Qt::ColorScheme::Dark) {
-    return DarkThemeColor;
-  } else {
-    return LightThemeColor;
-  }
-}
-
-template <int64_t BoardSize>
-void BaseCanvas<BoardSize>::SetOwner(Turn<BoardSize> turn) {
-  if (turn.IsPlayer1Turn()) {
-    Owner = Owner::Player1;
-  } else {
-    Owner = Owner::Player2;
-  }
-}
-
-template <int64_t BoardSize>
-void BaseCanvas<BoardSize>::enterEvent(QEnterEvent* event) {
-  QWidget::enterEvent(event);
-  HoverState = true;
-  update();
-}
-
-template <int64_t BoardSize>
-void BaseCanvas<BoardSize>::leaveEvent(QEvent* event) {
-  QWidget::leaveEvent(event);
-  HoverState = false;
-  update();
-}
 
 }  // namespace dab::detail::frontend

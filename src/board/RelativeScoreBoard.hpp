@@ -30,35 +30,16 @@ THE SOFTWARE.
 
 namespace dab::detail::board {
 
-template <int64_t BoardSize>
-class RelativeScoreBoard : public EdgeCountableBoard<BoardSize>, public Turn<BoardSize> {
+class RelativeScoreBoard : public EdgeCountableBoard, public Turn {
  public:
   RelativeScoreBoard() { Reset(); }
 
-  void Reset(const EdgeCountableBoard<BoardSize>& newBoard = EdgeCountableBoard<BoardSize>());
-  Int<BoardSize> Add(Edge<BoardSize> edge);
-  Int<BoardSize> RelativeScore() const { return Score; }
+  void Reset(const EdgeCountableBoard& newBoard = EdgeCountableBoard());
+  Int Add(Edge edge);
+  inline Int RelativeScore() const { return Score; }
 
  private:
-  Int<BoardSize> Score;
+  Int Score;
 };
-
-template <int64_t BoardSize>
-void RelativeScoreBoard<BoardSize>::Reset(const EdgeCountableBoard<BoardSize>& newBoard) {
-  EdgeCountableBoard<BoardSize>::operator=(newBoard);
-  Turn<BoardSize>::Reset();
-  Score = 0;
-}
-
-template <int64_t BoardSize>
-Int<BoardSize> RelativeScoreBoard<BoardSize>::Add(Edge<BoardSize> edge) {
-  const Int<BoardSize> score = EdgeCountableBoard<BoardSize>::Add(edge);
-  if (score > 0) {
-    Score += score * Turn<BoardSize>::v;
-  } else {
-    Turn<BoardSize>::Add();
-  }
-  return score;
-}
 
 }  // namespace dab::detail::board

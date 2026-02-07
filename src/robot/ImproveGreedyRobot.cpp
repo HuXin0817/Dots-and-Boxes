@@ -22,44 +22,35 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#pragma once
+#include "ImproveGreedyRobot.hpp"
 
-#include <Dab/Robot.hpp>
-#include <QApplication>
-#include <QCommandLineParser>
-#include <cstdlib>
+#include "GreedyRobot.hpp"
 
-namespace dab::detail::frontend {
+namespace dab::detail::robot {
 
-static constexpr const char* PlayerTypeOptionStrings[] = {
-    "human",
-    "robot:easy",
-    "robot:medium",
-    "robot:hard",
-    "robot:expert",
-    "robot:master",
-};
+Span<Edge> ImproveGreedyRobot::BestCandidateEdges(const RelativeScoreBoard& board) {
+  if (Span<Edge> edges = GreedyRobot::BestCandidateEdges(board);
+      GreedyRobot::EnemyUnscoreable() || GreedyRobot::Scoreable()) {
+    return edges;
+  }
 
-class Config {
- public:
-  QString ToString() const;
+  Int minScore = Box::Max + 1;
+  Array<Edge, Edge::Max>& candidateEdges = GreedyRobot::GetEdgeBuffer();
+  Int candidateEdgesSize = 0;
 
-  PlayerType Player1Type;
-  PlayerType Player2Type;
-  bool BackgroundMode;
-};
+  for (const Edge edge : board.EmptyEdges()) {
+    SimulationBoard.Reset(static_cast<EdgeCountableBoard>(board));
+    SimulationBoard.Add(edge);
+    if (const Int score = SimulationBoard.MaxObtainableScore(minScore); score < minScore) {
+      minScore = score;
+      candidateEdgesSize = 1;
+      candidateEdges[0] = edge;
+    } else if (score == minScore) {
+      candidateEdges[candidateEdgesSize++] = edge;
+    }
+  }
 
-class CommandParser {
-  static constexpr PlayerType DefaultPlayerType = PlayerType::ParallelSearchRobot;
+  return Span(candidateEdges.begin(), candidateEdges.begin() + candidateEdgesSize);
+}
 
- public:
-  CommandParser() = default;
-  int Process(QApplication& application);
-
- private:
-  QCommandLineOption PlayerTypeOption(int player);
-  QCommandLineOption BackgroundModeOption();
-  PlayerType ParsePlayerType(const QString& arg);
-};
-
-}  // namespace dab::detail::frontend
+}  // namespace dab::detail::robot

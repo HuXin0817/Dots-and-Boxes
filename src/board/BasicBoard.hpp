@@ -28,48 +28,24 @@ THE SOFTWARE.
 
 namespace dab::detail::board {
 
-template <int64_t BoardSize>
 class BasicBoard {
  public:
   BasicBoard() { Reset(); }
 
   void Reset();
-  void Add(Edge<BoardSize> edge);
-  bool Contains(Edge<BoardSize> edge) const { return EdgeIndexes[edge] < Step; }
-  bool NotContains(Edge<BoardSize> edge) const { return EdgeIndexes[edge] >= Step; }
-  Span<Edge<BoardSize>> EmptyEdges() const { return Span(Edges.begin() + Step, Edges.end()); }
-  Span<Edge<BoardSize>> MoveRecord() const { return Span(Edges.begin(), Edges.begin() + Step); }
-  bool Gaming() const { return Step < Edge<BoardSize>::Max; }
-  Int<BoardSize> RemainStep() const { return Edge<BoardSize>::Max - Step; }
-  Int<BoardSize> NowStep() const { return Step; }
+  void Add(Edge edge);
+  inline bool Contains(Edge edge) const { return EdgeIndexes[edge] < Step; }
+  inline bool NotContains(Edge edge) const { return EdgeIndexes[edge] >= Step; }
+  inline Span<Edge> EmptyEdges() const { return Span(Edges.begin() + Step, Edges.end()); }
+  inline Span<Edge> MoveRecord() const { return Span(Edges.begin(), Edges.begin() + Step); }
+  inline bool Gaming() const { return Step < Edge::Max; }
+  inline Int RemainStep() const { return Edge::Max - Step; }
+  inline Int NowStep() const { return Step; }
 
  private:
-  Int<BoardSize> Step = 0;
-  Array<Edge<BoardSize>, Edge<BoardSize>::Max> Edges;
-  Array<Int<BoardSize>, Edge<BoardSize>::Max> EdgeIndexes;
+  Int Step = 0;
+  Array<Edge, Edge::Max> Edges;
+  Array<Int, Edge::Max> EdgeIndexes;
 };
-
-template <int64_t BoardSize>
-void BasicBoard<BoardSize>::Reset() {
-  Step = 0;
-  for (Edge<BoardSize> edge = 0; edge < Edge<BoardSize>::Max; ++edge) {
-    EdgeIndexes[edge] = edge;
-    Edges[edge] = edge;
-  }
-}
-
-template <int64_t BoardSize>
-void BasicBoard<BoardSize>::Add(Edge<BoardSize> edge) {
-  assert(NotContains(edge));
-  const Edge<BoardSize> nowEdge = Edges[Step];
-  const Int<BoardSize> edgeIndex = EdgeIndexes[edge];
-  assert(Edges[edgeIndex] == edge);
-  assert(edgeIndex >= Step);
-  Edges[Step] = edge;
-  Edges[edgeIndex] = nowEdge;
-  EdgeIndexes[edge] = Step;
-  EdgeIndexes[nowEdge] = edgeIndex;
-  ++Step;
-}
 
 }  // namespace dab::detail::board

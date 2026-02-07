@@ -29,7 +29,6 @@ THE SOFTWARE.
 
 namespace dab::detail::model {
 
-template <int64_t BoardSize>
 constexpr auto SelectIntType() {
   constexpr int64_t MaxValue = 2 * BoardSize * (BoardSize + 1);
 
@@ -44,20 +43,18 @@ constexpr auto SelectIntType() {
   }
 }
 
-template <int64_t BoardSize>
-using Int = decltype(SelectIntType<BoardSize>());
+using Int = decltype(SelectIntType());
 
-template <int64_t BoardSize>
 class IntWapper {
  public:
   constexpr IntWapper() = default;
-  constexpr IntWapper(Int<BoardSize> v) : v(v) {}
-  constexpr operator Int<BoardSize>() { return v; }
-  constexpr operator Int<BoardSize>() const { return v; }
+  constexpr IntWapper(Int v) : v(v) {}
+  constexpr operator Int() { return v; }
+  constexpr operator Int() const { return v; }
   constexpr void operator++() { ++v; }
 
  protected:
-  Int<BoardSize> v = 0;
+  Int v = 0;
 };
 
 }  // namespace dab::detail::model

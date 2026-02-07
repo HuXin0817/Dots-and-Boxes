@@ -28,40 +28,13 @@ THE SOFTWARE.
 
 namespace dab::detail::robot {
 
-template <int64_t BoardSize>
-class ImproveGreedyRobot final : public GreedyRobot<BoardSize> {
+class ImproveGreedyRobot final : public GreedyRobot {
  public:
   ImproveGreedyRobot() = default;
-  Span<Edge<BoardSize>> BestCandidateEdges(const RelativeScoreBoard<BoardSize>& board) override;
+  Span<Edge> BestCandidateEdges(const RelativeScoreBoard& board) override;
 
  private:
-  ScoreableEdgeBoard<BoardSize> SimulationBoard;
+  ScoreableEdgeBoard SimulationBoard;
 };
-
-template <int64_t BoardSize>
-Span<Edge<BoardSize>> ImproveGreedyRobot<BoardSize>::BestCandidateEdges(const RelativeScoreBoard<BoardSize>& board) {
-  if (Span<Edge<BoardSize>> edges = GreedyRobot<BoardSize>::BestCandidateEdges(board);
-      GreedyRobot<BoardSize>::EnemyUnscoreable() || GreedyRobot<BoardSize>::Scoreable()) {
-    return edges;
-  }
-
-  Int<BoardSize> minScore = Box<BoardSize>::Max + 1;
-  Array<Edge<BoardSize>, Edge<BoardSize>::Max>& candidateEdges = GreedyRobot<BoardSize>::GetEdgeBuffer();
-  Int<BoardSize> candidateEdgesSize = 0;
-
-  for (const Edge<BoardSize> edge : board.EmptyEdges()) {
-    SimulationBoard.Reset(static_cast<EdgeCountableBoard<BoardSize>>(board));
-    SimulationBoard.Add(edge);
-    if (const Int<BoardSize> score = SimulationBoard.MaxObtainableScore(minScore); score < minScore) {
-      minScore = score;
-      candidateEdgesSize = 1;
-      candidateEdges[0] = edge;
-    } else if (score == minScore) {
-      candidateEdges[candidateEdgesSize++] = edge;
-    }
-  }
-
-  return Span(candidateEdges.begin(), candidateEdges.begin() + candidateEdgesSize);
-}
 
 }  // namespace dab::detail::robot

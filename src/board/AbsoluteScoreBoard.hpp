@@ -30,33 +30,19 @@ THE SOFTWARE.
 
 namespace dab::detail::board {
 
-template <int64_t BoardSize>
-class AbsoluteScoreBoard : public RelativeScoreBoard<BoardSize> {
+class AbsoluteScoreBoard : public RelativeScoreBoard {
  public:
   AbsoluteScoreBoard() { Reset(); }
 
-  void Reset(const EdgeCountableBoard<BoardSize>& newBoard = EdgeCountableBoard<BoardSize>());
-  Int<BoardSize> Add(Edge<BoardSize> edge);
+  void Reset(const EdgeCountableBoard& newBoard = EdgeCountableBoard());
+  Int Add(Edge edge);
 
-  using RelativeScoreBoard<BoardSize>::RelativeScore;
-  Int<BoardSize> Player1Score() const { return (TotalScore + RelativeScore()) / 2; }
-  Int<BoardSize> Player2Score() const { return (TotalScore - RelativeScore()) / 2; }
+  using RelativeScoreBoard::RelativeScore;
+  inline Int Player1Score() const { return (TotalScore + RelativeScore()) / 2; }
+  inline Int Player2Score() const { return (TotalScore - RelativeScore()) / 2; }
 
  private:
-  Int<BoardSize> TotalScore;
+  Int TotalScore;
 };
-
-template <int64_t BoardSize>
-void AbsoluteScoreBoard<BoardSize>::Reset(const EdgeCountableBoard<BoardSize>& newBoard) {
-  RelativeScoreBoard<BoardSize>::Reset(newBoard);
-  TotalScore = 0;
-}
-
-template <int64_t BoardSize>
-Int<BoardSize> AbsoluteScoreBoard<BoardSize>::Add(Edge<BoardSize> edge) {
-  Int<BoardSize> score = RelativeScoreBoard<BoardSize>::Add(edge);
-  TotalScore += score;
-  return score;
-}
 
 }  // namespace dab::detail::board

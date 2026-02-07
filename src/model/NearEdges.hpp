@@ -31,31 +31,28 @@ THE SOFTWARE.
 
 namespace dab::detail::model {
 
-template <int64_t BoardSize>
 class NearEdgesMapper {
  public:
   constexpr NearEdgesMapper();
-  static constexpr Array<Edge<BoardSize>, 4> GetNearEdges(Box<BoardSize> box);
+  static constexpr Array<Edge, 4> GetNearEdges(Box box);
 
-  Array<Array<Edge<BoardSize>, 4>, Box<BoardSize>::Max> BoxNearEdges;
+  Array<Array<Edge, 4>, Box::Max> BoxNearEdges;
 };
 
-template <int64_t BoardSize>
-constexpr NearEdgesMapper<BoardSize>::NearEdgesMapper() {
-  for (Box<BoardSize> box = 0; box < Box<BoardSize>::Max; ++box) {
+constexpr NearEdgesMapper::NearEdgesMapper() {
+  for (Box box = 0; box < Box::Max; ++box) {
     BoxNearEdges[box] = GetNearEdges(box);
   }
 }
 
-template <int64_t BoardSize>
-constexpr Array<Edge<BoardSize>, 4> NearEdgesMapper<BoardSize>::GetNearEdges(Box<BoardSize> box) {
-  Array<Edge<BoardSize>, 4> NearEdges;
-  const Int<BoardSize> x = box.X();
-  const Int<BoardSize> y = box.Y();
-  const Dot<BoardSize> topLeft(x, y);
-  const Dot<BoardSize> topRight(x + 1, y);
-  const Dot<BoardSize> bottomLeft(x, y + 1);
-  const Dot<BoardSize> bottomRight(x + 1, y + 1);
+constexpr Array<Edge, 4> NearEdgesMapper::GetNearEdges(Box box) {
+  Array<Edge, 4> NearEdges;
+  const Int x = box.X();
+  const Int y = box.Y();
+  const Dot topLeft(x, y);
+  const Dot topRight(x + 1, y);
+  const Dot bottomLeft(x, y + 1);
+  const Dot bottomRight(x + 1, y + 1);
   NearEdges[0] = Edge(topLeft, topRight);
   NearEdges[1] = Edge(topLeft, bottomLeft);
   NearEdges[2] = Edge(bottomLeft, bottomRight);
@@ -63,9 +60,8 @@ constexpr Array<Edge<BoardSize>, 4> NearEdgesMapper<BoardSize>::GetNearEdges(Box
   return NearEdges;
 }
 
-template <int64_t BoardSize>
-const Array<Edge<BoardSize>, 4>& NearEdges(Box<BoardSize> box) {
-  static constexpr NearEdgesMapper<BoardSize> Instance;
+inline const Array<Edge, 4>& NearEdges(Box box) {
+  static constexpr NearEdgesMapper Instance;
 
   return Instance.BoxNearEdges[box];
 }

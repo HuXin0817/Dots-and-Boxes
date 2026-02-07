@@ -31,44 +31,40 @@ THE SOFTWARE.
 
 namespace dab::detail::model {
 
-template <int64_t BoardSize>
 class NearBoxesMapper {
  public:
   constexpr NearBoxesMapper();
-  static constexpr List<Box<BoardSize>, 2> GetNearBoxes(Edge<BoardSize> edge);
+  static constexpr List<Box, 2> GetNearBoxes(Edge edge);
 
-  Array<List<Box<BoardSize>, 2>, Edge<BoardSize>::Max> EdgeNearBoxes;
+  Array<List<Box, 2>, Edge::Max> EdgeNearBoxes;
 };
 
-template <int64_t BoardSize>
-constexpr NearBoxesMapper<BoardSize>::NearBoxesMapper() {
-  for (Edge<BoardSize> edge = 0; edge < Edge<BoardSize>::Max; ++edge) {
+constexpr NearBoxesMapper::NearBoxesMapper() {
+  for (Edge edge = 0; edge < Edge::Max; ++edge) {
     EdgeNearBoxes[edge] = GetNearBoxes(edge);
   }
 }
 
-template <int64_t BoardSize>
-constexpr List<Box<BoardSize>, 2> NearBoxesMapper<BoardSize>::GetNearBoxes(Edge<BoardSize> edge) {
-  List<Box<BoardSize>, 2> result;
+constexpr List<Box, 2> NearBoxesMapper::GetNearBoxes(Edge edge) {
+  List<Box, 2> result;
 
-  Int<BoardSize> x = edge.Dot2().X() - 1;
-  Int<BoardSize> y = edge.Dot2().Y() - 1;
+  Int x = edge.Dot2().X() - 1;
+  Int y = edge.Dot2().Y() - 1;
   if (x >= 0 && y >= 0) {
-    result.Append(Box<BoardSize>(x, y));
+    result.Append(Box(x, y));
   }
 
   x = edge.Dot1().X();
   y = edge.Dot1().Y();
   if (x < BoardSize && y < BoardSize) {
-    result.Append(Box<BoardSize>(x, y));
+    result.Append(Box(x, y));
   }
 
   return result;
 }
 
-template <int64_t BoardSize>
-const List<Box<BoardSize>, 2>& NearBoxes(Edge<BoardSize> edge) {
-  static constexpr NearBoxesMapper<BoardSize> Instance;
+inline const List<Box, 2>& NearBoxes(Edge edge) {
+  static constexpr NearBoxesMapper Instance;
 
   return Instance.EdgeNearBoxes[edge];
 }

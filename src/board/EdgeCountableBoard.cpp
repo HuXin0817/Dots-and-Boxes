@@ -22,44 +22,55 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#pragma once
+#include "EdgeCountableBoard.hpp"
 
-#include <Dab/Robot.hpp>
-#include <QApplication>
-#include <QCommandLineParser>
-#include <cstdlib>
+#include <Dab/Model.hpp>
 
-namespace dab::detail::frontend {
+#include "BasicBoard.hpp"
 
-static constexpr const char* PlayerTypeOptionStrings[] = {
-    "human",
-    "robot:easy",
-    "robot:medium",
-    "robot:hard",
-    "robot:expert",
-    "robot:master",
-};
+namespace dab::detail::board {
 
-class Config {
- public:
-  QString ToString() const;
+void EdgeCountableBoard::Reset() {
+  BasicBoard::Reset();
+  Counter = Array<uint8_t, Box::Max>();
+}
 
-  PlayerType Player1Type;
-  PlayerType Player2Type;
-  bool BackgroundMode;
-};
+Int EdgeCountableBoard::Add(Edge edge) {
+  BasicBoard::Add(edge);
+  Int score = 0;
+  for (const Box box : NearBoxes(edge)) {
+    const uint8_t num = ++Counter[box];
+    assert(num <= 4);
+    if (num == 4) {
+      ++score;
+    }
+  }
+  return score;
+}
 
-class CommandParser {
-  static constexpr PlayerType DefaultPlayerType = PlayerType::ParallelSearchRobot;
+Edge EdgeCountableBoard::FindNotContainsEdgeInBox(Box box) const {
+  assert(Counter[box] == 3);
+  for (const Edge edge : NearEdges(box)) {
+    if (BasicBoard::NotContains(edge)) {
+      return edge;
+    }
+  }
+  assert(false);
+  return InvalidEdge;
+}
 
- public:
-  CommandParser() = default;
-  int Process(QApplication& application);
+Edge EdgeCountableBoard::FindScoreableEdge() const {
+  for (Box box = 0; box < Box::Max; ++box) {
+    if (Counter[box] == 3) {
+      return FindNotContainsEdgeInBox(box);
+    }
+  }
+  return InvalidEdge;
+}
 
- private:
-  QCommandLineOption PlayerTypeOption(int player);
-  QCommandLineOption BackgroundModeOption();
-  PlayerType ParsePlayerType(const QString& arg);
-};
+uint8_t EdgeCountableBoard::MaxEdgeCount(Edge edge) const {
+  const List<Box, 2>& nearBoxes = NearBoxes(edge);
+  return std::max(Counter[nearBoxes.Front()], Counter[nearBoxes.Back()]);
+}
 
-}  // namespace dab::detail::frontend
+}  // namespace dab::detail::board

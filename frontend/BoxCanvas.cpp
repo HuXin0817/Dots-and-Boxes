@@ -22,56 +22,33 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#pragma once
-
-#include <Dab/Robot.hpp>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QPointer>
-#include <QThreadPool>
-#include <QTime>
-#include <QTimer>
-#include <atomic>
-#include <cassert>
-
 #include "BoxCanvas.hpp"
-#include "Dab/Model.hpp"
-#include "DotCanvas.hpp"
-#include "EdgeCanvas.hpp"
 
 namespace dab::detail::frontend {
 
-class MainWindow final : public BaseCanvas {
-  Q_OBJECT
+BoxCanvas::BoxCanvas(QWidget* parent) : BaseCanvas(parent) { BaseCanvas::setFixedSize(Width, Width); }
 
-  static constexpr int BoardWidth = BoardSize * EdgeCanvas::Height;
-  static constexpr int WindowSize = BoardWidth + 2 * BoxCanvas::Width;
+void BoxCanvas::paintEvent(QPaintEvent* event) {
+  QWidget::paintEvent(event);
 
- public:
-  explicit MainWindow(PlayerType player1Type, PlayerType player2Type, bool backgroundMode, QWidget* parent);
-  void Run();
+  QPainter painter(this);
+  painter.setRenderHint(QPainter::Antialiasing);
+  painter.setPen(Qt::NoPen);
+  painter.setBrush(QBrush(Color()));
+  painter.drawRect(BaseCanvas::rect());
+}
 
- protected:
-  void paintEvent(QPaintEvent* event) override;
-  void resizeEvent(QResizeEvent* event) override;
-  void showEvent(QShowEvent* event) override;
+QColor BoxCanvas::Color() const {
+  static constexpr QColor Player1OccupyColor = QColor(64, 64, 255, 64);
+  static constexpr QColor Player2OccupyColor = QColor(255, 64, 64, 64);
 
- private:
-  const PlayerType Player1Type;
-  const PlayerType Player2Type;
-  const bool BackgroundMode;
-  QScopedPointer<Robot> Robot1;
-  QScopedPointer<Robot> Robot2;
-  std::atomic<Edge> PlayerMoveEdge;
-  Edge LastEdge;
-  AbsoluteScoreBoard Board;
-  QList<QPointer<BoxCanvas>> BoxCanvases;
-  QList<QPointer<DotCanvas>> DotCanvases;
-  QList<QPointer<EdgeCanvas>> EdgeCanvases;
-
-  void SetPlayerMoveEdge(Edge edge);
-  QColor Color() const;
-  void Add(Edge edge);
-};
+  if (BaseCanvas::GetOwner() == Owner::None) {
+    return QColor(0, 0, 0, 0);
+  } else if (BaseCanvas::GetOwner() == Owner::Player1) {
+    return Player1OccupyColor;
+  } else {
+    return Player2OccupyColor;
+  }
+}
 
 }  // namespace dab::detail::frontend

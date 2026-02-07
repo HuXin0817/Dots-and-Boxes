@@ -22,44 +22,32 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#pragma once
+#include "GreedyRobot.hpp"
 
-#include <Dab/Robot.hpp>
-#include <QApplication>
-#include <QCommandLineParser>
-#include <cstdlib>
+namespace dab::detail::robot {
 
-namespace dab::detail::frontend {
+Span<Edge> GreedyRobot::BestCandidateEdges(const RelativeScoreBoard& board) {
+  ScoreableIndex = 0;
+  EnemyUnscoreableIndex = Edge::Max;
 
-static constexpr const char* PlayerTypeOptionStrings[] = {
-    "human",
-    "robot:easy",
-    "robot:medium",
-    "robot:hard",
-    "robot:expert",
-    "robot:master",
-};
+  Span<Edge> emptyEdges = board.EmptyEdges();
+  for (const Edge edge : emptyEdges) {
+    if (const uint8_t maxCount = board.MaxEdgeCount(edge); maxCount == 3) {
+      Edges[ScoreableIndex++] = edge;
+    } else if (maxCount < 2) {
+      Edges[--EnemyUnscoreableIndex] = edge;
+    }
+  }
+  assert(ScoreableIndex <= EnemyUnscoreableIndex);
 
-class Config {
- public:
-  QString ToString() const;
+  if (Scoreable()) {
+    return Span(Edges.begin(), Edges.begin() + ScoreableIndex);
+  }
+  if (EnemyUnscoreable()) {
+    return Span(Edges.begin() + EnemyUnscoreableIndex, Edges.end());
+  }
 
-  PlayerType Player1Type;
-  PlayerType Player2Type;
-  bool BackgroundMode;
-};
+  return Span(emptyEdges.begin(), emptyEdges.end());
+}
 
-class CommandParser {
-  static constexpr PlayerType DefaultPlayerType = PlayerType::ParallelSearchRobot;
-
- public:
-  CommandParser() = default;
-  int Process(QApplication& application);
-
- private:
-  QCommandLineOption PlayerTypeOption(int player);
-  QCommandLineOption BackgroundModeOption();
-  PlayerType ParsePlayerType(const QString& arg);
-};
-
-}  // namespace dab::detail::frontend
+}  // namespace dab::detail::robot

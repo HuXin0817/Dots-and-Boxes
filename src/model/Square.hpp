@@ -28,21 +28,19 @@ THE SOFTWARE.
 
 namespace dab::detail::model {
 
-template <int64_t BoardSize, int64_t Length>
-class Square : public IntWapper<BoardSize> {
+template <int64_t Length>
+class Square : public IntWapper {
  public:
-  static constexpr Int<BoardSize> Max = Length * Length;
+  static constexpr Int Max = Length * Length;
 
-  using IntWapper<BoardSize>::IntWapper;
-  constexpr Square(Int<BoardSize> x, Int<BoardSize> y) : IntWapper<BoardSize>(x * Length + y) {}
-  constexpr Int<BoardSize> X() const { return IntWapper<BoardSize>::v / Length; }
-  constexpr Int<BoardSize> Y() const { return IntWapper<BoardSize>::v % Length; }
+  using IntWapper::IntWapper;
+  constexpr Square(Int x, Int y) : IntWapper(x * Length + y) {}
+  constexpr Int X() const { return IntWapper::v / Length; }
+  constexpr Int Y() const { return IntWapper::v % Length; }
 };
 
-template <int64_t BoardSize>
-using Box = Square<BoardSize, BoardSize>;
+using Box = Square<BoardSize>;
 
-template <int64_t BoardSize>
-using Dot = Square<BoardSize, BoardSize + 1>;
+using Dot = Square<BoardSize + 1>;
 
 }  // namespace dab::detail::model

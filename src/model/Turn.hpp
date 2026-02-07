@@ -28,21 +28,20 @@ THE SOFTWARE.
 
 namespace dab::detail::model {
 
-template <int64_t BoardSize>
-class Turn : public IntWapper<BoardSize> {
+class Turn : public IntWapper {
  public:
-  constexpr Turn() : IntWapper<BoardSize>(Player1Turn) {}
+  constexpr Turn() : IntWapper(Player1Turn) {}
   constexpr void Reset() { v = Player1Turn; }
   constexpr void Add() { v = -v; }
   constexpr bool IsPlayer1Turn() const { return v == Player1Turn; }
   constexpr bool IsPlayer2Turn() const { return v == Player2Turn; }
 
  protected:
-  using IntWapper<BoardSize>::v;
+  using IntWapper::v;
 
  private:
-  static constexpr Int<BoardSize> Player1Turn = 1;
-  static constexpr Int<BoardSize> Player2Turn = -Player1Turn;
+  static constexpr Int Player1Turn = 1;
+  static constexpr Int Player2Turn = -Player1Turn;
 };
 
 }  // namespace dab::detail::model

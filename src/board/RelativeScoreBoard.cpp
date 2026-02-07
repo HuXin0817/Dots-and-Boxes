@@ -22,44 +22,28 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#pragma once
+#include "RelativeScoreBoard.hpp"
 
-#include <Dab/Robot.hpp>
-#include <QApplication>
-#include <QCommandLineParser>
-#include <cstdlib>
+#include <Dab/Model.hpp>
 
-namespace dab::detail::frontend {
+#include "EdgeCountableBoard.hpp"
 
-static constexpr const char* PlayerTypeOptionStrings[] = {
-    "human",
-    "robot:easy",
-    "robot:medium",
-    "robot:hard",
-    "robot:expert",
-    "robot:master",
-};
+namespace dab::detail::board {
 
-class Config {
- public:
-  QString ToString() const;
+void RelativeScoreBoard::Reset(const EdgeCountableBoard& newBoard) {
+  EdgeCountableBoard::operator=(newBoard);
+  Turn::Reset();
+  Score = 0;
+}
 
-  PlayerType Player1Type;
-  PlayerType Player2Type;
-  bool BackgroundMode;
-};
+Int RelativeScoreBoard::Add(Edge edge) {
+  const Int score = EdgeCountableBoard::Add(edge);
+  if (score > 0) {
+    Score += score * Turn::v;
+  } else {
+    Turn::Add();
+  }
+  return score;
+}
 
-class CommandParser {
-  static constexpr PlayerType DefaultPlayerType = PlayerType::ParallelSearchRobot;
-
- public:
-  CommandParser() = default;
-  int Process(QApplication& application);
-
- private:
-  QCommandLineOption PlayerTypeOption(int player);
-  QCommandLineOption BackgroundModeOption();
-  PlayerType ParsePlayerType(const QString& arg);
-};
-
-}  // namespace dab::detail::frontend
+}  // namespace dab::detail::board
