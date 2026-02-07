@@ -27,7 +27,6 @@ THE SOFTWARE.
 #include <Dab/Robot.hpp>
 #include <QApplication>
 #include <QCommandLineParser>
-#include <cstdlib>
 
 namespace dab::detail::frontend {
 
@@ -54,7 +53,7 @@ class CommandParser {
 
  public:
   CommandParser() = default;
-  int Process(QApplication& application);
+  int Process(const QApplication& application);
 
  private:
   QCommandLineOption PlayerTypeOption(int player);

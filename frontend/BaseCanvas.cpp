@@ -43,13 +43,13 @@ void BaseCanvas::SetOwner(Turn turn) {
 }
 
 void BaseCanvas::enterEvent(QEnterEvent* event) {
-  enterEvent(event);
+  QWidget::enterEvent(event);
   HoverState = true;
   update();
 }
 
 void BaseCanvas::leaveEvent(QEvent* event) {
-  leaveEvent(event);
+  QWidget::leaveEvent(event);
   HoverState = false;
   update();
 }

@@ -79,7 +79,7 @@ void MainWindow::Run() {
   Random Random;
   while (Board.Gaming()) {
     const QTime startTime = QTime::currentTime();
-    const Turn turn = static_cast<Turn>(Board);
+    const Turn turn = Board;
 
     if (PlayerTypeIsRobot(Player1Type) && Board.IsPlayer1Turn()) {
       PlayerMoveEdge = Random.Choice(Robot1->BestCandidateEdges(Board));
@@ -109,7 +109,7 @@ void MainWindow::Run() {
     QJsonObject moveRecord;
     moveRecord.insert("Step", Board.NowStep());
     moveRecord.insert("Turn", turn.IsPlayer1Turn() ? 1 : 2);
-    moveRecord.insert("Move", Int(PlayerMoveEdge.load()));
+    moveRecord.insert("Move", static_cast<Int>(PlayerMoveEdge.load()));
     moveRecord.insert("Score", playerScore);
     moveRecord.insert("Time", seconds);
 
@@ -145,14 +145,14 @@ void MainWindow::Run() {
 }
 
 void MainWindow::paintEvent(QPaintEvent* event) {
-  paintEvent(event);
+  QWidget::paintEvent(event);
 
   QPainter painter(this);
   painter.fillRect(rect(), Color());
 }
 
 void MainWindow::resizeEvent(QResizeEvent* event) {
-  resizeEvent(event);
+  QWidget::resizeEvent(event);
 
   const int x0 = (width() - BoardWidth) / 2 - UnitSize;
   const int y0 = (height() - BoardWidth) / 2 - UnitSize;
@@ -182,7 +182,7 @@ void MainWindow::resizeEvent(QResizeEvent* event) {
 }
 
 void MainWindow::showEvent(QShowEvent* event) {
-  showEvent(event);
+  QWidget::showEvent(event);
 
   QThreadPool::globalInstance()->start([this]() -> void { Run(); });
 }
@@ -213,7 +213,7 @@ void MainWindow::Add(Edge edge) {
     if (Board.NowStep() > 0) {
       EdgeCanvases[LastEdge]->SetHighLight(false);
     }
-    EdgeCanvases[edge]->SetOwner(Board);
+    EdgeCanvases[edge]->SetOwner(static_cast<Turn>(Board));
     EdgeCanvases[edge]->raise();
     for (Dot dot = 0; dot < Dot::Max; ++dot) {
       DotCanvases[dot]->raise();
@@ -227,7 +227,7 @@ void MainWindow::Add(Edge edge) {
         }
       }
       if (count == 3) {
-        BoxCanvases[box]->SetOwner(Board);
+        BoxCanvases[box]->SetOwner(static_cast<Turn>(Board));
       }
     }
     LastEdge = edge;

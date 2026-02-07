@@ -32,7 +32,7 @@ class DotCanvas final : public BaseCanvas {
   Q_OBJECT
 
  public:
-  static constexpr int Width = 2 * BaseCanvas::UnitSize;
+  static constexpr int Width = 2 * UnitSize;
 
   explicit DotCanvas(QWidget* parent);
 

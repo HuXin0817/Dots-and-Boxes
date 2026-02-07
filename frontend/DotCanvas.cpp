@@ -31,7 +31,7 @@ namespace dab::detail::frontend {
 DotCanvas::DotCanvas(QWidget* parent) : BaseCanvas(parent) { setFixedSize(Width, Width); }
 
 void DotCanvas::paintEvent(QPaintEvent* event) {
-  paintEvent(event);
+  QWidget::paintEvent(event);
 
   QPainter painter(this);
   painter.setRenderHint(QPainter::Antialiasing);

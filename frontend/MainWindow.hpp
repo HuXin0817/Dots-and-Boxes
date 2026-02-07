@@ -29,7 +29,6 @@ THE SOFTWARE.
 #include <QJsonObject>
 #include <QPointer>
 #include <QThreadPool>
-#include <QTime>
 #include <QTimer>
 #include <atomic>
 #include <cassert>

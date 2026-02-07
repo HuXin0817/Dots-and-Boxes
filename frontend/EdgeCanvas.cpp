@@ -34,13 +34,13 @@ EdgeCanvas::EdgeCanvas(bool rotate, const std::function<void()>& callBack, QWidg
 }
 
 void EdgeCanvas::mousePressEvent(QMouseEvent* event) {
-  mousePressEvent(event);
+  QWidget::mousePressEvent(event);
 
   CallBack();
 }
 
 void EdgeCanvas::paintEvent(QPaintEvent* event) {
-  paintEvent(event);
+  QWidget::paintEvent(event);
 
   QPainter painter(this);
   painter.setRenderHint(QPainter::Antialiasing);

@@ -36,7 +36,7 @@ class ScoreableEdgeBoard : public EdgeCountableBoard {
 
   void Reset(const EdgeCountableBoard& newBoard = EdgeCountableBoard());
   Int Add(Edge edge);
-  Int MaxObtainableScore(Int minScore);
+  Int MaxObtainableScore(Int endScore);
 
  private:
   Queue<Edge, Edge::Max> ScoreableEdges;

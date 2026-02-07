@@ -32,7 +32,7 @@ class EdgeCanvas final : public BaseCanvas {
   Q_OBJECT
 
  public:
-  static constexpr int Width = BaseCanvas::UnitSize * 2;
+  static constexpr int Width = UnitSize * 2;
   static constexpr int Height = Width * 5;
 
   explicit EdgeCanvas(bool rotate, const std::function<void()>& callBack, QWidget* parent);

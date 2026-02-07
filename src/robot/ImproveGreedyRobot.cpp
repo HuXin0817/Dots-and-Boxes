@@ -29,13 +29,12 @@ THE SOFTWARE.
 namespace dab::detail::robot {
 
 Span<Edge> ImproveGreedyRobot::BestCandidateEdges(const RelativeScoreBoard& board) {
-  if (Span<Edge> edges = GreedyRobot::BestCandidateEdges(board);
-      GreedyRobot::EnemyUnscoreable() || GreedyRobot::Scoreable()) {
+  if (const Span<Edge> edges = GreedyRobot::BestCandidateEdges(board); EnemyUnscoreable() || Scoreable()) {
     return edges;
   }
 
   Int minScore = Box::Max + 1;
-  Array<Edge, Edge::Max>& candidateEdges = GreedyRobot::GetEdgeBuffer();
+  Array<Edge, Edge::Max>& candidateEdges = GetEdgeBuffer();
   Int candidateEdgesSize = 0;
 
   for (const Edge edge : board.EmptyEdges()) {

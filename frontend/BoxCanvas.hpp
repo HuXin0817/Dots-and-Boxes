@@ -33,7 +33,7 @@ class BoxCanvas final : public BaseCanvas {
   Q_OBJECT
 
  public:
-  static constexpr int Width = EdgeCanvas::Height - 2 * BaseCanvas::UnitSize;
+  static constexpr int Width = EdgeCanvas::Height - 2 * UnitSize;
 
   explicit BoxCanvas(QWidget* parent);
 

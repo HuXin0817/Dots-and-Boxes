@@ -29,7 +29,7 @@ THE SOFTWARE.
 namespace dab::detail::robot {
 
 Span<Edge> SimulationRobot::BestCandidateEdges(const RelativeScoreBoard& board) {
-  if (Span<Edge> edges = SubRobot.BestCandidateEdges(board); SubRobot.EnemyUnscoreable()) {
+  if (const Span<Edge> edges = SubRobot.BestCandidateEdges(board); SubRobot.EnemyUnscoreable()) {
     return edges;
   }
 

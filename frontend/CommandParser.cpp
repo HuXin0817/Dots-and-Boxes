@@ -43,7 +43,7 @@ QString Config::ToString() const {
   return QJsonDocument(config).toJson(QJsonDocument::Compact);
 }
 
-int CommandParser::Process(QApplication& application) {
+int CommandParser::Process(const QApplication& application) {
   const QCommandLineOption player1Option = PlayerTypeOption(1);
   const QCommandLineOption player2Option = PlayerTypeOption(2);
   const QCommandLineOption backgroundModeOption = BackgroundModeOption();
@@ -56,7 +56,7 @@ int CommandParser::Process(QApplication& application) {
   parser.addOption(backgroundModeOption);
   parser.process(application);
 
-  Config config{
+  const Config config{
       .Player1Type = ParsePlayerType(parser.value(player1Option)),
       .Player2Type = ParsePlayerType(parser.value(player2Option)),
       .BackgroundMode = parser.isSet(backgroundModeOption),

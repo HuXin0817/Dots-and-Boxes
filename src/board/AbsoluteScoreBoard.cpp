@@ -36,7 +36,7 @@ void AbsoluteScoreBoard::Reset(const EdgeCountableBoard& newBoard) {
 }
 
 Int AbsoluteScoreBoard::Add(Edge edge) {
-  Int score = RelativeScoreBoard::Add(edge);
+  const Int score = RelativeScoreBoard::Add(edge);
   TotalScore += score;
   return score;
 }

@@ -29,7 +29,7 @@ namespace dab::detail::frontend {
 BoxCanvas::BoxCanvas(QWidget* parent) : BaseCanvas(parent) { setFixedSize(Width, Width); }
 
 void BoxCanvas::paintEvent(QPaintEvent* event) {
-  paintEvent(event);
+  QWidget::paintEvent(event);
 
   QPainter painter(this);
   painter.setRenderHint(QPainter::Antialiasing);
