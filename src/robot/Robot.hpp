@@ -6,7 +6,7 @@ namespace dab::detail::robot {
 
 template <int64_t BoardSize>
 class Robot {
-  public:
+ public:
   virtual ~Robot() = default;
 
   virtual Span<Edge<BoardSize>>

@@ -9,7 +9,7 @@ namespace dab::detail::model {
 
 template <int64_t BoardSize>
 class NearBoxesMapper {
-  public:
+ public:
   constexpr NearBoxesMapper();
 
   static constexpr List<Box<BoardSize>, 2>

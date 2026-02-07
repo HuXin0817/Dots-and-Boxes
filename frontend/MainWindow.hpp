@@ -22,7 +22,7 @@ class MainWindow final : public BaseCanvas<BoardSize> {
   static constexpr int BoardWidth = BoardSize * EdgeCanvas<BoardSize>::Height;
   static constexpr int WindowSize = BoardWidth + 2 * BoxCanvas<BoardSize>::Width;
 
-  public:
+ public:
   explicit MainWindow(const PlayerType player1Type,
                       const PlayerType player2Type,
                       const bool backgroundMode,
@@ -30,7 +30,7 @@ class MainWindow final : public BaseCanvas<BoardSize> {
   void
   Run();
 
-  protected:
+ protected:
   void
   paintEvent(QPaintEvent* event) override;
   void
@@ -38,7 +38,7 @@ class MainWindow final : public BaseCanvas<BoardSize> {
   void
   showEvent(QShowEvent* event) override;
 
-  private:
+ private:
   const PlayerType Player1Type;
   const PlayerType Player2Type;
   const bool BackgroundMode;

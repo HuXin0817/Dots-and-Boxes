@@ -22,13 +22,13 @@ template <int64_t MaxBoardSize = 36,
 class CommandParser {
   static_assert(DefaultBoardSize <= MaxBoardSize);
 
-  public:
+ public:
   CommandParser() = default;
 
   int
   Process(QApplication& application);
 
-  private:
+ private:
   QCommandLineOption
   BoardSizeOption();
   QCommandLineOption

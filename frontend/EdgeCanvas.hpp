@@ -6,7 +6,7 @@ namespace dab::detail::frontend {
 
 template <int64_t BoardSize>
 class EdgeCanvas final : public BaseCanvas<BoardSize> {
-  public:
+ public:
   static constexpr int Width = BaseCanvas<BoardSize>::UnitSize * 2;
   static constexpr int Height = Width * 5;
 
@@ -15,13 +15,13 @@ class EdgeCanvas final : public BaseCanvas<BoardSize> {
   void
   SetHighLight(const bool highLight);
 
-  protected:
+ protected:
   void
   mousePressEvent(QMouseEvent* event) override;
   void
   paintEvent(QPaintEvent* event) override;
 
-  private:
+ private:
   bool HighLight = true;
   const std::function<void()> CallBack;
 

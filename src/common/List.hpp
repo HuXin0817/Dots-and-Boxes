@@ -9,7 +9,7 @@ namespace dab::detail::common {
 
 template <typename T, uint32_t Cap>
 class List : public Iterable<List<T, Cap>> {
-  public:
+ public:
   constexpr List() = default;
   constexpr List(const List& other) = default;
   constexpr List(List&& other) = default;
@@ -36,7 +36,7 @@ class List : public Iterable<List<T, Cap>> {
   constexpr const T*
   end() const;
 
-  private:
+ private:
   Array<T, Cap> Data;
   uint32_t Length = 0;
 };

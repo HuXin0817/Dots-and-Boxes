@@ -9,7 +9,7 @@ namespace dab::detail::model {
 
 template <int64_t BoardSize>
 class Edge : public IntWapper<BoardSize> {
-  public:
+ public:
   using IntWapper<BoardSize>::IntWapper;
   constexpr Edge(const Dot<BoardSize> dot1, const Dot<BoardSize> dot2);
 

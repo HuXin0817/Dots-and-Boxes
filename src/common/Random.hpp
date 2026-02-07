@@ -7,7 +7,7 @@
 namespace dab::detail::common {
 
 class Random {
-  public:
+ public:
   explicit Random();
 
   uint32_t
@@ -17,7 +17,7 @@ class Random {
   const auto&
   Choice(const T& data);
 
-  private:
+ private:
   std::mt19937_64 Rng;
   std::uniform_int_distribution<uint32_t> dist;
 };

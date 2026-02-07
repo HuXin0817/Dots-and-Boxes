@@ -10,7 +10,7 @@ template <int64_t BoardSize>
 class MonteCarloRobot final : public Robot<BoardSize> {
   static constexpr int64_t SearchTime = static_cast<int64_t>(Edge<BoardSize>::Max) << 6;
 
-  public:
+ public:
   MonteCarloRobot() = default;
 
   Span<Edge<BoardSize>>
@@ -20,7 +20,7 @@ class MonteCarloRobot final : public Robot<BoardSize> {
   const SearchScoreMap<BoardSize>&
   GetSearchResult() const;
 
-  private:
+ private:
   SimulationRobot<BoardSize> SubRobot;
   RelativeScoreBoard<BoardSize> SimulationBoard;
   SearchScoreMap<BoardSize> SearchResult;

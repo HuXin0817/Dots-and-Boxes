@@ -8,7 +8,7 @@ namespace dab::detail::board {
 
 template <int64_t BoardSize>
 class EdgeCountableBoard : public BasicBoard<BoardSize> {
-  public:
+ public:
   EdgeCountableBoard();
 
   void
@@ -24,7 +24,7 @@ class EdgeCountableBoard : public BasicBoard<BoardSize> {
   uint8_t
   MaxEdgeCount(const Edge<BoardSize> edge) const;
 
-  protected:
+ protected:
   Array<uint8_t, Box<BoardSize>::Max> Counter;
 };
 

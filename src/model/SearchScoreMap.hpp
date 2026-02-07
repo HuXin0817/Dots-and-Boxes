@@ -9,7 +9,7 @@ namespace dab::detail::model {
 
 template <int64_t BoardSize>
 class SearchScoreMap {
-  public:
+ public:
   SearchScoreMap() = default;
 
   void
@@ -21,7 +21,7 @@ class SearchScoreMap {
   Span<Edge<BoardSize>>
   Export();
 
-  private:
+ private:
   Array<int, Edge<BoardSize>::Max> Time;
   Array<int, Edge<BoardSize>::Max> Score;
   List<Edge<BoardSize>, Edge<BoardSize>::Max> BestEdges;

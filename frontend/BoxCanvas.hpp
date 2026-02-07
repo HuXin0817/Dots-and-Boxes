@@ -7,16 +7,16 @@ namespace dab::detail::frontend {
 
 template <int64_t BoardSize>
 class BoxCanvas final : public BaseCanvas<BoardSize> {
-  public:
+ public:
   static constexpr int Width = EdgeCanvas<BoardSize>::Height - 2 * BaseCanvas<BoardSize>::UnitSize;
 
   explicit BoxCanvas(QPointer<QWidget> parent);
 
-  protected:
+ protected:
   void
   paintEvent(QPaintEvent* event) override;
 
-  private:
+ private:
   QColor
   Color() const;
 };

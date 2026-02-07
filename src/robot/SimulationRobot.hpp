@@ -6,13 +6,13 @@ namespace dab::detail::robot {
 
 template <int64_t BoardSize>
 class SimulationRobot final : public Robot<BoardSize> {
-  public:
+ public:
   SimulationRobot() = default;
 
   Span<Edge<BoardSize>>
   BestCandidateEdges(const RelativeScoreBoard<BoardSize>& board) override;
 
-  private:
+ private:
   ImproveGreedyRobot<BoardSize> SubRobot;
   RelativeScoreBoard<BoardSize> SimulationBoard;
   List<Edge<BoardSize>, Edge<BoardSize>::Max> SearchEdges;

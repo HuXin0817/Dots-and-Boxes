@@ -6,7 +6,7 @@ namespace dab::detail::model {
 
 template <int64_t BoardSize>
 class Turn : public IntWapper<BoardSize> {
-  public:
+ public:
   constexpr Turn();
 
   constexpr void
@@ -18,7 +18,7 @@ class Turn : public IntWapper<BoardSize> {
   constexpr bool
   IsPlayer2Turn() const;
 
-  private:
+ private:
   static constexpr Int<BoardSize> Player1Turn = 1;
   static constexpr Int<BoardSize> Player2Turn = -Player1Turn;
 };

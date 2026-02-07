@@ -8,7 +8,7 @@
 namespace dab::detail::frontend {
 
 class Config {
-  public:
+ public:
   Config(const int64_t boardSize,
          const PlayerType player1Type,
          const PlayerType player2Type,

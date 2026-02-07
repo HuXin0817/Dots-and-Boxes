@@ -10,13 +10,13 @@ template <int64_t BoardSize>
 class ParallelSearchRobot final : public Robot<BoardSize> {
   static constexpr int64_t SubRobotNumber = 32;
 
-  public:
+ public:
   ParallelSearchRobot() = default;
 
   Span<Edge<BoardSize>>
   BestCandidateEdges(const RelativeScoreBoard<BoardSize>& board) override;
 
-  private:
+ private:
   Array<MonteCarloRobot<BoardSize>, SubRobotNumber> SubRobots;
   SearchScoreMap<BoardSize> SearchResult;
 };

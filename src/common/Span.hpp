@@ -6,7 +6,7 @@ namespace dab::detail::common {
 
 template <typename T>
 class Span : public Iterable<Span<T>> {
-  public:
+ public:
   constexpr Span() = default;
   constexpr Span(T* begin, T* end);
 
@@ -25,7 +25,7 @@ class Span : public Iterable<Span<T>> {
   constexpr const T*
   end() const;
 
-  private:
+ private:
   T* BeginPtr = nullptr;
   T* EndPtr = nullptr;
 };

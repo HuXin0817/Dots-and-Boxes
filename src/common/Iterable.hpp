@@ -7,7 +7,7 @@ namespace dab::detail::common {
 
 template <typename Derived>
 class Iterable {
-  public:
+ public:
   constexpr auto
   begin();
   constexpr auto
@@ -34,7 +34,7 @@ class Iterable {
   constexpr const auto&
   Back() const;
 
-  protected:
+ protected:
   ~Iterable() = default;
 };
 

@@ -6,7 +6,7 @@ namespace dab::detail::robot {
 
 template <int64_t BoardSize>
 class GreedyRobot : public Robot<BoardSize> {
-  public:
+ public:
   GreedyRobot() = default;
 
   Span<Edge<BoardSize>>
@@ -15,10 +15,12 @@ class GreedyRobot : public Robot<BoardSize> {
   EnemyUnscoreable() const;
   bool
   Scoreable() const;
+
+ protected:
   Array<Edge<BoardSize>, Edge<BoardSize>::Max>&
   GetEdgeBuffer();
 
-  private:
+ private:
   Int<BoardSize> EnemyUnscoreableIndex;
   Int<BoardSize> ScoreableIndex;
   Array<Edge<BoardSize>, Edge<BoardSize>::Max> Edges;

@@ -6,7 +6,7 @@ namespace dab::detail::model {
 
 template <int64_t BoardSize, int64_t Length>
 class Square : public IntWapper<BoardSize> {
-  public:
+ public:
   using IntWapper<BoardSize>::IntWapper;
   constexpr Square(Int<BoardSize> x, Int<BoardSize> y);
 

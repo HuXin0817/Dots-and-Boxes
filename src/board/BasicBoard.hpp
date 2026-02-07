@@ -6,7 +6,7 @@ namespace dab::detail::board {
 
 template <int64_t BoardSize>
 class BasicBoard {
-  public:
+ public:
   BasicBoard();
 
   void
@@ -28,7 +28,7 @@ class BasicBoard {
   Int<BoardSize>
   NowStep() const;
 
-  private:
+ private:
   Int<BoardSize> Step = 0;
   Array<Edge<BoardSize>, Edge<BoardSize>::Max> Edges;
   Array<Int<BoardSize>, Edge<BoardSize>::Max> EdgeIndexes;

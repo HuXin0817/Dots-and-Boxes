@@ -6,16 +6,16 @@ namespace dab::detail::frontend {
 
 template <int64_t BoardSize>
 class DotCanvas final : public BaseCanvas<BoardSize> {
-  public:
+ public:
   static constexpr int Width = 2 * BaseCanvas<BoardSize>::UnitSize;
 
   explicit DotCanvas(QPointer<QWidget> parent);
 
-  protected:
+ protected:
   void
   paintEvent(QPaintEvent* event) override;
 
-  private:
+ private:
   QColor
   Color() const;
 };

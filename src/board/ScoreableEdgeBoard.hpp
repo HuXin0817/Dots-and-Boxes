@@ -8,7 +8,7 @@ namespace dab::detail::board {
 
 template <int64_t BoardSize>
 class ScoreableEdgeBoard : public EdgeCountableBoard<BoardSize> {
-  public:
+ public:
   ScoreableEdgeBoard();
 
   void
@@ -18,7 +18,7 @@ class ScoreableEdgeBoard : public EdgeCountableBoard<BoardSize> {
   Int<BoardSize>
   MaxObtainableScore(const Int<BoardSize> minScore);
 
-  private:
+ private:
   Queue<Edge<BoardSize>, Edge<BoardSize>::Max> ScoreableEdges;
 };
 

@@ -6,13 +6,13 @@ namespace dab::detail::robot {
 
 template <int64_t BoardSize>
 class ImproveGreedyRobot final : public GreedyRobot<BoardSize> {
-  public:
+ public:
   ImproveGreedyRobot() = default;
 
   Span<Edge<BoardSize>>
   BestCandidateEdges(const RelativeScoreBoard<BoardSize>& board) override;
 
-  private:
+ private:
   ScoreableEdgeBoard<BoardSize> SimulationBoard;
 };
 

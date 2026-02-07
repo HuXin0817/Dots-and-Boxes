@@ -16,7 +16,7 @@ enum class Owner {
 
 template <int64_t BoardSize>
 class BaseCanvas : public QWidget {
-  public:
+ public:
   using QWidget::QWidget;
 
   static constexpr int UnitSize = 6 + 16 / BoardSize;
@@ -30,13 +30,13 @@ class BaseCanvas : public QWidget {
   void
   SetOwner(Turn<BoardSize> turn);
 
-  protected:
+ protected:
   void
   enterEvent(QEnterEvent* event) override;
   void
   leaveEvent(QEvent* event) override;
 
-  private:
+ private:
   Owner Owner = Owner::None;
   bool HoverState = false;
 };

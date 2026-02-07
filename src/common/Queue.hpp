@@ -8,7 +8,7 @@ namespace dab::detail::common {
 
 template <typename T, uint32_t Cap>
 class Queue : public Iterable<Queue<T, Cap>> {
-  public:
+ public:
   constexpr Queue() = default;
   constexpr Queue(const Queue& other) = default;
   constexpr Queue(Queue&& other) = default;
@@ -35,7 +35,7 @@ class Queue : public Iterable<Queue<T, Cap>> {
   constexpr const T*
   end() const;
 
-  private:
+ private:
   Array<T, Cap> Data;
   uint32_t BeginIndex = 0;
   uint32_t EndIndex = 0;

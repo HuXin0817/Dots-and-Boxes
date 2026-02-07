@@ -8,7 +8,7 @@ namespace dab::detail::board {
 
 template <int64_t BoardSize>
 class AbsoluteScoreBoard : public RelativeScoreBoard<BoardSize> {
-  public:
+ public:
   AbsoluteScoreBoard();
 
   void
@@ -20,7 +20,7 @@ class AbsoluteScoreBoard : public RelativeScoreBoard<BoardSize> {
   Int<BoardSize>
   Player2Score() const;
 
-  private:
+ private:
   Int<BoardSize> TotalScore;
 };
 

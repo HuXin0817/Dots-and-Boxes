@@ -8,7 +8,7 @@ namespace dab::detail::board {
 
 template <int64_t BoardSize>
 class RelativeScoreBoard : public EdgeCountableBoard<BoardSize>, public Turn<BoardSize> {
-  public:
+ public:
   RelativeScoreBoard();
 
   void
@@ -18,7 +18,7 @@ class RelativeScoreBoard : public EdgeCountableBoard<BoardSize>, public Turn<Boa
   Int<BoardSize>
   RelativeScore() const;
 
-  private:
+ private:
   Int<BoardSize> Score;
 };
 

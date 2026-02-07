@@ -8,7 +8,7 @@ namespace dab::detail::common {
 
 template <typename T, uint32_t Length>
 class Array : public Iterable<Array<T, Length>> {
-  public:
+ public:
   constexpr Array() = default;
   constexpr Array(const Array& other) = default;
   constexpr Array(Array&& other) = default;
@@ -28,7 +28,7 @@ class Array : public Iterable<Array<T, Length>> {
   constexpr const T*
   end() const;
 
-  private:
+ private:
   T Data[Length];
 };
 

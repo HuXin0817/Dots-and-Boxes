@@ -9,7 +9,7 @@ namespace dab::detail::model {
 
 template <int64_t BoardSize>
 class NearEdgesMapper {
-  public:
+ public:
   constexpr NearEdgesMapper();
 
   static constexpr Array<Edge<BoardSize>, 4>

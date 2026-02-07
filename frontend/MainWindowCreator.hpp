@@ -9,11 +9,11 @@ namespace dab::detail::frontend {
 
 template <int64_t MaxBoardSize>
 class MainWindowCreator {
-  public:
+ public:
   QPointer<QWidget>
   CreateMainWindow(const Config& config, const QPointer<QWidget>& parent = nullptr);
 
-  private:
+ private:
   template <int64_t BoardSize>
   QPointer<QWidget>
   CreateMainWindowImpl(const Config& config, QPointer<QWidget> parent);

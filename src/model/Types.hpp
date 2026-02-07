@@ -26,7 +26,7 @@ using Int = decltype(SelectIntType<BoardSize>());
 
 template <int64_t BoardSize>
 class IntWapper {
-  public:
+ public:
   constexpr IntWapper() = default;
   constexpr IntWapper(Int<BoardSize> v);
   constexpr
@@ -36,7 +36,7 @@ class IntWapper {
   constexpr void
   operator++();
 
-  protected:
+ protected:
   Int<BoardSize> v = 0;
 };
 
