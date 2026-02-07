@@ -52,7 +52,7 @@ class CommandParser {
 
  private:
   QCommandLineOption BoardSizeOption();
-  QCommandLineOption PlayerTypeOption(const int8_t player);
+  QCommandLineOption PlayerTypeOption(int player);
   QCommandLineOption BackgroundModeOption();
   int64_t ParseBoardSize(const QString& arg);
   PlayerType ParsePlayerType(const QString& arg);
@@ -101,8 +101,7 @@ QCommandLineOption CommandParser<MaxBoardSize, DefaultBoardSize, DefaultPlayerTy
 }
 
 template <int64_t MaxBoardSize, int64_t DefaultBoardSize, PlayerType DefaultPlayerType>
-QCommandLineOption CommandParser<MaxBoardSize, DefaultBoardSize, DefaultPlayerType>::PlayerTypeOption(
-    const int8_t player) {
+QCommandLineOption CommandParser<MaxBoardSize, DefaultBoardSize, DefaultPlayerType>::PlayerTypeOption(int player) {
   QStringList accepted;
   accepted << "human" << "robot";
   for (size_t i = 1; i < std::size(PlayerTypeOptionStrings); ++i) {

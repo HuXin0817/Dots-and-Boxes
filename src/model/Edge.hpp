@@ -37,7 +37,7 @@ class Edge : public IntWapper<BoardSize> {
   static constexpr Int<BoardSize> Max = 2 * BoardSize * (BoardSize + 1);
 
   using IntWapper<BoardSize>::IntWapper;
-  constexpr Edge(const Dot<BoardSize> dot1, const Dot<BoardSize> dot2);
+  constexpr Edge(Dot<BoardSize> dot1, Dot<BoardSize> dot2);
   constexpr Dot<BoardSize> Dot1() const;
   constexpr Dot<BoardSize> Dot2() const;
   constexpr bool Rotate() const { return v & 1; }
@@ -47,7 +47,7 @@ class Edge : public IntWapper<BoardSize> {
 };
 
 template <int64_t BoardSize>
-constexpr Edge<BoardSize>::Edge(const Dot<BoardSize> dot1, const Dot<BoardSize> dot2) {
+constexpr Edge<BoardSize>::Edge(Dot<BoardSize> dot1, Dot<BoardSize> dot2) {
   if (dot2 - dot1 == 1) {
     v = 2 * (dot1 - dot1 / (BoardSize + 1)) + 1;
   } else {

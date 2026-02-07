@@ -36,7 +36,7 @@ class RelativeScoreBoard : public EdgeCountableBoard<BoardSize>, public Turn<Boa
   RelativeScoreBoard() { Reset(); }
 
   void Reset(const EdgeCountableBoard<BoardSize>& newBoard = EdgeCountableBoard<BoardSize>());
-  Int<BoardSize> Add(const Edge<BoardSize> edge);
+  Int<BoardSize> Add(Edge<BoardSize> edge);
   Int<BoardSize> RelativeScore() const { return Score; }
 
  private:
@@ -51,7 +51,7 @@ void RelativeScoreBoard<BoardSize>::Reset(const EdgeCountableBoard<BoardSize>& n
 }
 
 template <int64_t BoardSize>
-Int<BoardSize> RelativeScoreBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
+Int<BoardSize> RelativeScoreBoard<BoardSize>::Add(Edge<BoardSize> edge) {
   const Int<BoardSize> score = EdgeCountableBoard<BoardSize>::Add(edge);
   if (score > 0) {
     Score += score * Turn<BoardSize>::v;

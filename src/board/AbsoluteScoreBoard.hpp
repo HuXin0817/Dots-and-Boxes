@@ -36,7 +36,7 @@ class AbsoluteScoreBoard : public RelativeScoreBoard<BoardSize> {
   AbsoluteScoreBoard() { Reset(); }
 
   void Reset(const EdgeCountableBoard<BoardSize>& newBoard = EdgeCountableBoard<BoardSize>());
-  Int<BoardSize> Add(const Edge<BoardSize> edge);
+  Int<BoardSize> Add(Edge<BoardSize> edge);
 
   using RelativeScoreBoard<BoardSize>::RelativeScore;
   Int<BoardSize> Player1Score() const { return (TotalScore + RelativeScore()) / 2; }
@@ -53,7 +53,7 @@ void AbsoluteScoreBoard<BoardSize>::Reset(const EdgeCountableBoard<BoardSize>& n
 }
 
 template <int64_t BoardSize>
-Int<BoardSize> AbsoluteScoreBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
+Int<BoardSize> AbsoluteScoreBoard<BoardSize>::Add(Edge<BoardSize> edge) {
   Int<BoardSize> score = RelativeScoreBoard<BoardSize>::Add(edge);
   TotalScore += score;
   return score;

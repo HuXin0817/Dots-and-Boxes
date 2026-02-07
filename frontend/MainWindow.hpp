@@ -47,10 +47,7 @@ class MainWindow final : public BaseCanvas<BoardSize> {
   static constexpr int WindowSize = BoardWidth + 2 * BoxCanvas<BoardSize>::Width;
 
  public:
-  explicit MainWindow(const PlayerType player1Type,
-                      const PlayerType player2Type,
-                      const bool backgroundMode,
-                      QWidget* parent);
+  explicit MainWindow(PlayerType player1Type, PlayerType player2Type, bool backgroundMode, QWidget* parent);
   void Run();
 
  protected:
@@ -71,16 +68,13 @@ class MainWindow final : public BaseCanvas<BoardSize> {
   QList<QPointer<DotCanvas<BoardSize>>> DotCanvases;
   QList<QPointer<EdgeCanvas<BoardSize>>> EdgeCanvases;
 
-  void SetPlayerMoveEdge(const Edge<BoardSize> edge);
+  void SetPlayerMoveEdge(Edge<BoardSize> edge);
   QColor Color() const;
-  void Add(const Edge<BoardSize> edge);
+  void Add(Edge<BoardSize> edge);
 };
 
 template <int64_t BoardSize>
-MainWindow<BoardSize>::MainWindow(const PlayerType player1Type,
-                                  const PlayerType player2Type,
-                                  const bool backgroundMode,
-                                  QWidget* parent)
+MainWindow<BoardSize>::MainWindow(PlayerType player1Type, PlayerType player2Type, bool backgroundMode, QWidget* parent)
     : BaseCanvas<BoardSize>(parent),
       Player1Type(player1Type),
       Player2Type(player2Type),
@@ -234,7 +228,7 @@ void MainWindow<BoardSize>::showEvent(QShowEvent* event) {
 }
 
 template <int64_t BoardSize>
-void MainWindow<BoardSize>::SetPlayerMoveEdge(const Edge<BoardSize> edge) {
+void MainWindow<BoardSize>::SetPlayerMoveEdge(Edge<BoardSize> edge) {
   if (Board.Contains(edge)) {
     return;
   }
@@ -257,7 +251,7 @@ QColor MainWindow<BoardSize>::Color() const {
 }
 
 template <int64_t BoardSize>
-void MainWindow<BoardSize>::Add(const Edge<BoardSize> edge) {
+void MainWindow<BoardSize>::Add(Edge<BoardSize> edge) {
   if (!BackgroundMode) {
     if (Board.NowStep() > 0) {
       EdgeCanvases[LastEdge]->SetHighLight(false);

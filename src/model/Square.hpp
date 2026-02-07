@@ -34,7 +34,7 @@ class Square : public IntWapper<BoardSize> {
   static constexpr Int<BoardSize> Max = Length * Length;
 
   using IntWapper<BoardSize>::IntWapper;
-  constexpr Square(const Int<BoardSize> x, const Int<BoardSize> y) : IntWapper<BoardSize>(x * Length + y) {}
+  constexpr Square(Int<BoardSize> x, Int<BoardSize> y) : IntWapper<BoardSize>(x * Length + y) {}
   constexpr Int<BoardSize> X() const { return IntWapper<BoardSize>::v / Length; }
   constexpr Int<BoardSize> Y() const { return IntWapper<BoardSize>::v % Length; }
 };

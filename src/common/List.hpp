@@ -40,9 +40,9 @@ class List : public Iterable<List<T, Cap>> {
   constexpr List& operator=(const List& other) = default;
   constexpr List& operator=(List&& other) = default;
 
-  constexpr void ClearAndSet(const T item);
+  constexpr void ClearAndSet(T item);
   constexpr void Clear() { Length = 0; }
-  constexpr void Append(const T item);
+  constexpr void Append(T item);
   constexpr uint32_t Size() const { return Length; }
   constexpr T* begin() { return Data.begin(); }
   constexpr const T* begin() const { return Data.begin(); }
@@ -55,13 +55,13 @@ class List : public Iterable<List<T, Cap>> {
 };
 
 template <typename T, uint32_t Cap>
-constexpr void List<T, Cap>::ClearAndSet(const T item) {
+constexpr void List<T, Cap>::ClearAndSet(T item) {
   Data[0] = item;
   Length = 1;
 }
 
 template <typename T, uint32_t Cap>
-constexpr void List<T, Cap>::Append(const T item) {
+constexpr void List<T, Cap>::Append(T item) {
   assert(Length < Cap);
   Data[Length++] = item;
 }

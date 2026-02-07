@@ -51,7 +51,7 @@ template <int64_t BoardSize>
 class IntWapper {
  public:
   constexpr IntWapper() = default;
-  constexpr IntWapper(const Int<BoardSize> v) : v(v) {}
+  constexpr IntWapper(Int<BoardSize> v) : v(v) {}
   constexpr operator Int<BoardSize>() { return v; }
   constexpr operator Int<BoardSize>() const { return v; }
   constexpr void operator++() { ++v; }

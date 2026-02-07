@@ -40,7 +40,7 @@ class Queue : public Iterable<Queue<T, Cap>> {
   constexpr Queue& operator=(Queue&& other) = default;
 
   constexpr void Clear();
-  constexpr void Append(const T item);
+  constexpr void Append(T item);
   constexpr T Pop();
   constexpr uint32_t Size() const { return EndIndex - BeginIndex; }
   constexpr T* begin() { return Data.begin() + BeginIndex; }
@@ -61,7 +61,7 @@ constexpr void Queue<T, Cap>::Clear() {
 }
 
 template <typename T, uint32_t Cap>
-constexpr void Queue<T, Cap>::Append(const T item) {
+constexpr void Queue<T, Cap>::Append(T item) {
   assert(EndIndex < Cap);
   Data[EndIndex++] = item;
 }

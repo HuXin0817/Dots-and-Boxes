@@ -34,9 +34,9 @@ class BasicBoard {
   BasicBoard() { Reset(); }
 
   void Reset();
-  void Add(const Edge<BoardSize> edge);
-  bool Contains(const Edge<BoardSize> edge) const { return EdgeIndexes[edge] < Step; }
-  bool NotContains(const Edge<BoardSize> edge) const { return EdgeIndexes[edge] >= Step; }
+  void Add(Edge<BoardSize> edge);
+  bool Contains(Edge<BoardSize> edge) const { return EdgeIndexes[edge] < Step; }
+  bool NotContains(Edge<BoardSize> edge) const { return EdgeIndexes[edge] >= Step; }
   Span<Edge<BoardSize>> EmptyEdges() const { return Span(Edges.begin() + Step, Edges.end()); }
   Span<Edge<BoardSize>> MoveRecord() const { return Span(Edges.begin(), Edges.begin() + Step); }
   bool Gaming() const { return Step < Edge<BoardSize>::Max; }
@@ -59,7 +59,7 @@ void BasicBoard<BoardSize>::Reset() {
 }
 
 template <int64_t BoardSize>
-void BasicBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
+void BasicBoard<BoardSize>::Add(Edge<BoardSize> edge) {
   assert(NotContains(edge));
   const Edge<BoardSize> nowEdge = Edges[Step];
   const Int<BoardSize> edgeIndex = EdgeIndexes[edge];

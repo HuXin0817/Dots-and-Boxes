@@ -34,7 +34,7 @@ class Random {
  public:
   explicit Random();
 
-  uint32_t Range(const uint32_t min, const uint32_t max);
+  uint32_t Range(uint32_t min, uint32_t max);
   template <typename T>
   const auto& Choice(const T& data);
 
@@ -47,7 +47,7 @@ inline Random::Random() {
   Rng.seed(static_cast<uint64_t>(std::chrono::steady_clock::now().time_since_epoch().count()));
 }
 
-inline uint32_t Random::Range(const uint32_t min, const uint32_t max) {
+inline uint32_t Random::Range(uint32_t min, uint32_t max) {
   Dist.param(std::uniform_int_distribution<uint32_t>::param_type(min, max));
   return Dist(Rng);
 }

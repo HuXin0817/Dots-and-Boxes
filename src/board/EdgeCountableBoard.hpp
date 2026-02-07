@@ -36,11 +36,11 @@ class EdgeCountableBoard : public BasicBoard<BoardSize> {
   EdgeCountableBoard() { Reset(); }
 
   void Reset();
-  Int<BoardSize> Add(const Edge<BoardSize> edge);
-  Edge<BoardSize> FindNotContainsEdgeInBox(const Box<BoardSize> box) const;
+  Int<BoardSize> Add(Edge<BoardSize> edge);
+  Edge<BoardSize> FindNotContainsEdgeInBox(Box<BoardSize> box) const;
   Edge<BoardSize> FindScoreableEdge() const;
-  uint8_t EdgeCount(const Box<BoardSize> box) const { return Counter[box]; }
-  uint8_t MaxEdgeCount(const Edge<BoardSize> edge) const;
+  uint8_t EdgeCount(Box<BoardSize> box) const { return Counter[box]; }
+  uint8_t MaxEdgeCount(Edge<BoardSize> edge) const;
 
  protected:
   Array<uint8_t, Box<BoardSize>::Max> Counter;
@@ -53,7 +53,7 @@ void EdgeCountableBoard<BoardSize>::Reset() {
 }
 
 template <int64_t BoardSize>
-Int<BoardSize> EdgeCountableBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
+Int<BoardSize> EdgeCountableBoard<BoardSize>::Add(Edge<BoardSize> edge) {
   BasicBoard<BoardSize>::Add(edge);
   Int<BoardSize> score = 0;
   for (const Box<BoardSize> box : NearBoxes(edge)) {
@@ -67,7 +67,7 @@ Int<BoardSize> EdgeCountableBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
 }
 
 template <int64_t BoardSize>
-Edge<BoardSize> EdgeCountableBoard<BoardSize>::FindNotContainsEdgeInBox(const Box<BoardSize> box) const {
+Edge<BoardSize> EdgeCountableBoard<BoardSize>::FindNotContainsEdgeInBox(Box<BoardSize> box) const {
   assert(Counter[box] == 3);
   for (const Edge<BoardSize> edge : NearEdges(box)) {
     if (BasicBoard<BoardSize>::NotContains(edge)) {
@@ -89,7 +89,7 @@ Edge<BoardSize> EdgeCountableBoard<BoardSize>::FindScoreableEdge() const {
 }
 
 template <int64_t BoardSize>
-uint8_t EdgeCountableBoard<BoardSize>::MaxEdgeCount(const Edge<BoardSize> edge) const {
+uint8_t EdgeCountableBoard<BoardSize>::MaxEdgeCount(Edge<BoardSize> edge) const {
   const List<Box<BoardSize>, 2>& nearBoxes = NearBoxes(edge);
   return std::max(Counter[nearBoxes.Front()], Counter[nearBoxes.Back()]);
 }

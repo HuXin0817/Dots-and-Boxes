@@ -37,7 +37,7 @@ class SearchScoreMap {
   SearchScoreMap() = default;
 
   void Reset();
-  void Add(const Edge<BoardSize> edge, const Int<BoardSize> score);
+  void Add(Edge<BoardSize> edge, Int<BoardSize> score);
   void Add(const SearchScoreMap& other);
   Span<Edge<BoardSize>> Export();
 
@@ -55,7 +55,7 @@ void SearchScoreMap<BoardSize>::Reset() {
 }
 
 template <int64_t BoardSize>
-void SearchScoreMap<BoardSize>::Add(const Edge<BoardSize> edge, const Int<BoardSize> score) {
+void SearchScoreMap<BoardSize>::Add(Edge<BoardSize> edge, Int<BoardSize> score) {
   ++Time[edge];
   Score[edge] += score;
 }
