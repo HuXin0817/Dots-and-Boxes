@@ -16,4 +16,3 @@ SortIncludes: true
 Standard: Latest
 BinPackParameters: false
 BinPackArguments: false
-ReflowComments: false
