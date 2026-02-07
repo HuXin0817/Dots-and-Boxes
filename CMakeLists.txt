@@ -11,7 +11,7 @@ set(CMAKE_AUTORCC ON)
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 find_package(TBB REQUIRED)
 
-qt_add_executable(${PROJECT_NAME} 
+set(SOURCES
     main.cpp
 
     src/model/NearEdges.cpp
@@ -38,6 +38,11 @@ qt_add_executable(${PROJECT_NAME}
     frontend/BaseCanvas.cpp
     frontend/DotCanvas.cpp
 )
-target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/include")
-target_compile_definitions(${PROJECT_NAME} PRIVATE QT_NO_KEYWORDS BoardSize=6)
-target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets TBB::tbb)
+
+foreach(BoardSize RANGE 1 36)
+    set(Executable "${PROJECT_NAME}_${BoardSize}x${BoardSize}")
+    qt_add_executable(${Executable} ${SOURCES})
+    target_include_directories(${Executable} PRIVATE "${CMAKE_SOURCE_DIR}/include")
+    target_compile_definitions(${Executable} PRIVATE QT_NO_KEYWORDS BoardSize=${BoardSize})
+    target_link_libraries(${Executable} PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets TBB::tbb)
+endforeach()
