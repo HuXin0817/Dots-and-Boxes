@@ -36,7 +36,6 @@ class ParallelSearchRobot final : public Robot<BoardSize> {
 
  public:
   ParallelSearchRobot() = default;
-
   Span<Edge<BoardSize>> BestCandidateEdges(const RelativeScoreBoard<BoardSize>& board) override;
 
  private:

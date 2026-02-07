@@ -35,7 +35,6 @@ class EdgeCanvas final : public BaseCanvas<BoardSize> {
   static constexpr int Height = Width * 5;
 
   explicit EdgeCanvas(const bool rotate, const std::function<void()>& callBack, QWidget* parent);
-
   void SetHighLight(const bool highLight) { HighLight = highLight; }
 
  protected:

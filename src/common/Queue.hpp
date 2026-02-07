@@ -42,7 +42,6 @@ class Queue : public Iterable<Queue<T, Cap>> {
   constexpr void Clear();
   constexpr void Append(const T item);
   constexpr T Pop();
-
   constexpr uint32_t Size() const { return EndIndex - BeginIndex; }
   constexpr T* begin() { return Data.begin() + BeginIndex; }
   constexpr const T* begin() const { return Data.begin() + BeginIndex; }

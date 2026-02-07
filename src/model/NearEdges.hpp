@@ -35,7 +35,6 @@ template <int64_t BoardSize>
 class NearEdgesMapper {
  public:
   constexpr NearEdgesMapper();
-
   static constexpr Array<Edge<BoardSize>, 4> GetNearEdges(const Box<BoardSize> box);
 
   Array<Array<Edge<BoardSize>, 4>, Box<BoardSize>::Max> BoxNearEdges;

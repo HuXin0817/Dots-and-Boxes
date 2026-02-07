@@ -41,9 +41,9 @@ enum class Owner {
 template <int64_t BoardSize>
 class BaseCanvas : public QWidget {
  public:
-  using QWidget::QWidget;
-
   static constexpr int UnitSize = 6 + 16 / BoardSize;
+
+  using QWidget::QWidget;
 
   static QColor ThemeColor(const QColor& DarkThemeColor, const QColor& LightThemeColor);
   bool Hovered() const { return HoverState; }

@@ -36,7 +36,6 @@ class MonteCarloRobot final : public Robot<BoardSize> {
 
  public:
   MonteCarloRobot() = default;
-
   Span<Edge<BoardSize>> BestCandidateEdges(const RelativeScoreBoard<BoardSize>& board) override;
   bool CanEarlyExit(const RelativeScoreBoard<BoardSize>& board, Span<Edge<BoardSize>>& result);
   const SearchScoreMap<BoardSize>& GetSearchResult() const { return SearchResult; }

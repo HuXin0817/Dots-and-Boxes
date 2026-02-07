@@ -48,7 +48,6 @@ class CommandParser {
 
  public:
   CommandParser() = default;
-
   int Process(QApplication& application);
 
  private:
@@ -75,18 +74,19 @@ int CommandParser<MaxBoardSize, DefaultBoardSize, DefaultPlayerType>::Process(QA
   parser.addOption(backgroundModeOption);
   parser.process(application);
 
-  Config Config(ParseBoardSize(parser.value(boardSizeOption)),
-                ParsePlayerType(parser.value(player1Option)),
-                ParsePlayerType(parser.value(player2Option)),
-                parser.isSet(backgroundModeOption));
-  if (Config.BackgroundMode && (!PlayerTypeIsRobot(Config.Player1Type) || !PlayerTypeIsRobot(Config.Player2Type))) {
+  Config config{
+      .BoardSize = ParseBoardSize(parser.value(boardSizeOption)),
+      .Player1Type = ParsePlayerType(parser.value(player1Option)),
+      .Player2Type = ParsePlayerType(parser.value(player2Option)),
+      .BackgroundMode = parser.isSet(backgroundModeOption),
+  };
+  if (config.BackgroundMode && (!PlayerTypeIsRobot(config.Player1Type) || !PlayerTypeIsRobot(config.Player2Type))) {
     qInfo("Error: player type 'human' is not allow in background mode.");
     exit(EXIT_FAILURE);
   }
+  qInfo() << config.ToString().toLocal8Bit().constData();
 
-  qInfo() << Config.ToString().toLocal8Bit().constData();
-
-  QWidget* MainWindow = MainWindowCreator<MaxBoardSize>().CreateMainWindow(Config);
+  QWidget* MainWindow = MainWindowCreator<MaxBoardSize>().CreateMainWindow(config);
   MainWindow->show();
   return application.exec();
 }

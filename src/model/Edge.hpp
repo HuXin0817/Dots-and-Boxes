@@ -38,7 +38,6 @@ class Edge : public IntWapper<BoardSize> {
 
   using IntWapper<BoardSize>::IntWapper;
   constexpr Edge(const Dot<BoardSize> dot1, const Dot<BoardSize> dot2);
-
   constexpr Dot<BoardSize> Dot1() const;
   constexpr Dot<BoardSize> Dot2() const;
   constexpr bool Rotate() const { return v & 1; }

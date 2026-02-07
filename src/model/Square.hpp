@@ -35,7 +35,6 @@ class Square : public IntWapper<BoardSize> {
 
   using IntWapper<BoardSize>::IntWapper;
   constexpr Square(Int<BoardSize> x, Int<BoardSize> y) : IntWapper<BoardSize>(x * Length + y) {}
-
   constexpr Int<BoardSize> X() const { return IntWapper<BoardSize>::v / Length; }
   constexpr Int<BoardSize> Y() const { return IntWapper<BoardSize>::v % Length; }
 };

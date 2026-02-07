@@ -32,7 +32,6 @@ template <int64_t BoardSize>
 class SimulationRobot final : public Robot<BoardSize> {
  public:
   SimulationRobot() = default;
-
   Span<Edge<BoardSize>> BestCandidateEdges(const RelativeScoreBoard<BoardSize>& board) override;
 
  private:

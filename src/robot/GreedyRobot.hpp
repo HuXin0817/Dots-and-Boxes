@@ -32,7 +32,6 @@ template <int64_t BoardSize>
 class GreedyRobot : public Robot<BoardSize> {
  public:
   GreedyRobot() = default;
-
   Span<Edge<BoardSize>> BestCandidateEdges(const RelativeScoreBoard<BoardSize>& board) override;
   bool EnemyUnscoreable() const { return EnemyUnscoreableIndex < Edge<BoardSize>::Max; }
   bool Scoreable() const { return ScoreableIndex > 0; }
