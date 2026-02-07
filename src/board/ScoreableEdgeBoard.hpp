@@ -54,11 +54,11 @@ Int<BoardSize> ScoreableEdgeBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
   BasicBoard<BoardSize>::Add(edge);
   Int<BoardSize> score = 0;
   for (const Box<BoardSize> box : NearBoxes(edge)) {
-    const uint8_t num = ++EdgeCountableBoard<BoardSize>::Counter[box];
-    assert(num <= 4);
-    if (num == 4) {
+    const uint8_t count = ++EdgeCountableBoard<BoardSize>::Counter[box];
+    assert(count <= 4);
+    if (count == 4) {
       ++score;
-    } else if (num == 3) {
+    } else if (count == 3) {
       ScoreableEdges.Append(EdgeCountableBoard<BoardSize>::FindNotContainsEdgeInBox(box));
     }
   }
@@ -66,7 +66,7 @@ Int<BoardSize> ScoreableEdgeBoard<BoardSize>::Add(const Edge<BoardSize> edge) {
 }
 
 template <int64_t BoardSize>
-Int<BoardSize> ScoreableEdgeBoard<BoardSize>::MaxObtainableScore(const Int<BoardSize> minScore) {
+Int<BoardSize> ScoreableEdgeBoard<BoardSize>::MaxObtainableScore(const Int<BoardSize> endScore) {
   Int<BoardSize> score = 0;
   while (EdgeCountableBoard<BoardSize>::Gaming()) {
     if (ScoreableEdges.Empty()) {
@@ -84,7 +84,7 @@ Int<BoardSize> ScoreableEdgeBoard<BoardSize>::MaxObtainableScore(const Int<Board
     const Int<BoardSize> addScore = Add(edge);
     assert(addScore > 0);
     score += addScore;
-    if (score >= minScore) {
+    if (score >= endScore) {
       break;
     }
   }
