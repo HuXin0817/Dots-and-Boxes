@@ -30,7 +30,6 @@ THE SOFTWARE.
 #include "../../src/model/SearchScoreMap.hpp"
 #include "../../src/model/Square.hpp"
 #include "../../src/model/Turn.hpp"
-#include "../../src/model/Types.hpp"
 
 namespace dab {
 

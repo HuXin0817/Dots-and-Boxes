@@ -26,8 +26,8 @@ THE SOFTWARE.
 
 #include <cassert>
 
+#include "IntWapper.hpp"
 #include "Square.hpp"
-#include "Types.hpp"
 
 namespace dab::detail::model {
 
