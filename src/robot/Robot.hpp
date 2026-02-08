@@ -52,7 +52,7 @@ class Robot {
  public:
   virtual ~Robot() = default;
 
-  virtual Span<Edge> BestCandidateEdges(const RelativeScoreBoard& board) = 0;
+  virtual Span<const Edge> BestCandidateEdges(const RelativeScoreBoard& board) = 0;
 };
 
 Robot* CreateRobot(PlayerType playerType);

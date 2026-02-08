@@ -28,8 +28,8 @@ THE SOFTWARE.
 
 namespace dab::detail::robot {
 
-Span<Edge> SimulationRobot::BestCandidateEdges(const RelativeScoreBoard& board) {
-  if (const Span<Edge> edges = SubRobot.BestCandidateEdges(board); SubRobot.EnemyUnscoreable()) {
+Span<const Edge> SimulationRobot::BestCandidateEdges(const RelativeScoreBoard& board) {
+  if (const Span<const Edge> edges = SubRobot.BestCandidateEdges(board); SubRobot.EnemyUnscoreable()) {
     return edges;
   }
 
@@ -51,7 +51,7 @@ Span<Edge> SimulationRobot::BestCandidateEdges(const RelativeScoreBoard& board) 
     }
   }
 
-  return Span(SearchEdges.begin(), SearchEdges.end());
+  return {SearchEdges.begin(), SearchEdges.end()};
 }
 
 }  // namespace dab::detail::robot

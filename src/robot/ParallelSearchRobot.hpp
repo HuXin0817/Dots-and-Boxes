@@ -33,7 +33,7 @@ class ParallelSearchRobot final : public Robot {
 
  public:
   ParallelSearchRobot() = default;
-  Span<Edge> BestCandidateEdges(const RelativeScoreBoard& board) override;
+  Span<const Edge> BestCandidateEdges(const RelativeScoreBoard& board) override;
 
  private:
   Array<MonteCarloRobot, SubRobotNumber> SubRobots;

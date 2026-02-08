@@ -26,11 +26,11 @@ THE SOFTWARE.
 
 namespace dab::detail::robot {
 
-Span<Edge> GreedyRobot::BestCandidateEdges(const RelativeScoreBoard& board) {
+Span<const Edge> GreedyRobot::BestCandidateEdges(const RelativeScoreBoard& board) {
   ScoreableIndex = 0;
   EnemyUnscoreableIndex = Edge::Max;
 
-  Span<Edge> emptyEdges = board.EmptyEdges();
+  Span<const Edge> emptyEdges = board.EmptyEdges();
   for (const Edge edge : emptyEdges) {
     if (const uint8_t maxCount = board.MaxEdgeCount(edge); maxCount == 3) {
       Edges[ScoreableIndex++] = edge;
@@ -41,13 +41,13 @@ Span<Edge> GreedyRobot::BestCandidateEdges(const RelativeScoreBoard& board) {
   assert(ScoreableIndex <= EnemyUnscoreableIndex);
 
   if (Scoreable()) {
-    return Span(Edges.begin(), Edges.begin() + ScoreableIndex);
+    return {Edges.begin(), Edges.begin() + ScoreableIndex};
   }
   if (EnemyUnscoreable()) {
-    return Span(Edges.begin() + EnemyUnscoreableIndex, Edges.end());
+    return {Edges.begin() + EnemyUnscoreableIndex, Edges.end()};
   }
 
-  return Span(emptyEdges.begin(), emptyEdges.end());
+  return {emptyEdges.begin(), emptyEdges.end()};
 }
 
 }  // namespace dab::detail::robot

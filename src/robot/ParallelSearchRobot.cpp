@@ -30,8 +30,8 @@ THE SOFTWARE.
 
 namespace dab::detail::robot {
 
-Span<Edge> ParallelSearchRobot::BestCandidateEdges(const RelativeScoreBoard& board) {
-  if (Span<Edge> edges; SubRobots.Front().CanEarlyExit(board, edges)) {
+Span<const Edge> ParallelSearchRobot::BestCandidateEdges(const RelativeScoreBoard& board) {
+  if (Span<const Edge> edges; SubRobots.Front().CanEarlyExit(board, edges)) {
     return edges;
   }
 

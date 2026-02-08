@@ -36,8 +36,8 @@ class BasicBoard {
   void Add(Edge edge);
   bool Contains(Edge edge) const { return EdgeIndexes[edge] < Step; }
   bool NotContains(Edge edge) const { return EdgeIndexes[edge] >= Step; }
-  Span<Edge> EmptyEdges() const { return Span(Edges.begin() + Step, Edges.end()); }
-  Span<Edge> MoveRecord() const { return Span(Edges.begin(), Edges.begin() + Step); }
+  Span<const Edge> EmptyEdges() const { return {Edges.begin() + Step, Edges.end()}; }
+  Span<const Edge> MoveRecord() const { return {Edges.begin(), Edges.begin() + Step}; }
   bool Gaming() const { return Step < Edge::Max; }
   Int RemainStep() const { return Edge::Max - Step; }
   Int NowStep() const { return Step; }

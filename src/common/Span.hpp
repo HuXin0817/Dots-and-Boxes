@@ -33,8 +33,6 @@ class Span : public Iterable<Span<T>> {
  public:
   constexpr Span() = default;
   constexpr Span(T* begin, T* end) : BeginPtr(begin), EndPtr(end) {}
-  template <typename Other>
-  constexpr operator Span<Other>() const;
 
   constexpr uint32_t Size() const { return EndPtr - BeginPtr; }
   constexpr T* begin() { return BeginPtr; }
@@ -46,12 +44,5 @@ class Span : public Iterable<Span<T>> {
   T* BeginPtr = nullptr;
   T* EndPtr = nullptr;
 };
-
-template <typename T>
-template <typename Other>
-constexpr Span<T>::operator Span<Other>() const {
-  return Span<Other>(const_cast<Other*>(reinterpret_cast<const Other*>(begin())),
-                     const_cast<Other*>(reinterpret_cast<const Other*>(end())));
-}
 
 }  // namespace dab::detail::common

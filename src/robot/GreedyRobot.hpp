@@ -31,7 +31,7 @@ namespace dab::detail::robot {
 class GreedyRobot : public Robot {
  public:
   GreedyRobot() = default;
-  Span<Edge> BestCandidateEdges(const RelativeScoreBoard& board) override;
+  Span<const Edge> BestCandidateEdges(const RelativeScoreBoard& board) override;
   bool EnemyUnscoreable() const { return EnemyUnscoreableIndex < Edge::Max; }
   bool Scoreable() const { return ScoreableIndex > 0; }
 

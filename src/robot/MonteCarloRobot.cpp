@@ -30,8 +30,8 @@ THE SOFTWARE.
 
 namespace dab::detail::robot {
 
-Span<Edge> MonteCarloRobot::BestCandidateEdges(const RelativeScoreBoard& board) {
-  if (Span<Edge> edges; CanEarlyExit(board, edges)) {
+Span<const Edge> MonteCarloRobot::BestCandidateEdges(const RelativeScoreBoard& board) {
+  if (Span<const Edge> edges; CanEarlyExit(board, edges)) {
     return edges;
   }
 
@@ -50,7 +50,7 @@ Span<Edge> MonteCarloRobot::BestCandidateEdges(const RelativeScoreBoard& board) 
   return SearchResult.Export();
 }
 
-bool MonteCarloRobot::CanEarlyExit(const RelativeScoreBoard& board, Span<Edge>& result) {
+bool MonteCarloRobot::CanEarlyExit(const RelativeScoreBoard& board, Span<const Edge>& result) {
   result = SubRobot.BestCandidateEdges(board);
   return result.Size() == 1;
 }

@@ -33,8 +33,8 @@ class MonteCarloRobot final : public Robot {
 
  public:
   MonteCarloRobot() = default;
-  Span<Edge> BestCandidateEdges(const RelativeScoreBoard& board) override;
-  bool CanEarlyExit(const RelativeScoreBoard& board, Span<Edge>& result);
+  Span<const Edge> BestCandidateEdges(const RelativeScoreBoard& board) override;
+  bool CanEarlyExit(const RelativeScoreBoard& board, Span<const Edge>& result);
   const SearchScoreMap& GetSearchResult() const { return SearchResult; }
 
  private:

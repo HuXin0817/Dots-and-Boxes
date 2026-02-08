@@ -28,8 +28,8 @@ THE SOFTWARE.
 
 namespace dab::detail::robot {
 
-Span<Edge> ImproveGreedyRobot::BestCandidateEdges(const RelativeScoreBoard& board) {
-  if (const Span<Edge> edges = GreedyRobot::BestCandidateEdges(board); EnemyUnscoreable() || Scoreable()) {
+Span<const Edge> ImproveGreedyRobot::BestCandidateEdges(const RelativeScoreBoard& board) {
+  if (const Span<const Edge> edges = GreedyRobot::BestCandidateEdges(board); EnemyUnscoreable() || Scoreable()) {
     return edges;
   }
 
@@ -49,7 +49,7 @@ Span<Edge> ImproveGreedyRobot::BestCandidateEdges(const RelativeScoreBoard& boar
     }
   }
 
-  return Span(candidateEdges.begin(), candidateEdges.begin() + candidateEdgesSize);
+  return {candidateEdges.begin(), candidateEdges.begin() + candidateEdgesSize};
 }
 
 }  // namespace dab::detail::robot

@@ -49,7 +49,7 @@ void SearchScoreMap::Add(const SearchScoreMap& other) {
   }
 }
 
-Span<Edge> SearchScoreMap::Export() {
+Span<const Edge> SearchScoreMap::Export() {
   float maxScore = 0.0;
   for (Edge edge = 0; edge < Edge::Max; ++edge) {
     if (Time[edge] > 0) {
@@ -62,7 +62,7 @@ Span<Edge> SearchScoreMap::Export() {
       }
     }
   }
-  return Span(BestEdges.begin(), BestEdges.end());
+  return {BestEdges.begin(), BestEdges.end()};
 }
 
 }  // namespace dab::detail::model

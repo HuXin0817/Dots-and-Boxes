@@ -31,7 +31,7 @@ namespace dab::detail::robot {
 class SimulationRobot final : public Robot {
  public:
   SimulationRobot() = default;
-  Span<Edge> BestCandidateEdges(const RelativeScoreBoard& board) override;
+  Span<const Edge> BestCandidateEdges(const RelativeScoreBoard& board) override;
 
  private:
   ImproveGreedyRobot SubRobot;

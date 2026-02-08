@@ -37,7 +37,7 @@ class SearchScoreMap {
   void Reset();
   void Add(Edge edge, Int score);
   void Add(const SearchScoreMap& other);
-  Span<Edge> Export();
+  Span<const Edge> Export();
 
  private:
   Array<int, Edge::Max> Time;
