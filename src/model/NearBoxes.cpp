@@ -63,10 +63,8 @@ constexpr List<Box, 2> NearBoxesMapper::GetNearBoxes(Edge edge) {
   return result;
 }
 
-const List<Box, 2>& NearBoxes(Edge edge) {
-  static constexpr NearBoxesMapper Instance;
+static constexpr NearBoxesMapper Instance;
 
-  return Instance.EdgeNearBoxes[edge];
-}
+const List<Box, 2>& NearBoxes(Edge edge) { return Instance.EdgeNearBoxes[edge]; }
 
 }  // namespace dab::detail::model

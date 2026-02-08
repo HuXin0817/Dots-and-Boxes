@@ -60,10 +60,8 @@ constexpr Array<Edge, 4> NearEdgesMapper::GetNearEdges(Box box) {
   return NearEdges;
 }
 
-const Array<Edge, 4>& NearEdges(Box box) {
-  static constexpr NearEdgesMapper Instance;
+static constexpr NearEdgesMapper Instance;
 
-  return Instance.BoxNearEdges[box];
-}
+const Array<Edge, 4>& NearEdges(Box box) { return Instance.BoxNearEdges[box]; }
 
 }  // namespace dab::detail::model
