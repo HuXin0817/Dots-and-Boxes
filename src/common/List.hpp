@@ -30,7 +30,7 @@ THE SOFTWARE.
 
 namespace dab::detail::common {
 
-template <typename T, uint32_t Cap>
+template <typename T, Int Cap>
 class List : public Iterable<List<T, Cap>> {
  public:
   constexpr List() = default;
@@ -42,7 +42,7 @@ class List : public Iterable<List<T, Cap>> {
   constexpr void ClearAndSet(T item);
   constexpr void Clear() { Length = 0; }
   constexpr void Append(T item);
-  constexpr uint32_t Size() const { return Length; }
+  constexpr Int Size() const { return Length; }
   constexpr T* begin() { return Data.begin(); }
   constexpr const T* begin() const { return Data.begin(); }
   constexpr T* end() { return Data.begin() + Length; }
@@ -50,16 +50,16 @@ class List : public Iterable<List<T, Cap>> {
 
  private:
   Array<T, Cap> Data;
-  uint32_t Length = 0;
+  Int Length = 0;
 };
 
-template <typename T, uint32_t Cap>
+template <typename T, Int Cap>
 constexpr void List<T, Cap>::ClearAndSet(T item) {
   Data[0] = item;
   Length = 1;
 }
 
-template <typename T, uint32_t Cap>
+template <typename T, Int Cap>
 constexpr void List<T, Cap>::Append(T item) {
   assert(Length < Cap);
   Data[Length++] = item;

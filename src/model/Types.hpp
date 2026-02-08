@@ -24,32 +24,14 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <cstdint>
-#include <limits>
+#include <Dab/Common.hpp>
 
 namespace dab::detail::model {
-
-constexpr auto SelectIntType() {
-  constexpr int64_t MaxValue = 2 * BoardSize * (BoardSize + 1);
-
-  if constexpr (MaxValue <= std::numeric_limits<int8_t>::max()) {
-    return static_cast<int8_t>(0);
-  } else if constexpr (MaxValue <= std::numeric_limits<int16_t>::max()) {
-    return static_cast<int16_t>(0);
-  } else if constexpr (MaxValue <= std::numeric_limits<int32_t>::max()) {
-    return static_cast<int32_t>(0);
-  } else {
-    return static_cast<int64_t>(0);
-  }
-}
-
-using Int = decltype(SelectIntType());
 
 class IntWapper {
  public:
   constexpr IntWapper() = default;
   constexpr IntWapper(Int v) : v(v) {}
-  constexpr operator Int() { return v; }
   constexpr operator Int() const { return v; }
   constexpr void operator++() { ++v; }
 

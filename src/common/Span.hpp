@@ -34,7 +34,7 @@ class Span : public Iterable<Span<T>> {
   constexpr Span() = default;
   constexpr Span(T* begin, T* end) : BeginPtr(begin), EndPtr(end) {}
 
-  constexpr uint32_t Size() const { return EndPtr - BeginPtr; }
+  constexpr Int Size() const { return EndPtr - BeginPtr; }
   constexpr T* begin() { return BeginPtr; }
   constexpr const T* begin() const { return BeginPtr; }
   constexpr T* end() { return EndPtr; }

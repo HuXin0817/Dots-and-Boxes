@@ -34,21 +34,21 @@ class Random {
  public:
   explicit Random();
 
-  uint32_t Range(uint32_t min, uint32_t max);
+  Int Range(Int min, Int max);
   template <typename T>
   const auto& Choice(const T& data);
 
  private:
   std::mt19937_64 Rng;
-  std::uniform_int_distribution<uint32_t> Dist;
+  std::uniform_int_distribution<Int> Dist;
 };
 
 inline Random::Random() {
   Rng.seed(static_cast<uint64_t>(std::chrono::steady_clock::now().time_since_epoch().count()));
 }
 
-inline uint32_t Random::Range(uint32_t min, uint32_t max) {
-  Dist.param(std::uniform_int_distribution<uint32_t>::param_type(min, max));
+inline Int Random::Range(Int min, Int max) {
+  Dist.param(std::uniform_int_distribution<Int>::param_type(min, max));
   return Dist(Rng);
 }
 

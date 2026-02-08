@@ -25,7 +25,8 @@ THE SOFTWARE.
 #pragma once
 
 #include <cassert>
-#include <cstdint>
+
+#include "Int.hpp"
 
 namespace dab::detail::common {
 
@@ -42,28 +43,28 @@ class Iterable {
   constexpr auto begin() const { return static_cast<const Derived*>(this)->begin(); }
   constexpr auto end() { return static_cast<Derived*>(this)->end(); }
   constexpr auto end() const { return static_cast<const Derived*>(this)->end(); }
-  constexpr uint32_t Size() const { return static_cast<const Derived*>(this)->Size(); }
+  constexpr Int Size() const { return static_cast<const Derived*>(this)->Size(); }
   constexpr bool Empty() const { return Size() == 0; }
   constexpr auto& Front() { return begin()[0]; }
   constexpr const auto& Front() const { return begin()[0]; }
   constexpr auto& Back() { return begin()[Size() - 1]; }
   constexpr const auto& Back() const { return begin()[Size() - 1]; }
-  constexpr auto& operator[](uint32_t i);
-  constexpr const auto& operator[](uint32_t i) const;
+  constexpr auto& operator[](Int i);
+  constexpr const auto& operator[](Int i) const;
 
  protected:
   ~Iterable() = default;
 };
 
 template <typename Derived>
-constexpr auto& Iterable<Derived>::operator[](uint32_t i) {
-  assert(i < Size());
+constexpr auto& Iterable<Derived>::operator[](Int i) {
+  assert(0 <= i && i < Size());
   return begin()[i];
 }
 
 template <typename Derived>
-constexpr const auto& Iterable<Derived>::operator[](uint32_t i) const {
-  assert(i < Size());
+constexpr const auto& Iterable<Derived>::operator[](Int i) const {
+  assert(0 <= i && i < Size());
   return begin()[i];
 }
 

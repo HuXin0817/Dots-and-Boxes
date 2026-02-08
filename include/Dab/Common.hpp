@@ -25,6 +25,7 @@ THE SOFTWARE.
 #pragma once
 
 #include "../../src/common/Array.hpp"
+#include "../../src/common/Int.hpp"
 #include "../../src/common/List.hpp"
 #include "../../src/common/Queue.hpp"
 #include "../../src/common/Random.hpp"
@@ -33,6 +34,8 @@ THE SOFTWARE.
 namespace dab {
 
 using detail::common::Array;
+using detail::common::BoardSize;
+using detail::common::Int;
 using detail::common::List;
 using detail::common::Queue;
 using detail::common::Random;

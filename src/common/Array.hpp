@@ -30,7 +30,7 @@ THE SOFTWARE.
 
 namespace dab::detail::common {
 
-template <typename T, uint32_t Length>
+template <typename T, Int Length>
 class Array : public Iterable<Array<T, Length>> {
  public:
   constexpr Array() = default;
@@ -39,7 +39,7 @@ class Array : public Iterable<Array<T, Length>> {
   constexpr Array& operator=(const Array& other) = default;
   constexpr Array& operator=(Array&& other) = default;
 
-  constexpr uint32_t Size() const { return Length; }
+  constexpr Int Size() const { return Length; }
   constexpr T* begin() { return Data; }
   constexpr const T* begin() const { return Data; }
   constexpr T* end() { return Data + Length; }
