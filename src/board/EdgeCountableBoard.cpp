@@ -24,10 +24,6 @@ THE SOFTWARE.
 
 #include "EdgeCountableBoard.h"
 
-#include <Dab/Model.h>
-
-#include "BasicBoard.h"
-
 namespace dab::detail::board {
 
 void EdgeCountableBoard::Reset() {

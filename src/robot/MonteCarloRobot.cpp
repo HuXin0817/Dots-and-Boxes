@@ -24,10 +24,6 @@ THE SOFTWARE.
 
 #include "MonteCarloRobot.h"
 
-#include <Dab/Board.h>
-
-#include "SimulationRobot.h"
-
 namespace dab::detail::robot {
 
 Span<const Edge> MonteCarloRobot::BestCandidateEdges(const RelativeScoreBoard& board) {

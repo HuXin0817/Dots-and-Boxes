@@ -24,10 +24,6 @@ THE SOFTWARE.
 
 #include "AbsoluteScoreBoard.h"
 
-#include <Dab/Model.h>
-
-#include "RelativeScoreBoard.h"
-
 namespace dab::detail::board {
 
 void AbsoluteScoreBoard::Reset(const EdgeCountableBoard& newBoard) {

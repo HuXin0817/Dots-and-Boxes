@@ -24,8 +24,6 @@ THE SOFTWARE.
 
 #include "ImproveGreedyRobot.h"
 
-#include "GreedyRobot.h"
-
 namespace dab::detail::robot {
 
 Span<const Edge> ImproveGreedyRobot::BestCandidateEdges(const RelativeScoreBoard& board) {

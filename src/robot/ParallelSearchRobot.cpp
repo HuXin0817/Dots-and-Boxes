@@ -26,8 +26,6 @@ THE SOFTWARE.
 
 #include <tbb/parallel_for_each.h>
 
-#include "MonteCarloRobot.h"
-
 namespace dab::detail::robot {
 
 Span<const Edge> ParallelSearchRobot::BestCandidateEdges(const RelativeScoreBoard& board) {

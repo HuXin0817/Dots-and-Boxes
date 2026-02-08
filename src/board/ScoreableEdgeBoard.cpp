@@ -26,8 +26,6 @@ THE SOFTWARE.
 
 #include <Dab/Model.h>
 
-#include "EdgeCountableBoard.h"
-
 namespace dab::detail::board {
 
 void ScoreableEdgeBoard::Reset(const EdgeCountableBoard& newBoard) {

@@ -24,10 +24,6 @@ THE SOFTWARE.
 
 #include "RelativeScoreBoard.h"
 
-#include <Dab/Model.h>
-
-#include "EdgeCountableBoard.h"
-
 namespace dab::detail::board {
 
 void RelativeScoreBoard::Reset(const EdgeCountableBoard& newBoard) {

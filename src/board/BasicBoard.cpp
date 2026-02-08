@@ -24,8 +24,6 @@ THE SOFTWARE.
 
 #include "BasicBoard.h"
 
-#include <Dab/Model.h>
-
 namespace dab::detail::board {
 
 void BasicBoard::Reset() {
