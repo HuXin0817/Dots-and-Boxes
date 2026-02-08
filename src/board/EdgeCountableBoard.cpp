@@ -56,7 +56,7 @@ Edge EdgeCountableBoard::FindNotContainsEdgeInBox(Box box) const {
     }
   }
   assert(false);
-  return InvalidEdge;
+  return Edge::Invalid;
 }
 
 Edge EdgeCountableBoard::FindScoreableEdge() const {
@@ -65,7 +65,7 @@ Edge EdgeCountableBoard::FindScoreableEdge() const {
       return FindNotContainsEdgeInBox(box);
     }
   }
-  return InvalidEdge;
+  return Edge::Invalid;
 }
 
 uint8_t EdgeCountableBoard::MaxEdgeCount(Edge edge) const {

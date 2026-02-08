@@ -85,8 +85,8 @@ void MainWindow::Run() {
     } else if (PlayerTypeIsRobot(Player2Type) && Board.IsPlayer2Turn()) {
       PlayerMoveEdge = Random.Choice(Robot2->BestCandidateEdges(Board));
     } else {
-      PlayerMoveEdge = InvalidEdge;
-      while (PlayerMoveEdge.load() == InvalidEdge) {
+      PlayerMoveEdge = Edge::Invalid;
+      while (PlayerMoveEdge.load() == Edge::Invalid) {
         QThread::yieldCurrentThread();
       }
     }
@@ -196,7 +196,7 @@ void MainWindow::SetPlayerMoveEdge(Edge edge) {
   if (PlayerTypeIsRobot(Player2Type) && Board.IsPlayer2Turn()) {
     return;
   }
-  Edge expected = InvalidEdge;
+  Edge expected = Edge::Invalid;
   PlayerMoveEdge.compare_exchange_strong(expected, edge);
 }
 

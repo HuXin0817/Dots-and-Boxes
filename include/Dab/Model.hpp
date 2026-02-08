@@ -36,7 +36,6 @@ namespace dab {
 using detail::model::Box;
 using detail::model::Dot;
 using detail::model::Edge;
-using detail::model::InvalidEdge;
 using detail::model::NearBoxes;
 using detail::model::NearEdges;
 using detail::model::SearchScoreMap;

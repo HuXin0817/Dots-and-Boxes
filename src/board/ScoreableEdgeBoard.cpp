@@ -54,7 +54,7 @@ Int ScoreableEdgeBoard::MaxObtainableScore(Int endScore) {
   Int score = 0;
   while (Gaming()) {
     if (ScoreableEdges.Empty()) {
-      if (const Edge edge = FindScoreableEdge(); edge != InvalidEdge) {
+      if (const Edge edge = FindScoreableEdge(); edge != Edge::Invalid) {
         ScoreableEdges.Append(edge);
       } else {
         break;

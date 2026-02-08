@@ -34,6 +34,7 @@ namespace dab::detail::model {
 class Edge : public IntWapper {
  public:
   static constexpr Int Max = 2 * BoardSize * (BoardSize + 1);
+  static constexpr Int Invalid = -1;
 
   using IntWapper::IntWapper;
   constexpr Edge(Dot dot1, Dot dot2);
@@ -68,7 +69,5 @@ constexpr Dot Edge::Dot2() const {
   }
   return dot;
 }
-
-static constexpr Edge InvalidEdge = -1;
 
 }  // namespace dab::detail::model
