@@ -26,7 +26,6 @@ THE SOFTWARE.
 
 #include <QApplication>
 #include <QCommandLineParser>
-#include <QJsonDocument>
 #include <QJsonObject>
 #include <cstdlib>
 

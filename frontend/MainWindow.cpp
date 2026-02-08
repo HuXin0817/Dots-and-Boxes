@@ -25,7 +25,6 @@ THE SOFTWARE.
 #include "MainWindow.hpp"
 
 #include <Dab/Robot.hpp>
-#include <QJsonDocument>
 #include <QJsonObject>
 #include <QPainter>
 #include <QPointer>
@@ -36,7 +35,6 @@ THE SOFTWARE.
 #include <cassert>
 
 #include "BoxCanvas.hpp"
-#include "Dab/Model.hpp"
 #include "DotCanvas.hpp"
 #include "EdgeCanvas.hpp"
 
