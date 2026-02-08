@@ -31,21 +31,21 @@ namespace dab::detail::board {
 void BasicBoard::Reset() {
   Step = 0;
   for (Edge edge = 0; edge < Edge::Max; ++edge) {
-    EdgeIndexes[edge] = edge;
-    Edges[edge] = edge;
+    EdgeIndexes.At(edge) = edge;
+    Edges.At(edge) = edge;
   }
 }
 
 void BasicBoard::Add(Edge edge) {
   assert(NotContains(edge));
-  const Edge nowEdge = Edges[Step];
-  const Int edgeIndex = EdgeIndexes[edge];
-  assert(Edges[edgeIndex] == edge);
+  const Edge nowEdge = Edges.At(Step);
+  const Int edgeIndex = EdgeIndexes.At(edge);
+  assert(Edges.At(edgeIndex) == edge);
   assert(edgeIndex >= Step);
-  Edges[Step] = edge;
-  Edges[edgeIndex] = nowEdge;
-  EdgeIndexes[edge] = Step;
-  EdgeIndexes[nowEdge] = edgeIndex;
+  Edges.At(Step) = edge;
+  Edges.At(edgeIndex) = nowEdge;
+  EdgeIndexes.At(edge) = Step;
+  EdgeIndexes.At(nowEdge) = edgeIndex;
   ++Step;
 }
 

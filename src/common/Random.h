@@ -56,9 +56,9 @@ template <typename T>
 const auto& Random::Choice(const T& data) {
   assert(!data.Empty());
   if (data.Size() == 1) {
-    return data[0];
+    return data.At(0);
   }
-  return data[Range(0, data.Size() - 1)];
+  return data.At(Range(0, data.Size() - 1));
 }
 
 }  // namespace dab::detail::common

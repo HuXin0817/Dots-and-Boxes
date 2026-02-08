@@ -39,22 +39,22 @@ void SearchScoreMap::Reset() {
 }
 
 void SearchScoreMap::Add(Edge edge, Int score) {
-  ++Time[edge];
-  Score[edge] += score;
+  ++Time.At(edge);
+  Score.At(edge) += score;
 }
 
 void SearchScoreMap::Add(const SearchScoreMap& other) {
   for (Int i = 0; i < Edge::Max; ++i) {
-    Time[i] += other.Time[i];
-    Score[i] += other.Score[i];
+    Time.At(i) += other.Time.At(i);
+    Score.At(i) += other.Score.At(i);
   }
 }
 
 Span<const Edge> SearchScoreMap::Export() {
   float maxScore = 0.0;
   for (Edge edge = 0; edge < Edge::Max; ++edge) {
-    if (Time[edge] > 0) {
-      if (const float score = static_cast<float>(Score[edge]) / static_cast<float>(Time[edge]);
+    if (Time.At(edge) > 0) {
+      if (const float score = static_cast<float>(Score.At(edge)) / static_cast<float>(Time.At(edge));
           score > maxScore || BestEdges.Empty()) {
         maxScore = score;
         BestEdges.ClearAndSet(edge);

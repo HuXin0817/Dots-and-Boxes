@@ -41,7 +41,7 @@ class NearBoxesMapper {
 
 constexpr NearBoxesMapper::NearBoxesMapper() {
   for (Edge edge = 0; edge < Edge::Max; ++edge) {
-    EdgeNearBoxes[edge] = GetNearBoxes(edge);
+    EdgeNearBoxes.At(edge) = GetNearBoxes(edge);
   }
 }
 
@@ -65,6 +65,6 @@ constexpr List<Box, 2> NearBoxesMapper::GetNearBoxes(Edge edge) {
 
 static constexpr NearBoxesMapper Instance;
 
-const List<Box, 2>& NearBoxes(Edge edge) { return Instance.EdgeNearBoxes[edge]; }
+const List<Box, 2>& NearBoxes(Edge edge) { return Instance.EdgeNearBoxes.At(edge); }
 
 }  // namespace dab::detail::model

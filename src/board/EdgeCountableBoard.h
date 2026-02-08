@@ -36,7 +36,7 @@ class EdgeCountableBoard : public BasicBoard {
   Int Add(Edge edge);
   Edge FindNotContainsEdgeInBox(Box box) const;
   Edge FindScoreableEdge() const;
-  uint8_t EdgeCount(Box box) const { return Counter[box]; }
+  uint8_t EdgeCount(Box box) const { return Counter.At(box); }
   uint8_t MaxEdgeCount(Edge edge) const;
 
  protected:

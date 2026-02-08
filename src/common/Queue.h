@@ -63,13 +63,13 @@ constexpr void Queue<T, Cap>::Clear() {
 template <typename T, Int Cap>
 constexpr void Queue<T, Cap>::Append(T item) {
   assert(EndIndex < Cap);
-  Data[EndIndex++] = item;
+  Data.At(EndIndex++) = item;
 }
 
 template <typename T, Int Cap>
 constexpr T Queue<T, Cap>::Pop() {
   assert(Size() > 0);
-  return Data[BeginIndex++];
+  return Data.At(BeginIndex++);
 }
 
 }  // namespace dab::detail::common

@@ -41,7 +41,7 @@ class NearEdgesMapper {
 
 constexpr NearEdgesMapper::NearEdgesMapper() {
   for (Box box = 0; box < Box::Max; ++box) {
-    BoxNearEdges[box] = GetNearEdges(box);
+    BoxNearEdges.At(box) = GetNearEdges(box);
   }
 }
 
@@ -53,15 +53,15 @@ constexpr Array<Edge, 4> NearEdgesMapper::GetNearEdges(Box box) {
   const Dot topRight(x + 1, y);
   const Dot bottomLeft(x, y + 1);
   const Dot bottomRight(x + 1, y + 1);
-  NearEdges[0] = Edge(topLeft, topRight);
-  NearEdges[1] = Edge(topLeft, bottomLeft);
-  NearEdges[2] = Edge(bottomLeft, bottomRight);
-  NearEdges[3] = Edge(topRight, bottomRight);
+  NearEdges.At(0) = Edge(topLeft, topRight);
+  NearEdges.At(1) = Edge(topLeft, bottomLeft);
+  NearEdges.At(2) = Edge(bottomLeft, bottomRight);
+  NearEdges.At(3) = Edge(topRight, bottomRight);
   return NearEdges;
 }
 
 static constexpr NearEdgesMapper Instance;
 
-const Array<Edge, 4>& NearEdges(Box box) { return Instance.BoxNearEdges[box]; }
+const Array<Edge, 4>& NearEdges(Box box) { return Instance.BoxNearEdges.At(box); }
 
 }  // namespace dab::detail::model

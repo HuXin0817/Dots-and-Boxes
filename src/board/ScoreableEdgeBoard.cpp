@@ -39,7 +39,7 @@ Int ScoreableEdgeBoard::Add(Edge edge) {
   BasicBoard::Add(edge);
   Int score = 0;
   for (const Box box : NearBoxes(edge)) {
-    const uint8_t count = ++Counter[box];
+    const uint8_t count = ++Counter.At(box);
     assert(count <= 4);
     if (count == 4) {
       ++score;

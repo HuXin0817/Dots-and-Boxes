@@ -55,14 +55,14 @@ class List : public Iterable<List<T, Cap>> {
 
 template <typename T, Int Cap>
 constexpr void List<T, Cap>::ClearAndSet(T item) {
-  Data[0] = item;
+  Data.At(0) = item;
   Length = 1;
 }
 
 template <typename T, Int Cap>
 constexpr void List<T, Cap>::Append(T item) {
   assert(Length < Cap);
-  Data[Length++] = item;
+  Data.At(Length++) = item;
 }
 
 }  // namespace dab::detail::common

@@ -39,7 +39,7 @@ Int EdgeCountableBoard::Add(Edge edge) {
   BasicBoard::Add(edge);
   Int score = 0;
   for (const Box box : NearBoxes(edge)) {
-    const uint8_t num = ++Counter[box];
+    const uint8_t num = ++Counter.At(box);
     assert(num <= 4);
     if (num == 4) {
       ++score;
@@ -49,7 +49,7 @@ Int EdgeCountableBoard::Add(Edge edge) {
 }
 
 Edge EdgeCountableBoard::FindNotContainsEdgeInBox(Box box) const {
-  assert(Counter[box] == 3);
+  assert(Counter.At(box) == 3);
   for (const Edge edge : NearEdges(box)) {
     if (NotContains(edge)) {
       return edge;
@@ -61,7 +61,7 @@ Edge EdgeCountableBoard::FindNotContainsEdgeInBox(Box box) const {
 
 Edge EdgeCountableBoard::FindScoreableEdge() const {
   for (Box box = 0; box < Box::Max; ++box) {
-    if (Counter[box] == 3) {
+    if (Counter.At(box) == 3) {
       return FindNotContainsEdgeInBox(box);
     }
   }
@@ -70,7 +70,7 @@ Edge EdgeCountableBoard::FindScoreableEdge() const {
 
 uint8_t EdgeCountableBoard::MaxEdgeCount(Edge edge) const {
   const List<Box, 2>& nearBoxes = NearBoxes(edge);
-  return std::max(Counter[nearBoxes.Front()], Counter[nearBoxes.Back()]);
+  return std::max(Counter.At(nearBoxes.Front()), Counter.At(nearBoxes.Back()));
 }
 
 }  // namespace dab::detail::board
