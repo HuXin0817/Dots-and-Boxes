@@ -18,24 +18,24 @@ set(SOURCES
   src/model/SearchScoreMap.cpp
 
   src/board/AbsoluteScoreBoard.cpp
-  src/board/ScoreableEdgeBoard.cpp
+  src/board/BasicBoard.cpp
   src/board/EdgeCountableBoard.cpp
   src/board/RelativeScoreBoard.cpp
-  src/board/BasicBoard.cpp
+  src/board/ScoreableEdgeBoard.cpp
 
-  src/robot/Robot.cpp
   src/robot/GreedyRobot.cpp
   src/robot/ImproveGreedyRobot.cpp
-  src/robot/ParallelSearchRobot.cpp
-  src/robot/SimulationRobot.cpp
   src/robot/MonteCarloRobot.cpp
+  src/robot/ParallelSearchRobot.cpp
+  src/robot/Robot.cpp
+  src/robot/SimulationRobot.cpp
 
+  frontend/BaseCanvas.cpp
   frontend/BoxCanvas.cpp
   frontend/CommandParser.cpp
-  frontend/MainWindow.cpp
-  frontend/EdgeCanvas.cpp
-  frontend/BaseCanvas.cpp
   frontend/DotCanvas.cpp
+  frontend/EdgeCanvas.cpp
+  frontend/MainWindow.cpp
 )
 
 foreach(BoardSize RANGE 1 36)
