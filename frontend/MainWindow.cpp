@@ -42,7 +42,11 @@ THE SOFTWARE.
 namespace dab::detail::frontend {
 
 MainWindow::MainWindow(PlayerType player1Type, PlayerType player2Type, bool backgroundMode, QWidget* parent)
-    : BaseCanvas(parent), Player1Type(player1Type), Player2Type(player2Type), BackgroundMode(backgroundMode) {
+    : BaseCanvas(parent),
+      Player1Type(player1Type),
+      Player2Type(player2Type),
+      BackgroundMode(backgroundMode),
+      PlayerMoveEdge(Edge::Invalid) {
   if (PlayerTypeIsRobot(Player1Type)) {
     Robot1.reset(CreateRobot(Player1Type));
   }
