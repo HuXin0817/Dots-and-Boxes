@@ -31,15 +31,6 @@ THE SOFTWARE.
 
 namespace dab::detail::frontend {
 
-static constexpr const char* PlayerTypeOptionStrings[] = {
-    "human",
-    "robot:easy",
-    "robot:medium",
-    "robot:hard",
-    "robot:expert",
-    "robot:master",
-};
-
 class Config {
  public:
   QString ToString() const;
