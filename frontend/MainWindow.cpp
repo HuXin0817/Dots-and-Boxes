@@ -219,9 +219,9 @@ void MainWindow::Add(Edge edge) {
       DotCanvases[dot]->raise();
     }
 
-    for (const Box box : NearBoxes(edge)) {
+    for (const Box box : edge.NearBoxes()) {
       int count = 0;
-      for (const Edge nearEdge : NearEdges(box)) {
+      for (const Edge nearEdge : box.NearEdges()) {
         if (Board.Contains(nearEdge)) {
           count++;
         }

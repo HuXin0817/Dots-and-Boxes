@@ -22,14 +22,45 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "NearBoxes.h"
+#include "Models.h"
 
 #include <Dab/Common.h>
 
-#include "Edge.h"
-#include "Square.h"
-
 namespace dab::detail::model {
+
+class NearEdgesMapper {
+ public:
+  constexpr NearEdgesMapper();
+  static constexpr Array<Edge, 4> GetNearEdges(Box box);
+
+  Array<Array<Edge, 4>, Box::Max> BoxNearEdges;
+};
+
+constexpr NearEdgesMapper::NearEdgesMapper() {
+  for (Box box = 0; box < Box::Max; box.Add()) {
+    BoxNearEdges.At(box) = GetNearEdges(box);
+  }
+}
+
+constexpr Array<Edge, 4> NearEdgesMapper::GetNearEdges(Box box) {
+  Array<Edge, 4> NearEdges;
+  const Int x = box.X();
+  const Int y = box.Y();
+  const Dot topLeft(x, y);
+  const Dot topRight(x + 1, y);
+  const Dot bottomLeft(x, y + 1);
+  const Dot bottomRight(x + 1, y + 1);
+  NearEdges.At(0) = Edge(topLeft, topRight);
+  NearEdges.At(1) = Edge(topLeft, bottomLeft);
+  NearEdges.At(2) = Edge(bottomLeft, bottomRight);
+  NearEdges.At(3) = Edge(topRight, bottomRight);
+  return NearEdges;
+}
+
+const Array<Edge, 4>& Box::NearEdges() const {
+  static constexpr NearEdgesMapper Instance;
+  return Instance.BoxNearEdges.At(v);
+}
 
 class NearBoxesMapper {
  public:
@@ -63,8 +94,9 @@ constexpr List<Box, 2> NearBoxesMapper::GetNearBoxes(Edge edge) {
   return result;
 }
 
-static constexpr NearBoxesMapper Instance;
-
-const List<Box, 2>& NearBoxes(Edge edge) { return Instance.EdgeNearBoxes.At(edge); }
+const List<Box, 2>& Edge::NearBoxes() const {
+  static constexpr NearBoxesMapper Instance;
+  return Instance.EdgeNearBoxes.At(v);
+}
 
 }  // namespace dab::detail::model

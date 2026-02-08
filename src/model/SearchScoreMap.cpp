@@ -28,7 +28,7 @@ THE SOFTWARE.
 
 #include <algorithm>
 
-#include "Edge.h"
+#include "Models.h"
 
 namespace dab::detail::model {
 

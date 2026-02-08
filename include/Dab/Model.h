@@ -24,20 +24,14 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "../../src/model/Edge.h"
-#include "../../src/model/NearBoxes.h"
-#include "../../src/model/NearEdges.h"
+#include "../../src/model/Models.h"
 #include "../../src/model/SearchScoreMap.h"
-#include "../../src/model/Square.h"
-#include "../../src/model/Turn.h"
 
 namespace dab {
 
 using detail::model::Box;
 using detail::model::Dot;
 using detail::model::Edge;
-using detail::model::NearBoxes;
-using detail::model::NearEdges;
 using detail::model::SearchScoreMap;
 using detail::model::Turn;
 

@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 #include <Dab/Common.h>
 
-#include "Edge.h"
+#include "Models.h"
 
 namespace dab::detail::model {
 

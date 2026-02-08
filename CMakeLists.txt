@@ -14,8 +14,7 @@ find_package(TBB REQUIRED)
 set(SOURCES
   main.cpp
 
-  src/model/NearEdges.cpp
-  src/model/NearBoxes.cpp
+  src/model/Models.cpp
   src/model/SearchScoreMap.cpp
 
   src/board/AbsoluteScoreBoard.cpp

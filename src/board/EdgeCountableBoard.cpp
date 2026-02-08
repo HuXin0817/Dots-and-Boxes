@@ -34,7 +34,7 @@ void EdgeCountableBoard::Reset() {
 Int EdgeCountableBoard::Add(Edge edge) {
   BasicBoard::Add(edge);
   Int score = 0;
-  for (const Box box : NearBoxes(edge)) {
+  for (const Box box : edge.NearBoxes()) {
     const uint8_t num = ++Counter.At(box);
     assert(num <= 4);
     if (num == 4) {
@@ -46,7 +46,7 @@ Int EdgeCountableBoard::Add(Edge edge) {
 
 Edge EdgeCountableBoard::FindNotContainsEdgeInBox(Box box) const {
   assert(Counter.At(box) == 3);
-  for (const Edge edge : NearEdges(box)) {
+  for (const Edge edge : box.NearEdges()) {
     if (NotContains(edge)) {
       return edge;
     }
@@ -65,7 +65,7 @@ Edge EdgeCountableBoard::FindScoreableEdge() const {
 }
 
 uint8_t EdgeCountableBoard::MaxEdgeCount(Edge edge) const {
-  const List<Box, 2>& nearBoxes = NearBoxes(edge);
+  const List<Box, 2>& nearBoxes = edge.NearBoxes();
   return std::max(Counter.At(nearBoxes.Front()), Counter.At(nearBoxes.Back()));
 }
 

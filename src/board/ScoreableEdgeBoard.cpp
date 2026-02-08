@@ -36,7 +36,7 @@ void ScoreableEdgeBoard::Reset(const EdgeCountableBoard& newBoard) {
 Int ScoreableEdgeBoard::Add(Edge edge) {
   BasicBoard::Add(edge);
   Int score = 0;
-  for (const Box box : NearBoxes(edge)) {
+  for (const Box box : edge.NearBoxes()) {
     const uint8_t count = ++Counter.At(box);
     assert(count <= 4);
     if (count == 4) {

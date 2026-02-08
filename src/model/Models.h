@@ -24,9 +24,81 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "IntWapper.h"
+#include <Dab/Common.h>
 
 namespace dab::detail::model {
+
+class IntWapper {
+ public:
+  constexpr IntWapper() = default;
+  constexpr IntWapper(Int v) : v(v) {}
+  constexpr operator Int() const { return v; }
+  constexpr void Add() { ++v; }
+
+ protected:
+  Int v = 0;
+};
+
+template <Int Length>
+class Square : public IntWapper {
+ public:
+  static constexpr Int Max = Length * Length;
+
+  using IntWapper::IntWapper;
+  constexpr Square(Int x, Int y) : IntWapper(x * Length + y) {}
+  constexpr Int X() const { return v / Length; }
+  constexpr Int Y() const { return v % Length; }
+};
+
+using Dot = Square<BoardSize + 1>;
+
+class Edge;
+
+class Box : public Square<BoardSize> {
+ public:
+  using Square<BoardSize>::Square;
+  const Array<Edge, 4>& NearEdges() const;
+};
+
+class Edge : public IntWapper {
+ public:
+  static constexpr Int Max = 2 * BoardSize * (BoardSize + 1);
+  static constexpr Int Invalid = -1;
+
+  using IntWapper::IntWapper;
+  constexpr Edge(Dot dot1, Dot dot2);
+  constexpr Dot Dot1() const;
+  constexpr Dot Dot2() const;
+  constexpr bool Rotate() const { return v & 1; }
+  const List<Box, 2>& NearBoxes() const;
+};
+
+constexpr Edge::Edge(Dot dot1, Dot dot2) {
+  if (dot2 - dot1 == 1) {
+    v = 2 * (dot1 - dot1 / (BoardSize + 1)) + 1;
+  } else {
+    v = 2 * dot1;
+  }
+  assert(Dot1() == dot1 && Dot2() == dot2);
+}
+
+constexpr Dot Edge::Dot1() const {
+  Int dot = v >> 1;
+  if (v & 1) {
+    dot += dot / BoardSize;
+  }
+  return dot;
+}
+
+constexpr Dot Edge::Dot2() const {
+  Int dot = v >> 1;
+  if (v & 1) {
+    dot += dot / BoardSize + 1;
+  } else {
+    dot += BoardSize + 1;
+  }
+  return dot;
+}
 
 class Turn : public IntWapper {
  public:
