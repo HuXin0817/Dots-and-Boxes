@@ -27,6 +27,7 @@ THE SOFTWARE.
 #include <Dab/Robot.hpp>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QPainter>
 #include <QPointer>
 #include <QThreadPool>
 #include <QTime>

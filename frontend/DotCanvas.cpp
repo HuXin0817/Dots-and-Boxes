@@ -24,6 +24,8 @@ THE SOFTWARE.
 
 #include "DotCanvas.hpp"
 
+#include <QPainter>
+
 #include "BaseCanvas.hpp"
 
 namespace dab::detail::frontend {

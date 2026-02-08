@@ -25,16 +25,10 @@ THE SOFTWARE.
 #pragma once
 
 #include <Dab/Robot.hpp>
-#include <QJsonDocument>
-#include <QJsonObject>
 #include <QPointer>
-#include <QThreadPool>
-#include <QTimer>
 #include <atomic>
-#include <cassert>
 
 #include "BoxCanvas.hpp"
-#include "Dab/Model.hpp"
 #include "DotCanvas.hpp"
 #include "EdgeCanvas.hpp"
 

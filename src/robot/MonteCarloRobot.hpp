@@ -24,8 +24,6 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <Dab/Board.hpp>
-
 #include "SimulationRobot.hpp"
 
 namespace dab::detail::robot {

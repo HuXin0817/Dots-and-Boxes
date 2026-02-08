@@ -24,6 +24,8 @@ THE SOFTWARE.
 
 #include "BoxCanvas.hpp"
 
+#include <QPainter>
+
 namespace dab::detail::frontend {
 
 BoxCanvas::BoxCanvas(QWidget* parent) : BaseCanvas(parent) { setFixedSize(Width, Width); }

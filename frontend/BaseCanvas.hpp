@@ -26,8 +26,6 @@ THE SOFTWARE.
 
 #include <Dab/Model.hpp>
 #include <QApplication>
-#include <QPainter>
-#include <QStyleHints>
 #include <QWidget>
 
 namespace dab::detail::frontend {

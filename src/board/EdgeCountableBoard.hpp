@@ -24,8 +24,6 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <Dab/Model.hpp>
-
 #include "BasicBoard.hpp"
 
 namespace dab::detail::board {

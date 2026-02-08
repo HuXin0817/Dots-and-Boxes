@@ -24,8 +24,6 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <Dab/Model.hpp>
-
 #include "EdgeCountableBoard.hpp"
 
 namespace dab::detail::board {

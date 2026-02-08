@@ -24,6 +24,12 @@ THE SOFTWARE.
 
 #include "BaseCanvas.hpp"
 
+#include <Dab/Model.hpp>
+#include <QApplication>
+#include <QPainter>
+#include <QStyleHints>
+#include <QWidget>
+
 namespace dab::detail::frontend {
 
 QColor BaseCanvas::ThemeColor(const QColor& DarkThemeColor, const QColor& LightThemeColor) {
