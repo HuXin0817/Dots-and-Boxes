@@ -24,8 +24,6 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <cstdint>
-
 #include "Iterable.hpp"
 
 namespace dab::detail::common {
