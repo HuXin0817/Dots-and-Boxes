@@ -56,7 +56,7 @@ class Edge;
 
 class Box : public Square<BoardSize> {
  public:
-  using Square<BoardSize>::Square;
+  using Square::Square;
   const Array<Edge, 4>& NearEdges() const;
 };
 
