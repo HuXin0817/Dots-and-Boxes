@@ -24,25 +24,21 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <Dab/Common.hpp>
+#include "RelativeScoreBoard.h"
 
-#include "Edge.hpp"
+namespace dab::detail::board {
 
-namespace dab::detail::model {
-
-class SearchScoreMap {
+class AbsoluteScoreBoard : public RelativeScoreBoard {
  public:
-  SearchScoreMap() = default;
+  AbsoluteScoreBoard() { Reset(); }
 
-  void Reset();
-  void Add(Edge edge, Int score);
-  void Add(const SearchScoreMap& other);
-  Span<const Edge> Export();
+  void Reset(const EdgeCountableBoard& newBoard = EdgeCountableBoard());
+  Int Add(Edge edge);
+  Int Player1Score() const { return (TotalScore + RelativeScore()) / 2; }
+  Int Player2Score() const { return (TotalScore - RelativeScore()) / 2; }
 
  private:
-  Array<int, Edge::Max> Time;
-  Array<int, Edge::Max> Score;
-  List<Edge, Edge::Max> BestEdges;
+  Int TotalScore;
 };
 
-}  // namespace dab::detail::model
+}  // namespace dab::detail::board

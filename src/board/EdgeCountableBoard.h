@@ -22,34 +22,25 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "DotCanvas.h"
+#pragma once
 
-#include <QPainter>
+#include "BasicBoard.h"
 
-#include "BaseCanvas.h"
+namespace dab::detail::board {
 
-namespace dab::detail::frontend {
+class EdgeCountableBoard : public BasicBoard {
+ public:
+  EdgeCountableBoard() { Reset(); }
 
-DotCanvas::DotCanvas(QWidget* parent) : BaseCanvas(parent) { setFixedSize(Width, Width); }
+  void Reset();
+  Int Add(Edge edge);
+  Edge FindNotContainsEdgeInBox(Box box) const;
+  Edge FindScoreableEdge() const;
+  uint8_t EdgeCount(Box box) const { return Counter[box]; }
+  uint8_t MaxEdgeCount(Edge edge) const;
 
-void DotCanvas::paintEvent(QPaintEvent* event) {
-  QWidget::paintEvent(event);
+ protected:
+  Array<uint8_t, Box::Max> Counter;
+};
 
-  QPainter painter(this);
-  painter.setRenderHint(QPainter::Antialiasing);
-  painter.setBrush(QBrush(Color()));
-  painter.setPen(Qt::NoPen);
-
-  const int x = width() / 2;
-  const int y = height() / 2;
-  painter.drawEllipse(QPoint(x, y), UnitSize, UnitSize);
-}
-
-QColor DotCanvas::Color() const {
-  static constexpr QColor DarkThemeColor = QColor(202, 202, 202, 255);
-  static constexpr QColor LightThemeColor = QColor(255, 255, 255, 255);
-
-  return ThemeColor(DarkThemeColor, LightThemeColor);
-}
-
-}  // namespace dab::detail::frontend
+}  // namespace dab::detail::board

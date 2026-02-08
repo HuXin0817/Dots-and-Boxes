@@ -22,12 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "SearchScoreMap.hpp"
+#include "SearchScoreMap.h"
 
-#include <Dab/Common.hpp>
+#include <Dab/Common.h>
+
 #include <algorithm>
 
-#include "Edge.hpp"
+#include "Edge.h"
 
 namespace dab::detail::model {
 

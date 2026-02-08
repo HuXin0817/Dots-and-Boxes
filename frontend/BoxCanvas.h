@@ -24,10 +24,24 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "../../../frontend/CommandParser.hpp"
+#include "BaseCanvas.h"
+#include "EdgeCanvas.h"
 
-namespace dab {
+namespace dab::detail::frontend {
 
-using detail::frontend::CommandParser;
+class BoxCanvas final : public BaseCanvas {
+  Q_OBJECT
 
-}  // namespace dab
+ public:
+  static constexpr int Width = EdgeCanvas::Height - 2 * UnitSize;
+
+  explicit BoxCanvas(QWidget* parent);
+
+ protected:
+  void paintEvent(QPaintEvent* event) override;
+
+ private:
+  QColor Color() const;
+};
+
+}  // namespace dab::detail::frontend

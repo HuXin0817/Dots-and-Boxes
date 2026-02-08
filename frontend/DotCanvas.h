@@ -24,47 +24,23 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <Dab/Robot.hpp>
-#include <QPointer>
-#include <atomic>
-
-#include "BoxCanvas.hpp"
-#include "DotCanvas.hpp"
-#include "EdgeCanvas.hpp"
+#include "BaseCanvas.h"
 
 namespace dab::detail::frontend {
 
-class MainWindow final : public BaseCanvas {
+class DotCanvas final : public BaseCanvas {
   Q_OBJECT
 
-  static constexpr int BoardWidth = BoardSize * EdgeCanvas::Height;
-  static constexpr int WindowSize = BoardWidth + 2 * BoxCanvas::Width;
-
  public:
-  explicit MainWindow(PlayerType player1Type, PlayerType player2Type, bool backgroundMode, QWidget* parent);
-  void Run();
+  static constexpr int Width = 2 * UnitSize;
+
+  explicit DotCanvas(QWidget* parent);
 
  protected:
   void paintEvent(QPaintEvent* event) override;
-  void resizeEvent(QResizeEvent* event) override;
-  void showEvent(QShowEvent* event) override;
 
  private:
-  const PlayerType Player1Type;
-  const PlayerType Player2Type;
-  const bool BackgroundMode;
-  QScopedPointer<Robot> Robot1;
-  QScopedPointer<Robot> Robot2;
-  std::atomic<Edge> PlayerMoveEdge;
-  Edge LastEdge;
-  AbsoluteScoreBoard Board;
-  QList<QPointer<BoxCanvas>> BoxCanvases;
-  QList<QPointer<DotCanvas>> DotCanvases;
-  QList<QPointer<EdgeCanvas>> EdgeCanvases;
-
-  void SetPlayerMoveEdge(Edge edge);
   QColor Color() const;
-  void Add(Edge edge);
 };
 
 }  // namespace dab::detail::frontend

@@ -24,23 +24,23 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "BasicBoard.hpp"
+#include "SimulationRobot.h"
 
-namespace dab::detail::board {
+namespace dab::detail::robot {
 
-class EdgeCountableBoard : public BasicBoard {
+class MonteCarloRobot final : public Robot {
+  static constexpr int64_t SearchTime = static_cast<int64_t>(Edge::Max) << 6;
+
  public:
-  EdgeCountableBoard() { Reset(); }
+  MonteCarloRobot() = default;
+  Span<const Edge> BestCandidateEdges(const RelativeScoreBoard& board) override;
+  bool CanEarlyExit(const RelativeScoreBoard& board, Span<const Edge>& result);
+  const SearchScoreMap& GetSearchResult() const { return SearchResult; }
 
-  void Reset();
-  Int Add(Edge edge);
-  Edge FindNotContainsEdgeInBox(Box box) const;
-  Edge FindScoreableEdge() const;
-  uint8_t EdgeCount(Box box) const { return Counter[box]; }
-  uint8_t MaxEdgeCount(Edge edge) const;
-
- protected:
-  Array<uint8_t, Box::Max> Counter;
+ private:
+  SimulationRobot SubRobot;
+  RelativeScoreBoard SimulationBoard;
+  SearchScoreMap SearchResult;
 };
 
-}  // namespace dab::detail::board
+}  // namespace dab::detail::robot

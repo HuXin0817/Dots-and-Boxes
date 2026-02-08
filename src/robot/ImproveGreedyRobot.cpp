@@ -22,9 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "ImproveGreedyRobot.hpp"
+#include "ImproveGreedyRobot.h"
 
-#include "GreedyRobot.hpp"
+#include "GreedyRobot.h"
 
 namespace dab::detail::robot {
 

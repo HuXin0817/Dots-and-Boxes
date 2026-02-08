@@ -22,34 +22,47 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "DotCanvas.h"
+#pragma once
 
-#include <QPainter>
+#include <cassert>
 
-#include "BaseCanvas.h"
+#include "Array.h"
 
-namespace dab::detail::frontend {
+namespace dab::detail::common {
 
-DotCanvas::DotCanvas(QWidget* parent) : BaseCanvas(parent) { setFixedSize(Width, Width); }
+template <typename T, Int Cap>
+class List : public Iterable<List<T, Cap>> {
+ public:
+  constexpr List() = default;
+  constexpr List(const List& other) = default;
+  constexpr List(List&& other) = default;
+  constexpr List& operator=(const List& other) = default;
+  constexpr List& operator=(List&& other) = default;
 
-void DotCanvas::paintEvent(QPaintEvent* event) {
-  QWidget::paintEvent(event);
+  constexpr void ClearAndSet(T item);
+  constexpr void Clear() { Length = 0; }
+  constexpr void Append(T item);
+  constexpr Int Size() const { return Length; }
+  constexpr T* begin() { return Data.begin(); }
+  constexpr const T* begin() const { return Data.begin(); }
+  constexpr T* end() { return Data.begin() + Length; }
+  constexpr const T* end() const { return Data.begin() + Length; }
 
-  QPainter painter(this);
-  painter.setRenderHint(QPainter::Antialiasing);
-  painter.setBrush(QBrush(Color()));
-  painter.setPen(Qt::NoPen);
+ private:
+  Array<T, Cap> Data;
+  Int Length = 0;
+};
 
-  const int x = width() / 2;
-  const int y = height() / 2;
-  painter.drawEllipse(QPoint(x, y), UnitSize, UnitSize);
+template <typename T, Int Cap>
+constexpr void List<T, Cap>::ClearAndSet(T item) {
+  Data[0] = item;
+  Length = 1;
 }
 
-QColor DotCanvas::Color() const {
-  static constexpr QColor DarkThemeColor = QColor(202, 202, 202, 255);
-  static constexpr QColor LightThemeColor = QColor(255, 255, 255, 255);
-
-  return ThemeColor(DarkThemeColor, LightThemeColor);
+template <typename T, Int Cap>
+constexpr void List<T, Cap>::Append(T item) {
+  assert(Length < Cap);
+  Data[Length++] = item;
 }
 
-}  // namespace dab::detail::frontend
+}  // namespace dab::detail::common

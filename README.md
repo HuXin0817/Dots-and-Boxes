@@ -62,23 +62,23 @@ The project can be built on other platforms with Qt6 support. Follow similar ste
 
 The game supports the following command line arguments:
 
-| Option | Short | Long | Description | Default |
-|--------|-------|------|-------------|---------|
-| Board Size | `-s` | `--size` | Set board size ranging from [1, 36] | 6 |
-| Player 1 Type | `-p1` | `--player1` | Set type of player 1 | robot |
-| Player 2 Type | `-p2` | `--player2` | Set type of player 2 | robot |
+| Option        | Short | Long        | Description                         | Default |
+| ------------- | ----- | ----------- | ----------------------------------- | ------- |
+| Board Size    | `-s`  | `--size`    | Set board size ranging from [1, 36] | 6       |
+| Player 1 Type | `-p1` | `--player1` | Set type of player 1                | robot   |
+| Player 2 Type | `-p2` | `--player2` | Set type of player 2                | robot   |
 
 #### Player Type Values
 
-| Value | Description |
-|-------|-------------|
-| `human` | Human player |
-| `robot:easy` | GreedyRobot |
-| `robot:medium` | ImproveGreedyRobot |
-| `robot:hard` | SimulationRobot |
-| `robot:expert` | MonteCarloRobot |
-| `robot:master` | ParallelSearchRobot |
-| `robot` | Equivalent to `robot:master` |
+| Value          | Description                  |
+| -------------- | ---------------------------- |
+| `human`        | Human player                 |
+| `robot:easy`   | GreedyRobot                  |
+| `robot:medium` | ImproveGreedyRobot           |
+| `robot:hard`   | SimulationRobot              |
+| `robot:expert` | MonteCarloRobot              |
+| `robot:master` | ParallelSearchRobot          |
+| `robot`        | Equivalent to `robot:master` |
 
 #### Example Usage
 
@@ -104,52 +104,52 @@ Dots-and-Boxes/
 │   └── workflows/
 │       └── macos-build.yml
 ├── frontend/           # GUI-related files
-│   ├── BoxCanvas.hpp   # Canvas for drawing boxes
-│   ├── CommandParser.hpp # Command line argument parser
-│   ├── Common.hpp      # Common frontend utilities
-│   ├── DotCanvas.hpp   # Canvas for drawing dots
-│   ├── EdgeCanvas.hpp  # Canvas for drawing edges
-│   ├── MainWindow.hpp  # Main window implementation
-│   └── MainWindowCreator.hpp # Main window creator
+│   ├── BoxCanvas.h   # Canvas for drawing boxes
+│   ├── CommandParser.h # Command line argument parser
+│   ├── Common.h      # Common frontend utilities
+│   ├── DotCanvas.h   # Canvas for drawing dots
+│   ├── EdgeCanvas.h  # Canvas for drawing edges
+│   ├── MainWindow.h  # Main window implementation
+│   └── MainWindowCreator.h # Main window creator
 ├── include/            # Header files
-│   ├── Board.hpp
-│   ├── Common.hpp
-│   ├── Frontend.hpp
-│   ├── Model.hpp
-│   └── Robot.hpp
+│   ├── Board.h
+│   ├── Common.h
+│   ├── Frontend.h
+│   ├── Model.h
+│   └── Robot.h
 ├── src/                # Core game logic
 │   ├── board/          # Board implementations
-│   │   ├── BasicBoard.hpp
-│   │   ├── EdgeCountableBoard.hpp
-│   │   ├── RelativeScoreBoard.hpp
-│   │   └── ScoreableEdgeBoard.hpp
+│   │   ├── BasicBoard.h
+│   │   ├── EdgeCountableBoard.h
+│   │   ├── RelativeScoreBoard.h
+│   │   └── ScoreableEdgeBoard.h
 │   ├── common/         # Utility classes
-│   │   ├── Array.hpp
-│   │   ├── Iterable.hpp
-│   │   ├── List.hpp
-│   │   ├── Queue.hpp
-│   │   ├── Random.hpp
-│   │   └── Span.hpp
+│   │   ├── Array.h
+│   │   ├── Iterable.h
+│   │   ├── List.h
+│   │   ├── Queue.h
+│   │   ├── Random.h
+│   │   └── Span.h
 │   ├── model/          # Game model
-│   │   ├── Edge.hpp
-│   │   ├── EdgeCounter.hpp
-│   │   ├── GameScoreMap.hpp
-│   │   ├── Iota.hpp
-│   │   ├── NearBoxes.hpp
-│   │   ├── NearEdges.hpp
-│   │   ├── SearchScoreMap.hpp
-│   │   ├── Square.hpp
-│   │   ├── Step.hpp
-│   │   ├── Turn.hpp
-│   │   └── Types.hpp
+│   │   ├── Edge.h
+│   │   ├── EdgeCounter.h
+│   │   ├── GameScoreMap.h
+│   │   ├── Iota.h
+│   │   ├── NearBoxes.h
+│   │   ├── NearEdges.h
+│   │   ├── SearchScoreMap.h
+│   │   ├── Square.h
+│   │   ├── Step.h
+│   │   ├── Turn.h
+│   │   └── Types.h
 │   └── robot/          # AI implementations
-│       ├── GreedyRobot.hpp
-│       ├── ImproveGreedyRobot.hpp
-│       ├── MonteCarloRobot.hpp
-│       ├── ParallelSearchRobot.hpp
-│       ├── PlayerType.hpp
-│       ├── Robot.hpp
-│       └── SimulationRobot.hpp
+│       ├── GreedyRobot.h
+│       ├── ImproveGreedyRobot.h
+│       ├── MonteCarloRobot.h
+│       ├── ParallelSearchRobot.h
+│       ├── PlayerType.h
+│       ├── Robot.h
+│       └── SimulationRobot.h
 ├── main.cpp            # Entry point
 ├── CMakeLists.txt      # Build configuration
 ├── LICENSE             # License file

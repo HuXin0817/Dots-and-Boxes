@@ -24,13 +24,50 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <Dab/Common.hpp>
+#include <cassert>
 
-#include "Edge.hpp"
-#include "Square.hpp"
+#include "IntWapper.h"
+#include "Square.h"
 
 namespace dab::detail::model {
 
-const List<Box, 2>& NearBoxes(Edge edge);
+class Edge : public IntWapper {
+ public:
+  static constexpr Int Max = 2 * BoardSize * (BoardSize + 1);
+  static constexpr Int Invalid = -1;
+
+  using IntWapper::IntWapper;
+  constexpr Edge(Dot dot1, Dot dot2);
+  constexpr Dot Dot1() const;
+  constexpr Dot Dot2() const;
+  constexpr bool Rotate() const { return v & 1; }
+};
+
+constexpr Edge::Edge(Dot dot1, Dot dot2) {
+  if (dot2 - dot1 == 1) {
+    v = 2 * (dot1 - dot1 / (BoardSize + 1)) + 1;
+  } else {
+    v = 2 * dot1;
+  }
+  assert(Dot1() == dot1 && Dot2() == dot2);
+}
+
+constexpr Dot Edge::Dot1() const {
+  Int dot = v >> 1;
+  if (v & 1) {
+    dot += dot / BoardSize;
+  }
+  return dot;
+}
+
+constexpr Dot Edge::Dot2() const {
+  Int dot = v >> 1;
+  if (v & 1) {
+    dot += dot / BoardSize + 1;
+  } else {
+    dot += BoardSize + 1;
+  }
+  return dot;
+}
 
 }  // namespace dab::detail::model

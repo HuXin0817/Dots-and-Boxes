@@ -24,21 +24,21 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "../../src/common/Array.hpp"
-#include "../../src/common/Int.hpp"
-#include "../../src/common/List.hpp"
-#include "../../src/common/Queue.hpp"
-#include "../../src/common/Random.hpp"
-#include "../../src/common/Span.hpp"
+#include "IntWapper.h"
 
-namespace dab {
+namespace dab::detail::model {
 
-using detail::common::Array;
-using detail::common::BoardSize;
-using detail::common::Int;
-using detail::common::List;
-using detail::common::Queue;
-using detail::common::Random;
-using detail::common::Span;
+class Turn : public IntWapper {
+ public:
+  constexpr Turn() : IntWapper(Player1Turn) {}
+  constexpr void Reset() { v = Player1Turn; }
+  constexpr void Add() { v = -v; }
+  constexpr bool IsPlayer1Turn() const { return v == Player1Turn; }
+  constexpr bool IsPlayer2Turn() const { return v == Player2Turn; }
 
-}  // namespace dab
+ private:
+  static constexpr Int Player1Turn = 1;
+  static constexpr Int Player2Turn = -Player1Turn;
+};
+
+}  // namespace dab::detail::model

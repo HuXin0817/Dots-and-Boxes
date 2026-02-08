@@ -24,21 +24,24 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "../../src/model/Edge.hpp"
-#include "../../src/model/NearBoxes.hpp"
-#include "../../src/model/NearEdges.hpp"
-#include "../../src/model/SearchScoreMap.hpp"
-#include "../../src/model/Square.hpp"
-#include "../../src/model/Turn.hpp"
+#include "Robot.h"
 
-namespace dab {
+namespace dab::detail::robot {
 
-using detail::model::Box;
-using detail::model::Dot;
-using detail::model::Edge;
-using detail::model::NearBoxes;
-using detail::model::NearEdges;
-using detail::model::SearchScoreMap;
-using detail::model::Turn;
+class GreedyRobot : public Robot {
+ public:
+  GreedyRobot() = default;
+  Span<const Edge> BestCandidateEdges(const RelativeScoreBoard& board) override;
+  bool EnemyUnscoreable() const { return EnemyUnscoreableIndex < Edge::Max; }
+  bool Scoreable() const { return ScoreableIndex > 0; }
 
-}  // namespace dab
+ protected:
+  Array<Edge, Edge::Max>& GetEdgeBuffer() { return Edges; }
+
+ private:
+  Int EnemyUnscoreableIndex;
+  Int ScoreableIndex;
+  Array<Edge, Edge::Max> Edges;
+};
+
+}  // namespace dab::detail::robot

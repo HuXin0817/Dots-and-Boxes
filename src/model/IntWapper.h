@@ -24,29 +24,19 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "BaseCanvas.hpp"
+#include <Dab/Common.h>
 
-namespace dab::detail::frontend {
+namespace dab::detail::model {
 
-class EdgeCanvas final : public BaseCanvas {
-  Q_OBJECT
-
+class IntWapper {
  public:
-  static constexpr int Width = UnitSize * 2;
-  static constexpr int Height = Width * 5;
-
-  explicit EdgeCanvas(bool rotate, const std::function<void()>& callBack, QWidget* parent);
-  void SetHighLight(bool highLight) { HighLight = highLight; }
+  constexpr IntWapper() = default;
+  constexpr IntWapper(Int v) : v(v) {}
+  constexpr operator Int() const { return v; }
+  constexpr void operator++() { ++v; }
 
  protected:
-  void mousePressEvent(QMouseEvent* event) override;
-  void paintEvent(QPaintEvent* event) override;
-
- private:
-  bool HighLight = true;
-  const std::function<void()> CallBack;
-
-  QColor Color() const;
+  Int v = 0;
 };
 
-}  // namespace dab::detail::frontend
+}  // namespace dab::detail::model

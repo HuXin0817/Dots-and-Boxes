@@ -24,37 +24,17 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <Dab/Board.hpp>
+#include "GreedyRobot.h"
 
 namespace dab::detail::robot {
 
-enum class PlayerType {
-  Human = 0,
-  GreedyRobot,
-  ImproveGreedyRobot,
-  SimulationRobot,
-  MonteCarloRobot,
-  ParallelSearchRobot,
-};
-
-static constexpr const char* PlayerTypeString[] = {
-    "Human",
-    "GreedyRobot",
-    "ImproveGreedyRobot",
-    "SimulationRobot",
-    "MonteCarloRobot",
-    "ParallelSearchRobot",
-};
-
-inline bool PlayerTypeIsRobot(PlayerType playerType) { return playerType != PlayerType::Human; }
-
-class Robot {
+class ImproveGreedyRobot final : public GreedyRobot {
  public:
-  virtual ~Robot() = default;
+  ImproveGreedyRobot() = default;
+  Span<const Edge> BestCandidateEdges(const RelativeScoreBoard& board) override;
 
-  virtual Span<const Edge> BestCandidateEdges(const RelativeScoreBoard& board) = 0;
+ private:
+  ScoreableEdgeBoard SimulationBoard;
 };
-
-Robot* CreateRobot(PlayerType playerType);
 
 }  // namespace dab::detail::robot

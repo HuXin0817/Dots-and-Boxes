@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "ImproveGreedyRobot.hpp"
+#include "ImproveGreedyRobot.h"
 
 namespace dab::detail::robot {
 

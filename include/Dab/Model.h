@@ -24,17 +24,21 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "GreedyRobot.hpp"
+#include "../../src/model/Edge.h"
+#include "../../src/model/NearBoxes.h"
+#include "../../src/model/NearEdges.h"
+#include "../../src/model/SearchScoreMap.h"
+#include "../../src/model/Square.h"
+#include "../../src/model/Turn.h"
 
-namespace dab::detail::robot {
+namespace dab {
 
-class ImproveGreedyRobot final : public GreedyRobot {
- public:
-  ImproveGreedyRobot() = default;
-  Span<const Edge> BestCandidateEdges(const RelativeScoreBoard& board) override;
+using detail::model::Box;
+using detail::model::Dot;
+using detail::model::Edge;
+using detail::model::NearBoxes;
+using detail::model::NearEdges;
+using detail::model::SearchScoreMap;
+using detail::model::Turn;
 
- private:
-  ScoreableEdgeBoard SimulationBoard;
-};
-
-}  // namespace dab::detail::robot
+}  // namespace dab

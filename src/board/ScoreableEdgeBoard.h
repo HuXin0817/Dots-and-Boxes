@@ -24,41 +24,20 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <Dab/Robot.hpp>
-#include <QApplication>
-#include <QCommandLineParser>
+#include "EdgeCountableBoard.h"
 
-namespace dab::detail::frontend {
+namespace dab::detail::board {
 
-static constexpr const char* PlayerTypeOptionStrings[] = {
-    "human",
-    "robot:easy",
-    "robot:medium",
-    "robot:hard",
-    "robot:expert",
-    "robot:master",
-};
-
-class Config {
+class ScoreableEdgeBoard : public EdgeCountableBoard {
  public:
-  QString ToString() const;
+  ScoreableEdgeBoard() { Reset(); }
 
-  PlayerType Player1Type;
-  PlayerType Player2Type;
-  bool BackgroundMode;
-};
-
-class CommandParser {
-  static constexpr PlayerType DefaultPlayerType = PlayerType::ParallelSearchRobot;
-
- public:
-  CommandParser() = default;
-  int Process(const QApplication& application);
+  void Reset(const EdgeCountableBoard& newBoard = EdgeCountableBoard());
+  Int Add(Edge edge);
+  Int MaxObtainableScore(Int endScore);
 
  private:
-  QCommandLineOption PlayerTypeOption(int player);
-  QCommandLineOption BackgroundModeOption();
-  PlayerType ParsePlayerType(const QString& arg);
+  Queue<Edge, Edge::Max> ScoreableEdges;
 };
 
-}  // namespace dab::detail::frontend
+}  // namespace dab::detail::board

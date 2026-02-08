@@ -22,11 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "EdgeCanvas.hpp"
+#include "EdgeCanvas.h"
 
 #include <QPainter>
 
-#include "BaseCanvas.hpp"
+#include "BaseCanvas.h"
 
 namespace dab::detail::frontend {
 

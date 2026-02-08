@@ -24,20 +24,14 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "EdgeCountableBoard.hpp"
+#include "../../src/robot/Robot.h"
 
-namespace dab::detail::board {
+namespace dab {
 
-class RelativeScoreBoard : public EdgeCountableBoard, public Turn {
- public:
-  RelativeScoreBoard() { Reset(); }
+using detail::robot::CreateRobot;
+using detail::robot::PlayerType;
+using detail::robot::PlayerTypeIsRobot;
+using detail::robot::PlayerTypeString;
+using detail::robot::Robot;
 
-  void Reset(const EdgeCountableBoard& newBoard = EdgeCountableBoard());
-  Int Add(Edge edge);
-  Int RelativeScore() const { return Score; }
-
- private:
-  Int Score;
-};
-
-}  // namespace dab::detail::board
+}  // namespace dab

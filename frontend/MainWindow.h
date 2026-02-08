@@ -22,34 +22,50 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
+#pragma once
+
+#include <Dab/Robot.h>
+
+#include <QPointer>
+#include <atomic>
+
+#include "BoxCanvas.h"
 #include "DotCanvas.h"
-
-#include <QPainter>
-
-#include "BaseCanvas.h"
+#include "EdgeCanvas.h"
 
 namespace dab::detail::frontend {
 
-DotCanvas::DotCanvas(QWidget* parent) : BaseCanvas(parent) { setFixedSize(Width, Width); }
+class MainWindow final : public BaseCanvas {
+  Q_OBJECT
 
-void DotCanvas::paintEvent(QPaintEvent* event) {
-  QWidget::paintEvent(event);
+  static constexpr int BoardWidth = BoardSize * EdgeCanvas::Height;
+  static constexpr int WindowSize = BoardWidth + 2 * BoxCanvas::Width;
 
-  QPainter painter(this);
-  painter.setRenderHint(QPainter::Antialiasing);
-  painter.setBrush(QBrush(Color()));
-  painter.setPen(Qt::NoPen);
+ public:
+  explicit MainWindow(PlayerType player1Type, PlayerType player2Type, bool backgroundMode, QWidget* parent);
+  void Run();
 
-  const int x = width() / 2;
-  const int y = height() / 2;
-  painter.drawEllipse(QPoint(x, y), UnitSize, UnitSize);
-}
+ protected:
+  void paintEvent(QPaintEvent* event) override;
+  void resizeEvent(QResizeEvent* event) override;
+  void showEvent(QShowEvent* event) override;
 
-QColor DotCanvas::Color() const {
-  static constexpr QColor DarkThemeColor = QColor(202, 202, 202, 255);
-  static constexpr QColor LightThemeColor = QColor(255, 255, 255, 255);
+ private:
+  const PlayerType Player1Type;
+  const PlayerType Player2Type;
+  const bool BackgroundMode;
+  QScopedPointer<Robot> Robot1;
+  QScopedPointer<Robot> Robot2;
+  std::atomic<Edge> PlayerMoveEdge;
+  Edge LastEdge;
+  AbsoluteScoreBoard Board;
+  QList<QPointer<BoxCanvas>> BoxCanvases;
+  QList<QPointer<DotCanvas>> DotCanvases;
+  QList<QPointer<EdgeCanvas>> EdgeCanvases;
 
-  return ThemeColor(DarkThemeColor, LightThemeColor);
-}
+  void SetPlayerMoveEdge(Edge edge);
+  QColor Color() const;
+  void Add(Edge edge);
+};
 
 }  // namespace dab::detail::frontend

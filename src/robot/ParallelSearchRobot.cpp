@@ -22,11 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "ParallelSearchRobot.hpp"
+#include "ParallelSearchRobot.h"
 
 #include <tbb/parallel_for_each.h>
 
-#include "MonteCarloRobot.hpp"
+#include "MonteCarloRobot.h"
 
 namespace dab::detail::robot {
 

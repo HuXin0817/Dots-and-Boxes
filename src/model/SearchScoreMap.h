@@ -24,23 +24,25 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "BaseCanvas.hpp"
+#include <Dab/Common.h>
 
-namespace dab::detail::frontend {
+#include "Edge.h"
 
-class DotCanvas final : public BaseCanvas {
-  Q_OBJECT
+namespace dab::detail::model {
 
+class SearchScoreMap {
  public:
-  static constexpr int Width = 2 * UnitSize;
+  SearchScoreMap() = default;
 
-  explicit DotCanvas(QWidget* parent);
-
- protected:
-  void paintEvent(QPaintEvent* event) override;
+  void Reset();
+  void Add(Edge edge, Int score);
+  void Add(const SearchScoreMap& other);
+  Span<const Edge> Export();
 
  private:
-  QColor Color() const;
+  Array<int, Edge::Max> Time;
+  Array<int, Edge::Max> Score;
+  List<Edge, Edge::Max> BestEdges;
 };
 
-}  // namespace dab::detail::frontend
+}  // namespace dab::detail::model

@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "IntWapper.hpp"
+#include "IntWapper.h"
 
 namespace dab::detail::model {
 

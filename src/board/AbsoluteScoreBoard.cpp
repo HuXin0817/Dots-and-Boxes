@@ -22,11 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "AbsoluteScoreBoard.hpp"
+#include "AbsoluteScoreBoard.h"
 
-#include <Dab/Model.hpp>
+#include <Dab/Model.h>
 
-#include "RelativeScoreBoard.hpp"
+#include "RelativeScoreBoard.h"
 
 namespace dab::detail::board {
 

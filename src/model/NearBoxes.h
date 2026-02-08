@@ -24,20 +24,13 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "MonteCarloRobot.hpp"
+#include <Dab/Common.h>
 
-namespace dab::detail::robot {
+#include "Edge.h"
+#include "Square.h"
 
-class ParallelSearchRobot final : public Robot {
-  static constexpr int64_t SubRobotNumber = 32;
+namespace dab::detail::model {
 
- public:
-  ParallelSearchRobot() = default;
-  Span<const Edge> BestCandidateEdges(const RelativeScoreBoard& board) override;
+const List<Box, 2>& NearBoxes(Edge edge);
 
- private:
-  Array<MonteCarloRobot, SubRobotNumber> SubRobots;
-  SearchScoreMap SearchResult;
-};
-
-}  // namespace dab::detail::robot
+}  // namespace dab::detail::model

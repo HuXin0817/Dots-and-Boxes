@@ -24,13 +24,28 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <Dab/Common.hpp>
+#include <Dab/Model.h>
 
-#include "Edge.hpp"
-#include "Square.hpp"
+namespace dab::detail::board {
 
-namespace dab::detail::model {
+class BasicBoard {
+ public:
+  BasicBoard() { Reset(); }
 
-const Array<Edge, 4>& NearEdges(Box box);
+  void Reset();
+  void Add(Edge edge);
+  bool Contains(Edge edge) const { return EdgeIndexes[edge] < Step; }
+  bool NotContains(Edge edge) const { return EdgeIndexes[edge] >= Step; }
+  Span<const Edge> EmptyEdges() const { return {Edges.begin() + Step, Edges.end()}; }
+  Span<const Edge> MoveRecord() const { return {Edges.begin(), Edges.begin() + Step}; }
+  bool Gaming() const { return Step < Edge::Max; }
+  Int RemainStep() const { return Edge::Max - Step; }
+  Int NowStep() const { return Step; }
 
-}  // namespace dab::detail::model
+ private:
+  Int Step = 0;
+  Array<Edge, Edge::Max> Edges;
+  Array<Int, Edge::Max> EdgeIndexes;
+};
+
+}  // namespace dab::detail::board

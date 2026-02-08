@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <Dab/Common.hpp>
+#include <Dab/Common.h>
 
 namespace dab::detail::model {
 

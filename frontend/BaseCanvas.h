@@ -24,24 +24,39 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "BaseCanvas.hpp"
-#include "EdgeCanvas.hpp"
+#include <Dab/Model.h>
+
+#include <QApplication>
+#include <QWidget>
 
 namespace dab::detail::frontend {
 
-class BoxCanvas final : public BaseCanvas {
+enum class Owner {
+  None,
+  Player1,
+  Player2,
+};
+
+class BaseCanvas : public QWidget {
   Q_OBJECT
 
  public:
-  static constexpr int Width = EdgeCanvas::Height - 2 * UnitSize;
+  static constexpr int UnitSize = 6 + 16 / BoardSize;
 
-  explicit BoxCanvas(QWidget* parent);
+  using QWidget::QWidget;
+
+  static QColor ThemeColor(const QColor& DarkThemeColor, const QColor& LightThemeColor);
+  bool Hovered() const { return HoverState; }
+  Owner GetOwner() const { return Owner; }
+  void SetOwner(Turn turn);
 
  protected:
-  void paintEvent(QPaintEvent* event) override;
+  void enterEvent(QEnterEvent* event) override;
+  void leaveEvent(QEvent* event) override;
 
  private:
-  QColor Color() const;
+  Owner Owner = Owner::None;
+  bool HoverState = false;
 };
 
 }  // namespace dab::detail::frontend

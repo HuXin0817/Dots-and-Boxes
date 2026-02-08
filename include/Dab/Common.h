@@ -24,23 +24,21 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "SimulationRobot.hpp"
+#include "../../src/common/Array.h"
+#include "../../src/common/Int.h"
+#include "../../src/common/List.h"
+#include "../../src/common/Queue.h"
+#include "../../src/common/Random.h"
+#include "../../src/common/Span.h"
 
-namespace dab::detail::robot {
+namespace dab {
 
-class MonteCarloRobot final : public Robot {
-  static constexpr int64_t SearchTime = static_cast<int64_t>(Edge::Max) << 6;
+using detail::common::Array;
+using detail::common::BoardSize;
+using detail::common::Int;
+using detail::common::List;
+using detail::common::Queue;
+using detail::common::Random;
+using detail::common::Span;
 
- public:
-  MonteCarloRobot() = default;
-  Span<const Edge> BestCandidateEdges(const RelativeScoreBoard& board) override;
-  bool CanEarlyExit(const RelativeScoreBoard& board, Span<const Edge>& result);
-  const SearchScoreMap& GetSearchResult() const { return SearchResult; }
-
- private:
-  SimulationRobot SubRobot;
-  RelativeScoreBoard SimulationBoard;
-  SearchScoreMap SearchResult;
-};
-
-}  // namespace dab::detail::robot
+}  // namespace dab

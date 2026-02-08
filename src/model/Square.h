@@ -24,18 +24,23 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "../../src/board/AbsoluteScoreBoard.hpp"
-#include "../../src/board/BasicBoard.hpp"
-#include "../../src/board/EdgeCountableBoard.hpp"
-#include "../../src/board/RelativeScoreBoard.hpp"
-#include "../../src/board/ScoreableEdgeBoard.hpp"
+#include "IntWapper.h"
 
-namespace dab {
+namespace dab::detail::model {
 
-using detail::board::AbsoluteScoreBoard;
-using detail::board::BasicBoard;
-using detail::board::EdgeCountableBoard;
-using detail::board::RelativeScoreBoard;
-using detail::board::ScoreableEdgeBoard;
+template <int64_t Length>
+class Square : public IntWapper {
+ public:
+  static constexpr Int Max = Length * Length;
 
-}  // namespace dab
+  using IntWapper::IntWapper;
+  constexpr Square(Int x, Int y) : IntWapper(x * Length + y) {}
+  constexpr Int X() const { return v / Length; }
+  constexpr Int Y() const { return v % Length; }
+};
+
+using Box = Square<BoardSize>;
+
+using Dot = Square<BoardSize + 1>;
+
+}  // namespace dab::detail::model

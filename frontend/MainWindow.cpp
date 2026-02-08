@@ -22,9 +22,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "MainWindow.hpp"
+#include "MainWindow.h"
 
-#include <Dab/Robot.hpp>
+#include <Dab/Robot.h>
+
 #include <QJsonObject>
 #include <QPainter>
 #include <QPointer>
@@ -34,9 +35,9 @@ THE SOFTWARE.
 #include <atomic>
 #include <cassert>
 
-#include "BoxCanvas.hpp"
-#include "DotCanvas.hpp"
-#include "EdgeCanvas.hpp"
+#include "BoxCanvas.h"
+#include "DotCanvas.h"
+#include "EdgeCanvas.h"
 
 namespace dab::detail::frontend {
 

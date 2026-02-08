@@ -22,12 +22,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "NearBoxes.hpp"
+#include "NearBoxes.h"
 
-#include <Dab/Common.hpp>
+#include <Dab/Common.h>
 
-#include "Edge.hpp"
-#include "Square.hpp"
+#include "Edge.h"
+#include "Square.h"
 
 namespace dab::detail::model {
 

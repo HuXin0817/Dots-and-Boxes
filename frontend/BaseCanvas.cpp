@@ -22,9 +22,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "BaseCanvas.hpp"
+#include "BaseCanvas.h"
 
-#include <Dab/Model.hpp>
+#include <Dab/Model.h>
+
 #include <QApplication>
 #include <QPainter>
 #include <QStyleHints>

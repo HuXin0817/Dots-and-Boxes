@@ -22,9 +22,21 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "ParallelSearchRobot.hpp"
+#include "ParallelSearchRobot.h"
 
 namespace dab::detail::robot {
+
+const char* PlayerTypeString(PlayerType playerType) {
+  static constexpr const char* PlayerTypeStringArray[] = {
+      "Human",
+      "GreedyRobot",
+      "ImproveGreedyRobot",
+      "SimulationRobot",
+      "MonteCarloRobot",
+      "ParallelSearchRobot",
+  };
+  return PlayerTypeStringArray[static_cast<int>(playerType)];
+}
 
 Robot* CreateRobot(PlayerType playerType) {
   switch (playerType) {

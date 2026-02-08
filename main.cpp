@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include <Dab/Frontend/Frontend.hpp>
+#include <Dab/Frontend/Frontend.h>
 
 int main(int argc, char* argv[]) {
   QApplication application(argc, argv);

@@ -24,21 +24,42 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "RelativeScoreBoard.hpp"
+#include <Dab/Robot.h>
 
-namespace dab::detail::board {
+#include <QApplication>
+#include <QCommandLineParser>
 
-class AbsoluteScoreBoard : public RelativeScoreBoard {
- public:
-  AbsoluteScoreBoard() { Reset(); }
+namespace dab::detail::frontend {
 
-  void Reset(const EdgeCountableBoard& newBoard = EdgeCountableBoard());
-  Int Add(Edge edge);
-  Int Player1Score() const { return (TotalScore + RelativeScore()) / 2; }
-  Int Player2Score() const { return (TotalScore - RelativeScore()) / 2; }
-
- private:
-  Int TotalScore;
+static constexpr const char* PlayerTypeOptionStrings[] = {
+    "human",
+    "robot:easy",
+    "robot:medium",
+    "robot:hard",
+    "robot:expert",
+    "robot:master",
 };
 
-}  // namespace dab::detail::board
+class Config {
+ public:
+  QString ToString() const;
+
+  PlayerType Player1Type;
+  PlayerType Player2Type;
+  bool BackgroundMode;
+};
+
+class CommandParser {
+  static constexpr PlayerType DefaultPlayerType = PlayerType::ParallelSearchRobot;
+
+ public:
+  CommandParser() = default;
+  int Process(const QApplication& application);
+
+ private:
+  QCommandLineOption PlayerTypeOption(int player);
+  QCommandLineOption BackgroundModeOption();
+  PlayerType ParsePlayerType(const QString& arg);
+};
+
+}  // namespace dab::detail::frontend

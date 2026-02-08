@@ -22,34 +22,30 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "DotCanvas.h"
+#pragma once
 
-#include <QPainter>
+#include <Dab/Board.h>
 
-#include "BaseCanvas.h"
+namespace dab::detail::robot {
 
-namespace dab::detail::frontend {
+enum class PlayerType {
+  Human = 0,
+  GreedyRobot,
+  ImproveGreedyRobot,
+  SimulationRobot,
+  MonteCarloRobot,
+  ParallelSearchRobot,
+};
 
-DotCanvas::DotCanvas(QWidget* parent) : BaseCanvas(parent) { setFixedSize(Width, Width); }
+class Robot {
+ public:
+  virtual ~Robot() = default;
 
-void DotCanvas::paintEvent(QPaintEvent* event) {
-  QWidget::paintEvent(event);
+  virtual Span<const Edge> BestCandidateEdges(const RelativeScoreBoard& board) = 0;
+};
 
-  QPainter painter(this);
-  painter.setRenderHint(QPainter::Antialiasing);
-  painter.setBrush(QBrush(Color()));
-  painter.setPen(Qt::NoPen);
+const char* PlayerTypeString(PlayerType playerType);
+inline bool PlayerTypeIsRobot(PlayerType playerType) { return playerType != PlayerType::Human; }
+Robot* CreateRobot(PlayerType playerType);
 
-  const int x = width() / 2;
-  const int y = height() / 2;
-  painter.drawEllipse(QPoint(x, y), UnitSize, UnitSize);
-}
-
-QColor DotCanvas::Color() const {
-  static constexpr QColor DarkThemeColor = QColor(202, 202, 202, 255);
-  static constexpr QColor LightThemeColor = QColor(255, 255, 255, 255);
-
-  return ThemeColor(DarkThemeColor, LightThemeColor);
-}
-
-}  // namespace dab::detail::frontend
+}  // namespace dab::detail::robot

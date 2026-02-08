@@ -22,22 +22,22 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "CommandParser.hpp"
+#include "CommandParser.h"
 
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QJsonObject>
 #include <cstdlib>
 
-#include "MainWindow.hpp"
+#include "MainWindow.h"
 
 namespace dab::detail::frontend {
 
 QString Config::ToString() const {
   QJsonObject configData;
   configData.insert("BoardSize", BoardSize);
-  configData.insert("Player1Type", PlayerTypeString[static_cast<int>(Player1Type)]);
-  configData.insert("Player2Type", PlayerTypeString[static_cast<int>(Player2Type)]);
+  configData.insert("Player1Type", PlayerTypeString(Player1Type));
+  configData.insert("Player2Type", PlayerTypeString(Player2Type));
   configData.insert("BackgroundMode", BackgroundMode);
   QJsonObject config;
   config.insert("Config", configData);

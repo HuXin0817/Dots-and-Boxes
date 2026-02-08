@@ -24,20 +24,13 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "EdgeCountableBoard.hpp"
+#include <Dab/Common.h>
 
-namespace dab::detail::board {
+#include "Edge.h"
+#include "Square.h"
 
-class ScoreableEdgeBoard : public EdgeCountableBoard {
- public:
-  ScoreableEdgeBoard() { Reset(); }
+namespace dab::detail::model {
 
-  void Reset(const EdgeCountableBoard& newBoard = EdgeCountableBoard());
-  Int Add(Edge edge);
-  Int MaxObtainableScore(Int endScore);
+const Array<Edge, 4>& NearEdges(Box box);
 
- private:
-  Queue<Edge, Edge::Max> ScoreableEdges;
-};
-
-}  // namespace dab::detail::board
+}  // namespace dab::detail::model

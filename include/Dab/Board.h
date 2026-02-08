@@ -22,34 +22,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "DotCanvas.h"
+#pragma once
 
-#include <QPainter>
+#include "../../src/board/AbsoluteScoreBoard.h"
+#include "../../src/board/BasicBoard.h"
+#include "../../src/board/EdgeCountableBoard.h"
+#include "../../src/board/RelativeScoreBoard.h"
+#include "../../src/board/ScoreableEdgeBoard.h"
 
-#include "BaseCanvas.h"
+namespace dab {
 
-namespace dab::detail::frontend {
+using detail::board::AbsoluteScoreBoard;
+using detail::board::BasicBoard;
+using detail::board::EdgeCountableBoard;
+using detail::board::RelativeScoreBoard;
+using detail::board::ScoreableEdgeBoard;
 
-DotCanvas::DotCanvas(QWidget* parent) : BaseCanvas(parent) { setFixedSize(Width, Width); }
-
-void DotCanvas::paintEvent(QPaintEvent* event) {
-  QWidget::paintEvent(event);
-
-  QPainter painter(this);
-  painter.setRenderHint(QPainter::Antialiasing);
-  painter.setBrush(QBrush(Color()));
-  painter.setPen(Qt::NoPen);
-
-  const int x = width() / 2;
-  const int y = height() / 2;
-  painter.drawEllipse(QPoint(x, y), UnitSize, UnitSize);
-}
-
-QColor DotCanvas::Color() const {
-  static constexpr QColor DarkThemeColor = QColor(202, 202, 202, 255);
-  static constexpr QColor LightThemeColor = QColor(255, 255, 255, 255);
-
-  return ThemeColor(DarkThemeColor, LightThemeColor);
-}
-
-}  // namespace dab::detail::frontend
+}  // namespace dab
