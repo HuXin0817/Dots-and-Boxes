@@ -28,6 +28,8 @@ THE SOFTWARE.
 #include <chrono>
 #include <random>
 
+#include "Int.h"
+
 namespace dab::detail::common {
 
 class Random {
