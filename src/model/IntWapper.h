@@ -33,7 +33,7 @@ class IntWapper {
   constexpr IntWapper() = default;
   constexpr IntWapper(Int v) : v(v) {}
   constexpr operator Int() const { return v; }
-  constexpr void operator++() { ++v; }
+  constexpr void Add() { ++v; }
 
  protected:
   Int v = 0;

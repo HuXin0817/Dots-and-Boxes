@@ -28,7 +28,7 @@ namespace dab::detail::board {
 
 void BasicBoard::Reset() {
   Step = 0;
-  for (Edge edge = 0; edge < Edge::Max; ++edge) {
+  for (Edge edge = 0; edge < Edge::Max; edge.Add()) {
     EdgeIndexes.At(edge) = edge;
     Edges.At(edge) = edge;
   }

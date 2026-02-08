@@ -58,18 +58,18 @@ MainWindow::MainWindow(PlayerType player1Type, PlayerType player2Type, bool back
     setMinimumSize(WindowSize, WindowSize);
 
     BoxCanvases.reserve(Box::Max);
-    for (Box box = 0; box < Box::Max; ++box) {
+    for (Box box = 0; box < Box::Max; box.Add()) {
       BoxCanvases.emplace_back(new BoxCanvas(this));
     }
 
     EdgeCanvases.reserve(Edge::Max);
-    for (Edge edge = 0; edge < Edge::Max; ++edge) {
+    for (Edge edge = 0; edge < Edge::Max; edge.Add()) {
       EdgeCanvases.emplace_back(
           new EdgeCanvas(edge.Rotate(), [edge, this]() -> void { SetPlayerMoveEdge(edge); }, this));
     }
 
     DotCanvases.reserve(Dot::Max);
-    for (Dot dot = 0; dot < Dot::Max; ++dot) {
+    for (Dot dot = 0; dot < Dot::Max; dot.Add()) {
       DotCanvases.emplace_back(new DotCanvas(this));
     }
   }
@@ -157,13 +157,13 @@ void MainWindow::resizeEvent(QResizeEvent* event) {
   const int x0 = (width() - BoardWidth) / 2 - UnitSize;
   const int y0 = (height() - BoardWidth) / 2 - UnitSize;
 
-  for (Box box = 0; box < Box::Max; ++box) {
+  for (Box box = 0; box < Box::Max; box.Add()) {
     const int x = x0 + box.X() * EdgeCanvas::Height + 2 * UnitSize;
     const int y = y0 + box.Y() * EdgeCanvas::Height + 2 * UnitSize;
     BoxCanvases[box]->move(x, y);
   }
 
-  for (Edge edge = 0; edge < Edge::Max; ++edge) {
+  for (Edge edge = 0; edge < Edge::Max; edge.Add()) {
     int x = x0 + edge.Dot1().X() * EdgeCanvas::Height;
     int y = y0 + edge.Dot1().Y() * EdgeCanvas::Height;
     if (edge.Rotate()) {
@@ -174,7 +174,7 @@ void MainWindow::resizeEvent(QResizeEvent* event) {
     EdgeCanvases[edge]->move(x, y);
   }
 
-  for (Dot dot = 0; dot < Dot::Max; ++dot) {
+  for (Dot dot = 0; dot < Dot::Max; dot.Add()) {
     const int x = x0 + dot.X() * EdgeCanvas::Height;
     const int y = y0 + dot.Y() * EdgeCanvas::Height;
     DotCanvases[dot]->move(x, y);
@@ -215,7 +215,7 @@ void MainWindow::Add(Edge edge) {
     }
     EdgeCanvases[edge]->SetOwner(static_cast<Turn>(Board));
     EdgeCanvases[edge]->raise();
-    for (Dot dot = 0; dot < Dot::Max; ++dot) {
+    for (Dot dot = 0; dot < Dot::Max; dot.Add()) {
       DotCanvases[dot]->raise();
     }
 

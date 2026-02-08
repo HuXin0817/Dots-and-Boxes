@@ -56,7 +56,7 @@ Edge EdgeCountableBoard::FindNotContainsEdgeInBox(Box box) const {
 }
 
 Edge EdgeCountableBoard::FindScoreableEdge() const {
-  for (Box box = 0; box < Box::Max; ++box) {
+  for (Box box = 0; box < Box::Max; box.Add()) {
     if (Counter.At(box) == 3) {
       return FindNotContainsEdgeInBox(box);
     }

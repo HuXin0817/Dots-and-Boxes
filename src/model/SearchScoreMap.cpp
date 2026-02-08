@@ -52,7 +52,7 @@ void SearchScoreMap::Add(const SearchScoreMap& other) {
 
 Span<const Edge> SearchScoreMap::Export() {
   float maxScore = 0.0;
-  for (Edge edge = 0; edge < Edge::Max; ++edge) {
+  for (Edge edge = 0; edge < Edge::Max; edge.Add()) {
     if (Time.At(edge) > 0) {
       if (const float score = static_cast<float>(Score.At(edge)) / static_cast<float>(Time.At(edge));
           score > maxScore || BestEdges.Empty()) {

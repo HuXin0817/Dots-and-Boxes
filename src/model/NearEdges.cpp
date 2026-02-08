@@ -40,7 +40,7 @@ class NearEdgesMapper {
 };
 
 constexpr NearEdgesMapper::NearEdgesMapper() {
-  for (Box box = 0; box < Box::Max; ++box) {
+  for (Box box = 0; box < Box::Max; box.Add()) {
     BoxNearEdges.At(box) = GetNearEdges(box);
   }
 }
