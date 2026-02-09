@@ -81,6 +81,56 @@ MainWindow::MainWindow(PlayerType player1Type, PlayerType player2Type, bool back
   }
 }
 
+void MainWindow::paintEvent(QPaintEvent* event) {
+  QWidget::paintEvent(event);
+
+  QPainter painter(this);
+  painter.fillRect(rect(), Color());
+}
+
+void MainWindow::resizeEvent(QResizeEvent* event) {
+  QWidget::resizeEvent(event);
+
+  const int x0 = (width() - BoardWidth) / 2 - UnitSize;
+  const int y0 = (height() - BoardWidth) / 2 - UnitSize;
+
+  for (Box box = 0; box < Box::Max; box.Add()) {
+    const int x = x0 + box.X() * EdgeCanvas::Height + 2 * UnitSize;
+    const int y = y0 + box.Y() * EdgeCanvas::Height + 2 * UnitSize;
+    BoxCanvases[box]->move(x, y);
+  }
+
+  for (Edge edge = 0; edge < Edge::Max; edge.Add()) {
+    int x = x0 + edge.Dot1().X() * EdgeCanvas::Height;
+    int y = y0 + edge.Dot1().Y() * EdgeCanvas::Height;
+    if (edge.Rotate()) {
+      y += UnitSize;
+    } else {
+      x += UnitSize;
+    }
+    EdgeCanvases[edge]->move(x, y);
+  }
+
+  for (Dot dot = 0; dot < Dot::Max; dot.Add()) {
+    const int x = x0 + dot.X() * EdgeCanvas::Height;
+    const int y = y0 + dot.Y() * EdgeCanvas::Height;
+    DotCanvases[dot]->move(x, y);
+  }
+}
+
+void MainWindow::showEvent(QShowEvent* event) {
+  QWidget::showEvent(event);
+
+  QThreadPool::globalInstance()->start([this]() -> void { Run(); });
+}
+
+QColor MainWindow::Color() const {
+  static constexpr QColor DarkThemeColor = QColor(43, 43, 43, 255);
+  static constexpr QColor LightThemeColor = QColor(242, 242, 242, 255);
+
+  return ThemeColor(DarkThemeColor, LightThemeColor);
+}
+
 void MainWindow::Run() {
   Random Random;
   while (Board.Gaming()) {
@@ -136,94 +186,30 @@ void MainWindow::Run() {
 
   if (BackgroundMode) {
     exit(0);
-  } else {
-    QMetaObject::invokeMethod(
-        this,
-        [&]() -> void {
-          QMessageBox* messagebox = new QMessageBox(this);
-          if (const QString winnerName = winner["Winner"].toString(); winnerName == "Draw") {
-            messagebox->setText("Draw!");
-          } else {
-            messagebox->setText(
-                QString("%1 Win! (Score %2:%3)").arg(winnerName).arg(Board.Player1Score()).arg(Board.Player2Score()));
-          }
-          messagebox->setIcon(QMessageBox::Information);
-          QPushButton* closeButton = messagebox->addButton(QMessageBox::Close);
-          connect(closeButton, &QPushButton::pressed, this, &MainWindow::close);
-          messagebox->show();
-
-          QTimer::singleShot(2000, this, [this]() -> void {
-            EdgeCanvases[LastEdge]->SetHighLight(false);
-            update();
-            QTimer::singleShot(2000, this, &MainWindow::close);
-          });
-        },
-        Qt::BlockingQueuedConnection);
-  }
-}
-
-void MainWindow::paintEvent(QPaintEvent* event) {
-  QWidget::paintEvent(event);
-
-  QPainter painter(this);
-  painter.fillRect(rect(), Color());
-}
-
-void MainWindow::resizeEvent(QResizeEvent* event) {
-  QWidget::resizeEvent(event);
-
-  const int x0 = (width() - BoardWidth) / 2 - UnitSize;
-  const int y0 = (height() - BoardWidth) / 2 - UnitSize;
-
-  for (Box box = 0; box < Box::Max; box.Add()) {
-    const int x = x0 + box.X() * EdgeCanvas::Height + 2 * UnitSize;
-    const int y = y0 + box.Y() * EdgeCanvas::Height + 2 * UnitSize;
-    BoxCanvases[box]->move(x, y);
   }
 
-  for (Edge edge = 0; edge < Edge::Max; edge.Add()) {
-    int x = x0 + edge.Dot1().X() * EdgeCanvas::Height;
-    int y = y0 + edge.Dot1().Y() * EdgeCanvas::Height;
-    if (edge.Rotate()) {
-      y += UnitSize;
-    } else {
-      x += UnitSize;
-    }
-    EdgeCanvases[edge]->move(x, y);
-  }
+  QMetaObject::invokeMethod(
+      this,
+      [&]() -> void {
+        const QPointer messagebox = new QMessageBox(this);
+        if (const QString winnerName = winner["Winner"].toString(); winnerName == "Draw") {
+          messagebox->setText("Draw!");
+        } else {
+          messagebox->setText(
+              QString("%1 Win! (Score %2:%3)").arg(winnerName).arg(Board.Player1Score()).arg(Board.Player2Score()));
+        }
+        messagebox->setIcon(QMessageBox::Information);
+        const QPointer closeButton = messagebox->addButton(QMessageBox::Close);
+        connect(closeButton, &QPushButton::pressed, this, &MainWindow::close);
+        messagebox->show();
 
-  for (Dot dot = 0; dot < Dot::Max; dot.Add()) {
-    const int x = x0 + dot.X() * EdgeCanvas::Height;
-    const int y = y0 + dot.Y() * EdgeCanvas::Height;
-    DotCanvases[dot]->move(x, y);
-  }
-}
-
-void MainWindow::showEvent(QShowEvent* event) {
-  QWidget::showEvent(event);
-
-  QThreadPool::globalInstance()->start([this]() -> void { Run(); });
-}
-
-void MainWindow::SetPlayerMoveEdge(Edge edge) {
-  if (Board.Contains(edge)) {
-    return;
-  }
-  if (PlayerTypeIsRobot(Player1Type) && Board.IsPlayer1Turn()) {
-    return;
-  }
-  if (PlayerTypeIsRobot(Player2Type) && Board.IsPlayer2Turn()) {
-    return;
-  }
-  Edge expected = Edge::Invalid;
-  PlayerMoveEdge.compare_exchange_strong(expected, edge);
-}
-
-QColor MainWindow::Color() const {
-  static constexpr QColor DarkThemeColor = QColor(43, 43, 43, 255);
-  static constexpr QColor LightThemeColor = QColor(242, 242, 242, 255);
-
-  return ThemeColor(DarkThemeColor, LightThemeColor);
+        QTimer::singleShot(2000, this, [this]() -> void {
+          EdgeCanvases[LastEdge]->SetHighLight(false);
+          update();
+          QTimer::singleShot(2000, this, &MainWindow::close);
+        });
+      },
+      Qt::BlockingQueuedConnection);
 }
 
 void MainWindow::Add(Edge edge) {
@@ -256,6 +242,20 @@ void MainWindow::Add(Edge edge) {
     update();
     QApplication::beep();
   }
+}
+
+void MainWindow::SetPlayerMoveEdge(Edge edge) {
+  if (Board.Contains(edge)) {
+    return;
+  }
+  if (PlayerTypeIsRobot(Player1Type) && Board.IsPlayer1Turn()) {
+    return;
+  }
+  if (PlayerTypeIsRobot(Player2Type) && Board.IsPlayer2Turn()) {
+    return;
+  }
+  Edge expected = Edge::Invalid;
+  PlayerMoveEdge.compare_exchange_strong(expected, edge);
 }
 
 }  // namespace dab::detail::frontend

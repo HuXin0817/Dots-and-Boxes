@@ -43,7 +43,6 @@ class MainWindow final : public BaseCanvas {
 
  public:
   explicit MainWindow(PlayerType player1Type, PlayerType player2Type, bool backgroundMode, QWidget* parent);
-  void Run();
 
  protected:
   void paintEvent(QPaintEvent* event) override;
@@ -63,9 +62,10 @@ class MainWindow final : public BaseCanvas {
   QList<QPointer<DotCanvas>> DotCanvases;
   QList<QPointer<EdgeCanvas>> EdgeCanvases;
 
-  void SetPlayerMoveEdge(Edge edge);
   QColor Color() const;
+  void Run();
   void Add(Edge edge);
+  void SetPlayerMoveEdge(Edge edge);
 };
 
 }  // namespace dab::detail::frontend
