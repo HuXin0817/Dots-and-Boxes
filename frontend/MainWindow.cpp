@@ -27,8 +27,10 @@ THE SOFTWARE.
 #include <Dab/Robot.h>
 
 #include <QJsonObject>
+#include <QMessageBox>
 #include <QPainter>
 #include <QPointer>
+#include <QPushButton>
 #include <QThreadPool>
 #include <QTime>
 #include <QTimer>
@@ -137,7 +139,19 @@ void MainWindow::Run() {
   } else {
     QMetaObject::invokeMethod(
         this,
-        [this]() -> void {
+        [&]() -> void {
+          QMessageBox* messagebox = new QMessageBox(this);
+          if (const QString winnerName = winner["Winner"].toString(); winnerName == "Draw") {
+            messagebox->setText("Draw!");
+          } else {
+            messagebox->setText(
+                QString("%1 Win! (Score %2:%3)").arg(winnerName).arg(Board.Player1Score()).arg(Board.Player2Score()));
+          }
+          messagebox->setIcon(QMessageBox::Information);
+          QPushButton* closeButton = messagebox->addButton(QMessageBox::Close);
+          connect(closeButton, &QPushButton::pressed, this, &MainWindow::close);
+          messagebox->show();
+
           QTimer::singleShot(2000, this, [this]() -> void {
             EdgeCanvases[LastEdge]->SetHighLight(false);
             update();
