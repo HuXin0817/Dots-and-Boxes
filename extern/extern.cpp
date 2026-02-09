@@ -24,10 +24,7 @@ THE SOFTWARE.
 
 #include <Dab/Frontend/Frontend.h>
 
-extern "C" Q_DECL_EXPORT QWidget* CreateMainWindow(int player1Type,
-                                                   int player2Type,
-                                                   bool backgroundMode,
-                                                   QWidget* parent) {
+extern "C" QWidget* CreateMainWindow(int player1Type, int player2Type, bool backgroundMode, QWidget* parent) {
   return new dab::detail::frontend::MainWindow(
       static_cast<dab::PlayerType>(player1Type), static_cast<dab::PlayerType>(player2Type), backgroundMode, parent);
 }

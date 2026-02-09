@@ -53,5 +53,5 @@ endforeach()
 
 qt_add_executable("${PROJECT_NAME}" main.cpp)
 target_include_directories("${PROJECT_NAME}" PRIVATE "${CMAKE_SOURCE_DIR}/include")
-target_compile_definitions("${PROJECT_NAME}" PRIVATE QT_NO_KEYWORDS MaxBoardSize=${MaxBoardSize})
+target_compile_definitions("${PROJECT_NAME}" PRIVATE QT_NO_KEYWORDS __MaxBoardSize__=${MaxBoardSize})
 target_link_libraries("${PROJECT_NAME}" PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets)

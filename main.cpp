@@ -29,8 +29,8 @@ THE SOFTWARE.
 #include <QWidget>
 #include <cstdlib>
 
+static constexpr int64_t MaxBoardSize = __MaxBoardSize__;
 static constexpr int DefaultPlayerType = 5;
-
 static constexpr const char* PlayerTypeOptionStrings[] = {
     "human",
     "robot:easy",
@@ -39,8 +39,6 @@ static constexpr const char* PlayerTypeOptionStrings[] = {
     "robot:expert",
     "robot:master",
 };
-
-bool PlayerTypeIsRobot(int playerType) { return playerType > 0; }
 
 int ParsePlayerType(const QString& arg) {
   if (arg.compare("robot", Qt::CaseInsensitive) == 0) {
@@ -55,11 +53,11 @@ int ParsePlayerType(const QString& arg) {
   exit(EXIT_FAILURE);
 }
 
-int ParseBoardSize(const QString& arg) {
+int64_t ParseBoardSize(const QString& arg) {
   bool ok = false;
-  int boardSize = arg.toInt(&ok);
+  int64_t boardSize = arg.toLongLong(&ok);
   if (!ok || boardSize < 1 || boardSize > MaxBoardSize) {
-    qInfo("Error: Invalid board size '%s'. Must be between 1 and %d.", arg.toLocal8Bit().constData(), MaxBoardSize);
+    qInfo("Error: Invalid board size '%s'. Must be between 1 and %lld.", arg.toLocal8Bit().constData(), MaxBoardSize);
     exit(EXIT_FAILURE);
   }
   return boardSize;
@@ -117,11 +115,11 @@ int main(int argc, char* argv[]) {
   parser.addOption(backgroundModeOption);
   parser.process(application);
 
-  int boardSize = ParseBoardSize(parser.value(boardSizeOption));
+  int64_t boardSize = ParseBoardSize(parser.value(boardSizeOption));
   int player1Type = ParsePlayerType(parser.value(player1Option));
   int player2Type = ParsePlayerType(parser.value(player2Option));
   bool backgroundMode = parser.isSet(backgroundModeOption);
-  if (backgroundMode && (!PlayerTypeIsRobot(player1Type) || !PlayerTypeIsRobot(player2Type))) {
+  if (backgroundMode && (player1Type == 0 || player2Type == 0)) {
     qInfo("Error: player type 'human' is not allow in background mode.");
     exit(EXIT_FAILURE);
   }
