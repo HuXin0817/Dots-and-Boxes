@@ -36,6 +36,7 @@ set(SOURCES
   frontend/DotCanvas.cpp
   frontend/EdgeCanvas.cpp
   frontend/MainWindow.cpp
+  frontend/Models.cpp
 )
 
 foreach(BoardSize RANGE 1 36)

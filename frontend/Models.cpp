@@ -22,26 +22,42 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#pragma once
-
-#include <Dab/Robot.h>
-
-#include <QApplication>
-#include <QCommandLineParser>
+#include "Models.h"
 
 namespace dab::detail::frontend {
 
-class CommandParser {
-  static constexpr PlayerType DefaultPlayerType = PlayerType::ParallelSearchRobot;
+QJsonObject Config::ToJson() const {
+  QJsonObject configData;
+  configData.insert("BoardSize", BoardSize);
+  configData.insert("Player1Type", PlayerTypeString(Player1Type));
+  configData.insert("Player2Type", PlayerTypeString(Player2Type));
+  configData.insert("BackgroundMode", BackgroundMode);
+  QJsonObject config;
+  config.insert("Config", configData);
+  return config;
+}
 
- public:
-  CommandParser() = default;
-  int Process(const QApplication& application);
+QJsonObject MoveRecord::ToJson() const {
+  QJsonObject playerScore;
+  playerScore.insert("Player1", Player1Score);
+  playerScore.insert("Player2", Player2Score);
 
- private:
-  QCommandLineOption PlayerTypeOption(int player);
-  QCommandLineOption BackgroundModeOption();
-  PlayerType ParsePlayerType(const QString& arg);
-};
+  QJsonObject moveRecord;
+  moveRecord.insert("Step", Step);
+  moveRecord.insert("Turn", Turn.IsPlayer1Turn() ? 1 : 2);
+  moveRecord.insert("Move", Int(Move));
+  moveRecord.insert("Score", playerScore);
+  moveRecord.insert("Time", Time);
+
+  QJsonObject info;
+  info.insert("Info", moveRecord);
+  return info;
+}
+
+QJsonObject Winner::ToJson() const {
+  QJsonObject winner;
+  winner.insert("Winner", Name);
+  return winner;
+}
 
 }  // namespace dab::detail::frontend

@@ -30,6 +30,7 @@ THE SOFTWARE.
 #include <cstdlib>
 
 #include "MainWindow.h"
+#include "Models.h"
 
 namespace dab::detail::frontend {
 
@@ -41,17 +42,6 @@ static constexpr const char* PlayerTypeOptionStrings[] = {
     "robot:expert",
     "robot:master",
 };
-
-QString Config::ToString() const {
-  QJsonObject configData;
-  configData.insert("BoardSize", BoardSize);
-  configData.insert("Player1Type", PlayerTypeString(Player1Type));
-  configData.insert("Player2Type", PlayerTypeString(Player2Type));
-  configData.insert("BackgroundMode", BackgroundMode);
-  QJsonObject config;
-  config.insert("Config", configData);
-  return QJsonDocument(config).toJson(QJsonDocument::Compact);
-}
 
 int CommandParser::Process(const QApplication& application) {
   const QCommandLineOption player1Option = PlayerTypeOption(1);
@@ -75,7 +65,7 @@ int CommandParser::Process(const QApplication& application) {
     qInfo("Error: player type 'human' is not allow in background mode.");
     exit(EXIT_FAILURE);
   }
-  qInfo() << config.ToString().toLocal8Bit().constData();
+  LogInfo(config);
 
   QWidget* mainWindow = new MainWindow(config.Player1Type, config.Player2Type, config.BackgroundMode, nullptr);
   mainWindow->show();

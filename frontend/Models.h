@@ -26,22 +26,42 @@ THE SOFTWARE.
 
 #include <Dab/Robot.h>
 
-#include <QApplication>
-#include <QCommandLineParser>
+#include <QJsonObject>
+#include <QString>
 
 namespace dab::detail::frontend {
 
-class CommandParser {
-  static constexpr PlayerType DefaultPlayerType = PlayerType::ParallelSearchRobot;
+template <typename T>
+void LogInfo(const T& message) {
+  qInfo() << QJsonDocument(message.ToJson()).toJson(QJsonDocument::Compact).constData();
+}
 
+class Config {
  public:
-  CommandParser() = default;
-  int Process(const QApplication& application);
+  QJsonObject ToJson() const;
 
- private:
-  QCommandLineOption PlayerTypeOption(int player);
-  QCommandLineOption BackgroundModeOption();
-  PlayerType ParsePlayerType(const QString& arg);
+  PlayerType Player1Type;
+  PlayerType Player2Type;
+  bool BackgroundMode;
+};
+
+class MoveRecord {
+ public:
+  QJsonObject ToJson() const;
+
+  Int Player1Score;
+  Int Player2Score;
+  Int Step;
+  Turn Turn;
+  Edge Move;
+  double Time;
+};
+
+class Winner {
+ public:
+  QJsonObject ToJson() const;
+
+  QString Name;
 };
 
 }  // namespace dab::detail::frontend
