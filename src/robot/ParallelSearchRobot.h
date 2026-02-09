@@ -29,14 +29,12 @@ THE SOFTWARE.
 namespace dab::detail::robot {
 
 class ParallelSearchRobot final : public Robot {
-  static constexpr int64_t SubRobotNumber = 32;
-
  public:
   ParallelSearchRobot() = default;
   Span<const Edge> BestCandidateEdges(const RelativeScoreBoard& board) override;
 
  private:
-  Array<MonteCarloRobot, SubRobotNumber> SubRobots;
+  Array<MonteCarloRobot, Edge::Max / 2> SubRobots;
   SearchScoreMap SearchResult;
 };
 
