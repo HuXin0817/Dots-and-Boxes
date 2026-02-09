@@ -33,6 +33,7 @@ set(LIBRARY_SOURCES
   frontend/DotCanvas.cpp
   frontend/EdgeCanvas.cpp
   frontend/MainWindow.cpp
+  frontend/Models.cpp
 
   extern/extern.cpp
 )
