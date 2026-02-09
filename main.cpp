@@ -29,6 +29,8 @@ THE SOFTWARE.
 #include <QWidget>
 #include <cstdlib>
 
+static constexpr int DefaultPlayerType = 5;
+
 static constexpr const char* PlayerTypeOptionStrings[] = {
     "human",
     "robot:easy",
@@ -38,11 +40,7 @@ static constexpr const char* PlayerTypeOptionStrings[] = {
     "robot:master",
 };
 
-typedef QWidget* (*CreateMainWindowFunc)(int, int, bool, QWidget*);
-
 bool PlayerTypeIsRobot(int playerType) { return playerType > 0; }
-
-static constexpr int DefaultPlayerType = 5;
 
 int ParsePlayerType(const QString& arg) {
   if (arg.compare("robot", Qt::CaseInsensitive) == 0) {
@@ -128,19 +126,19 @@ int main(int argc, char* argv[]) {
     exit(EXIT_FAILURE);
   }
 
-  QString libraryName = QString("Dots_and_Boxes_%1x%1").arg(boardSize);
-  QLibrary library(libraryName);
+  QLibrary library(QString("Dots_and_Boxes_%1x%1").arg(boardSize));
   if (!library.load()) {
     qInfo("Error: Failed to load library %s: %s",
-          libraryName.toLocal8Bit().constData(),
+          library.fileName().toLocal8Bit().constData(),
           library.errorString().toLocal8Bit().constData());
     exit(EXIT_FAILURE);
   }
 
+  typedef QWidget* (*CreateMainWindowFunc)(int, int, bool, QWidget*);
   CreateMainWindowFunc createMainWindow = reinterpret_cast<CreateMainWindowFunc>(library.resolve("CreateMainWindow"));
   if (!createMainWindow) {
     qInfo("Error: Failed to resolve CreateMainWindow function in library %s: %s",
-          libraryName.toLocal8Bit().constData(),
+          library.fileName().toLocal8Bit().constData(),
           library.errorString().toLocal8Bit().constData());
     exit(EXIT_FAILURE);
   }
