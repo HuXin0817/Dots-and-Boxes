@@ -24,10 +24,10 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "../../../frontend/CommandParser.h"
+#include "../../../frontend/MainWindow.h"
 
 namespace dab {
 
-using detail::frontend::CommandParser;
+using detail::frontend::MainWindow;
 
 }  // namespace dab

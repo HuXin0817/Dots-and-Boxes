@@ -11,9 +11,7 @@ set(CMAKE_AUTORCC ON)
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 find_package(TBB REQUIRED)
 
-set(SOURCES
-  main.cpp
-
+set(LIBRARY_SOURCES
   src/model/Models.cpp
   src/model/SearchScoreMap.cpp
 
@@ -32,17 +30,27 @@ set(SOURCES
 
   frontend/BaseCanvas.cpp
   frontend/BoxCanvas.cpp
-  frontend/CommandParser.cpp
   frontend/DotCanvas.cpp
   frontend/EdgeCanvas.cpp
   frontend/MainWindow.cpp
-  frontend/Models.cpp
+
+  extern/extern.cpp
 )
 
-foreach(BoardSize RANGE 1 36)
-  set(Executable "${PROJECT_NAME}_${BoardSize}x${BoardSize}")
-  qt_add_executable(${Executable} ${SOURCES})
-  target_include_directories(${Executable} PRIVATE "${CMAKE_SOURCE_DIR}/include")
-  target_compile_definitions(${Executable} PRIVATE QT_NO_KEYWORDS __BoardSize__=${BoardSize})
-  target_link_libraries(${Executable} PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets TBB::tbb)
+if(NOT MaxBoardSize)
+  set(MaxBoardSize 36)
+endif()
+message(STATUS "MaxBoardSize: ${MaxBoardSize}")
+
+foreach(BoardSize RANGE 1 ${MaxBoardSize})
+  set(LibraryName "${PROJECT_NAME}_${BoardSize}x${BoardSize}")
+  qt_add_library(${LibraryName} SHARED ${LIBRARY_SOURCES})
+  target_include_directories(${LibraryName} PRIVATE "${CMAKE_SOURCE_DIR}/include")
+  target_compile_definitions(${LibraryName} PRIVATE QT_NO_KEYWORDS __BoardSize__=${BoardSize})
+  target_link_libraries(${LibraryName} PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets TBB::tbb)
 endforeach()
+
+qt_add_executable("${PROJECT_NAME}" main.cpp)
+target_include_directories("${PROJECT_NAME}" PRIVATE "${CMAKE_SOURCE_DIR}/include")
+target_compile_definitions("${PROJECT_NAME}" PRIVATE QT_NO_KEYWORDS MaxBoardSize=${MaxBoardSize})
+target_link_libraries("${PROJECT_NAME}" PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets)

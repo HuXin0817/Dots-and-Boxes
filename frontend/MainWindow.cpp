@@ -40,7 +40,6 @@ THE SOFTWARE.
 #include "BoxCanvas.h"
 #include "DotCanvas.h"
 #include "EdgeCanvas.h"
-#include "Models.h"
 
 namespace dab::detail::frontend {
 
@@ -133,6 +132,14 @@ QColor MainWindow::Color() const {
 }
 
 void MainWindow::Run() {
+  QJsonObject config;
+  config.insert("BoardSize", BoardSize);
+  config.insert("Player1Type", PlayerTypeString(Player1Type));
+  config.insert("Player2Type", PlayerTypeString(Player2Type));
+  QJsonObject configObject;
+  configObject.insert("Config", config);
+  qInfo() << QJsonDocument(configObject).toJson(QJsonDocument::Compact).constData();
+
   Random Random;
   while (Board.Gaming()) {
     const QTime startTime = QTime::currentTime();
@@ -157,26 +164,33 @@ void MainWindow::Run() {
     }
     assert(Board.Contains(PlayerMoveEdge.load()));
 
-    MoveRecord moveRecord{
-        .Player1Score = Board.Player1Score(),
-        .Player2Score = Board.Player2Score(),
-        .Step = Board.NowStep(),
-        .Turn = turn,
-        .Move = PlayerMoveEdge.load(),
-        .Time = static_cast<double>(startTime.msecsTo(QTime::currentTime())) / 1000.0,
-    };
-    LogInfo(moveRecord);
+    const double seconds = static_cast<double>(startTime.msecsTo(QTime::currentTime())) / 1000.0;
+
+    QJsonObject playerScore;
+    playerScore.insert("Player1", Board.Player1Score());
+    playerScore.insert("Player2", Board.Player2Score());
+
+    QJsonObject moveRecord;
+    moveRecord.insert("Step", Board.NowStep());
+    moveRecord.insert("Turn", turn.IsPlayer1Turn() ? 1 : 2);
+    moveRecord.insert("Move", static_cast<Int>(PlayerMoveEdge.load()));
+    moveRecord.insert("Score", playerScore);
+    moveRecord.insert("Time", seconds);
+
+    QJsonObject info;
+    info.insert("Info", moveRecord);
+    qInfo() << QJsonDocument(info).toJson(QJsonDocument::Compact).constData();
   }
 
-  Winner winner;
+  QJsonObject winner;
   if (Board.RelativeScore() > 0) {
-    winner.Name = "Player1";
+    winner.insert("Winner", "Player1");
   } else if (Board.RelativeScore() < 0) {
-    winner.Name = "Player2";
+    winner.insert("Winner", "Player2");
   } else {
-    winner.Name = "Draw";
+    winner.insert("Winner", "Draw");
   }
-  LogInfo(winner);
+  qInfo() << QJsonDocument(winner).toJson(QJsonDocument::Compact).constData();
 
   if (BackgroundMode) {
     exit(0);
@@ -186,11 +200,11 @@ void MainWindow::Run() {
       this,
       [&]() -> void {
         const QPointer messagebox = new QMessageBox(this);
-        if (winner.Name == "Draw") {
+        if (const QString winnerName = winner["Winner"].toString(); winnerName == "Draw") {
           messagebox->setText("Draw!");
         } else {
           messagebox->setText(
-              QString("%1 Win! (Score %2:%3)").arg(winner.Name).arg(Board.Player1Score()).arg(Board.Player2Score()));
+              QString("%1 Win! (Score %2:%3)").arg(winnerName).arg(Board.Player1Score()).arg(Board.Player2Score()));
         }
         messagebox->setIcon(QMessageBox::Information);
         const QPointer closeButton = messagebox->addButton(QMessageBox::Close);

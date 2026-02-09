@@ -22,26 +22,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#pragma once
+#include <Dab/Frontend/Frontend.h>
 
-#include <Dab/Robot.h>
-
-#include <QApplication>
-#include <QCommandLineParser>
-
-namespace dab::detail::frontend {
-
-class CommandParser {
-  static constexpr PlayerType DefaultPlayerType = PlayerType::ParallelSearchRobot;
-
- public:
-  CommandParser() = default;
-  int Process(const QApplication& application);
-
- private:
-  QCommandLineOption PlayerTypeOption(int player);
-  QCommandLineOption BackgroundModeOption();
-  PlayerType ParsePlayerType(const QString& arg);
-};
-
-}  // namespace dab::detail::frontend
+extern "C" Q_DECL_EXPORT QWidget* CreateMainWindow(int player1Type,
+                                                   int player2Type,
+                                                   bool backgroundMode,
+                                                   QWidget* parent) {
+  return new dab::detail::frontend::MainWindow(
+      static_cast<dab::PlayerType>(player1Type), static_cast<dab::PlayerType>(player2Type), backgroundMode, parent);
+}
