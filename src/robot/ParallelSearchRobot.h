@@ -34,7 +34,7 @@ class ParallelSearchRobot final : public Robot {
   Span<const Edge> BestCandidateEdges(const RelativeScoreBoard& board) override;
 
  private:
-  Array<MonteCarloRobot, Edge::Max / 2> SubRobots;
+  Array<MonteCarloRobot, 32> SubRobots;
   SearchScoreMap SearchResult;
 };
 
