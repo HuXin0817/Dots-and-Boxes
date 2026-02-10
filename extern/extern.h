@@ -22,12 +22,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "extern.h"
+#pragma once
 
-#include <Dab/Frontend/Frontend.h>
+#include <QWidget>
+#include <cstdint>
 
-template <>
-QWidget* CreateMainWindow<__BoardSize__>(int player1Type, int player2Type, bool backgroundMode, QWidget* parent) {
-  return new dab::MainWindow(
-      static_cast<dab::PlayerType>(player1Type), static_cast<dab::PlayerType>(player2Type), backgroundMode, parent);
-}
+template <int64_t BoardSize>
+QWidget* CreateMainWindow(int player1Type, int player2Type, bool backgroundMode, QWidget* parent);

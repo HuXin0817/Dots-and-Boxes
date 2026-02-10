@@ -31,6 +31,8 @@ THE SOFTWARE.
 #include <QWidget>
 #include <cstdlib>
 
+#include "extern/extern.h"
+
 static constexpr int64_t MaxBoardSize = __MaxBoardSize__;
 static constexpr int DefaultPlayerType = 5;
 static constexpr const char* PlayerTypeOptionStrings[] = {
@@ -41,6 +43,22 @@ static constexpr const char* PlayerTypeOptionStrings[] = {
     "robot:expert",
     "robot:master",
 };
+
+template <int64_t BoardSize>
+QWidget* CreateMainWindowImpl(
+    int64_t boardSize, int player1Type, int player2Type, bool backgroundMode, QWidget* parent) {
+  if constexpr (BoardSize > 0) {
+    if (boardSize < BoardSize) {
+      return CreateMainWindowImpl<BoardSize - 1>(boardSize, player1Type, player2Type, backgroundMode, parent);
+    }
+    return CreateMainWindow<BoardSize>(player1Type, player2Type, backgroundMode, parent);
+  }
+  return nullptr;
+}
+
+QWidget* CreateMainWindow(int64_t boardSize, int player1Type, int player2Type, bool backgroundMode, QWidget* parent) {
+  return CreateMainWindowImpl<__MaxBoardSize__>(boardSize, player1Type, player2Type, backgroundMode, parent);
+}
 
 int ParsePlayerType(const QString& arg) {
   if (arg.compare("robot", Qt::CaseInsensitive) == 0) {
@@ -126,29 +144,7 @@ int main(int argc, char* argv[]) {
     exit(EXIT_FAILURE);
   }
 
-  QDir appDir(QCoreApplication::applicationDirPath());
-  appDir.cd("lib");
-  appDir.cd("extern");
-  QString libName = QString("extern%1x%1").arg(boardSize);
-  QLibrary library(appDir.absoluteFilePath(libName));
-  if (!library.load()) {
-    qInfo("Error: Failed to load library %s: %s",
-          library.fileName().toLocal8Bit().constData(),
-          library.errorString().toLocal8Bit().constData());
-    exit(EXIT_FAILURE);
-  }
-
-  typedef QWidget* (*CreateMainWindowFunc)(int, int, bool, QWidget*);
-  CreateMainWindowFunc createMainWindow = reinterpret_cast<CreateMainWindowFunc>(
-      library.resolve(QString("CreateMainWindow_%1").arg(boardSize).toLocal8Bit().constData()));
-  if (!createMainWindow) {
-    qInfo("Error: Failed to resolve CreateMainWindow function in library %s: %s",
-          library.fileName().toLocal8Bit().constData(),
-          library.errorString().toLocal8Bit().constData());
-    exit(EXIT_FAILURE);
-  }
-
-  QWidget* mainWindow = createMainWindow(player1Type, player2Type, backgroundMode, nullptr);
+  QWidget* mainWindow = CreateMainWindow(boardSize, player1Type, player2Type, backgroundMode, nullptr);
   mainWindow->show();
   return application.exec();
 }
