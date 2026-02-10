@@ -7,7 +7,7 @@ set(RobotSources
   Robot.cpp
   SimulationRobot.cpp
 )
-add_library(${RobotLibraryName} SHARED ${RobotSources})
+add_library(${RobotLibraryName} STATIC ${RobotSources})
 set_target_properties(${RobotLibraryName} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib/robot")
 target_include_directories(${RobotLibraryName} PRIVATE "${CMAKE_SOURCE_DIR}/include")
 target_compile_definitions(${RobotLibraryName} PRIVATE __BoardSize__=${BoardSize} dab=dab${BoardSize}x${BoardSize})
