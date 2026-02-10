@@ -57,7 +57,7 @@ QWidget* CreateMainWindowImpl(
 }
 
 QWidget* CreateMainWindow(int64_t boardSize, int player1Type, int player2Type, bool backgroundMode, QWidget* parent) {
-  return CreateMainWindowImpl<__MaxBoardSize__>(boardSize, player1Type, player2Type, backgroundMode, parent);
+  return CreateMainWindowImpl<MaxBoardSize>(boardSize, player1Type, player2Type, backgroundMode, parent);
 }
 
 int ParsePlayerType(const QString& arg) {
