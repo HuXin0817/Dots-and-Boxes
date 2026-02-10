@@ -17,73 +17,9 @@ endif()
 message(STATUS "MaxBoardSize: ${MaxBoardSize}")
 
 foreach(BoardSize RANGE 1 ${MaxBoardSize})
-  set(ModelLibraryName "model_${BoardSize}x${BoardSize}")
-  set(ModelSources
-    src/model/Models.cpp
-    src/model/SearchScoreMap.cpp
-  )
-  add_library(${ModelLibraryName} SHARED ${ModelSources})
-  set_target_properties(${ModelLibraryName} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib/model")
-  target_include_directories(${ModelLibraryName} PRIVATE "${CMAKE_SOURCE_DIR}/include")
-  target_compile_definitions(${ModelLibraryName} PRIVATE __BoardSize__=${BoardSize})
-
-  set(BoardLibraryName "board_${BoardSize}x${BoardSize}")
-  set(BoardSources
-    src/board/AbsoluteScoreBoard.cpp
-    src/board/BasicBoard.cpp
-    src/board/EdgeCountableBoard.cpp
-    src/board/RelativeScoreBoard.cpp
-    src/board/ScoreableEdgeBoard.cpp
-  )
-  add_library(${BoardLibraryName} SHARED ${BoardSources})
-  set_target_properties(${BoardLibraryName} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib/board")
-  target_include_directories(${BoardLibraryName} PRIVATE "${CMAKE_SOURCE_DIR}/include")
-  target_compile_definitions(${BoardLibraryName} PRIVATE __BoardSize__=${BoardSize})
-  target_link_libraries(${BoardLibraryName} PRIVATE ${ModelLibraryName})
-
-  set(RobotLibraryName "robot_${BoardSize}x${BoardSize}")
-  set(RobotSources
-    src/robot/GreedyRobot.cpp
-    src/robot/ImproveGreedyRobot.cpp
-    src/robot/MonteCarloRobot.cpp
-    src/robot/ParallelSearchRobot.cpp
-    src/robot/Robot.cpp
-    src/robot/SimulationRobot.cpp
-  )
-  add_library(${RobotLibraryName} SHARED ${RobotSources})
-  set_target_properties(${RobotLibraryName} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib/robot")
-  target_include_directories(${RobotLibraryName} PRIVATE "${CMAKE_SOURCE_DIR}/include")
-  target_compile_definitions(${RobotLibraryName} PRIVATE __BoardSize__=${BoardSize})
-  target_link_libraries(${RobotLibraryName} PRIVATE TBB::tbb ${ModelLibraryName} ${BoardLibraryName})
-
-  set(FrontendLibraryName "frontend_${BoardSize}x${BoardSize}")
-  set(FrontendSources
-    frontend/BaseCanvas.cpp
-    frontend/BoxCanvas.cpp
-    frontend/DotCanvas.cpp
-    frontend/EdgeCanvas.cpp
-    frontend/MainWindow.cpp
-    frontend/Models.cpp
-  )
-  qt_add_library(${FrontendLibraryName} SHARED ${FrontendSources})
-  set_target_properties(${FrontendLibraryName} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib/frontend")
-  target_include_directories(${FrontendLibraryName} PRIVATE "${CMAKE_SOURCE_DIR}/include")
-  target_compile_definitions(${FrontendLibraryName} PRIVATE QT_NO_KEYWORDS __BoardSize__=${BoardSize})
-  target_link_libraries(${FrontendLibraryName} PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets ${ModelLibraryName} ${BoardLibraryName} ${RobotLibraryName})
-
-  set(MainLibraryName "main_${BoardSize}x${BoardSize}")
-  set(MainSources extern/extern.cpp)
-  qt_add_library(${MainLibraryName} SHARED ${MainSources})
-  set_target_properties(${MainLibraryName} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
-  target_include_directories(${MainLibraryName} PRIVATE "${CMAKE_SOURCE_DIR}/include")
-  target_compile_definitions(${MainLibraryName} PRIVATE QT_NO_KEYWORDS __BoardSize__=${BoardSize})
-  target_link_libraries(${MainLibraryName} PRIVATE 
-    Qt6::Core Qt6::Gui Qt6::Widgets TBB::tbb
-    ${ModelLibraryName}
-    ${BoardLibraryName}
-    ${RobotLibraryName}
-    ${FrontendLibraryName}
-  )
+  add_subdirectory(src "src_${BoardSize}x${BoardSize}")
+  add_subdirectory(frontend "frontend_${BoardSize}x${BoardSize}")
+  add_subdirectory(extern "extern_${BoardSize}x${BoardSize}")
 endforeach()
 
 qt_add_executable("${PROJECT_NAME}" main.cpp)
