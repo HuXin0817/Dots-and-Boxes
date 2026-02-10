@@ -126,7 +126,7 @@ int main(int argc, char* argv[]) {
   }
 
   QDir libDir("lib");
-  QString libraryPath = libDir.absoluteFilePath(QString("Dots_and_Boxes_%1x%1").arg(boardSize));
+  QString libraryPath = libDir.absoluteFilePath(QString("main_%1x%1").arg(boardSize));
   QLibrary library(libraryPath);
   if (!library.load()) {
     qInfo("Error: Failed to load library %s: %s",
