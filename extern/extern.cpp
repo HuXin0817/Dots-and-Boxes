@@ -24,7 +24,11 @@ THE SOFTWARE.
 
 #include <Dab/Frontend/Frontend.h>
 
-extern "C" QWidget* CreateMainWindow(int player1Type, int player2Type, bool backgroundMode, QWidget* parent) {
+#define CONCAT_IMPL(prefix, num) prefix##num
+#define CONCAT(prefix, num) CONCAT_IMPL(prefix, num)
+#define CreateMainWindowFunc CONCAT(CreateMainWindow_, __BoardSize__)
+
+extern "C" QWidget* CreateMainWindowFunc(int player1Type, int player2Type, bool backgroundMode, QWidget* parent) {
   return new dab::detail::frontend::MainWindow(
       static_cast<dab::PlayerType>(player1Type), static_cast<dab::PlayerType>(player2Type), backgroundMode, parent);
 }

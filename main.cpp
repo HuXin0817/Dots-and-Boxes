@@ -129,7 +129,7 @@ int main(int argc, char* argv[]) {
   QDir appDir(QCoreApplication::applicationDirPath());
   appDir.cd("lib");
   appDir.cd("extern");
-  QString libName = QString("extern_%1x%1").arg(boardSize);
+  QString libName = QString("extern%1x%1").arg(boardSize);
   QLibrary library(appDir.absoluteFilePath(libName));
   if (!library.load()) {
     qInfo("Error: Failed to load library %s: %s",
@@ -139,7 +139,8 @@ int main(int argc, char* argv[]) {
   }
 
   typedef QWidget* (*CreateMainWindowFunc)(int, int, bool, QWidget*);
-  CreateMainWindowFunc createMainWindow = reinterpret_cast<CreateMainWindowFunc>(library.resolve("CreateMainWindow"));
+  CreateMainWindowFunc createMainWindow = reinterpret_cast<CreateMainWindowFunc>(
+      library.resolve(QString("CreateMainWindow_%1").arg(boardSize).toLocal8Bit().constData()));
   if (!createMainWindow) {
     qInfo("Error: Failed to resolve CreateMainWindow function in library %s: %s",
           library.fileName().toLocal8Bit().constData(),
