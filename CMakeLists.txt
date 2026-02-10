@@ -17,9 +17,9 @@ endif()
 message(STATUS "MaxBoardSize: ${MaxBoardSize}")
 
 foreach(BoardSize RANGE 1 ${MaxBoardSize})
-  add_subdirectory(src "src_${BoardSize}x${BoardSize}")
-  add_subdirectory(frontend "frontend_${BoardSize}x${BoardSize}")
-  add_subdirectory(extern "extern_${BoardSize}x${BoardSize}")
+  add_subdirectory(src "source/src/src_${BoardSize}x${BoardSize}")
+  add_subdirectory(frontend "source/frontend/frontend_${BoardSize}x${BoardSize}")
+  add_subdirectory(extern "source/extern/extern_${BoardSize}x${BoardSize}")
 endforeach()
 
 qt_add_executable("${PROJECT_NAME}" main.cpp)

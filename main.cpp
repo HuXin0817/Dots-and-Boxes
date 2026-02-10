@@ -24,6 +24,7 @@ THE SOFTWARE.
 
 #include <QApplication>
 #include <QCommandLineParser>
+#include <QCoreApplication>
 #include <QDir>
 #include <QJsonObject>
 #include <QLibrary>
@@ -125,9 +126,11 @@ int main(int argc, char* argv[]) {
     exit(EXIT_FAILURE);
   }
 
-  QDir libDir("lib");
-  QString libraryPath = libDir.absoluteFilePath(QString("main_%1x%1").arg(boardSize));
-  QLibrary library(libraryPath);
+  QDir appDir(QCoreApplication::applicationDirPath());
+  appDir.cd("lib");
+  appDir.cd("extern");
+  QString libName = QString("extern_%1x%1").arg(boardSize);
+  QLibrary library(appDir.absoluteFilePath(libName));
   if (!library.load()) {
     qInfo("Error: Failed to load library %s: %s",
           library.fileName().toLocal8Bit().constData(),
