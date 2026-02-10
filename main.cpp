@@ -24,6 +24,7 @@ THE SOFTWARE.
 
 #include <QApplication>
 #include <QCommandLineParser>
+#include <QDir>
 #include <QJsonObject>
 #include <QLibrary>
 #include <QWidget>
@@ -124,7 +125,9 @@ int main(int argc, char* argv[]) {
     exit(EXIT_FAILURE);
   }
 
-  QLibrary library(QString("Dots_and_Boxes_%1x%1").arg(boardSize));
+  QDir libDir("lib");
+  QString libraryPath = libDir.absoluteFilePath(QString("Dots_and_Boxes_%1x%1").arg(boardSize));
+  QLibrary library(libraryPath);
   if (!library.load()) {
     qInfo("Error: Failed to load library %s: %s",
           library.fileName().toLocal8Bit().constData(),
