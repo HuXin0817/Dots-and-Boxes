@@ -1,4 +1,4 @@
-set(RobotLibraryName "robot_${BoardSize}x${BoardSize}")
+set(RobotLibraryName "robot${BoardSize}x${BoardSize}")
 set(RobotSources
   GreedyRobot.cpp
   ImproveGreedyRobot.cpp

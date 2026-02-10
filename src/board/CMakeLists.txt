@@ -1,4 +1,4 @@
-set(BoardLibraryName "board_${BoardSize}x${BoardSize}")
+set(BoardLibraryName "board${BoardSize}x${BoardSize}")
 set(BoardSources
   AbsoluteScoreBoard.cpp
   BasicBoard.cpp

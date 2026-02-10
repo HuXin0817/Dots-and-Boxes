@@ -1,4 +1,4 @@
-set(ModelLibraryName "model_${BoardSize}x${BoardSize}")
+set(ModelLibraryName "model${BoardSize}x${BoardSize}")
 set(ModelSources
   Models.cpp
   SearchScoreMap.cpp

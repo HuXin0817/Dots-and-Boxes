@@ -1,4 +1,4 @@
-set(MainLibraryName "extern_${BoardSize}x${BoardSize}")
+set(MainLibraryName "extern${BoardSize}x${BoardSize}")
 set(MainSources extern.cpp)
 qt_add_library(${MainLibraryName} SHARED ${MainSources})
 set_target_properties(${MainLibraryName} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib/extern")

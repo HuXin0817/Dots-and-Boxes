@@ -1,4 +1,4 @@
-set(FrontendLibraryName "frontend_${BoardSize}x${BoardSize}")
+set(FrontendLibraryName "frontend${BoardSize}x${BoardSize}")
 set(FrontendSources
   BaseCanvas.cpp
   BoxCanvas.cpp
