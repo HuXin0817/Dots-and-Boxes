@@ -22,11 +22,10 @@ foreach(BoardSize RANGE 1 ${MaxBoardSize})
     src/model/Models.cpp
     src/model/SearchScoreMap.cpp
   )
-  qt_add_library(${ModelLibraryName} SHARED ${ModelSources})
+  add_library(${ModelLibraryName} SHARED ${ModelSources})
   set_target_properties(${ModelLibraryName} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
   target_include_directories(${ModelLibraryName} PRIVATE "${CMAKE_SOURCE_DIR}/include")
-  target_compile_definitions(${ModelLibraryName} PRIVATE QT_NO_KEYWORDS __BoardSize__=${BoardSize})
-  target_link_libraries(${ModelLibraryName} PRIVATE Qt6::Core TBB::tbb)
+  target_compile_definitions(${ModelLibraryName} PRIVATE __BoardSize__=${BoardSize})
 
   set(BoardLibraryName "board_${BoardSize}x${BoardSize}")
   set(BoardSources
@@ -36,11 +35,11 @@ foreach(BoardSize RANGE 1 ${MaxBoardSize})
     src/board/RelativeScoreBoard.cpp
     src/board/ScoreableEdgeBoard.cpp
   )
-  qt_add_library(${BoardLibraryName} SHARED ${BoardSources})
+  add_library(${BoardLibraryName} SHARED ${BoardSources})
   set_target_properties(${BoardLibraryName} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
   target_include_directories(${BoardLibraryName} PRIVATE "${CMAKE_SOURCE_DIR}/include")
-  target_compile_definitions(${BoardLibraryName} PRIVATE QT_NO_KEYWORDS __BoardSize__=${BoardSize})
-  target_link_libraries(${BoardLibraryName} PRIVATE Qt6::Core TBB::tbb ${ModelLibraryName})
+  target_compile_definitions(${BoardLibraryName} PRIVATE __BoardSize__=${BoardSize})
+  target_link_libraries(${BoardLibraryName} PRIVATE ${ModelLibraryName})
 
   set(RobotLibraryName "robot_${BoardSize}x${BoardSize}")
   set(RobotSources
@@ -51,11 +50,11 @@ foreach(BoardSize RANGE 1 ${MaxBoardSize})
     src/robot/Robot.cpp
     src/robot/SimulationRobot.cpp
   )
-  qt_add_library(${RobotLibraryName} SHARED ${RobotSources})
+  add_library(${RobotLibraryName} SHARED ${RobotSources})
   set_target_properties(${RobotLibraryName} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
   target_include_directories(${RobotLibraryName} PRIVATE "${CMAKE_SOURCE_DIR}/include")
-  target_compile_definitions(${RobotLibraryName} PRIVATE QT_NO_KEYWORDS __BoardSize__=${BoardSize})
-  target_link_libraries(${RobotLibraryName} PRIVATE Qt6::Core TBB::tbb ${ModelLibraryName} ${BoardLibraryName})
+  target_compile_definitions(${RobotLibraryName} PRIVATE __BoardSize__=${BoardSize})
+  target_link_libraries(${RobotLibraryName} PRIVATE TBB::tbb ${ModelLibraryName} ${BoardLibraryName})
 
   set(FrontendLibraryName "frontend_${BoardSize}x${BoardSize}")
   set(FrontendSources
