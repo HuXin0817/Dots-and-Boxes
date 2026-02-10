@@ -11,3 +11,5 @@ target_link_libraries(${ExternLibraryName} PRIVATE
   ${RobotLibraryName}
   ${FrontendLibraryName}
 )
+
+set(ExternLibraryName ${ExternLibraryName} PARENT_SCOPE)
