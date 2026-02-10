@@ -3,12 +3,5 @@ set(ExternSources extern.cpp)
 qt_add_library(${ExternLibraryName} STATIC ${ExternSources})
 target_include_directories(${ExternLibraryName} PRIVATE "${CMAKE_SOURCE_DIR}/include")
 target_compile_definitions(${ExternLibraryName} PRIVATE QT_NO_KEYWORDS __BoardSize__=${BoardSize} dab=dab${BoardSize}x${BoardSize})
-target_link_libraries(${ExternLibraryName} PRIVATE 
-  Qt6::Core Qt6::Gui Qt6::Widgets TBB::tbb
-  ${ModelLibraryName}
-  ${BoardLibraryName}
-  ${RobotLibraryName}
-  ${FrontendLibraryName}
-)
-
+target_link_libraries(${ExternLibraryName} PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets TBB::tbb ${FrontendLibraryName})
 set(ExternLibraryName ${ExternLibraryName} PARENT_SCOPE)
