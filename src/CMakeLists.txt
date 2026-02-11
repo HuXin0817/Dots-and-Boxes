@@ -10,6 +10,3 @@ add_subdirectory(cmd "source/cmd")
 qt_add_executable("${PROJECT_NAME}" main.cpp)
 target_compile_definitions("${PROJECT_NAME}" PRIVATE __MaxBoardSize__=${MaxBoardSize})
 target_link_libraries("${PROJECT_NAME}" PRIVATE ${CommandLibraryName})
-
-set(ExternLibraries ${ExternLibraries} PARENT_SCOPE)
-set(CommandLibraryName ${CommandLibraryName} PARENT_SCOPE)
