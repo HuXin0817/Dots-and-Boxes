@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 #include "SimulationRobot.h"
 
-namespace dab::detail::robot {
+namespace dab::__detail__::robot {
 
 Span<const Edge> SimulationRobot::BestCandidateEdges(const RelativeScoreBoard& board) {
   if (const Span<const Edge> edges = SubRobot.BestCandidateEdges(board); SubRobot.EnemyUnscoreable()) {
@@ -52,4 +52,4 @@ Span<const Edge> SimulationRobot::BestCandidateEdges(const RelativeScoreBoard& b
   return {SearchEdges.begin(), SearchEdges.end()};
 }
 
-}  // namespace dab::detail::robot
+}  // namespace dab::__detail__::robot

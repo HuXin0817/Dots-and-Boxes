@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 #include "BasicBoard.h"
 
-namespace dab::detail::board {
+namespace dab::__detail__::board {
 
 void BasicBoard::Reset() {
   Step = 0;
@@ -47,4 +47,4 @@ void BasicBoard::Add(Edge edge) {
   ++Step;
 }
 
-}  // namespace dab::detail::board
+}  // namespace dab::__detail__::board

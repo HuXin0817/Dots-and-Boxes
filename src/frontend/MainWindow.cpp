@@ -42,7 +42,7 @@ THE SOFTWARE.
 #include "EdgeCanvas.h"
 #include "Models.h"
 
-namespace dab::detail::frontend {
+namespace dab::__detail__::frontend {
 
 MainWindow::MainWindow(PlayerType player1Type, PlayerType player2Type, bool backgroundMode, QWidget* parent)
     : BaseCanvas(parent),
@@ -253,4 +253,4 @@ void MainWindow::SetPlayerMoveEdge(Edge edge) {
   PlayerMoveEdge.compare_exchange_strong(expected, edge);
 }
 
-}  // namespace dab::detail::frontend
+}  // namespace dab::__detail__::frontend

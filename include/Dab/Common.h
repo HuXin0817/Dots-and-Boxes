@@ -33,12 +33,12 @@ THE SOFTWARE.
 
 namespace dab {
 
-using detail::common::Array;
-using detail::common::BoardSize;
-using detail::common::Int;
-using detail::common::List;
-using detail::common::Queue;
-using detail::common::Random;
-using detail::common::Span;
+using __detail__::common::Array;
+using __detail__::common::BoardSize;
+using __detail__::common::Int;
+using __detail__::common::List;
+using __detail__::common::Queue;
+using __detail__::common::Random;
+using __detail__::common::Span;
 
 }  // namespace dab

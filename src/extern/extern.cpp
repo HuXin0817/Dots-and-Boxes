@@ -26,8 +26,12 @@ THE SOFTWARE.
 
 #include <Dab/Frontend/Frontend.h>
 
+namespace dab::frontend {
+
 template <>
 QWidget* CreateMainWindow<dab::BoardSize>(int player1Type, int player2Type, bool backgroundMode, QWidget* parent) {
   return new dab::MainWindow(
       static_cast<dab::PlayerType>(player1Type), static_cast<dab::PlayerType>(player2Type), backgroundMode, parent);
 }
+
+}  // namespace dab::frontend

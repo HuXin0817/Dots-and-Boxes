@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 #include "GreedyRobot.h"
 
-namespace dab::detail::robot {
+namespace dab::__detail__::robot {
 
 class ImproveGreedyRobot : public GreedyRobot {
  public:
@@ -37,4 +37,4 @@ class ImproveGreedyRobot : public GreedyRobot {
   ScoreableEdgeBoard SimulationBoard;
 };
 
-}  // namespace dab::detail::robot
+}  // namespace dab::__detail__::robot

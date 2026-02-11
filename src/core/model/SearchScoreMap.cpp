@@ -30,7 +30,7 @@ THE SOFTWARE.
 
 #include "Models.h"
 
-namespace dab::detail::model {
+namespace dab::__detail__::model {
 
 void SearchScoreMap::Reset() {
   std::fill(Time.begin(), Time.end(), 0);
@@ -66,4 +66,4 @@ Span<const Edge> SearchScoreMap::Export() {
   return {BestEdges.begin(), BestEdges.end()};
 }
 
-}  // namespace dab::detail::model
+}  // namespace dab::__detail__::model

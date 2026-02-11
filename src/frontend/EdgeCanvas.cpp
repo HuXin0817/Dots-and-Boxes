@@ -28,7 +28,7 @@ THE SOFTWARE.
 
 #include "BaseCanvas.h"
 
-namespace dab::detail::frontend {
+namespace dab::__detail__::frontend {
 
 EdgeCanvas::EdgeCanvas(bool rotate, const std::function<void()>& callBack, QWidget* parent)
     : BaseCanvas(parent), CallBack(callBack) {
@@ -83,4 +83,4 @@ QColor EdgeCanvas::Color() const {
   return color;
 }
 
-}  // namespace dab::detail::frontend
+}  // namespace dab::__detail__::frontend

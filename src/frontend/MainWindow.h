@@ -33,7 +33,7 @@ THE SOFTWARE.
 #include "DotCanvas.h"
 #include "EdgeCanvas.h"
 
-namespace dab::detail::frontend {
+namespace dab::__detail__::frontend {
 
 class MainWindow : public BaseCanvas {
   Q_OBJECT
@@ -68,4 +68,4 @@ class MainWindow : public BaseCanvas {
   void SetPlayerMoveEdge(Edge edge);
 };
 
-}  // namespace dab::detail::frontend
+}  // namespace dab::__detail__::frontend

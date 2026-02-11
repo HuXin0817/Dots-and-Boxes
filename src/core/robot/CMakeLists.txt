@@ -8,7 +8,7 @@ set(RobotSources
   SimulationRobot.cpp
 )
 add_library(${RobotLibraryName} STATIC ${RobotSources})
-target_compile_definitions(${RobotLibraryName} PRIVATE __BoardSize__=${BoardSize} dab=dab${BoardSize}x${BoardSize})
+target_compile_definitions(${RobotLibraryName} PRIVATE __BoardSize__=${BoardSize} __detail__=__detail${BoardSize}x${BoardSize}__)
 target_link_libraries(${RobotLibraryName} PRIVATE TBB::tbb ${ModelLibraryName} ${BoardLibraryName})
 
 set(RobotLibraryName ${RobotLibraryName} PARENT_SCOPE)

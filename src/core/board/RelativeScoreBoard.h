@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 #include "EdgeCountableBoard.h"
 
-namespace dab::detail::board {
+namespace dab::__detail__::board {
 
 class RelativeScoreBoard : public EdgeCountableBoard, public Turn {
  public:
@@ -40,4 +40,4 @@ class RelativeScoreBoard : public EdgeCountableBoard, public Turn {
   Int Score;
 };
 
-}  // namespace dab::detail::board
+}  // namespace dab::__detail__::board

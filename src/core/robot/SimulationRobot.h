@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 #include "ImproveGreedyRobot.h"
 
-namespace dab::detail::robot {
+namespace dab::__detail__::robot {
 
 class SimulationRobot : public Robot {
  public:
@@ -39,4 +39,4 @@ class SimulationRobot : public Robot {
   List<Edge, Edge::Max> SearchEdges;
 };
 
-}  // namespace dab::detail::robot
+}  // namespace dab::__detail__::robot

@@ -29,7 +29,7 @@ THE SOFTWARE.
 #include <QJsonObject>
 #include <QString>
 
-namespace dab::detail::frontend {
+namespace dab::__detail__::frontend {
 
 template <typename T>
 void LogInfo(const T& message) {
@@ -63,4 +63,4 @@ class Winner {
   QString Name;
 };
 
-}  // namespace dab::detail::frontend
+}  // namespace dab::__detail__::frontend

@@ -31,7 +31,7 @@ THE SOFTWARE.
 #include <QStyleHints>
 #include <QWidget>
 
-namespace dab::detail::frontend {
+namespace dab::__detail__::frontend {
 
 QColor BaseCanvas::ThemeColor(const QColor& DarkThemeColor, const QColor& LightThemeColor) {
   if (QApplication::styleHints()->colorScheme() == Qt::ColorScheme::Dark) {
@@ -61,4 +61,4 @@ void BaseCanvas::leaveEvent(QEvent* event) {
   update();
 }
 
-}  // namespace dab::detail::frontend
+}  // namespace dab::__detail__::frontend

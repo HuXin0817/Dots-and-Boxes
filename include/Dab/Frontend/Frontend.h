@@ -28,6 +28,6 @@ THE SOFTWARE.
 
 namespace dab {
 
-using detail::frontend::MainWindow;
+using __detail__::frontend::MainWindow;
 
 }  // namespace dab

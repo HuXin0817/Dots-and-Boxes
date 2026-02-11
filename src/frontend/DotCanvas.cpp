@@ -28,7 +28,7 @@ THE SOFTWARE.
 
 #include "BaseCanvas.h"
 
-namespace dab::detail::frontend {
+namespace dab::__detail__::frontend {
 
 DotCanvas::DotCanvas(QWidget* parent) : BaseCanvas(parent) { setFixedSize(Width, Width); }
 
@@ -52,4 +52,4 @@ QColor DotCanvas::Color() const {
   return ThemeColor(DarkThemeColor, LightThemeColor);
 }
 
-}  // namespace dab::detail::frontend
+}  // namespace dab::__detail__::frontend

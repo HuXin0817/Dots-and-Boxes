@@ -25,7 +25,10 @@ THE SOFTWARE.
 #pragma once
 
 #include <QWidget>
-#include <cstdint>
+
+namespace dab::frontend {
 
 template <int64_t BoardSize>
 QWidget* CreateMainWindow(int player1Type, int player2Type, bool backgroundMode, QWidget* parent);
+
+}  // namespace dab::frontend

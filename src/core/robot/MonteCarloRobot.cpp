@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 #include "MonteCarloRobot.h"
 
-namespace dab::detail::robot {
+namespace dab::__detail__::robot {
 
 Span<const Edge> MonteCarloRobot::BestCandidateEdges(const RelativeScoreBoard& board) {
   if (Span<const Edge> edges; CanEarlyExit(board, edges)) {
@@ -51,4 +51,4 @@ bool MonteCarloRobot::CanEarlyExit(const RelativeScoreBoard& board, Span<const E
   return result.Size() == 1;
 }
 
-}  // namespace dab::detail::robot
+}  // namespace dab::__detail__::robot

@@ -28,10 +28,10 @@ THE SOFTWARE.
 
 namespace dab {
 
-using detail::robot::CreateRobot;
-using detail::robot::PlayerType;
-using detail::robot::PlayerTypeIsRobot;
-using detail::robot::PlayerTypeString;
-using detail::robot::Robot;
+using __detail__::robot::CreateRobot;
+using __detail__::robot::PlayerType;
+using __detail__::robot::PlayerTypeIsRobot;
+using __detail__::robot::PlayerTypeString;
+using __detail__::robot::Robot;
 
 }  // namespace dab

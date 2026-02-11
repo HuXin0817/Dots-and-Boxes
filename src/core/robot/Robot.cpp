@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 #include "ParallelSearchRobot.h"
 
-namespace dab::detail::robot {
+namespace dab::__detail__::robot {
 
 const char* PlayerTypeString(PlayerType playerType) {
   static constexpr const char* PlayerTypeStringArray[] = {
@@ -56,4 +56,4 @@ Robot* CreateRobot(PlayerType playerType) {
   return nullptr;
 }
 
-}  // namespace dab::detail::robot
+}  // namespace dab::__detail__::robot

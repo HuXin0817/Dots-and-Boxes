@@ -24,21 +24,12 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "RelativeScoreBoard.h"
+#include "../../src/cmd/Command.h"
 
-namespace dab::__detail__::board {
+namespace dab {
 
-class AbsoluteScoreBoard : public RelativeScoreBoard {
- public:
-  AbsoluteScoreBoard() { Reset(); }
+using command::DefaultPlayerType;
+using command::PlayerTypeOptionStrings;
+using command::Process;
 
-  void Reset(const EdgeCountableBoard& newBoard = EdgeCountableBoard());
-  Int Add(Edge edge);
-  Int Player1Score() const { return (TotalScore + RelativeScore()) / 2; }
-  Int Player2Score() const { return (TotalScore - RelativeScore()) / 2; }
-
- private:
-  Int TotalScore;
-};
-
-}  // namespace dab::__detail__::board
+}  // namespace dab

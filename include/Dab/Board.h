@@ -32,10 +32,10 @@ THE SOFTWARE.
 
 namespace dab {
 
-using detail::board::AbsoluteScoreBoard;
-using detail::board::BasicBoard;
-using detail::board::EdgeCountableBoard;
-using detail::board::RelativeScoreBoard;
-using detail::board::ScoreableEdgeBoard;
+using __detail__::board::AbsoluteScoreBoard;
+using __detail__::board::BasicBoard;
+using __detail__::board::EdgeCountableBoard;
+using __detail__::board::RelativeScoreBoard;
+using __detail__::board::ScoreableEdgeBoard;
 
 }  // namespace dab

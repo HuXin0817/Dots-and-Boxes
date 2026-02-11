@@ -28,7 +28,7 @@ THE SOFTWARE.
 
 #include "Array.h"
 
-namespace dab::detail::common {
+namespace dab::__detail__::common {
 
 template <typename T, Int Cap>
 class Queue : public Iterable<Queue<T, Cap>> {
@@ -72,4 +72,4 @@ constexpr T Queue<T, Cap>::Pop() {
   return Data.At(BeginIndex++);
 }
 
-}  // namespace dab::detail::common
+}  // namespace dab::__detail__::common

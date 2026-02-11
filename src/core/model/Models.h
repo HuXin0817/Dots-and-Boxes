@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 #include <Dab/Common.h>
 
-namespace dab::detail::model {
+namespace dab::__detail__::model {
 
 class IntWapper {
  public:
@@ -113,4 +113,4 @@ class Turn : public IntWapper {
   static constexpr Int Player2Turn = -Player1Turn;
 };
 
-}  // namespace dab::detail::model
+}  // namespace dab::__detail__::model

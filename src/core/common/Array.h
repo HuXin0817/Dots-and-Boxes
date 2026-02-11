@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 #include "Iterable.h"
 
-namespace dab::detail::common {
+namespace dab::__detail__::common {
 
 template <typename T, Int Length>
 class Array : public Iterable<Array<T, Length>> {
@@ -47,4 +47,4 @@ class Array : public Iterable<Array<T, Length>> {
   T Data[Length];
 };
 
-}  // namespace dab::detail::common
+}  // namespace dab::__detail__::common

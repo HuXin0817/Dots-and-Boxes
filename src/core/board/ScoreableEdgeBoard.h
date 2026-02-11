@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 #include "EdgeCountableBoard.h"
 
-namespace dab::detail::board {
+namespace dab::__detail__::board {
 
 class ScoreableEdgeBoard : public EdgeCountableBoard {
  public:
@@ -40,4 +40,4 @@ class ScoreableEdgeBoard : public EdgeCountableBoard {
   Queue<Edge, Edge::Max> ScoreableEdges;
 };
 
-}  // namespace dab::detail::board
+}  // namespace dab::__detail__::board

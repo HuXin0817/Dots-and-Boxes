@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 #include "EdgeCountableBoard.h"
 
-namespace dab::detail::board {
+namespace dab::__detail__::board {
 
 void EdgeCountableBoard::Reset() {
   BasicBoard::Reset();
@@ -69,4 +69,4 @@ uint8_t EdgeCountableBoard::MaxEdgeCount(Edge edge) const {
   return std::max(Counter.At(nearBoxes.Front()), Counter.At(nearBoxes.Back()));
 }
 
-}  // namespace dab::detail::board
+}  // namespace dab::__detail__::board

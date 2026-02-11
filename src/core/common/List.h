@@ -28,7 +28,7 @@ THE SOFTWARE.
 
 #include "Array.h"
 
-namespace dab::detail::common {
+namespace dab::__detail__::common {
 
 template <typename T, Int Cap>
 class List : public Iterable<List<T, Cap>> {
@@ -65,4 +65,4 @@ constexpr void List<T, Cap>::Append(T item) {
   Data.At(Length++) = item;
 }
 
-}  // namespace dab::detail::common
+}  // namespace dab::__detail__::common

@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 #include <Dab/Model.h>
 
-namespace dab::detail::board {
+namespace dab::__detail__::board {
 
 void ScoreableEdgeBoard::Reset(const EdgeCountableBoard& newBoard) {
   EdgeCountableBoard::operator=(newBoard);
@@ -72,4 +72,4 @@ Int ScoreableEdgeBoard::MaxObtainableScore(Int endScore) {
   return score;
 }
 
-}  // namespace dab::detail::board
+}  // namespace dab::__detail__::board

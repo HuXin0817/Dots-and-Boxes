@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 #include "BasicBoard.h"
 
-namespace dab::detail::board {
+namespace dab::__detail__::board {
 
 class EdgeCountableBoard : public BasicBoard {
  public:
@@ -43,4 +43,4 @@ class EdgeCountableBoard : public BasicBoard {
   Array<uint8_t, Box::Max> Counter;
 };
 
-}  // namespace dab::detail::board
+}  // namespace dab::__detail__::board

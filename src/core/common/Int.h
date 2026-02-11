@@ -27,7 +27,7 @@ THE SOFTWARE.
 #include <cstdint>
 #include <limits>
 
-namespace dab::detail::common {
+namespace dab::__detail__::common {
 
 constexpr auto SelectIntType() {
   constexpr int64_t MaxValue = 2 * __BoardSize__ * (__BoardSize__ + 1);
@@ -47,4 +47,4 @@ using Int = decltype(SelectIntType());
 
 static constexpr Int BoardSize = __BoardSize__;
 
-}  // namespace dab::detail::common
+}  // namespace dab::__detail__::common

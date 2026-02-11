@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 #include "GreedyRobot.h"
 
-namespace dab::detail::robot {
+namespace dab::__detail__::robot {
 
 Span<const Edge> GreedyRobot::BestCandidateEdges(const RelativeScoreBoard& board) {
   ScoreableIndex = 0;
@@ -50,4 +50,4 @@ Span<const Edge> GreedyRobot::BestCandidateEdges(const RelativeScoreBoard& board
   return {emptyEdges.begin(), emptyEdges.end()};
 }
 
-}  // namespace dab::detail::robot
+}  // namespace dab::__detail__::robot

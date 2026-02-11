@@ -22,6 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "cmd/Command.h"
+#include <Dab/Command.h>
 
 int main(int argc, char* argv[]) { return dab::Process(argc, argv); }

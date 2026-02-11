@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 #include "SimulationRobot.h"
 
-namespace dab::detail::robot {
+namespace dab::__detail__::robot {
 
 class MonteCarloRobot : public Robot {
   static constexpr int64_t SearchTime = static_cast<int64_t>(Edge::Max) << 6;
@@ -43,4 +43,4 @@ class MonteCarloRobot : public Robot {
   SearchScoreMap SearchResult;
 };
 
-}  // namespace dab::detail::robot
+}  // namespace dab::__detail__::robot

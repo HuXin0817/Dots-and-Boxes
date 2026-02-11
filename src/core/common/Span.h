@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 #include "Iterable.h"
 
-namespace dab::detail::common {
+namespace dab::__detail__::common {
 
 template <typename T>
 class Span : public Iterable<Span<T>> {
@@ -49,4 +49,4 @@ class Span : public Iterable<Span<T>> {
   T* EndPtr = nullptr;
 };
 
-}  // namespace dab::detail::common
+}  // namespace dab::__detail__::common

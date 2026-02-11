@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 #include <Dab/Model.h>
 
-namespace dab::detail::board {
+namespace dab::__detail__::board {
 
 class BasicBoard {
  public:
@@ -48,4 +48,4 @@ class BasicBoard {
   Array<Int, Edge::Max> EdgeIndexes;
 };
 
-}  // namespace dab::detail::board
+}  // namespace dab::__detail__::board

@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 #include "ImproveGreedyRobot.h"
 
-namespace dab::detail::robot {
+namespace dab::__detail__::robot {
 
 Span<const Edge> ImproveGreedyRobot::BestCandidateEdges(const RelativeScoreBoard& board) {
   if (const Span<const Edge> edges = GreedyRobot::BestCandidateEdges(board); EnemyUnscoreable() || Scoreable()) {
@@ -50,4 +50,4 @@ Span<const Edge> ImproveGreedyRobot::BestCandidateEdges(const RelativeScoreBoard
   return {candidateEdges.begin(), candidateEdges.begin() + candidateEdgesSize};
 }
 
-}  // namespace dab::detail::robot
+}  // namespace dab::__detail__::robot

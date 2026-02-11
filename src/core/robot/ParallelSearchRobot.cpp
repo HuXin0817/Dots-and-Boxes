@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 #include <tbb/parallel_for_each.h>
 
-namespace dab::detail::robot {
+namespace dab::__detail__::robot {
 
 Span<const Edge> ParallelSearchRobot::BestCandidateEdges(const RelativeScoreBoard& board) {
   if (Span<const Edge> edges; SubRobots.Front().CanEarlyExit(board, edges)) {
@@ -42,4 +42,4 @@ Span<const Edge> ParallelSearchRobot::BestCandidateEdges(const RelativeScoreBoar
   return SearchResult.Export();
 }
 
-}  // namespace dab::detail::robot
+}  // namespace dab::__detail__::robot

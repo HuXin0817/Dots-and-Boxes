@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 #include "MonteCarloRobot.h"
 
-namespace dab::detail::robot {
+namespace dab::__detail__::robot {
 
 class ParallelSearchRobot : public Robot {
  public:
@@ -38,4 +38,4 @@ class ParallelSearchRobot : public Robot {
   SearchScoreMap SearchResult;
 };
 
-}  // namespace dab::detail::robot
+}  // namespace dab::__detail__::robot

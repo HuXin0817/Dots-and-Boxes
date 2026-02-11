@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 #include <QPainter>
 
-namespace dab::detail::frontend {
+namespace dab::__detail__::frontend {
 
 BoxCanvas::BoxCanvas(QWidget* parent) : BaseCanvas(parent) { setFixedSize(Width, Width); }
 
@@ -53,4 +53,4 @@ QColor BoxCanvas::Color() const {
   }
 }
 
-}  // namespace dab::detail::frontend
+}  // namespace dab::__detail__::frontend

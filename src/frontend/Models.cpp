@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 #include "Models.h"
 
-namespace dab::detail::frontend {
+namespace dab::__detail__::frontend {
 
 QJsonObject Config::ToJson() const {
   QJsonObject configData;
@@ -59,4 +59,4 @@ QJsonObject Winner::ToJson() const {
   return winner;
 }
 
-}  // namespace dab::detail::frontend
+}  // namespace dab::__detail__::frontend

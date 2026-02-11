@@ -34,7 +34,9 @@ THE SOFTWARE.
 
 #include "../extern/extern.h"
 
-namespace dab {
+namespace dab::command {
+
+static constexpr int64_t MaxBoardSize = __MaxBoardSize__;
 
 template <int64_t BoardSize>
 QWidget* CreateMainWindowImpl(
@@ -43,7 +45,7 @@ QWidget* CreateMainWindowImpl(
     if (boardSize < BoardSize) {
       return CreateMainWindowImpl<BoardSize - 1>(boardSize, player1Type, player2Type, backgroundMode, parent);
     }
-    return CreateMainWindow<BoardSize>(player1Type, player2Type, backgroundMode, parent);
+    return frontend::CreateMainWindow<BoardSize>(player1Type, player2Type, backgroundMode, parent);
   }
   return nullptr;
 }
@@ -141,4 +143,4 @@ int Process(int argc, char* argv[]) {
   return application.exec();
 }
 
-}  // namespace dab
+}  // namespace dab::command

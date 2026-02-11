@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 #include <Dab/Board.h>
 
-namespace dab::detail::robot {
+namespace dab::__detail__::robot {
 
 enum class PlayerType {
   Human = 0,
@@ -48,4 +48,4 @@ const char* PlayerTypeString(PlayerType playerType);
 inline bool PlayerTypeIsRobot(PlayerType playerType) { return playerType != PlayerType::Human; }
 Robot* CreateRobot(PlayerType playerType);
 
-}  // namespace dab::detail::robot
+}  // namespace dab::__detail__::robot

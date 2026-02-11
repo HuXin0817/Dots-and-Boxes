@@ -29,7 +29,7 @@ THE SOFTWARE.
 #include <QApplication>
 #include <QWidget>
 
-namespace dab::detail::frontend {
+namespace dab::__detail__::frontend {
 
 enum class Owner {
   None,
@@ -59,4 +59,4 @@ class BaseCanvas : public QWidget {
   bool HoverState = false;
 };
 
-}  // namespace dab::detail::frontend
+}  // namespace dab::__detail__::frontend

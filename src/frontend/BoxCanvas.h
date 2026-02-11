@@ -27,7 +27,7 @@ THE SOFTWARE.
 #include "BaseCanvas.h"
 #include "EdgeCanvas.h"
 
-namespace dab::detail::frontend {
+namespace dab::__detail__::frontend {
 
 class BoxCanvas : public BaseCanvas {
   Q_OBJECT
@@ -44,4 +44,4 @@ class BoxCanvas : public BaseCanvas {
   QColor Color() const;
 };
 
-}  // namespace dab::detail::frontend
+}  // namespace dab::__detail__::frontend

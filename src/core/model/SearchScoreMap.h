@@ -28,7 +28,7 @@ THE SOFTWARE.
 
 #include "Models.h"
 
-namespace dab::detail::model {
+namespace dab::__detail__::model {
 
 class SearchScoreMap {
  public:
@@ -45,4 +45,4 @@ class SearchScoreMap {
   List<Edge, Edge::Max> BestEdges;
 };
 
-}  // namespace dab::detail::model
+}  // namespace dab::__detail__::model

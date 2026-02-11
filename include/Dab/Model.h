@@ -29,10 +29,10 @@ THE SOFTWARE.
 
 namespace dab {
 
-using detail::model::Box;
-using detail::model::Dot;
-using detail::model::Edge;
-using detail::model::SearchScoreMap;
-using detail::model::Turn;
+using __detail__::model::Box;
+using __detail__::model::Dot;
+using __detail__::model::Edge;
+using __detail__::model::SearchScoreMap;
+using __detail__::model::Turn;
 
 }  // namespace dab

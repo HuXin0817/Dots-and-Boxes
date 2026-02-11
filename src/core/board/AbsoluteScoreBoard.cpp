@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 #include "AbsoluteScoreBoard.h"
 
-namespace dab::detail::board {
+namespace dab::__detail__::board {
 
 void AbsoluteScoreBoard::Reset(const EdgeCountableBoard& newBoard) {
   RelativeScoreBoard::Reset(newBoard);
@@ -37,4 +37,4 @@ Int AbsoluteScoreBoard::Add(Edge edge) {
   return score;
 }
 
-}  // namespace dab::detail::board
+}  // namespace dab::__detail__::board
