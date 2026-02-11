@@ -1,4 +1,6 @@
-pybind11_add_module(PyDab binding.cpp)
+find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
+
+Python3_add_library(PyDab MODULE binding.cpp)
 target_link_libraries(PyDab PUBLIC
   ${ExternLibraries}
   ${CommandLibraryName}

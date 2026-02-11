@@ -23,38 +23,84 @@ THE SOFTWARE.
 */
 
 #include <Dab/Command.h>
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
+#include <Python.h>
 
-namespace py = pybind11;
+#include <string>
+#include <vector>
 
-int Process(const std::vector<std::string>& args) {
-  int argc = args.size();
-  char** argv = new char*[argc + 1];
-
-  for (int i = 0; i < argc; ++i) {
-    argv[i] = const_cast<char*>(args[i].c_str());
+static PyObject* PyDab_Process(PyObject* self, PyObject* args) {
+  PyObject* py_list;
+  if (!PyArg_ParseTuple(args, "O!", &PyList_Type, &py_list)) {
+    return nullptr;
   }
-  argv[argc] = nullptr;
 
-  int result = dab::Process(argc, argv);
-  delete[] argv;
+  Py_ssize_t size = PyList_Size(py_list);
+  std::vector<std::string> cpp_args;
+  std::vector<char*> argv;
 
-  return result;
+  cpp_args.reserve(size);
+  argv.reserve(size + 1);
+
+  for (Py_ssize_t i = 0; i < size; ++i) {
+    PyObject* item = PyList_GetItem(py_list, i);
+    if (!PyUnicode_Check(item)) {
+      PyErr_SetString(PyExc_TypeError, "All arguments must be strings");
+      return nullptr;
+    }
+    Py_ssize_t len;
+    const char* str = PyUnicode_AsUTF8AndSize(item, &len);
+    if (!str) {
+      return nullptr;
+    }
+    cpp_args.emplace_back(str, len);
+    argv.push_back(const_cast<char*>(cpp_args.back().c_str()));
+  }
+  argv.push_back(nullptr);
+
+  int result = dab::Process(static_cast<int>(size), argv.data());
+
+  return PyLong_FromLong(result);
 }
 
-PYBIND11_MODULE(PyDab, m) {
-  m.doc() = "Dots and Boxes game Python binding";
+static PyMethodDef PyDab_methods[] = {{"Process", PyDab_Process, METH_VARARGS, "Process command line arguments"},
+                                      {nullptr, nullptr, 0, nullptr}};
 
-  m.attr("DefaultPlayerType") = dab::DefaultPlayerType;
-  py::list player_type_options;
+static struct PyModuleDef PyDab_module = {
+    PyModuleDef_HEAD_INIT, "PyDab", "Dots and Boxes game Python binding", -1, PyDab_methods};
+
+PyMODINIT_FUNC PyInit_PyDab(void) {
+  PyObject* module = PyModule_Create(&PyDab_module);
+  if (!module) {
+    return nullptr;
+  }
+
+  PyObject* default_player_type = PyLong_FromLong(dab::DefaultPlayerType);
+  if (!default_player_type) {
+    Py_DECREF(module);
+    return nullptr;
+  }
+  if (PyModule_AddObject(module, "DefaultPlayerType", default_player_type) < 0) {
+    Py_DECREF(default_player_type);
+    Py_DECREF(module);
+    return nullptr;
+  }
+
   for (size_t i = 0; i < std::size(dab::PlayerTypeOptionStrings); ++i) {
     std::string str = dab::PlayerTypeOptionStrings[i];
     if (str.size() > 5) {
       str[5] = '_';
     }
-    m.attr(str.c_str()) = dab::PlayerTypeOptionStrings[i];
+    PyObject* player_type = PyUnicode_FromString(dab::PlayerTypeOptionStrings[i]);
+    if (!player_type) {
+      Py_DECREF(module);
+      return nullptr;
+    }
+    if (PyModule_AddObject(module, str.c_str(), player_type) < 0) {
+      Py_DECREF(player_type);
+      Py_DECREF(module);
+      return nullptr;
+    }
   }
 
-  m.def("Process", Process, "Process command line arguments");
+  return module;
 }

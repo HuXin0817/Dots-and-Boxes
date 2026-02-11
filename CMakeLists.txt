@@ -18,6 +18,4 @@ find_package(TBB REQUIRED)
 
 include_directories("${CMAKE_SOURCE_DIR}/include")
 add_subdirectory(src)
-
-find_package(pybind11 REQUIRED)
 add_subdirectory(python)

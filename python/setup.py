@@ -22,26 +22,11 @@ class CMakeBuild(build_ext):
         extdir = os.path.abspath(os.path.dirname(
             self.get_ext_fullpath(ext.name)))
 
-        try:
-            import pybind11
-
-            pybind11_dir = os.path.dirname(pybind11.__file__)
-            pybind11_cmake_dir = os.path.join(
-                pybind11_dir, "share", "cmake", "pybind11"
-            )
-        except ImportError:
-            pybind11_cmake_dir = ""
-
         cmake_args = [
             f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={extdir}",
             f"-DPYTHON_EXECUTABLE={sys.executable}",
             "-DCMAKE_BUILD_TYPE=Release",
         ]
-        print(cmake_args)
-        exit(0)
-
-        if pybind11_cmake_dir and os.path.exists(pybind11_cmake_dir):
-            cmake_args.append(f"-DCMAKE_PREFIX_PATH={pybind11_cmake_dir}")
 
         build_temp = Path(self.build_temp) / ext.name
         build_temp.mkdir(parents=True, exist_ok=True)
@@ -66,7 +51,5 @@ setup(
     ],
     cmdclass={"build_ext": CMakeBuild},
     zip_safe=False,
-    install_requires=["pybind11>=2.6.0"],
-    setup_requires=["pybind11>=2.6.0"],
     packages=find_packages(),
 )
