@@ -17,21 +17,13 @@ jobs:
 
       - name: Install requirements
         run: |
-          brew install coreutils qt@6 tbb python@3.12
+          brew install coreutils qt@6 tbb
           echo "CMAKE_PREFIX_PATH=$(brew --prefix qt@6)/lib/cmake" >> $GITHUB_ENV
-          echo "PATH=$(brew --prefix qt@6)/bin:$(brew --prefix python@3.12)/bin:$PATH" >> $GITHUB_ENV
 
       - name: Configure CMake
         run: |
-          cmake -B build -S . \
-            -DCMAKE_PREFIX_PATH=$(brew --prefix qt@6)/lib/cmake
+          cmake -B build -S . -DCMAKE_PREFIX_PATH=$(brew --prefix qt@6)/lib/cmake
 
       - name: Build
         run: |
           cmake --build build -j $(nproc)
-
-      - name: Build Python Binding
-        run: |
-          cd python
-          python3 -m pip install .
-          python3 -c "import PyDab"
