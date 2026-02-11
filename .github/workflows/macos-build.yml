@@ -17,9 +17,9 @@ jobs:
 
       - name: Install requirements
         run: |
-          brew install coreutils qt@6 tbb
+          brew install coreutils qt@6 tbb python@3.12
           echo "CMAKE_PREFIX_PATH=$(brew --prefix qt@6)/lib/cmake" >> $GITHUB_ENV
-          echo "PATH=$(brew --prefix qt@6)/bin:$PATH" >> $GITHUB_ENV
+          echo "PATH=$(brew --prefix qt@6)/bin:$(brew --prefix python@3.12)/bin:$PATH" >> $GITHUB_ENV
 
       - name: Configure CMake
         run: |
@@ -29,3 +29,8 @@ jobs:
       - name: Build
         run: |
           cmake --build build -j $(nproc)
+
+      - name: Build Python Binding
+        run: |
+          cd python
+          python3 setup.py build_ext --inplace
