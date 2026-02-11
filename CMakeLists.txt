@@ -17,6 +17,7 @@ endif()
 message(STATUS "MaxBoardSize: ${MaxBoardSize}")
 
 set(ExternLibraries)
+include_directories("${CMAKE_SOURCE_DIR}/include")
 foreach(BoardSize RANGE 1 ${MaxBoardSize})
   add_subdirectory(src "source/src/src${BoardSize}x${BoardSize}")
   add_subdirectory(frontend "source/frontend/frontend${BoardSize}x${BoardSize}")

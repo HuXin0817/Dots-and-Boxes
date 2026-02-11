@@ -7,7 +7,6 @@ set(BoardSources
   ScoreableEdgeBoard.cpp
 )
 add_library(${BoardLibraryName} STATIC ${BoardSources})
-target_include_directories(${BoardLibraryName} PRIVATE "${CMAKE_SOURCE_DIR}/include")
 target_compile_definitions(${BoardLibraryName} PRIVATE __BoardSize__=${BoardSize} dab=dab${BoardSize}x${BoardSize})
 target_link_libraries(${BoardLibraryName} PRIVATE ${ModelLibraryName})
 
