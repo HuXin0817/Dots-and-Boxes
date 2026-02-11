@@ -32,6 +32,10 @@ template <typename T>
 class Span : public Iterable<Span<T>> {
  public:
   constexpr Span() = default;
+  constexpr Span(const Span& other) = default;
+  constexpr Span(Span&& other) = default;
+  constexpr Span& operator=(const Span& other) = default;
+  constexpr Span& operator=(Span&& other) = default;
   constexpr Span(T* begin, T* end) : BeginPtr(begin), EndPtr(end) {}
 
   constexpr Int Size() const { return EndPtr - BeginPtr; }
