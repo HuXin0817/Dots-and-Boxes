@@ -8,7 +8,16 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
+if(NOT MaxBoardSize)
+  set(MaxBoardSize 36)
+endif()
+message(STATUS "MaxBoardSize: ${MaxBoardSize}")
+
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 find_package(TBB REQUIRED)
 
+include_directories("${CMAKE_SOURCE_DIR}/include")
 add_subdirectory(src)
+
+find_package(pybind11 REQUIRED)
+add_subdirectory(python)

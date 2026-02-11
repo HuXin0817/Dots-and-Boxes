@@ -1,10 +1,4 @@
-if(NOT MaxBoardSize)
-  set(MaxBoardSize 36)
-endif()
-message(STATUS "MaxBoardSize: ${MaxBoardSize}")
-
 set(ExternLibraries)
-include_directories("${CMAKE_SOURCE_DIR}/include")
 foreach(BoardSize RANGE 1 ${MaxBoardSize})
   add_subdirectory(core "source/core/core${BoardSize}x${BoardSize}")
   add_subdirectory(frontend "source/frontend/frontend${BoardSize}x${BoardSize}")
@@ -13,7 +7,6 @@ foreach(BoardSize RANGE 1 ${MaxBoardSize})
 endforeach()
 
 add_subdirectory(cmd "source/cmd")
-
 qt_add_executable("${PROJECT_NAME}" main.cpp)
 target_compile_definitions("${PROJECT_NAME}" PRIVATE __MaxBoardSize__=${MaxBoardSize})
 target_link_libraries("${PROJECT_NAME}" PRIVATE ${CommandLibraryName})

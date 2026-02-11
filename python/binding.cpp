@@ -23,3 +23,34 @@ THE SOFTWARE.
 */
 
 #include <Dab/Command.h>
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+
+namespace py = pybind11;
+
+int Process(const std::vector<std::string>& args) {
+  int argc = args.size();
+  char** argv = new char*[argc + 1];
+
+  for (int i = 0; i < argc; ++i) {
+    argv[i] = const_cast<char*>(args[i].c_str());
+  }
+  argv[argc] = nullptr;
+
+  int result = dab::Process(argc, argv);
+  delete[] argv;
+
+  return result;
+}
+
+PYBIND11_MODULE(PyDab, m) {
+  m.doc() = "Dots and Boxes game Python binding";
+
+  m.attr("DefaultPlayerType") = dab::DefaultPlayerType;
+  py::list player_type_options;
+  for (size_t i = 0; i < std::size(dab::PlayerTypeOptionStrings); ++i) {
+    m.attr(dab::PlayerTypeOptionStrings[i]) = i;
+  }
+
+  m.def("Process", Process, "Process command line arguments");
+}
