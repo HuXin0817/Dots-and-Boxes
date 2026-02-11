@@ -49,7 +49,11 @@ PYBIND11_MODULE(PyDab, m) {
   m.attr("DefaultPlayerType") = dab::DefaultPlayerType;
   py::list player_type_options;
   for (size_t i = 0; i < std::size(dab::PlayerTypeOptionStrings); ++i) {
-    m.attr(dab::PlayerTypeOptionStrings[i]) = i;
+    std::string str = dab::PlayerTypeOptionStrings[i];
+    if (str.size() > 5) {
+      str[5] = '_';
+    }
+    m.attr(str.c_str()) = dab::PlayerTypeOptionStrings[i];
   }
 
   m.def("Process", Process, "Process command line arguments");
