@@ -35,7 +35,7 @@ THE SOFTWARE.
 
 namespace dab::detail::frontend {
 
-class MainWindow final : public BaseCanvas {
+class MainWindow : public BaseCanvas {
   Q_OBJECT
 
   static constexpr int BoardWidth = BoardSize * EdgeCanvas::Height;

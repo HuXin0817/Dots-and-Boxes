@@ -28,7 +28,7 @@ THE SOFTWARE.
 
 namespace dab::detail::robot {
 
-class MonteCarloRobot final : public Robot {
+class MonteCarloRobot : public Robot {
   static constexpr int64_t SearchTime = static_cast<int64_t>(Edge::Max) << 6;
 
  public:

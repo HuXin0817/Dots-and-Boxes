@@ -28,7 +28,7 @@ THE SOFTWARE.
 
 namespace dab::detail::robot {
 
-class ParallelSearchRobot final : public Robot {
+class ParallelSearchRobot : public Robot {
  public:
   ParallelSearchRobot() = default;
   Span<const Edge> BestCandidateEdges(const RelativeScoreBoard& board) override;

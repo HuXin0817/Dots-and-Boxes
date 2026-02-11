@@ -28,7 +28,7 @@ THE SOFTWARE.
 
 namespace dab::detail::robot {
 
-class SimulationRobot final : public Robot {
+class SimulationRobot : public Robot {
  public:
   SimulationRobot() = default;
   Span<const Edge> BestCandidateEdges(const RelativeScoreBoard& board) override;

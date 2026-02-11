@@ -28,7 +28,7 @@ THE SOFTWARE.
 
 namespace dab::detail::robot {
 
-class ImproveGreedyRobot final : public GreedyRobot {
+class ImproveGreedyRobot : public GreedyRobot {
  public:
   ImproveGreedyRobot() = default;
   Span<const Edge> BestCandidateEdges(const RelativeScoreBoard& board) override;

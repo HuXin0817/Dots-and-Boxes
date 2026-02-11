@@ -29,7 +29,7 @@ THE SOFTWARE.
 
 namespace dab::detail::frontend {
 
-class BoxCanvas final : public BaseCanvas {
+class BoxCanvas : public BaseCanvas {
   Q_OBJECT
 
  public:

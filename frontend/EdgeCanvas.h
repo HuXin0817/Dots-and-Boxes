@@ -28,7 +28,7 @@ THE SOFTWARE.
 
 namespace dab::detail::frontend {
 
-class EdgeCanvas final : public BaseCanvas {
+class EdgeCanvas : public BaseCanvas {
   Q_OBJECT
 
  public:
