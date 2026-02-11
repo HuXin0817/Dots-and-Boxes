@@ -26,6 +26,8 @@ THE SOFTWARE.
 
 #include <cstdint>
 
+namespace dab {
+
 static constexpr int64_t MaxBoardSize = __MaxBoardSize__;
 static constexpr int DefaultPlayerType = 5;
 static constexpr const char* PlayerTypeOptionStrings[] = {
@@ -38,3 +40,5 @@ static constexpr const char* PlayerTypeOptionStrings[] = {
 };
 
 int Process(int argc, char* argv[]);
+
+}  // namespace dab

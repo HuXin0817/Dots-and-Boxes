@@ -24,4 +24,4 @@ THE SOFTWARE.
 
 #include "cmd/Command.h"
 
-int main(int argc, char* argv[]) { return Process(argc, argv); }
+int main(int argc, char* argv[]) { return dab::Process(argc, argv); }

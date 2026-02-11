@@ -34,6 +34,8 @@ THE SOFTWARE.
 
 #include "../extern/extern.h"
 
+namespace dab {
+
 template <int64_t BoardSize>
 QWidget* CreateMainWindowImpl(
     int64_t boardSize, int player1Type, int player2Type, bool backgroundMode, QWidget* parent) {
@@ -138,3 +140,5 @@ int Process(int argc, char* argv[]) {
   mainWindow->show();
   return application.exec();
 }
+
+}  // namespace dab
