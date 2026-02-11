@@ -25,8 +25,9 @@ THE SOFTWARE.
 #include <Dab/Command.h>
 #include <Python.h>
 
-#include <string>
-#include <vector>
+#include <QByteArray>
+#include <QList>
+#include <QString>
 
 static PyObject* PyDab_Process(PyObject* self, PyObject* args) {
   PyObject* py_list;
@@ -35,11 +36,13 @@ static PyObject* PyDab_Process(PyObject* self, PyObject* args) {
   }
 
   Py_ssize_t size = PyList_Size(py_list);
-  std::vector<std::string> cpp_args;
-  std::vector<char*> argv;
+  QList<QString> qstrings;
+  QList<QByteArray> utf8Bytes;
+  QList<char*> argv;
 
-  cpp_args.reserve(size);
-  argv.reserve(size + 1);
+  qstrings.reserve(static_cast<int>(size));
+  utf8Bytes.reserve(static_cast<int>(size));
+  argv.reserve(static_cast<int>(size) + 1);
 
   for (Py_ssize_t i = 0; i < size; ++i) {
     PyObject* item = PyList_GetItem(py_list, i);
@@ -52,13 +55,17 @@ static PyObject* PyDab_Process(PyObject* self, PyObject* args) {
     if (!str) {
       return nullptr;
     }
-    cpp_args.emplace_back(str, len);
-    argv.push_back(const_cast<char*>(cpp_args.back().c_str()));
+
+    QString qstr = QString::fromUtf8(str, static_cast<int>(len));
+    qstrings.append(qstr);
+
+    QByteArray ba = qstr.toUtf8();
+    utf8Bytes.append(ba);
+    argv.append(ba.data());
   }
-  argv.push_back(nullptr);
+  argv.append(nullptr);
 
   int result = dab::Process(static_cast<int>(size), argv.data());
-
   return PyLong_FromLong(result);
 }
 
@@ -85,17 +92,24 @@ PyMODINIT_FUNC PyInit_PyDab(void) {
     return nullptr;
   }
 
-  for (size_t i = 0; i < std::size(dab::PlayerTypeOptionStrings); ++i) {
-    std::string str = dab::PlayerTypeOptionStrings[i];
-    if (str.size() > 5) {
-      str[5] = '_';
+  const int numOptions = sizeof(dab::PlayerTypeOptionStrings) / sizeof(dab::PlayerTypeOptionStrings[0]);
+  for (int i = 0; i < numOptions; ++i) {
+    QString originalStr = QString::fromUtf8(dab::PlayerTypeOptionStrings[i]);
+
+    QString attrName = originalStr;
+    if (attrName.length() > 5) {
+      attrName[5] = '_';
     }
-    PyObject* player_type = PyUnicode_FromString(dab::PlayerTypeOptionStrings[i]);
+
+    QByteArray originalBa = originalStr.toUtf8();
+    PyObject* player_type = PyUnicode_FromString(originalBa.constData());
     if (!player_type) {
       Py_DECREF(module);
       return nullptr;
     }
-    if (PyModule_AddObject(module, str.c_str(), player_type) < 0) {
+
+    QByteArray attrNameBa = attrName.toUtf8();
+    if (PyModule_AddObject(module, attrNameBa.constData(), player_type) < 0) {
       Py_DECREF(player_type);
       Py_DECREF(module);
       return nullptr;
