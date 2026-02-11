@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "../../src/robot/Robot.h"
+#include "../../src/core/robot/Robot.h"
 
 namespace dab {
 

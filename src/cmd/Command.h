@@ -24,10 +24,17 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "../../../src/frontend/MainWindow.h"
+#include <cstdint>
 
-namespace dab {
+static constexpr int64_t MaxBoardSize = __MaxBoardSize__;
+static constexpr int DefaultPlayerType = 5;
+static constexpr const char* PlayerTypeOptionStrings[] = {
+    "human",
+    "robot:easy",
+    "robot:medium",
+    "robot:hard",
+    "robot:expert",
+    "robot:master",
+};
 
-using detail::frontend::MainWindow;
-
-}  // namespace dab
+int Process(int argc, char* argv[]);

@@ -24,12 +24,12 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "../../src/common/Array.h"
-#include "../../src/common/Int.h"
-#include "../../src/common/List.h"
-#include "../../src/common/Queue.h"
-#include "../../src/common/Random.h"
-#include "../../src/common/Span.h"
+#include "../../src/core/common/Array.h"
+#include "../../src/core/common/Int.h"
+#include "../../src/core/common/List.h"
+#include "../../src/core/common/Queue.h"
+#include "../../src/core/common/Random.h"
+#include "../../src/core/common/Span.h"
 
 namespace dab {
 

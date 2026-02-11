@@ -22,6 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
+#include "Command.h"
+
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QCoreApplication>
@@ -29,20 +31,8 @@ THE SOFTWARE.
 #include <QJsonObject>
 #include <QLibrary>
 #include <QWidget>
-#include <cstdlib>
 
-#include "extern/extern.h"
-
-static constexpr int64_t MaxBoardSize = __MaxBoardSize__;
-static constexpr int DefaultPlayerType = 5;
-static constexpr const char* PlayerTypeOptionStrings[] = {
-    "human",
-    "robot:easy",
-    "robot:medium",
-    "robot:hard",
-    "robot:expert",
-    "robot:master",
-};
+#include "../extern/extern.h"
 
 template <int64_t BoardSize>
 QWidget* CreateMainWindowImpl(
@@ -83,7 +73,7 @@ int64_t ParseBoardSize(const QString& arg) {
   return boardSize;
 }
 
-int main(int argc, char* argv[]) {
+int Process(int argc, char* argv[]) {
   QApplication application(argc, argv);
   application.setApplicationName("Dots and Boxes");
   application.setApplicationVersion("1.0.0");

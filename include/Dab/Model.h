@@ -24,8 +24,8 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "../../src/model/Models.h"
-#include "../../src/model/SearchScoreMap.h"
+#include "../../src/core/model/Models.h"
+#include "../../src/core/model/SearchScoreMap.h"
 
 namespace dab {
 

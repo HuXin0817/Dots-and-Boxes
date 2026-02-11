@@ -22,12 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#pragma once
+#include "cmd/Command.h"
 
-#include "../../../src/frontend/MainWindow.h"
-
-namespace dab {
-
-using detail::frontend::MainWindow;
-
-}  // namespace dab
+int main(int argc, char* argv[]) { return Process(argc, argv); }
