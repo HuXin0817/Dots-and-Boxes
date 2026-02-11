@@ -65,55 +65,27 @@ static PyObject* PyDab_Process(PyObject* self, PyObject* args) {
   }
   argv.append(nullptr);
 
-  int result = dab::Process(static_cast<int>(size), argv.data());
+  int result = dab::Process(static_cast<int>(size) + 1, argv.data());
   return PyLong_FromLong(result);
 }
 
-static PyMethodDef PyDab_methods[] = {{"Process", PyDab_Process, METH_VARARGS, "Process command line arguments"},
-                                      {nullptr, nullptr, 0, nullptr}};
+static PyMethodDef PyDab_methods[] = {
+    {"Process", PyDab_Process, METH_VARARGS, "Process command line arguments"},
+    {nullptr, nullptr, 0, nullptr},
+};
 
 static struct PyModuleDef PyDab_module = {
-    PyModuleDef_HEAD_INIT, "PyDab", "Dots and Boxes game Python binding", -1, PyDab_methods};
+    PyModuleDef_HEAD_INIT,
+    "PyDab",
+    "Dots and Boxes Game",
+    -1,
+    PyDab_methods,
+};
 
 PyMODINIT_FUNC PyInit_PyDab(void) {
   PyObject* module = PyModule_Create(&PyDab_module);
   if (!module) {
     return nullptr;
-  }
-
-  PyObject* default_player_type = PyLong_FromLong(dab::DefaultPlayerType);
-  if (!default_player_type) {
-    Py_DECREF(module);
-    return nullptr;
-  }
-  if (PyModule_AddObject(module, "DefaultPlayerType", default_player_type) < 0) {
-    Py_DECREF(default_player_type);
-    Py_DECREF(module);
-    return nullptr;
-  }
-
-  const int numOptions = sizeof(dab::PlayerTypeOptionStrings) / sizeof(dab::PlayerTypeOptionStrings[0]);
-  for (int i = 0; i < numOptions; ++i) {
-    QString originalStr = QString::fromUtf8(dab::PlayerTypeOptionStrings[i]);
-
-    QString attrName = originalStr;
-    if (attrName.length() > 5) {
-      attrName[5] = '_';
-    }
-
-    QByteArray originalBa = originalStr.toUtf8();
-    PyObject* player_type = PyUnicode_FromString(originalBa.constData());
-    if (!player_type) {
-      Py_DECREF(module);
-      return nullptr;
-    }
-
-    QByteArray attrNameBa = attrName.toUtf8();
-    if (PyModule_AddObject(module, attrNameBa.constData(), player_type) < 0) {
-      Py_DECREF(player_type);
-      Py_DECREF(module);
-      return nullptr;
-    }
   }
 
   return module;
