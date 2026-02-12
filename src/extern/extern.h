@@ -29,6 +29,6 @@ THE SOFTWARE.
 namespace dab::internal {
 
 template <int64_t BoardSize>
-QWidget* CreateMainWindow(int player1Type, int player2Type, bool backgroundMode, QWidget* parent);
+QWidget* CreateMainWindow(int player1Type, int player2Type, QWidget* parent);
 
 }  // namespace dab::internal

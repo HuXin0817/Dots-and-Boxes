@@ -42,7 +42,7 @@ class MainWindow : public BaseCanvas {
   static constexpr int WindowSize = BoardWidth + 2 * BoxCanvas::Width;
 
  public:
-  explicit MainWindow(PlayerType player1Type, PlayerType player2Type, bool backgroundMode, QWidget* parent);
+  explicit MainWindow(PlayerType player1Type, PlayerType player2Type, QWidget* parent);
 
  protected:
   void paintEvent(QPaintEvent* event) override;
@@ -52,7 +52,6 @@ class MainWindow : public BaseCanvas {
  private:
   const PlayerType Player1Type;
   const PlayerType Player2Type;
-  const bool BackgroundMode;
   QScopedPointer<Robot> Robot1;
   QScopedPointer<Robot> Robot2;
   std::atomic<Edge> PlayerMoveEdge;
@@ -61,6 +60,7 @@ class MainWindow : public BaseCanvas {
   QList<QPointer<BoxCanvas>> BoxCanvases;
   QList<QPointer<DotCanvas>> DotCanvases;
   QList<QPointer<EdgeCanvas>> EdgeCanvases;
+  std::once_flag FirstRun;
 
   QColor Color() const;
   void Run();

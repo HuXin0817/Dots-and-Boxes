@@ -101,27 +101,18 @@ int Process(int argc, char* argv[]) {
       "Type",
       "robot");
 
-  const QCommandLineOption backgroundModeOption(QStringList() << "b" << "background", "Run in background mode.");
-
   QCommandLineParser parser;
   parser.addHelpOption();
   parser.addVersionOption();
   parser.addOption(boardSizeOption);
   parser.addOption(player1Option);
   parser.addOption(player2Option);
-  parser.addOption(backgroundModeOption);
   parser.process(application);
 
-  int64_t boardSize = ParseBoardSize(parser.value(boardSizeOption));
-  int player1Type = ParsePlayerType(parser.value(player1Option));
-  int player2Type = ParsePlayerType(parser.value(player2Option));
-  bool backgroundMode = parser.isSet(backgroundModeOption);
-  if (backgroundMode && (player1Type == 0 || player2Type == 0)) {
-    qInfo("Error: player type 'human' is not allow in background mode.");
-    exit(EXIT_FAILURE);
-  }
-
-  QWidget* mainWindow = CreateMainWindow(boardSize, player1Type, player2Type, backgroundMode, nullptr);
+  QWidget* mainWindow = CreateMainWindow(ParseBoardSize(parser.value(boardSizeOption)),
+                                         ParsePlayerType(parser.value(player1Option)),
+                                         ParsePlayerType(parser.value(player2Option)),
+                                         nullptr);
   mainWindow->show();
   return application.exec();
 }

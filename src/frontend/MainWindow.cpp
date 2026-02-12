@@ -36,7 +36,9 @@ THE SOFTWARE.
 #include <QTimer>
 #include <atomic>
 #include <cassert>
+#include <mutex>
 
+#include "BaseCanvas.h"
 #include "BoxCanvas.h"
 #include "DotCanvas.h"
 #include "EdgeCanvas.h"
@@ -44,41 +46,31 @@ THE SOFTWARE.
 
 namespace dab::__detail__::frontend {
 
-MainWindow::MainWindow(PlayerType player1Type, PlayerType player2Type, bool backgroundMode, QWidget* parent)
-    : BaseCanvas(parent),
-      Player1Type(player1Type),
-      Player2Type(player2Type),
-      BackgroundMode(backgroundMode),
-      PlayerMoveEdge(Edge::Invalid) {
+MainWindow::MainWindow(PlayerType player1Type, PlayerType player2Type, QWidget* parent)
+    : BaseCanvas(parent), Player1Type(player1Type), Player2Type(player2Type), PlayerMoveEdge(Edge::Invalid) {
   if (PlayerTypeIsRobot(Player1Type)) {
     Robot1.reset(CreateRobot(Player1Type));
   }
   if (PlayerTypeIsRobot(Player2Type)) {
     Robot2.reset(CreateRobot(Player2Type));
   }
-  if (backgroundMode) {
-    assert(Robot1);
-    assert(Robot2);
-    Run();
-  } else {
-    resize(WindowSize, WindowSize);
-    setMinimumSize(WindowSize, WindowSize);
 
-    BoxCanvases.reserve(Box::Max);
-    for (Box box = 0; box < Box::Max; box.Add()) {
-      BoxCanvases.emplace_back(new BoxCanvas(this));
-    }
+  resize(WindowSize, WindowSize);
+  setMinimumSize(WindowSize, WindowSize);
 
-    EdgeCanvases.reserve(Edge::Max);
-    for (Edge edge = 0; edge < Edge::Max; edge.Add()) {
-      EdgeCanvases.emplace_back(
-          new EdgeCanvas(edge.Rotate(), [edge, this]() -> void { SetPlayerMoveEdge(edge); }, this));
-    }
+  BoxCanvases.reserve(Box::Max);
+  for (Box box = 0; box < Box::Max; box.Add()) {
+    BoxCanvases.emplace_back(new BoxCanvas(this));
+  }
 
-    DotCanvases.reserve(Dot::Max);
-    for (Dot dot = 0; dot < Dot::Max; dot.Add()) {
-      DotCanvases.emplace_back(new DotCanvas(this));
-    }
+  EdgeCanvases.reserve(Edge::Max);
+  for (Edge edge = 0; edge < Edge::Max; edge.Add()) {
+    EdgeCanvases.emplace_back(new EdgeCanvas(edge.Rotate(), [edge, this]() -> void { SetPlayerMoveEdge(edge); }, this));
+  }
+
+  DotCanvases.reserve(Dot::Max);
+  for (Dot dot = 0; dot < Dot::Max; dot.Add()) {
+    DotCanvases.emplace_back(new DotCanvas(this));
   }
 }
 
@@ -122,7 +114,7 @@ void MainWindow::resizeEvent(QResizeEvent* event) {
 void MainWindow::showEvent(QShowEvent* event) {
   QWidget::showEvent(event);
 
-  QThreadPool::globalInstance()->start([this]() -> void { Run(); });
+  std::call_once(FirstRun, [this]() -> void { QThreadPool::globalInstance()->start([this]() -> void { Run(); }); });
 }
 
 QColor MainWindow::Color() const {
@@ -152,11 +144,7 @@ void MainWindow::Run() {
     }
 
     assert(Board.NotContains(PlayerMoveEdge.load()));
-    if (BackgroundMode) {
-      Add(PlayerMoveEdge.load());
-    } else {
-      QMetaObject::invokeMethod(this, [this]() -> void { Add(PlayerMoveEdge.load()); }, Qt::BlockingQueuedConnection);
-    }
+    QMetaObject::invokeMethod(this, [this]() -> void { Add(PlayerMoveEdge.load()); }, Qt::BlockingQueuedConnection);
     assert(Board.Contains(PlayerMoveEdge.load()));
 
     LogInfo(MoveRecord{
@@ -179,10 +167,6 @@ void MainWindow::Run() {
   }
   LogInfo(winner);
 
-  if (BackgroundMode) {
-    exit(0);
-  }
-
   QMetaObject::invokeMethod(
       this,
       [&]() -> void {
@@ -194,49 +178,53 @@ void MainWindow::Run() {
               QString("%1 Win! (Score %2:%3)").arg(winner.Name).arg(Board.Player1Score()).arg(Board.Player2Score()));
         }
         messagebox->setIcon(QMessageBox::Information);
+        const QPointer restartButton = messagebox->addButton(QMessageBox::Reset);
+        restartButton->setText("Restart");
+        connect(restartButton, &QPushButton::pressed, this, [&]() -> void {
+          Board.Reset();
+          for (Edge edge = 0; edge < Edge::Max; edge.Add()) {
+            EdgeCanvases[edge]->SetHighLight(false);
+            EdgeCanvases[edge]->SetOwner(Owner::None);
+          }
+          for (Box box = 0; box < Box::Max; box.Add()) {
+            BoxCanvases[box]->SetOwner(Owner::None);
+          }
+          update();
+          QThreadPool::globalInstance()->start([this]() -> void { Run(); });
+        });
         const QPointer closeButton = messagebox->addButton(QMessageBox::Close);
         connect(closeButton, &QPushButton::pressed, this, &MainWindow::close);
-        messagebox->show();
-
-        QTimer::singleShot(2000, this, [this]() -> void {
-          EdgeCanvases[LastEdge]->SetHighLight(false);
-          update();
-          QTimer::singleShot(2000, this, &MainWindow::close);
-        });
+        messagebox->exec();
       },
       Qt::BlockingQueuedConnection);
 }
 
 void MainWindow::Add(Edge edge) {
-  if (!BackgroundMode) {
-    if (Board.NowStep() > 0) {
-      EdgeCanvases[LastEdge]->SetHighLight(false);
-    }
-    EdgeCanvases[edge]->SetOwner(static_cast<Turn>(Board));
-    EdgeCanvases[edge]->raise();
-    for (Dot dot = 0; dot < Dot::Max; dot.Add()) {
-      DotCanvases[dot]->raise();
-    }
-
-    for (const Box box : edge.NearBoxes()) {
-      int count = 0;
-      for (const Edge nearEdge : box.NearEdges()) {
-        if (Board.Contains(nearEdge)) {
-          count++;
-        }
-      }
-      if (count == 3) {
-        BoxCanvases[box]->SetOwner(static_cast<Turn>(Board));
-      }
-    }
-    LastEdge = edge;
+  if (Board.NowStep() > 0) {
+    EdgeCanvases[LastEdge]->SetHighLight(false);
   }
+  EdgeCanvases[edge]->SetOwner(static_cast<Turn>(Board));
+  EdgeCanvases[edge]->raise();
+  for (Dot dot = 0; dot < Dot::Max; dot.Add()) {
+    DotCanvases[dot]->raise();
+  }
+
+  for (const Box box : edge.NearBoxes()) {
+    int count = 0;
+    for (const Edge nearEdge : box.NearEdges()) {
+      if (Board.Contains(nearEdge)) {
+        count++;
+      }
+    }
+    if (count == 3) {
+      BoxCanvases[box]->SetOwner(static_cast<Turn>(Board));
+    }
+  }
+  LastEdge = edge;
 
   Board.Add(edge);
-  if (!BackgroundMode) {
-    update();
-    QApplication::beep();
-  }
+  update();
+  QApplication::beep();
 }
 
 void MainWindow::SetPlayerMoveEdge(Edge edge) {

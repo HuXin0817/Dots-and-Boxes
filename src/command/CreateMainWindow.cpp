@@ -30,19 +30,18 @@ THE SOFTWARE.
 namespace dab::command {
 
 template <int64_t BoardSize>
-QWidget* CreateMainWindowImpl(
-    int64_t boardSize, int player1Type, int player2Type, bool backgroundMode, QWidget* parent) {
+QWidget* CreateMainWindowImpl(int64_t boardSize, int player1Type, int player2Type, QWidget* parent) {
   if constexpr (BoardSize > 0) {
     if (boardSize < BoardSize) {
-      return CreateMainWindowImpl<BoardSize - 1>(boardSize, player1Type, player2Type, backgroundMode, parent);
+      return CreateMainWindowImpl<BoardSize - 1>(boardSize, player1Type, player2Type, parent);
     }
-    return internal::CreateMainWindow<BoardSize>(player1Type, player2Type, backgroundMode, parent);
+    return internal::CreateMainWindow<BoardSize>(player1Type, player2Type, parent);
   }
   return nullptr;
 }
 
-QWidget* CreateMainWindow(int64_t boardSize, int player1Type, int player2Type, bool backgroundMode, QWidget* parent) {
-  return CreateMainWindowImpl<MaxBoardSize>(boardSize, player1Type, player2Type, backgroundMode, parent);
+QWidget* CreateMainWindow(int64_t boardSize, int player1Type, int player2Type, QWidget* parent) {
+  return CreateMainWindowImpl<MaxBoardSize>(boardSize, player1Type, player2Type, parent);
 }
 
 }  // namespace dab::command

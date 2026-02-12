@@ -29,9 +29,9 @@ THE SOFTWARE.
 namespace dab::internal {
 
 template <>
-QWidget* CreateMainWindow<dab::BoardSize>(int player1Type, int player2Type, bool backgroundMode, QWidget* parent) {
+QWidget* CreateMainWindow<dab::BoardSize>(int player1Type, int player2Type, QWidget* parent) {
   return new dab::MainWindow(
-      static_cast<dab::PlayerType>(player1Type), static_cast<dab::PlayerType>(player2Type), backgroundMode, parent);
+      static_cast<dab::PlayerType>(player1Type), static_cast<dab::PlayerType>(player2Type), parent);
 }
 
 }  // namespace dab::internal

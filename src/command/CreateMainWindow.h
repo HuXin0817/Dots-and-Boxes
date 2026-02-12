@@ -28,6 +28,6 @@ THE SOFTWARE.
 
 namespace dab::command {
 
-QWidget* CreateMainWindow(int64_t boardSize, int player1Type, int player2Type, bool backgroundMode, QWidget* parent);
+QWidget* CreateMainWindow(int64_t boardSize, int player1Type, int player2Type, QWidget* parent);
 
 }  // namespace dab::command
