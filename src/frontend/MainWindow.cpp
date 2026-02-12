@@ -218,11 +218,12 @@ void MainWindow::HandleGameOver() {
   }
   LogInfo(winner);
   const QPointer messagebox = new QMessageBox(this);
-  if (winner.Name == "Draw") {
-    messagebox->setText("Draw!");
+  if (winner.Name == "Player1") {
+    messagebox->setText(QString("Blue Team Win! (Score %1:%2)").arg(Board.Player1Score()).arg(Board.Player2Score()));
+  } else if (winner.Name == "Player2") {
+    messagebox->setText(QString("Red Team Win! (Score %1:%2)").arg(Board.Player1Score()).arg(Board.Player2Score()));
   } else {
-    messagebox->setText(
-        QString("%1 Win! (Score %2:%3)").arg(winner.Name).arg(Board.Player1Score()).arg(Board.Player2Score()));
+    messagebox->setText("Draw!");
   }
   messagebox->setIcon(QMessageBox::Information);
   const QPointer restartButton = messagebox->addButton(QMessageBox::Reset);
