@@ -28,41 +28,48 @@ THE SOFTWARE.
 
 #include "Array.h"
 
-namespace dab::__detail__::common {
+namespace dab::__detail__::model {
 
 template <typename T, Int Cap>
-class List : public Iterable<List<T, Cap>> {
+class Queue : public Iterable<Queue<T, Cap>> {
  public:
-  constexpr List() = default;
-  constexpr List(const List& other) = default;
-  constexpr List(List&& other) = default;
-  constexpr List& operator=(const List& other) = default;
-  constexpr List& operator=(List&& other) = default;
+  constexpr Queue() = default;
+  constexpr Queue(const Queue& other) = default;
+  constexpr Queue(Queue&& other) = default;
+  constexpr Queue& operator=(const Queue& other) = default;
+  constexpr Queue& operator=(Queue&& other) = default;
 
-  constexpr void ClearAndSet(T item);
-  constexpr void Clear() { Length = 0; }
+  constexpr void Clear();
   constexpr void Append(T item);
-  constexpr Int Size() const { return Length; }
-  constexpr T* begin() { return Data.begin(); }
-  constexpr const T* begin() const { return Data.begin(); }
-  constexpr T* end() { return Data.begin() + Length; }
-  constexpr const T* end() const { return Data.begin() + Length; }
+  constexpr T Pop();
+  constexpr Int Size() const { return EndIndex - BeginIndex; }
+  constexpr T* begin() { return Data.begin() + BeginIndex; }
+  constexpr const T* begin() const { return Data.begin() + BeginIndex; }
+  constexpr T* end() { return Data.begin() + EndIndex; }
+  constexpr const T* end() const { return Data.begin() + EndIndex; }
 
  private:
   Array<T, Cap> Data;
-  Int Length = 0;
+  Int BeginIndex = 0;
+  Int EndIndex = 0;
 };
 
 template <typename T, Int Cap>
-constexpr void List<T, Cap>::ClearAndSet(T item) {
-  Data.At(0) = item;
-  Length = 1;
+constexpr void Queue<T, Cap>::Clear() {
+  BeginIndex = 0;
+  EndIndex = 0;
 }
 
 template <typename T, Int Cap>
-constexpr void List<T, Cap>::Append(T item) {
-  assert(Length < Cap);
-  Data.At(Length++) = item;
+constexpr void Queue<T, Cap>::Append(T item) {
+  assert(EndIndex < Cap);
+  Data.At(EndIndex++) = item;
 }
 
-}  // namespace dab::__detail__::common
+template <typename T, Int Cap>
+constexpr T Queue<T, Cap>::Pop() {
+  assert(Size() > 0);
+  return Data.At(BeginIndex++);
+}
+
+}  // namespace dab::__detail__::model

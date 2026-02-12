@@ -24,27 +24,29 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <cstdint>
-#include <limits>
+#include "Iterable.h"
 
-namespace dab::__detail__::common {
+namespace dab::__detail__::model {
 
-constexpr auto SelectIntType() {
-  constexpr int64_t MaxValue = 2 * __BoardSize__ * (__BoardSize__ + 1);
+template <typename T>
+class Span : public Iterable<Span<T>> {
+ public:
+  constexpr Span() = default;
+  constexpr Span(const Span& other) = default;
+  constexpr Span(Span&& other) = default;
+  constexpr Span& operator=(const Span& other) = default;
+  constexpr Span& operator=(Span&& other) = default;
+  constexpr Span(T* begin, T* end) : BeginPtr(begin), EndPtr(end) {}
 
-  if constexpr (MaxValue <= std::numeric_limits<int8_t>::max()) {
-    return static_cast<int8_t>(0);
-  } else if constexpr (MaxValue <= std::numeric_limits<int16_t>::max()) {
-    return static_cast<int16_t>(0);
-  } else if constexpr (MaxValue <= std::numeric_limits<int32_t>::max()) {
-    return static_cast<int32_t>(0);
-  } else {
-    return static_cast<int64_t>(0);
-  }
-}
+  constexpr Int Size() const { return EndPtr - BeginPtr; }
+  constexpr T* begin() { return BeginPtr; }
+  constexpr const T* begin() const { return BeginPtr; }
+  constexpr T* end() { return EndPtr; }
+  constexpr const T* end() const { return EndPtr; }
 
-using Int = decltype(SelectIntType());
+ private:
+  T* BeginPtr = nullptr;
+  T* EndPtr = nullptr;
+};
 
-static constexpr Int BoardSize = __BoardSize__;
-
-}  // namespace dab::__detail__::common
+}  // namespace dab::__detail__::model

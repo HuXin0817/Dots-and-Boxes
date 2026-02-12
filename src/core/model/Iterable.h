@@ -28,7 +28,7 @@ THE SOFTWARE.
 
 #include "Int.h"
 
-namespace dab::__detail__::common {
+namespace dab::__detail__::model {
 
 template <typename Derived>
 class Iterable {
@@ -68,4 +68,4 @@ constexpr const auto& Iterable<Derived>::At(Int i) const {
   return begin()[i];
 }
 
-}  // namespace dab::__detail__::common
+}  // namespace dab::__detail__::model

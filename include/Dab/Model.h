@@ -24,29 +24,28 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "Iterable.h"
+#include "../../src/core/model/Array.h"
+#include "../../src/core/model/Int.h"
+#include "../../src/core/model/List.h"
+#include "../../src/core/model/Models.h"
+#include "../../src/core/model/Queue.h"
+#include "../../src/core/model/Random.h"
+#include "../../src/core/model/ScoreMap.h"
+#include "../../src/core/model/Span.h"
 
-namespace dab::__detail__::common {
+namespace dab {
 
-template <typename T>
-class Span : public Iterable<Span<T>> {
- public:
-  constexpr Span() = default;
-  constexpr Span(const Span& other) = default;
-  constexpr Span(Span&& other) = default;
-  constexpr Span& operator=(const Span& other) = default;
-  constexpr Span& operator=(Span&& other) = default;
-  constexpr Span(T* begin, T* end) : BeginPtr(begin), EndPtr(end) {}
+using __detail__::model::Array;
+using __detail__::model::BoardSize;
+using __detail__::model::Box;
+using __detail__::model::Dot;
+using __detail__::model::Edge;
+using __detail__::model::Int;
+using __detail__::model::List;
+using __detail__::model::Queue;
+using __detail__::model::Random;
+using __detail__::model::ScoreMap;
+using __detail__::model::Span;
+using __detail__::model::Turn;
 
-  constexpr Int Size() const { return EndPtr - BeginPtr; }
-  constexpr T* begin() { return BeginPtr; }
-  constexpr const T* begin() const { return BeginPtr; }
-  constexpr T* end() { return EndPtr; }
-  constexpr const T* end() const { return EndPtr; }
-
- private:
-  T* BeginPtr = nullptr;
-  T* EndPtr = nullptr;
-};
-
-}  // namespace dab::__detail__::common
+}  // namespace dab

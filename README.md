@@ -109,7 +109,7 @@ Dots-and-Boxes/
 │       │   └── Frontend.h
 │       ├── Board.h
 │       ├── Command.h
-│       ├── Common.h
+│       ├── Model.h
 │       └── Robot.h
 ├── src/                # Source files
 │   ├── cmd/            # Command-related files
@@ -129,7 +129,7 @@ Dots-and-Boxes/
 │   │   │   ├── RelativeScoreBoard.h
 │   │   │   ├── ScoreableEdgeBoard.cpp
 │   │   │   └── ScoreableEdgeBoard.h
-│   │   ├── common/     # Utility classes
+│   │   ├── model/      # Utility classes
 │   │   │   ├── Array.h
 │   │   │   ├── CMakeLists.txt
 │   │   │   ├── Int.h

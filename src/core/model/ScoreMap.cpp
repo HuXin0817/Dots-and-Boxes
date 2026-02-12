@@ -22,26 +22,46 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#pragma once
+#include "ScoreMap.h"
+
+#include <algorithm>
 
 #include "Models.h"
-#include "Span.h"
 
-namespace dab::__detail__::common {
+namespace dab::__detail__::model {
 
-class ScoreMap {
- public:
-  ScoreMap() = default;
+void ScoreMap::Reset() {
+  std::fill(Time.begin(), Time.end(), 0);
+  std::fill(Score.begin(), Score.end(), 0);
+  BestEdges.Clear();
+}
 
-  void Reset();
-  void Add(Edge edge, Int score);
-  void Add(const ScoreMap& other);
-  Span<const Edge> Export();
+void ScoreMap::Add(Edge edge, Int score) {
+  ++Time.At(edge);
+  Score.At(edge) += score;
+}
 
- private:
-  Array<int, Edge::Max> Time;
-  Array<int, Edge::Max> Score;
-  List<Edge, Edge::Max> BestEdges;
-};
+void ScoreMap::Add(const ScoreMap& other) {
+  for (Int i = 0; i < Edge::Max; ++i) {
+    Time.At(i) += other.Time.At(i);
+    Score.At(i) += other.Score.At(i);
+  }
+}
 
-}  // namespace dab::__detail__::common
+Span<const Edge> ScoreMap::Export() {
+  float maxScore = 0.0;
+  for (Edge edge = 0; edge < Edge::Max; edge.Add()) {
+    if (Time.At(edge) > 0) {
+      if (const float score = static_cast<float>(Score.At(edge)) / static_cast<float>(Time.At(edge));
+          score > maxScore || BestEdges.Empty()) {
+        maxScore = score;
+        BestEdges.ClearAndSet(edge);
+      } else if (score == maxScore) {
+        BestEdges.Append(edge);
+      }
+    }
+  }
+  return {BestEdges.begin(), BestEdges.end()};
+}
+
+}  // namespace dab::__detail__::model

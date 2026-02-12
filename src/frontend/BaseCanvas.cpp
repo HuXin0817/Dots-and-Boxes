@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 #include "BaseCanvas.h"
 
-#include <Dab/Common.h>
+#include <Dab/Model.h>
 
 #include <QApplication>
 #include <QPainter>

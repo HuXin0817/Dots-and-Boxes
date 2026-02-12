@@ -24,27 +24,27 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "Iterable.h"
+#include <cstdint>
+#include <limits>
 
-namespace dab::__detail__::common {
+namespace dab::__detail__::model {
 
-template <typename T, Int Length>
-class Array : public Iterable<Array<T, Length>> {
- public:
-  constexpr Array() = default;
-  constexpr Array(const Array& other) = default;
-  constexpr Array(Array&& other) = default;
-  constexpr Array& operator=(const Array& other) = default;
-  constexpr Array& operator=(Array&& other) = default;
+constexpr auto SelectIntType() {
+  constexpr int64_t MaxValue = 2 * __BoardSize__ * (__BoardSize__ + 1);
 
-  constexpr Int Size() const { return Length; }
-  constexpr T* begin() { return Data; }
-  constexpr const T* begin() const { return Data; }
-  constexpr T* end() { return Data + Length; }
-  constexpr const T* end() const { return Data + Length; }
+  if constexpr (MaxValue <= std::numeric_limits<int8_t>::max()) {
+    return static_cast<int8_t>(0);
+  } else if constexpr (MaxValue <= std::numeric_limits<int16_t>::max()) {
+    return static_cast<int16_t>(0);
+  } else if constexpr (MaxValue <= std::numeric_limits<int32_t>::max()) {
+    return static_cast<int32_t>(0);
+  } else {
+    return static_cast<int64_t>(0);
+  }
+}
 
- private:
-  T Data[Length];
-};
+using Int = decltype(SelectIntType());
 
-}  // namespace dab::__detail__::common
+static constexpr Int BoardSize = __BoardSize__;
+
+}  // namespace dab::__detail__::model

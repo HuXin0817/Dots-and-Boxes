@@ -24,28 +24,27 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "../../src/core/common/Array.h"
-#include "../../src/core/common/Int.h"
-#include "../../src/core/common/List.h"
-#include "../../src/core/common/Models.h"
-#include "../../src/core/common/Queue.h"
-#include "../../src/core/common/Random.h"
-#include "../../src/core/common/ScoreMap.h"
-#include "../../src/core/common/Span.h"
+#include "Iterable.h"
 
-namespace dab {
+namespace dab::__detail__::model {
 
-using __detail__::common::Array;
-using __detail__::common::BoardSize;
-using __detail__::common::Box;
-using __detail__::common::Dot;
-using __detail__::common::Edge;
-using __detail__::common::Int;
-using __detail__::common::List;
-using __detail__::common::Queue;
-using __detail__::common::Random;
-using __detail__::common::ScoreMap;
-using __detail__::common::Span;
-using __detail__::common::Turn;
+template <typename T, Int Length>
+class Array : public Iterable<Array<T, Length>> {
+ public:
+  constexpr Array() = default;
+  constexpr Array(const Array& other) = default;
+  constexpr Array(Array&& other) = default;
+  constexpr Array& operator=(const Array& other) = default;
+  constexpr Array& operator=(Array&& other) = default;
 
-}  // namespace dab
+  constexpr Int Size() const { return Length; }
+  constexpr T* begin() { return Data; }
+  constexpr const T* begin() const { return Data; }
+  constexpr T* end() { return Data + Length; }
+  constexpr const T* end() const { return Data + Length; }
+
+ private:
+  T Data[Length];
+};
+
+}  // namespace dab::__detail__::model

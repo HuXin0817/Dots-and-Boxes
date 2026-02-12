@@ -30,7 +30,7 @@ THE SOFTWARE.
 
 #include "Int.h"
 
-namespace dab::__detail__::common {
+namespace dab::__detail__::model {
 
 class Random {
  public:
@@ -63,4 +63,4 @@ const auto& Random::Choice(const T& data) {
   return data.At(Range(0, data.Size() - 1));
 }
 
-}  // namespace dab::__detail__::common
+}  // namespace dab::__detail__::model
