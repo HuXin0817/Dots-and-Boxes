@@ -24,9 +24,11 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <Dab/Common.h>
+#include "Array.h"
+#include "Int.h"
+#include "List.h"
 
-namespace dab::__detail__::model {
+namespace dab::__detail__::common {
 
 class IntWapper {
  public:
@@ -113,4 +115,4 @@ class Turn : public IntWapper {
   static constexpr Int Player2Turn = -Player1Turn;
 };
 
-}  // namespace dab::__detail__::model
+}  // namespace dab::__detail__::common

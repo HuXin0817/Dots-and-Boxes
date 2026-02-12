@@ -25,6 +25,7 @@ THE SOFTWARE.
 #pragma once
 
 #include "../../src/cmd/Command.h"
+#include "../../src/cmd/Config.h"
 
 namespace dab {
 

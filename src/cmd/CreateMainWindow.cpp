@@ -22,41 +22,27 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#pragma once
+#include "CreateMainWindow.h"
 
-#include <Dab/Common.h>
+#include "../extern/extern.h"
+#include "Config.h"
 
-#include <QApplication>
-#include <QWidget>
+namespace dab::command {
 
-namespace dab::__detail__::frontend {
+template <int64_t BoardSize>
+QWidget* CreateMainWindowImpl(
+    int64_t boardSize, int player1Type, int player2Type, bool backgroundMode, QWidget* parent) {
+  if constexpr (BoardSize > 0) {
+    if (boardSize < BoardSize) {
+      return CreateMainWindowImpl<BoardSize - 1>(boardSize, player1Type, player2Type, backgroundMode, parent);
+    }
+    return frontend::CreateMainWindow<BoardSize>(player1Type, player2Type, backgroundMode, parent);
+  }
+  return nullptr;
+}
 
-enum class Owner {
-  None,
-  Player1,
-  Player2,
-};
+QWidget* CreateMainWindow(int64_t boardSize, int player1Type, int player2Type, bool backgroundMode, QWidget* parent) {
+  return CreateMainWindowImpl<MaxBoardSize>(boardSize, player1Type, player2Type, backgroundMode, parent);
+}
 
-class BaseCanvas : public QWidget {
-  Q_OBJECT
-
- public:
-  static constexpr int UnitSize = 6 + 16 / BoardSize;
-
-  using QWidget::QWidget;
-
-  static QColor ThemeColor(const QColor& DarkThemeColor, const QColor& LightThemeColor);
-  bool Hovered() const { return HoverState; }
-  Owner GetOwner() const { return Owner; }
-  void SetOwner(Turn turn);
-
- protected:
-  void enterEvent(QEnterEvent* event) override;
-  void leaveEvent(QEvent* event) override;
-
- private:
-  Owner Owner = Owner::None;
-  bool HoverState = false;
-};
-
-}  // namespace dab::__detail__::frontend
+}  // namespace dab::command

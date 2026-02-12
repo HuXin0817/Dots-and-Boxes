@@ -24,15 +24,10 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "../../src/core/model/Models.h"
-#include "../../src/core/model/SearchScoreMap.h"
+#include <QWidget>
 
-namespace dab {
+namespace dab::command {
 
-using __detail__::model::Box;
-using __detail__::model::Dot;
-using __detail__::model::Edge;
-using __detail__::model::SearchScoreMap;
-using __detail__::model::Turn;
+QWidget* CreateMainWindow(int64_t boardSize, int player1Type, int player2Type, bool backgroundMode, QWidget* parent);
 
-}  // namespace dab
+}  // namespace dab::command

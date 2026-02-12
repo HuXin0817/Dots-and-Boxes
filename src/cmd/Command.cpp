@@ -32,27 +32,10 @@ THE SOFTWARE.
 #include <QLibrary>
 #include <QWidget>
 
-#include "../extern/extern.h"
+#include "Config.h"
+#include "CreateMainWindow.h"
 
 namespace dab::command {
-
-static constexpr int64_t MaxBoardSize = __MaxBoardSize__;
-
-template <int64_t BoardSize>
-QWidget* CreateMainWindowImpl(
-    int64_t boardSize, int player1Type, int player2Type, bool backgroundMode, QWidget* parent) {
-  if constexpr (BoardSize > 0) {
-    if (boardSize < BoardSize) {
-      return CreateMainWindowImpl<BoardSize - 1>(boardSize, player1Type, player2Type, backgroundMode, parent);
-    }
-    return frontend::CreateMainWindow<BoardSize>(player1Type, player2Type, backgroundMode, parent);
-  }
-  return nullptr;
-}
-
-QWidget* CreateMainWindow(int64_t boardSize, int player1Type, int player2Type, bool backgroundMode, QWidget* parent) {
-  return CreateMainWindowImpl<MaxBoardSize>(boardSize, player1Type, player2Type, backgroundMode, parent);
-}
 
 int ParsePlayerType(const QString& arg) {
   if (arg.compare("robot", Qt::CaseInsensitive) == 0) {

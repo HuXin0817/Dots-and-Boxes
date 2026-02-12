@@ -27,18 +27,25 @@ THE SOFTWARE.
 #include "../../src/core/common/Array.h"
 #include "../../src/core/common/Int.h"
 #include "../../src/core/common/List.h"
+#include "../../src/core/common/Models.h"
 #include "../../src/core/common/Queue.h"
 #include "../../src/core/common/Random.h"
+#include "../../src/core/common/ScoreMap.h"
 #include "../../src/core/common/Span.h"
 
 namespace dab {
 
 using __detail__::common::Array;
 using __detail__::common::BoardSize;
+using __detail__::common::Box;
+using __detail__::common::Dot;
+using __detail__::common::Edge;
 using __detail__::common::Int;
 using __detail__::common::List;
 using __detail__::common::Queue;
 using __detail__::common::Random;
+using __detail__::common::ScoreMap;
 using __detail__::common::Span;
+using __detail__::common::Turn;
 
 }  // namespace dab

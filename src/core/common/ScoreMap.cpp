@@ -22,35 +22,33 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "SearchScoreMap.h"
-
-#include <Dab/Common.h>
+#include "ScoreMap.h"
 
 #include <algorithm>
 
 #include "Models.h"
 
-namespace dab::__detail__::model {
+namespace dab::__detail__::common {
 
-void SearchScoreMap::Reset() {
+void ScoreMap::Reset() {
   std::fill(Time.begin(), Time.end(), 0);
   std::fill(Score.begin(), Score.end(), 0);
   BestEdges.Clear();
 }
 
-void SearchScoreMap::Add(Edge edge, Int score) {
+void ScoreMap::Add(Edge edge, Int score) {
   ++Time.At(edge);
   Score.At(edge) += score;
 }
 
-void SearchScoreMap::Add(const SearchScoreMap& other) {
+void ScoreMap::Add(const ScoreMap& other) {
   for (Int i = 0; i < Edge::Max; ++i) {
     Time.At(i) += other.Time.At(i);
     Score.At(i) += other.Score.At(i);
   }
 }
 
-Span<const Edge> SearchScoreMap::Export() {
+Span<const Edge> ScoreMap::Export() {
   float maxScore = 0.0;
   for (Edge edge = 0; edge < Edge::Max; edge.Add()) {
     if (Time.At(edge) > 0) {
@@ -66,4 +64,4 @@ Span<const Edge> SearchScoreMap::Export() {
   return {BestEdges.begin(), BestEdges.end()};
 }
 
-}  // namespace dab::__detail__::model
+}  // namespace dab::__detail__::common

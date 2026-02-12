@@ -24,39 +24,19 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <Dab/Common.h>
+#include <cstdint>
 
-#include <QApplication>
-#include <QWidget>
+namespace dab::command {
 
-namespace dab::__detail__::frontend {
-
-enum class Owner {
-  None,
-  Player1,
-  Player2,
+static constexpr int64_t MaxBoardSize = __MaxBoardSize__;
+static constexpr int DefaultPlayerType = 5;
+static constexpr const char* PlayerTypeOptionStrings[] = {
+    "human",
+    "robot:easy",
+    "robot:medium",
+    "robot:hard",
+    "robot:expert",
+    "robot:master",
 };
 
-class BaseCanvas : public QWidget {
-  Q_OBJECT
-
- public:
-  static constexpr int UnitSize = 6 + 16 / BoardSize;
-
-  using QWidget::QWidget;
-
-  static QColor ThemeColor(const QColor& DarkThemeColor, const QColor& LightThemeColor);
-  bool Hovered() const { return HoverState; }
-  Owner GetOwner() const { return Owner; }
-  void SetOwner(Turn turn);
-
- protected:
-  void enterEvent(QEnterEvent* event) override;
-  void leaveEvent(QEvent* event) override;
-
- private:
-  Owner Owner = Owner::None;
-  bool HoverState = false;
-};
-
-}  // namespace dab::__detail__::frontend
+}  // namespace dab::command

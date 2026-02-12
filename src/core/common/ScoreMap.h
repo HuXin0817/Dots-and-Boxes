@@ -24,19 +24,18 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <Dab/Common.h>
-
 #include "Models.h"
+#include "Span.h"
 
-namespace dab::__detail__::model {
+namespace dab::__detail__::common {
 
-class SearchScoreMap {
+class ScoreMap {
  public:
-  SearchScoreMap() = default;
+  ScoreMap() = default;
 
   void Reset();
   void Add(Edge edge, Int score);
-  void Add(const SearchScoreMap& other);
+  void Add(const ScoreMap& other);
   Span<const Edge> Export();
 
  private:
@@ -45,4 +44,4 @@ class SearchScoreMap {
   List<Edge, Edge::Max> BestEdges;
 };
 
-}  // namespace dab::__detail__::model
+}  // namespace dab::__detail__::common

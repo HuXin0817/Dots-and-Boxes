@@ -103,54 +103,82 @@ Dots-and-Boxes/
 ├── .github/            # GitHub workflows
 │   └── workflows/
 │       └── macos-build.yml
-├── frontend/           # GUI-related files
-│   ├── BoxCanvas.h   # Canvas for drawing boxes
-│   ├── CommandParser.h # Command line argument parser
-│   ├── Common.h      # Common frontend utilities
-│   ├── DotCanvas.h   # Canvas for drawing dots
-│   ├── EdgeCanvas.h  # Canvas for drawing edges
-│   ├── MainWindow.h  # Main window implementation
-│   └── MainWindowCreator.h # Main window creator
 ├── include/            # Header files
-│   ├── Board.h
-│   ├── Common.h
-│   ├── Frontend.h
-│   ├── Model.h
-│   └── Robot.h
-├── src/                # Core game logic
-│   ├── board/          # Board implementations
-│   │   ├── BasicBoard.h
-│   │   ├── EdgeCountableBoard.h
-│   │   ├── RelativeScoreBoard.h
-│   │   └── ScoreableEdgeBoard.h
-│   ├── common/         # Utility classes
-│   │   ├── Array.h
-│   │   ├── Iterable.h
-│   │   ├── List.h
-│   │   ├── Queue.h
-│   │   ├── Random.h
-│   │   └── Span.h
-│   ├── model/          # Game model
-│   │   ├── Edge.h
-│   │   ├── EdgeCounter.h
-│   │   ├── GameScoreMap.h
-│   │   ├── Iota.h
-│   │   ├── NearBoxes.h
-│   │   ├── NearEdges.h
-│   │   ├── SearchScoreMap.h
-│   │   ├── Square.h
-│   │   ├── Step.h
-│   │   ├── Turn.h
-│   │   └── Types.h
-│   └── robot/          # AI implementations
-│       ├── GreedyRobot.h
-│       ├── ImproveGreedyRobot.h
-│       ├── MonteCarloRobot.h
-│       ├── ParallelSearchRobot.h
-│       ├── PlayerType.h
-│       ├── Robot.h
-│       └── SimulationRobot.h
-├── main.cpp            # Entry point
+│   └── Dab/
+│       ├── Frontend/
+│       │   └── Frontend.h
+│       ├── Board.h
+│       ├── Command.h
+│       ├── Common.h
+│       └── Robot.h
+├── src/                # Source files
+│   ├── cmd/            # Command-related files
+│   │   ├── CMakeLists.txt
+│   │   ├── Command.cpp
+│   │   └── Command.h
+│   ├── core/           # Core game logic
+│   │   ├── board/      # Board implementations
+│   │   │   ├── AbsoluteScoreBoard.cpp
+│   │   │   ├── AbsoluteScoreBoard.h
+│   │   │   ├── BasicBoard.cpp
+│   │   │   ├── BasicBoard.h
+│   │   │   ├── CMakeLists.txt
+│   │   │   ├── EdgeCountableBoard.cpp
+│   │   │   ├── EdgeCountableBoard.h
+│   │   │   ├── RelativeScoreBoard.cpp
+│   │   │   ├── RelativeScoreBoard.h
+│   │   │   ├── ScoreableEdgeBoard.cpp
+│   │   │   └── ScoreableEdgeBoard.h
+│   │   ├── common/     # Utility classes
+│   │   │   ├── Array.h
+│   │   │   ├── CMakeLists.txt
+│   │   │   ├── Int.h
+│   │   │   ├── Iterable.h
+│   │   │   ├── List.h
+│   │   │   ├── Models.cpp
+│   │   │   ├── Models.h
+│   │   │   ├── Queue.h
+│   │   │   ├── Random.h
+│   │   │   ├── ScoreMap.cpp
+│   │   │   ├── ScoreMap.h
+│   │   │   └── Span.h
+│   │   ├── robot/      # AI implementations
+│   │   │   ├── CMakeLists.txt
+│   │   │   ├── GreedyRobot.cpp
+│   │   │   ├── GreedyRobot.h
+│   │   │   ├── ImproveGreedyRobot.cpp
+│   │   │   ├── ImproveGreedyRobot.h
+│   │   │   ├── MonteCarloRobot.cpp
+│   │   │   ├── MonteCarloRobot.h
+│   │   │   ├── ParallelSearchRobot.cpp
+│   │   │   ├── ParallelSearchRobot.h
+│   │   │   ├── Robot.cpp
+│   │   │   ├── Robot.h
+│   │   │   ├── SimulationRobot.cpp
+│   │   │   └── SimulationRobot.h
+│   │   └── CMakeLists.txt
+│   ├── extern/         # External dependencies
+│   │   ├── CMakeLists.txt
+│   │   ├── extern.cpp
+│   │   └── extern.h
+│   ├── frontend/       # GUI-related files
+│   │   ├── BaseCanvas.cpp
+│   │   ├── BaseCanvas.h
+│   │   ├── BoxCanvas.cpp
+│   │   ├── BoxCanvas.h
+│   │   ├── CMakeLists.txt
+│   │   ├── DotCanvas.cpp
+│   │   ├── DotCanvas.h
+│   │   ├── EdgeCanvas.cpp
+│   │   ├── EdgeCanvas.h
+│   │   ├── MainWindow.cpp
+│   │   ├── MainWindow.h
+│   │   ├── Models.cpp
+│   │   └── Models.h
+│   ├── CMakeLists.txt
+│   └── main.cpp        # Entry point
+├── .clang-format       # Code formatting configuration
+├── .gitignore          # Git ignore file
 ├── CMakeLists.txt      # Build configuration
 ├── LICENSE             # License file
 ├── README.md           # This file

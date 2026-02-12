@@ -26,16 +26,6 @@ THE SOFTWARE.
 
 namespace dab::command {
 
-static constexpr int DefaultPlayerType = 5;
-static constexpr const char* PlayerTypeOptionStrings[] = {
-    "human",
-    "robot:easy",
-    "robot:medium",
-    "robot:hard",
-    "robot:expert",
-    "robot:master",
-};
-
 int Process(int argc, char* argv[]);
 
 }  // namespace dab::command

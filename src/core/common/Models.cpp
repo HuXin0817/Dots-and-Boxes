@@ -24,9 +24,9 @@ THE SOFTWARE.
 
 #include "Models.h"
 
-#include <Dab/Common.h>
+#include "Int.h"
 
-namespace dab::__detail__::model {
+namespace dab::__detail__::common {
 
 class NearEdgesMapper {
  public:
@@ -99,4 +99,4 @@ const List<Box, 2>& Edge::NearBoxes() const {
   return Instance.EdgeNearBoxes.At(v);
 }
 
-}  // namespace dab::__detail__::model
+}  // namespace dab::__detail__::common

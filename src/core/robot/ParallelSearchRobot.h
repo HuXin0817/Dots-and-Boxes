@@ -35,7 +35,7 @@ class ParallelSearchRobot : public Robot {
 
  private:
   Array<MonteCarloRobot, 32> SubRobots;
-  SearchScoreMap SearchResult;
+  ScoreMap SearchResult;
 };
 
 }  // namespace dab::__detail__::robot

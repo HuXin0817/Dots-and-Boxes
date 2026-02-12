@@ -35,12 +35,12 @@ class MonteCarloRobot : public Robot {
   MonteCarloRobot() = default;
   Span<const Edge> BestCandidateEdges(const RelativeScoreBoard& board) override;
   bool CanEarlyExit(const RelativeScoreBoard& board, Span<const Edge>& result);
-  const SearchScoreMap& GetSearchResult() const { return SearchResult; }
+  const ScoreMap& GetSearchResult() const { return SearchResult; }
 
  private:
   SimulationRobot SubRobot;
   RelativeScoreBoard SimulationBoard;
-  SearchScoreMap SearchResult;
+  ScoreMap SearchResult;
 };
 
 }  // namespace dab::__detail__::robot

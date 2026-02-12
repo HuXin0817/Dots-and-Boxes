@@ -9,6 +9,6 @@ set(RobotSources
 )
 add_library(${RobotLibraryName} STATIC ${RobotSources})
 target_compile_definitions(${RobotLibraryName} PRIVATE __BoardSize__=${BoardSize} __detail__=__detail${BoardSize}x${BoardSize}__)
-target_link_libraries(${RobotLibraryName} PRIVATE TBB::tbb ${ModelLibraryName} ${BoardLibraryName})
+target_link_libraries(${RobotLibraryName} PRIVATE TBB::tbb ${CommonLibraryName} ${BoardLibraryName})
 
 set(RobotLibraryName ${RobotLibraryName} PARENT_SCOPE)
