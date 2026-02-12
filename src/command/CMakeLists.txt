@@ -1,4 +1,4 @@
-set(CommandLibraryName "cmd")
+set(CommandLibraryName "command")
 set(CommandSources 
     Command.cpp
     CreateMainWindow.cpp

@@ -36,7 +36,7 @@ QWidget* CreateMainWindowImpl(
     if (boardSize < BoardSize) {
       return CreateMainWindowImpl<BoardSize - 1>(boardSize, player1Type, player2Type, backgroundMode, parent);
     }
-    return frontend::CreateMainWindow<BoardSize>(player1Type, player2Type, backgroundMode, parent);
+    return internal::CreateMainWindow<BoardSize>(player1Type, player2Type, backgroundMode, parent);
   }
   return nullptr;
 }
