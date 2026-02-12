@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "../../../src/frontend/MainWindow.h"
+#include "../../src/frontend/MainWindow.h"
 
 namespace dab {
 

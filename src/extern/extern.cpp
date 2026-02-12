@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 #include "extern.h"
 
-#include <Dab/Frontend/Frontend.h>
+#include <Dab/Frontend.h>
 
 namespace dab::internal {
 

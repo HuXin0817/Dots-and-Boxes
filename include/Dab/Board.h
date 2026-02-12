@@ -24,11 +24,11 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "../../src/core/board/AbsoluteScoreBoard.h"
-#include "../../src/core/board/BasicBoard.h"
-#include "../../src/core/board/EdgeCountableBoard.h"
-#include "../../src/core/board/RelativeScoreBoard.h"
-#include "../../src/core/board/ScoreableEdgeBoard.h"
+#include "../../src/board/AbsoluteScoreBoard.h"
+#include "../../src/board/BasicBoard.h"
+#include "../../src/board/EdgeCountableBoard.h"
+#include "../../src/board/RelativeScoreBoard.h"
+#include "../../src/board/ScoreableEdgeBoard.h"
 
 namespace dab {
 

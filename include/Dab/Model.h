@@ -24,14 +24,14 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "../../src/core/model/Array.h"
-#include "../../src/core/model/Int.h"
-#include "../../src/core/model/List.h"
-#include "../../src/core/model/Models.h"
-#include "../../src/core/model/Queue.h"
-#include "../../src/core/model/Random.h"
-#include "../../src/core/model/ScoreMap.h"
-#include "../../src/core/model/Span.h"
+#include "../../src/model/Array.h"
+#include "../../src/model/Int.h"
+#include "../../src/model/List.h"
+#include "../../src/model/Models.h"
+#include "../../src/model/Queue.h"
+#include "../../src/model/Random.h"
+#include "../../src/model/ScoreMap.h"
+#include "../../src/model/Span.h"
 
 namespace dab {
 

@@ -1,6 +1,0 @@
-add_subdirectory(model)
-add_subdirectory(board)
-add_subdirectory(robot)
-set(ModelLibraryName ${ModelLibraryName} PARENT_SCOPE)
-set(BoardLibraryName ${BoardLibraryName} PARENT_SCOPE)
-set(RobotLibraryName ${RobotLibraryName} PARENT_SCOPE)
