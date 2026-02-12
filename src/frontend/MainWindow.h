@@ -63,9 +63,12 @@ class MainWindow : public BaseCanvas {
   std::once_flag FirstRun;
 
   QColor Color() const;
-  void Run();
-  void Add(Edge edge);
   void SetPlayerMoveEdge(Edge edge);
+
+ public Q_SLOTS:
+  void Run();
+  void Add();
+  void Restart();
 };
 
 }  // namespace dab::__detail__::frontend

@@ -124,6 +124,20 @@ QColor MainWindow::Color() const {
   return ThemeColor(DarkThemeColor, LightThemeColor);
 }
 
+void MainWindow::SetPlayerMoveEdge(Edge edge) {
+  if (Board.Contains(edge)) {
+    return;
+  }
+  if (PlayerTypeIsRobot(Player1Type) && Board.IsPlayer1Turn()) {
+    return;
+  }
+  if (PlayerTypeIsRobot(Player2Type) && Board.IsPlayer2Turn()) {
+    return;
+  }
+  Edge expected = Edge::Invalid;
+  PlayerMoveEdge.compare_exchange_strong(expected, edge);
+}
+
 void MainWindow::Run() {
   LogInfo(Config{.Player1Type = Player1Type, .Player2Type = Player2Type});
 
@@ -144,7 +158,7 @@ void MainWindow::Run() {
     }
 
     assert(Board.NotContains(PlayerMoveEdge.load()));
-    QMetaObject::invokeMethod(this, [this]() -> void { Add(PlayerMoveEdge.load()); }, Qt::BlockingQueuedConnection);
+    QMetaObject::invokeMethod(this, &MainWindow::Add, Qt::BlockingQueuedConnection);
     assert(Board.Contains(PlayerMoveEdge.load()));
 
     LogInfo(MoveRecord{
@@ -180,18 +194,7 @@ void MainWindow::Run() {
         messagebox->setIcon(QMessageBox::Information);
         const QPointer restartButton = messagebox->addButton(QMessageBox::Reset);
         restartButton->setText("Restart");
-        connect(restartButton, &QPushButton::pressed, this, [&]() -> void {
-          Board.Reset();
-          for (Edge edge = 0; edge < Edge::Max; edge.Add()) {
-            EdgeCanvases[edge]->SetHighLight(false);
-            EdgeCanvases[edge]->SetOwner(Owner::None);
-          }
-          for (Box box = 0; box < Box::Max; box.Add()) {
-            BoxCanvases[box]->SetOwner(Owner::None);
-          }
-          update();
-          QThreadPool::globalInstance()->start([this]() -> void { Run(); });
-        });
+        connect(restartButton, &QPushButton::pressed, this, &MainWindow::Restart);
         const QPointer closeButton = messagebox->addButton(QMessageBox::Close);
         connect(closeButton, &QPushButton::pressed, this, &MainWindow::close);
         messagebox->exec();
@@ -199,7 +202,8 @@ void MainWindow::Run() {
       Qt::BlockingQueuedConnection);
 }
 
-void MainWindow::Add(Edge edge) {
+void MainWindow::Add() {
+  Edge edge = PlayerMoveEdge.load();
   if (Board.NowStep() > 0) {
     EdgeCanvases[LastEdge]->SetHighLight(false);
   }
@@ -227,18 +231,17 @@ void MainWindow::Add(Edge edge) {
   QApplication::beep();
 }
 
-void MainWindow::SetPlayerMoveEdge(Edge edge) {
-  if (Board.Contains(edge)) {
-    return;
+void MainWindow::Restart() {
+  Board.Reset();
+  for (Edge edge = 0; edge < Edge::Max; edge.Add()) {
+    EdgeCanvases[edge]->SetHighLight(false);
+    EdgeCanvases[edge]->SetOwner(Owner::None);
   }
-  if (PlayerTypeIsRobot(Player1Type) && Board.IsPlayer1Turn()) {
-    return;
+  for (Box box = 0; box < Box::Max; box.Add()) {
+    BoxCanvases[box]->SetOwner(Owner::None);
   }
-  if (PlayerTypeIsRobot(Player2Type) && Board.IsPlayer2Turn()) {
-    return;
-  }
-  Edge expected = Edge::Invalid;
-  PlayerMoveEdge.compare_exchange_strong(expected, edge);
+  update();
+  QThreadPool::globalInstance()->start([this]() -> void { Run(); });
 }
 
 }  // namespace dab::__detail__::frontend
