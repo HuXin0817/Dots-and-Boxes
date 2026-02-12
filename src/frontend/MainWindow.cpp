@@ -31,12 +31,10 @@ THE SOFTWARE.
 #include <QPainter>
 #include <QPointer>
 #include <QPushButton>
-#include <QThreadPool>
 #include <QTime>
 #include <QTimer>
 #include <atomic>
 #include <cassert>
-#include <mutex>
 
 #include "BaseCanvas.h"
 #include "BoxCanvas.h"
@@ -113,9 +111,7 @@ void MainWindow::resizeEvent(QResizeEvent* event) {
 
 void MainWindow::showEvent(QShowEvent* event) {
   QWidget::showEvent(event);
-
-  std::call_once(FirstRun,
-                 [this]() -> void { QThreadPool::globalInstance()->start(std::bind(&MainWindow::Run, this)); });
+  AsyncRun();
 }
 
 QColor MainWindow::Color() const {
@@ -126,7 +122,7 @@ QColor MainWindow::Color() const {
 }
 
 QRunnable* MainWindow::SetPlayerMoveEdgeFunc(Edge edge) {
-  return QRunnable::create([edge, this]() {
+  return QRunnable::create([edge, this]() -> void {
     if (Board.Contains(edge)) {
       return;
     }
@@ -208,7 +204,7 @@ void MainWindow::Restart() {
     BoxCanvases[box]->SetOwner(Owner::None);
   }
   update();
-  QThreadPool::globalInstance()->start(std::bind(&MainWindow::Run, this));
+  AsyncRun();
 }
 
 void MainWindow::HandleGameOver() {

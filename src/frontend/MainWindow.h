@@ -28,8 +28,8 @@ THE SOFTWARE.
 
 #include <QPointer>
 #include <QRunnable>
+#include <QThreadPool>
 #include <QTime>
-#include <atomic>
 
 #include "BoxCanvas.h"
 #include "DotCanvas.h"
@@ -62,7 +62,6 @@ class MainWindow : public BaseCanvas {
   QList<QPointer<BoxCanvas>> BoxCanvases;
   QList<QPointer<DotCanvas>> DotCanvases;
   QList<QPointer<EdgeCanvas>> EdgeCanvases;
-  std::once_flag FirstRun;
   QTime LastUpdateTime;
 
   QColor Color() const;
@@ -70,6 +69,7 @@ class MainWindow : public BaseCanvas {
 
  public Q_SLOTS:
   void Run();
+  void AsyncRun() { QThreadPool::globalInstance()->start(std::bind(&MainWindow::Run, this)); }
   void Add();
   void Restart();
   void HandleGameOver();
