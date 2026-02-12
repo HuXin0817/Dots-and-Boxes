@@ -24,6 +24,8 @@ THE SOFTWARE.
 
 #pragma once
 
+#include <QRunnable>
+
 #include "BaseCanvas.h"
 
 namespace dab::__detail__::frontend {
@@ -35,7 +37,7 @@ class EdgeCanvas : public BaseCanvas {
   static constexpr int Width = UnitSize * 2;
   static constexpr int Height = Width * 5;
 
-  explicit EdgeCanvas(bool rotate, const std::function<void()>& callBack, QWidget* parent);
+  explicit EdgeCanvas(bool rotate, QRunnable* callBack, QWidget* parent);
   void SetHighLight(bool highLight) { HighLight = highLight; }
 
  protected:
@@ -44,7 +46,7 @@ class EdgeCanvas : public BaseCanvas {
 
  private:
   bool HighLight = true;
-  const std::function<void()> CallBack;
+  QRunnable* CallBack;
 
   QColor Color() const;
 };

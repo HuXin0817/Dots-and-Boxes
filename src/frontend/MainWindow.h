@@ -27,6 +27,8 @@ THE SOFTWARE.
 #include <Dab/Robot.h>
 
 #include <QPointer>
+#include <QRunnable>
+#include <QTime>
 #include <atomic>
 
 #include "BoxCanvas.h"
@@ -61,14 +63,16 @@ class MainWindow : public BaseCanvas {
   QList<QPointer<DotCanvas>> DotCanvases;
   QList<QPointer<EdgeCanvas>> EdgeCanvases;
   std::once_flag FirstRun;
+  QTime LastUpdateTime;
 
   QColor Color() const;
-  void SetPlayerMoveEdge(Edge edge);
+  QRunnable* SetPlayerMoveEdgeFunc(Edge edge);
 
  public Q_SLOTS:
   void Run();
   void Add();
   void Restart();
+  void HandleGameOver();
 };
 
 }  // namespace dab::__detail__::frontend

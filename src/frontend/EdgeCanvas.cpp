@@ -30,15 +30,14 @@ THE SOFTWARE.
 
 namespace dab::__detail__::frontend {
 
-EdgeCanvas::EdgeCanvas(bool rotate, const std::function<void()>& callBack, QWidget* parent)
-    : BaseCanvas(parent), CallBack(callBack) {
+EdgeCanvas::EdgeCanvas(bool rotate, QRunnable* callBack, QWidget* parent) : BaseCanvas(parent), CallBack(callBack) {
   setFixedSize(rotate ? Width : Height, rotate ? Height : Width);
 }
 
 void EdgeCanvas::mousePressEvent(QMouseEvent* event) {
   QWidget::mousePressEvent(event);
 
-  CallBack();
+  CallBack->run();
 }
 
 void EdgeCanvas::paintEvent(QPaintEvent* event) {
