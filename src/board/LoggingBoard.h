@@ -24,43 +24,21 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <Dab/Robot.h>
+#include <chrono>
 
-#include <QJsonObject>
-#include <QString>
+#include "AbsoluteScoreBoard.h"
 
-namespace dab::__detail__::frontend {
+namespace dab::__detail__::board {
 
-template <typename T>
-void LogInfo(const T& message) {
-  qInfo() << QJsonDocument(message.ToJson()).toJson(QJsonDocument::Compact).constData();
-}
-
-class Config {
+class LoggingBoard : public AbsoluteScoreBoard {
  public:
-  QJsonObject ToJson() const;
+  LoggingBoard() { Reset(); }
 
-  PlayerType Player1Type;
-  PlayerType Player2Type;
+  void Reset();
+  Int Add(Edge edge);
+
+ private:
+  std::chrono::system_clock::time_point LastUpdateTime;
 };
 
-class MoveRecord {
- public:
-  QJsonObject ToJson() const;
-
-  Int Player1Score;
-  Int Player2Score;
-  Int Step;
-  Turn Turn;
-  Edge Move;
-  double Time;
-};
-
-class Winner {
- public:
-  QJsonObject ToJson() const;
-
-  QString Name;
-};
-
-}  // namespace dab::__detail__::frontend
+}  // namespace dab::__detail__::board

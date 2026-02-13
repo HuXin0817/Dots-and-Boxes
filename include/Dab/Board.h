@@ -27,6 +27,7 @@ THE SOFTWARE.
 #include "../../src/board/AbsoluteScoreBoard.h"
 #include "../../src/board/BasicBoard.h"
 #include "../../src/board/EdgeCountableBoard.h"
+#include "../../src/board/LoggingBoard.h"
 #include "../../src/board/RelativeScoreBoard.h"
 #include "../../src/board/ScoreableEdgeBoard.h"
 
@@ -35,6 +36,7 @@ namespace dab {
 using __detail__::board::AbsoluteScoreBoard;
 using __detail__::board::BasicBoard;
 using __detail__::board::EdgeCountableBoard;
+using __detail__::board::LoggingBoard;
 using __detail__::board::RelativeScoreBoard;
 using __detail__::board::ScoreableEdgeBoard;
 

@@ -3,6 +3,7 @@ set(BoardSources
   AbsoluteScoreBoard.cpp
   BasicBoard.cpp
   EdgeCountableBoard.cpp
+  LoggingBoard.cpp
   RelativeScoreBoard.cpp
   ScoreableEdgeBoard.cpp
 )

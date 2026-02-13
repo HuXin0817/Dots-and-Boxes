@@ -40,7 +40,6 @@ THE SOFTWARE.
 #include "BoxCanvas.h"
 #include "DotCanvas.h"
 #include "EdgeCanvas.h"
-#include "Models.h"
 
 namespace dab::__detail__::frontend {
 
@@ -138,10 +137,9 @@ QRunnable* MainWindow::SetPlayerMoveEdgeFunc(Edge edge) {
 }
 
 void MainWindow::Run() {
-  LogInfo(Config{.Player1Type = Player1Type, .Player2Type = Player2Type});
+  Board.Reset();
   Random Random;
   while (Board.Gaming()) {
-    LastUpdateTime = QTime::currentTime();
     if (PlayerTypeIsRobot(Player1Type) && Board.IsPlayer1Turn()) {
       PlayerMoveEdge = Random.Choice(Robot1->BestCandidateEdges(Board));
     } else if (PlayerTypeIsRobot(Player2Type) && Board.IsPlayer2Turn()) {
@@ -170,26 +168,12 @@ void MainWindow::Add() {
   DotCanvases[edge.Dot1()]->raise();
   DotCanvases[edge.Dot2()]->raise();
   for (const Box box : edge.NearBoxes()) {
-    int count = 0;
-    for (const Edge nearEdge : box.NearEdges()) {
-      if (Board.Contains(nearEdge)) {
-        count++;
-      }
-    }
-    if (count == 3) {
+    if (Board.EdgeCount(box) == 3) {
       BoxCanvases[box]->SetOwner(static_cast<Turn>(Board));
     }
   }
   const Turn turn = static_cast<Turn>(Board);
   Board.Add(edge);
-  LogInfo(MoveRecord{
-      .Player1Score = Board.Player1Score(),
-      .Player2Score = Board.Player2Score(),
-      .Step = Board.NowStep(),
-      .Turn = turn,
-      .Move = PlayerMoveEdge.load(),
-      .Time = static_cast<double>(LastUpdateTime.msecsTo(QTime::currentTime())) / 1000.0,
-  });
   update();
   QApplication::beep();
 }
@@ -208,19 +192,10 @@ void MainWindow::Restart() {
 }
 
 void MainWindow::HandleGameOver() {
-  Winner winner;
-  if (Board.RelativeScore() > 0) {
-    winner.Name = "Player1";
-  } else if (Board.RelativeScore() < 0) {
-    winner.Name = "Player2";
-  } else {
-    winner.Name = "Draw";
-  }
-  LogInfo(winner);
   const QPointer messagebox = new QMessageBox(this);
-  if (winner.Name == "Player1") {
+  if (Board.RelativeScore() > 0) {
     messagebox->setText(QString("Blue Team Win! (Score %1:%2)").arg(Board.Player1Score()).arg(Board.Player2Score()));
-  } else if (winner.Name == "Player2") {
+  } else if (Board.RelativeScore() < 0) {
     messagebox->setText(QString("Red Team Win! (Score %1:%2)").arg(Board.Player1Score()).arg(Board.Player2Score()));
   } else {
     messagebox->setText("Draw!");

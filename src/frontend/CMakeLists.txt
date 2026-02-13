@@ -5,7 +5,6 @@ set(FrontendSources
   DotCanvas.cpp
   EdgeCanvas.cpp
   MainWindow.cpp
-  Models.cpp
 )
 qt_add_library(${FrontendLibraryName} STATIC ${FrontendSources})
 target_compile_definitions(${FrontendLibraryName} PRIVATE QT_NO_KEYWORDS __BoardSize__=${BoardSize} __detail__=__detail${BoardSize}x${BoardSize}__)

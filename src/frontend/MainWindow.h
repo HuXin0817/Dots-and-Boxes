@@ -58,7 +58,7 @@ class MainWindow : public BaseCanvas {
   QScopedPointer<Robot> Robot2;
   std::atomic<Edge> PlayerMoveEdge;
   Edge LastEdge;
-  AbsoluteScoreBoard Board;
+  LoggingBoard Board;
   QList<QPointer<BoxCanvas>> BoxCanvases;
   QList<QPointer<DotCanvas>> DotCanvases;
   QList<QPointer<EdgeCanvas>> EdgeCanvases;
