@@ -25,6 +25,7 @@ THE SOFTWARE.
 #include "EdgeCountableBoard.h"
 
 #include <ranges>
+#include <utility>
 
 namespace dab::__detail__::board {
 
@@ -54,6 +55,7 @@ Edge EdgeCountableBoard::FindNotContainsEdgeInBox(Box box) const {
     }
   }
   assert(false);
+  std::unreachable();
   return Edge::Invalid;
 }
 
