@@ -27,10 +27,11 @@ THE SOFTWARE.
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QCoreApplication>
-#include <QDir>
 #include <QJsonObject>
 #include <QLibrary>
 #include <QWidget>
+#include <iostream>
+#include <print>
 
 #include "Config.h"
 #include "CreateMainWindow.h"
@@ -46,7 +47,7 @@ int ParsePlayerType(const QString& arg) {
       return static_cast<int>(i);
     }
   }
-  qInfo("Error: Invalid player type '%s'.", arg.toLocal8Bit().constData());
+  std::println(std::cerr, "Error: Invalid player type '{}'.", arg.toLocal8Bit().constData());
   exit(EXIT_FAILURE);
 }
 
@@ -54,7 +55,10 @@ int64_t ParseBoardSize(const QString& arg) {
   bool ok = false;
   int64_t boardSize = arg.toLongLong(&ok);
   if (!ok || boardSize < 1 || boardSize > MaxBoardSize) {
-    qInfo("Error: Invalid board size '%s'. Must be between 1 and %lld.", arg.toLocal8Bit().constData(), MaxBoardSize);
+    std::println(std::cerr,
+                 "Error: Invalid board size '{}'. Must be between 1 and {}.",
+                 arg.toLocal8Bit().constData(),
+                 MaxBoardSize);
     exit(EXIT_FAILURE);
   }
   return boardSize;
