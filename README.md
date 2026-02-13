@@ -105,58 +105,34 @@ Dots-and-Boxes/
 │       └── macos-build.yml
 ├── include/            # Header files
 │   └── Dab/
-│       ├── Frontend/
-│       │   └── Frontend.h
 │       ├── Board.h
 │       ├── Command.h
+│       ├── Frontend.h
 │       ├── Model.h
-│       └── Robot.h
+│       ├── Robot.h
+│       └── Version.h
 ├── src/                # Source files
-│   ├── cmd/            # Command-related files
+│   ├── board/          # Board implementations
+│   │   ├── AbsoluteScoreBoard.cpp
+│   │   ├── AbsoluteScoreBoard.h
+│   │   ├── BasicBoard.cpp
+│   │   ├── BasicBoard.h
+│   │   ├── CMakeLists.txt
+│   │   ├── EdgeCountableBoard.cpp
+│   │   ├── EdgeCountableBoard.h
+│   │   ├── LoggingBoard.cpp
+│   │   ├── LoggingBoard.h
+│   │   ├── RelativeScoreBoard.cpp
+│   │   ├── RelativeScoreBoard.h
+│   │   ├── ScoreableEdgeBoard.cpp
+│   │   └── ScoreableEdgeBoard.h
+│   ├── command/        # Command-related files
 │   │   ├── CMakeLists.txt
 │   │   ├── Command.cpp
-│   │   └── Command.h
-│   ├── core/           # Core game logic
-│   │   ├── board/      # Board implementations
-│   │   │   ├── AbsoluteScoreBoard.cpp
-│   │   │   ├── AbsoluteScoreBoard.h
-│   │   │   ├── BasicBoard.cpp
-│   │   │   ├── BasicBoard.h
-│   │   │   ├── CMakeLists.txt
-│   │   │   ├── EdgeCountableBoard.cpp
-│   │   │   ├── EdgeCountableBoard.h
-│   │   │   ├── RelativeScoreBoard.cpp
-│   │   │   ├── RelativeScoreBoard.h
-│   │   │   ├── ScoreableEdgeBoard.cpp
-│   │   │   └── ScoreableEdgeBoard.h
-│   │   ├── model/      # Utility classes
-│   │   │   ├── Array.h
-│   │   │   ├── CMakeLists.txt
-│   │   │   ├── Int.h
-│   │   │   ├── Iterable.h
-│   │   │   ├── List.h
-│   │   │   ├── Models.cpp
-│   │   │   ├── Models.h
-│   │   │   ├── Queue.h
-│   │   │   ├── Random.h
-│   │   │   ├── ScoreMap.cpp
-│   │   │   ├── ScoreMap.h
-│   │   │   └── Span.h
-│   │   ├── robot/      # AI implementations
-│   │   │   ├── CMakeLists.txt
-│   │   │   ├── GreedyRobot.cpp
-│   │   │   ├── GreedyRobot.h
-│   │   │   ├── ImproveGreedyRobot.cpp
-│   │   │   ├── ImproveGreedyRobot.h
-│   │   │   ├── MonteCarloRobot.cpp
-│   │   │   ├── MonteCarloRobot.h
-│   │   │   ├── ParallelSearchRobot.cpp
-│   │   │   ├── ParallelSearchRobot.h
-│   │   │   ├── Robot.cpp
-│   │   │   ├── Robot.h
-│   │   │   ├── SimulationRobot.cpp
-│   │   │   └── SimulationRobot.h
-│   │   └── CMakeLists.txt
+│   │   ├── Command.h
+│   │   ├── Config.h
+│   │   ├── CreateMainWindow.cpp
+│   │   └── CreateMainWindow.h
 │   ├── extern/         # External dependencies
 │   │   ├── CMakeLists.txt
 │   │   ├── extern.cpp
@@ -172,9 +148,35 @@ Dots-and-Boxes/
 │   │   ├── EdgeCanvas.cpp
 │   │   ├── EdgeCanvas.h
 │   │   ├── MainWindow.cpp
-│   │   ├── MainWindow.h
+│   │   └── MainWindow.h
+│   ├── model/          # Utility classes
+│   │   ├── Array.h
+│   │   ├── CMakeLists.txt
+│   │   ├── Int.h
+│   │   ├── Iterable.h
+│   │   ├── List.h
 │   │   ├── Models.cpp
-│   │   └── Models.h
+│   │   ├── Models.h
+│   │   ├── Queue.h
+│   │   ├── Random.cpp
+│   │   ├── Random.h
+│   │   ├── ScoreMap.cpp
+│   │   ├── ScoreMap.h
+│   │   └── Span.h
+│   ├── robot/          # AI implementations
+│   │   ├── CMakeLists.txt
+│   │   ├── GreedyRobot.cpp
+│   │   ├── GreedyRobot.h
+│   │   ├── ImproveGreedyRobot.cpp
+│   │   ├── ImproveGreedyRobot.h
+│   │   ├── MonteCarloRobot.cpp
+│   │   ├── MonteCarloRobot.h
+│   │   ├── ParallelSearchRobot.cpp
+│   │   ├── ParallelSearchRobot.h
+│   │   ├── Robot.cpp
+│   │   ├── Robot.h
+│   │   ├── SimulationRobot.cpp
+│   │   └── SimulationRobot.h
 │   ├── CMakeLists.txt
 │   └── main.cpp        # Entry point
 ├── .clang-format       # Code formatting configuration
@@ -182,6 +184,7 @@ Dots-and-Boxes/
 ├── CMakeLists.txt      # Build configuration
 ├── LICENSE             # License file
 ├── README.md           # This file
+├── VERSION             # Version information
 └── demo.png            # Game demo screenshot
 ```
 
