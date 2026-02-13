@@ -24,6 +24,8 @@ THE SOFTWARE.
 
 #include "Command.h"
 
+#include <Dab/Version.h>
+
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QCoreApplication>
@@ -68,7 +70,7 @@ int64_t ParseBoardSize(const QString& arg) {
 int Process(int argc, char* argv[]) {
   QApplication application(argc, argv);
   application.setApplicationName("Dots and Boxes");
-  application.setApplicationVersion("1.0.0");
+  application.setApplicationVersion(Version);
   application.setOrganizationName("Dots and Boxes");
 
   QStringList accepted;
