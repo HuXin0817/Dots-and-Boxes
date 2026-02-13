@@ -12,6 +12,10 @@ if(NOT MaxBoardSize)
   set(MaxBoardSize 36)
 endif()
 
+file(READ VERSION Version)
+message(STATUS "Version: ${Version}")
+add_compile_definitions(__Version__="${Version}")
+
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 find_package(TBB REQUIRED)
 

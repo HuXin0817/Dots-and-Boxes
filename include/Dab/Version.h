@@ -24,10 +24,8 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "../VERSION"
-
 namespace dab {
 
-static constexpr const char* Version = VERSION;
+static constexpr const char* Version = __Version__;
 
 }  // namespace dab
