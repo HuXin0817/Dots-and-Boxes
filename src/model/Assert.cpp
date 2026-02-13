@@ -34,7 +34,6 @@ namespace dab::detail::model {
 static std::mutex AssertMutex;
 
 void AssertHelper(const char* expr, std::source_location location) {
-  std::unreachable();
   std::unique_lock lock(AssertMutex);
   std::println(std::cerr,
                R"(Assertion failed: {{"File":"{}:{}","Function":"{}","Expression":"{}"}})",
@@ -42,6 +41,7 @@ void AssertHelper(const char* expr, std::source_location location) {
                location.line(),
                location.function_name(),
                expr);
+  std::unreachable();
   std::abort();
 }
 
