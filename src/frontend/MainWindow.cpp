@@ -35,6 +35,7 @@ THE SOFTWARE.
 #include <QTimer>
 #include <atomic>
 #include <cassert>
+#include <ranges>
 
 #include "BaseCanvas.h"
 #include "BoxCanvas.h"
@@ -56,17 +57,17 @@ MainWindow::MainWindow(PlayerType player1Type, PlayerType player2Type, QWidget* 
   setMinimumSize(WindowSize, WindowSize);
 
   BoxCanvases.reserve(Box::Max);
-  for (Box box = 0; box < Box::Max; box.Add()) {
+  for (const Box box : std::views::iota(0, Box::Max)) {
     BoxCanvases.emplace_back(new BoxCanvas(this));
   }
 
   EdgeCanvases.reserve(Edge::Max);
-  for (Edge edge = 0; edge < Edge::Max; edge.Add()) {
+  for (const Edge edge : std::views::iota(0, Edge::Max)) {
     EdgeCanvases.emplace_back(new EdgeCanvas(edge.Rotate(), SetPlayerMoveEdgeFunc(edge), this));
   }
 
   DotCanvases.reserve(Dot::Max);
-  for (Dot dot = 0; dot < Dot::Max; dot.Add()) {
+  for (const Dot dot : std::views::iota(0, Dot::Max)) {
     DotCanvases.emplace_back(new DotCanvas(this));
   }
 }
@@ -84,13 +85,13 @@ void MainWindow::resizeEvent(QResizeEvent* event) {
   const int x0 = (width() - BoardWidth) / 2 - UnitSize;
   const int y0 = (height() - BoardWidth) / 2 - UnitSize;
 
-  for (Box box = 0; box < Box::Max; box.Add()) {
+  for (const Box box : std::views::iota(0, Box::Max)) {
     const int x = x0 + box.X() * EdgeCanvas::Height + 2 * UnitSize;
     const int y = y0 + box.Y() * EdgeCanvas::Height + 2 * UnitSize;
     BoxCanvases[box]->move(x, y);
   }
 
-  for (Edge edge = 0; edge < Edge::Max; edge.Add()) {
+  for (const Edge edge : std::views::iota(0, Edge::Max)) {
     int x = x0 + edge.Dot1().X() * EdgeCanvas::Height;
     int y = y0 + edge.Dot1().Y() * EdgeCanvas::Height;
     if (edge.Rotate()) {
@@ -101,7 +102,7 @@ void MainWindow::resizeEvent(QResizeEvent* event) {
     EdgeCanvases[edge]->move(x, y);
   }
 
-  for (Dot dot = 0; dot < Dot::Max; dot.Add()) {
+  for (const Dot dot : std::views::iota(0, Dot::Max)) {
     const int x = x0 + dot.X() * EdgeCanvas::Height;
     const int y = y0 + dot.Y() * EdgeCanvas::Height;
     DotCanvases[dot]->move(x, y);
@@ -180,11 +181,11 @@ void MainWindow::Add() {
 
 void MainWindow::Restart() {
   Board.Reset();
-  for (Edge edge = 0; edge < Edge::Max; edge.Add()) {
+  for (const Edge edge : std::views::iota(0, Edge::Max)) {
     EdgeCanvases[edge]->SetHighLight(false);
     EdgeCanvases[edge]->SetOwner(Owner::None);
   }
-  for (Box box = 0; box < Box::Max; box.Add()) {
+  for (const Box box : std::views::iota(0, Box::Max)) {
     BoxCanvases[box]->SetOwner(Owner::None);
   }
   update();

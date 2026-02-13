@@ -32,6 +32,7 @@ THE SOFTWARE.
 #include <QWidget>
 #include <iostream>
 #include <print>
+#include <ranges>
 
 #include "Config.h"
 #include "CreateMainWindow.h"
@@ -42,7 +43,7 @@ int ParsePlayerType(const QString& arg) {
   if (arg.compare("robot", Qt::CaseInsensitive) == 0) {
     return DefaultPlayerType;
   }
-  for (size_t i = 0; i < std::size(PlayerTypeOptionStrings); ++i) {
+  for (const size_t i : std::views::iota(0ull, std::size(PlayerTypeOptionStrings))) {
     if (arg.compare(PlayerTypeOptionStrings[i], Qt::CaseInsensitive) == 0) {
       return static_cast<int>(i);
     }
@@ -72,7 +73,7 @@ int Process(int argc, char* argv[]) {
 
   QStringList accepted;
   accepted << "human" << "robot";
-  for (size_t i = 1; i < std::size(PlayerTypeOptionStrings); ++i) {
+  for (const size_t i : std::views::iota(0ull, std::size(PlayerTypeOptionStrings))) {
     accepted << QString::fromUtf8(PlayerTypeOptionStrings[i]);
   }
 

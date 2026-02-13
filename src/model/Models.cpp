@@ -24,6 +24,8 @@ THE SOFTWARE.
 
 #include "Models.h"
 
+#include <ranges>
+
 #include "Int.h"
 
 namespace dab::__detail__::model {
@@ -37,7 +39,7 @@ class NearEdgesMapper {
 };
 
 constexpr NearEdgesMapper::NearEdgesMapper() {
-  for (Box box = 0; box < Box::Max; box.Add()) {
+  for (const Box box : std::views::iota(0, Box::Max)) {
     BoxNearEdges.At(box) = GetNearEdges(box);
   }
 }
@@ -71,7 +73,7 @@ class NearBoxesMapper {
 };
 
 constexpr NearBoxesMapper::NearBoxesMapper() {
-  for (Edge edge = 0; edge < Edge::Max; edge.Add()) {
+  for (const Edge edge : std::views::iota(0, Edge::Max)) {
     EdgeNearBoxes.At(edge) = GetNearBoxes(edge);
   }
 }

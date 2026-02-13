@@ -24,6 +24,9 @@ THE SOFTWARE.
 
 #include "MonteCarloRobot.h"
 
+#include <cstdint>
+#include <ranges>
+
 namespace dab::__detail__::robot {
 
 Span<const Edge> MonteCarloRobot::BestCandidateEdges(const RelativeScoreBoard& board) {
@@ -33,7 +36,7 @@ Span<const Edge> MonteCarloRobot::BestCandidateEdges(const RelativeScoreBoard& b
 
   Random Random;
   SearchResult.Reset();
-  for (int64_t i = 0; i < SearchTime / board.RemainStep() + 1; ++i) {
+  for (const int64_t i : std::views::iota(0, SearchTime / board.RemainStep() + 1)) {
     SimulationBoard.Reset(static_cast<EdgeCountableBoard>(board));
     const Edge edge = Random.Choice(SubRobot.BestCandidateEdges(SimulationBoard));
     SimulationBoard.Add(edge);

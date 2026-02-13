@@ -25,6 +25,7 @@ THE SOFTWARE.
 #include "ScoreMap.h"
 
 #include <algorithm>
+#include <ranges>
 
 #include "Models.h"
 
@@ -42,7 +43,7 @@ void ScoreMap::Add(Edge edge, Int score) {
 }
 
 void ScoreMap::Add(const ScoreMap& other) {
-  for (Int i = 0; i < Edge::Max; ++i) {
+  for (const Int i : std::views::iota(0, Edge::Max)) {
     Time.At(i) += other.Time.At(i);
     Score.At(i) += other.Score.At(i);
   }
@@ -50,7 +51,7 @@ void ScoreMap::Add(const ScoreMap& other) {
 
 Span<const Edge> ScoreMap::Export() {
   float maxScore = 0.0;
-  for (Edge edge = 0; edge < Edge::Max; edge.Add()) {
+  for (const Edge edge : std::views::iota(0, Edge::Max)) {
     if (Time.At(edge) > 0) {
       if (const float score = static_cast<float>(Score.At(edge)) / static_cast<float>(Time.At(edge));
           score > maxScore || BestEdges.Empty()) {

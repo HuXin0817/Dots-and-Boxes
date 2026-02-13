@@ -24,6 +24,8 @@ THE SOFTWARE.
 
 #include "EdgeCountableBoard.h"
 
+#include <ranges>
+
 namespace dab::__detail__::board {
 
 void EdgeCountableBoard::Reset() {
@@ -56,7 +58,7 @@ Edge EdgeCountableBoard::FindNotContainsEdgeInBox(Box box) const {
 }
 
 Edge EdgeCountableBoard::FindScoreableEdge() const {
-  for (Box box = 0; box < Box::Max; box.Add()) {
+  for (const Box box : std::views::iota(0, Box::Max)) {
     if (Counter.At(box) == 3) {
       return FindNotContainsEdgeInBox(box);
     }
