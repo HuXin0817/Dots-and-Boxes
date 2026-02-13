@@ -34,38 +34,36 @@ template <typename Derived>
 class Iterable {
  public:
   constexpr Iterable() = default;
-  constexpr Iterable(const Iterable& other) = default;
-  constexpr Iterable(Iterable&& other) = default;
-  constexpr Iterable& operator=(const Iterable& other) = default;
-  constexpr Iterable& operator=(Iterable&& other) = default;
+  constexpr Iterable(const Iterable&) = default;
+  constexpr Iterable(Iterable&&) = default;
+  constexpr Iterable& operator=(const Iterable&) = default;
+  constexpr Iterable& operator=(Iterable&&) = default;
 
-  constexpr auto begin() { return static_cast<Derived*>(this)->begin(); }
-  constexpr auto begin() const { return static_cast<const Derived*>(this)->begin(); }
-  constexpr auto end() { return static_cast<Derived*>(this)->end(); }
-  constexpr auto end() const { return static_cast<const Derived*>(this)->end(); }
-  constexpr Int Size() const { return static_cast<const Derived*>(this)->Size(); }
-  constexpr bool Empty() const { return Size() == 0; }
-  constexpr auto& Front() { return begin()[0]; }
-  constexpr const auto& Front() const { return begin()[0]; }
-  constexpr auto& Back() { return begin()[Size() - 1]; }
-  constexpr const auto& Back() const { return begin()[Size() - 1]; }
-  constexpr auto& At(Int i);
-  constexpr const auto& At(Int i) const;
+  constexpr auto begin(this auto&& self) { return self.derived().begin(); }
+  constexpr auto end(this auto&& self) { return self.derived().end(); }
+  constexpr Int Size(this const auto& self) { return self.derived().Size(); }
+  constexpr bool Empty(this const auto& self) { return self.Size() == 0; }
+  constexpr auto& Front(this auto& self) { return self.begin()[0]; }
+  constexpr const auto& Front(this const auto& self) { return self.begin()[0]; }
+  constexpr auto& Back(this auto& self) { return self.begin()[self.Size() - 1]; }
+  constexpr const auto& Back(this const auto& self) { return self.begin()[self.Size() - 1]; }
+
+  constexpr auto& At(this auto& self, Int i) {
+    assert(0 <= i && i < self.Size());
+    return self.begin()[i];
+  }
+  constexpr const auto& At(this const auto& self, Int i) {
+    assert(0 <= i && i < self.Size());
+    return self.begin()[i];
+  }
 
  protected:
   ~Iterable() = default;
+
+ private:
+  constexpr Derived& derived() & { return static_cast<Derived&>(*this); }
+  constexpr const Derived& derived() const& { return static_cast<const Derived&>(*this); }
+  constexpr Derived&& derived() && { return static_cast<Derived&&>(*this); }
 };
-
-template <typename Derived>
-constexpr auto& Iterable<Derived>::At(Int i) {
-  assert(0 <= i && i < Size());
-  return begin()[i];
-}
-
-template <typename Derived>
-constexpr const auto& Iterable<Derived>::At(Int i) const {
-  assert(0 <= i && i < Size());
-  return begin()[i];
-}
 
 }  // namespace dab::__detail__::model
