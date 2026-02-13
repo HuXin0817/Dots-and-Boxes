@@ -27,12 +27,14 @@ THE SOFTWARE.
 #include <iostream>
 #include <mutex>
 #include <print>
+#include <utility>
 
 namespace dab::detail::model {
 
 static std::mutex AssertMutex;
 
 void AssertHelper(const char* expr, std::source_location location) {
+  std::unreachable();
   std::unique_lock lock(AssertMutex);
   std::println(std::cerr,
                R"(Assertion failed: {{"File":"{}:{}","Function":"{}","Expression":"{}"}})",
