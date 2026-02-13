@@ -14,6 +14,7 @@ endif()
 
 file(READ VERSION Version)
 message(STATUS "Version: ${Version}")
+message(STATUS "MaxBoardSize: ${MaxBoardSize}")
 add_compile_definitions(__Version__="${Version}")
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)

@@ -1,7 +1,6 @@
 set(CommandLibraryName "command")
 set(CommandSources 
     Command.cpp
-    CreateMainWindow.cpp
 )
 qt_add_library(${CommandLibraryName} STATIC ${CommandSources})
 target_compile_definitions(${CommandLibraryName} PRIVATE __MaxBoardSize__=${MaxBoardSize})

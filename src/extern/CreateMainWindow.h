@@ -22,16 +22,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "extern.h"
+#pragma once
 
-#include <Dab/Frontend.h>
+#include <QWidget>
 
 namespace dab::internal {
 
-template <>
-QWidget* CreateMainWindow<dab::BoardSize>(int player1Type, int player2Type, QWidget* parent) {
-  return new dab::MainWindow(
-      static_cast<dab::PlayerType>(player1Type), static_cast<dab::PlayerType>(player2Type), parent);
-}
+class CreateMainWindow {
+ public:
+  template <int64_t BoardSize>
+  static QWidget* Call(int player1Type, int player2Type, QWidget* parent);
+};
 
 }  // namespace dab::internal

@@ -24,11 +24,14 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <QWidget>
+#include <cstdint>
 
 namespace dab::internal {
 
-template <int64_t BoardSize>
-QWidget* CreateMainWindow(int player1Type, int player2Type, QWidget* parent);
+class MockRunningGame {
+ public:
+  template <int64_t BoardSize>
+  static void Call(int player1Type, int player2Type);
+};
 
 }  // namespace dab::internal

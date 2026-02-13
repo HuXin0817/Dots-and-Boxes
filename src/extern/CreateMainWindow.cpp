@@ -24,24 +24,14 @@ THE SOFTWARE.
 
 #include "CreateMainWindow.h"
 
-#include "../extern/extern.h"
-#include "Config.h"
+#include <Dab/Frontend.h>
 
-namespace dab::command {
+namespace dab::internal {
 
-template <int64_t BoardSize>
-QWidget* CreateMainWindowImpl(int64_t boardSize, int player1Type, int player2Type, QWidget* parent) {
-  if constexpr (BoardSize > 0) {
-    if (boardSize < BoardSize) {
-      return CreateMainWindowImpl<BoardSize - 1>(boardSize, player1Type, player2Type, parent);
-    }
-    return internal::CreateMainWindow<BoardSize>(player1Type, player2Type, parent);
-  }
-  return nullptr;
+template <>
+QWidget* CreateMainWindow::Call<dab::BoardSize>(int player1Type, int player2Type, QWidget* parent) {
+  return new dab::MainWindow(
+      static_cast<dab::PlayerType>(player1Type), static_cast<dab::PlayerType>(player2Type), parent);
 }
 
-QWidget* CreateMainWindow(int64_t boardSize, int player1Type, int player2Type, QWidget* parent) {
-  return CreateMainWindowImpl<MaxBoardSize>(boardSize, player1Type, player2Type, parent);
-}
-
-}  // namespace dab::command
+}  // namespace dab::internal

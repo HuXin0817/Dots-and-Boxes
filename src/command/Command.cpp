@@ -36,8 +36,12 @@ THE SOFTWARE.
 #include <print>
 #include <ranges>
 
+#include "../extern/CreateMainWindow.h"
+#include "../extern/MockRunningGame.h"
 #include "Config.h"
-#include "CreateMainWindow.h"
+#include "Dispatch.h"
+
+using namespace dab::internal;
 
 namespace dab::command {
 
@@ -108,20 +112,29 @@ int Process(int argc, char* argv[]) {
       "Type",
       "robot");
 
+  const QCommandLineOption backgroundModeOption(QStringList() << "b" << "background",
+                                                QString("Running in background mode."));
+
   QCommandLineParser parser;
   parser.addHelpOption();
   parser.addVersionOption();
   parser.addOption(boardSizeOption);
   parser.addOption(player1Option);
   parser.addOption(player2Option);
+  parser.addOption(backgroundModeOption);
   parser.process(application);
 
-  QWidget* mainWindow = CreateMainWindow(ParseBoardSize(parser.value(boardSizeOption)),
-                                         ParsePlayerType(parser.value(player1Option)),
-                                         ParsePlayerType(parser.value(player2Option)),
-                                         nullptr);
-  mainWindow->show();
-  return application.exec();
+  int64_t boardSize = ParseBoardSize(parser.value(boardSizeOption));
+  int player1Type = ParsePlayerType(parser.value(player1Option));
+  int player2Type = ParsePlayerType(parser.value(player2Option));
+  if (parser.isSet(backgroundModeOption)) {
+    Dispatch<MockRunningGame>(boardSize, player1Type, player2Type);
+    return 0;
+  } else {
+    QWidget* mainWindow = Dispatch<CreateMainWindow>(boardSize, player1Type, player2Type, nullptr);
+    mainWindow->show();
+    return application.exec();
+  }
 }
 
 }  // namespace dab::command
