@@ -25,6 +25,7 @@ THE SOFTWARE.
 #pragma once
 
 #include "../../src/model/Array.h"
+#include "../../src/model/Assert.h"
 #include "../../src/model/Int.h"
 #include "../../src/model/List.h"
 #include "../../src/model/Models.h"

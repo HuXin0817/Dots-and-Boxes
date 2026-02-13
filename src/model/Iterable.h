@@ -24,8 +24,7 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <cassert>
-
+#include "Assert.h"
 #include "Int.h"
 
 namespace dab::__detail__::model {
@@ -49,11 +48,11 @@ class Iterable {
   constexpr const auto& Back(this const auto& self) { return self.begin()[self.Size() - 1]; }
 
   constexpr auto& At(this auto& self, Int i) {
-    assert(0 <= i && i < self.Size());
+    Assert(0 <= i && i < self.Size());
     return self.begin()[i];
   }
   constexpr const auto& At(this const auto& self, Int i) {
-    assert(0 <= i && i < self.Size());
+    Assert(0 <= i && i < self.Size());
     return self.begin()[i];
   }
 

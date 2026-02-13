@@ -8,6 +8,8 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
+set(LIBCXX_ENABLE_STACKTRACE ON)
+
 if(NOT MaxBoardSize)
   set(MaxBoardSize 36)
 endif()

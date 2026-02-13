@@ -36,8 +36,8 @@ void MockRunningGame::Call<BoardSize>(int player1Type, int player2Type) {
   QScopedPointer<Robot> robot2;
   robot1.reset(CreateRobot(static_cast<PlayerType>(player1Type)));
   robot2.reset(CreateRobot(static_cast<PlayerType>(player2Type)));
-  assert(robot1);
-  assert(robot2);
+  Assert(!robot1.isNull());
+  Assert(!robot2.isNull());
 
   Random random;
   LoggingBoard board;

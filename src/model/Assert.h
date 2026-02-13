@@ -24,32 +24,24 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <random>
+#include <cstdlib>
+#include <source_location>
 
-#include "Int.h"
+namespace dab::detail::model {
 
-namespace dab::__detail__::model {
+void AssertHelper(const char* expr, std::source_location location = std::source_location::current());
 
-class Random {
- public:
-  explicit Random();
+#ifdef NDEBUG
+#define Assert(expr) ((void)0)
+#else
 
-  Int Range(Int min, Int max);
-  template <typename T>
-  const auto& Choice(const T& data);
+#define Assert(expr)                             \
+  do {                                           \
+    if (!(expr)) {                               \
+      ::dab::detail::model::AssertHelper(#expr); \
+    }                                            \
+  } while (false)
 
- private:
-  std::mt19937_64 Rng;
-  std::uniform_int_distribution<Int> Dist;
-};
+#endif  // NDEBUG
 
-template <typename T>
-const auto& Random::Choice(const T& data) {
-  Assert(!data.Empty());
-  if (data.Size() == 1) {
-    return data.At(0);
-  }
-  return data.At(Range(0, data.Size() - 1));
-}
-
-}  // namespace dab::__detail__::model
+}  // namespace dab::detail::model

@@ -22,34 +22,25 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#pragma once
+#include "Assert.h"
 
-#include <random>
+#include <iostream>
+#include <mutex>
+#include <print>
 
-#include "Int.h"
+namespace dab::detail::model {
 
-namespace dab::__detail__::model {
+static std::mutex AssertMutex;
 
-class Random {
- public:
-  explicit Random();
-
-  Int Range(Int min, Int max);
-  template <typename T>
-  const auto& Choice(const T& data);
-
- private:
-  std::mt19937_64 Rng;
-  std::uniform_int_distribution<Int> Dist;
-};
-
-template <typename T>
-const auto& Random::Choice(const T& data) {
-  Assert(!data.Empty());
-  if (data.Size() == 1) {
-    return data.At(0);
-  }
-  return data.At(Range(0, data.Size() - 1));
+void AssertHelper(const char* expr, std::source_location location) {
+  std::unique_lock lock(AssertMutex);
+  std::println(std::cerr,
+               R"(Assertion failed: {{"File":"{}:{}","Function":"{}","Expression":"{}"}})",
+               location.file_name(),
+               location.line(),
+               location.function_name(),
+               expr);
+  std::abort();
 }
 
-}  // namespace dab::__detail__::model
+}  // namespace dab::detail::model

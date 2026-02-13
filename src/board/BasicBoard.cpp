@@ -37,11 +37,11 @@ void BasicBoard::Reset() {
 }
 
 void BasicBoard::Add(Edge edge) {
-  assert(NotContains(edge));
+  Assert(NotContains(edge));
   const Edge nowEdge = Edges.At(Step);
   const Int edgeIndex = EdgeIndexes.At(edge);
-  assert(Edges.At(edgeIndex) == edge);
-  assert(edgeIndex >= Step);
+  Assert(Edges.At(edgeIndex) == edge);
+  Assert(edgeIndex >= Step);
   Edges.At(Step) = edge;
   Edges.At(edgeIndex) = nowEdge;
   EdgeIndexes.At(edge) = Step;

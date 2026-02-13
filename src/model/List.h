@@ -24,9 +24,8 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <cassert>
-
 #include "Array.h"
+#include "Assert.h"
 
 namespace dab::__detail__::model {
 
@@ -61,7 +60,7 @@ constexpr void List<T, Cap>::ClearAndSet(T item) {
 
 template <typename T, Int Cap>
 constexpr void List<T, Cap>::Append(T item) {
-  assert(Length < Cap);
+  Assert(Length < Cap);
   Data.At(Length++) = item;
 }
 

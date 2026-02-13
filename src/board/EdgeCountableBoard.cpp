@@ -39,7 +39,7 @@ Int EdgeCountableBoard::Add(Edge edge) {
   Int score = 0;
   for (const Box box : edge.NearBoxes()) {
     const uint8_t num = ++Counter.At(box);
-    assert(num <= 4);
+    Assert(num <= 4);
     if (num == 4) {
       ++score;
     }
@@ -48,13 +48,13 @@ Int EdgeCountableBoard::Add(Edge edge) {
 }
 
 Edge EdgeCountableBoard::FindNotContainsEdgeInBox(Box box) const {
-  assert(Counter.At(box) == 3);
+  Assert(Counter.At(box) == 3);
   for (const Edge edge : box.NearEdges()) {
     if (NotContains(edge)) {
       return edge;
     }
   }
-  assert(false);
+  Assert(false);
   std::unreachable();
   return Edge::Invalid;
 }

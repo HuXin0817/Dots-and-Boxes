@@ -80,7 +80,7 @@ constexpr Edge::Edge(Dot dot1, Dot dot2) {
   } else {
     v = 2 * dot1;
   }
-  assert(Dot1() == dot1 && Dot2() == dot2);
+  Assert(Dot1() == dot1 && Dot2() == dot2);
 }
 
 constexpr Dot Edge::Dot1() const {

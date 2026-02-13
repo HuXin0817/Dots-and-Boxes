@@ -34,7 +34,6 @@ THE SOFTWARE.
 #include <QTime>
 #include <QTimer>
 #include <atomic>
-#include <cassert>
 #include <ranges>
 
 #include "BaseCanvas.h"
@@ -151,9 +150,9 @@ void MainWindow::Run() {
         QThread::yieldCurrentThread();
       }
     }
-    assert(Board.NotContains(PlayerMoveEdge.load()));
+    Assert(Board.NotContains(PlayerMoveEdge.load()));
     QMetaObject::invokeMethod(this, &MainWindow::Add, Qt::BlockingQueuedConnection);
-    assert(Board.Contains(PlayerMoveEdge.load()));
+    Assert(Board.Contains(PlayerMoveEdge.load()));
   }
   QMetaObject::invokeMethod(this, &MainWindow::HandleGameOver, Qt::BlockingQueuedConnection);
 }

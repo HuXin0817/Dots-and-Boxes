@@ -38,7 +38,7 @@ Int ScoreableEdgeBoard::Add(Edge edge) {
   Int score = 0;
   for (const Box box : edge.NearBoxes()) {
     const uint8_t count = ++Counter.At(box);
-    assert(count <= 4);
+    Assert(count <= 4);
     if (count == 4) {
       ++score;
     } else if (count == 3) {
@@ -63,7 +63,7 @@ Int ScoreableEdgeBoard::MaxObtainableScore(Int endScore) {
       continue;
     }
     const Int addScore = Add(edge);
-    assert(addScore > 0);
+    Assert(addScore > 0);
     score += addScore;
     if (score >= endScore) {
       break;

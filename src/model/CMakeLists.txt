@@ -1,5 +1,6 @@
 set(ModelLibraryName "model${BoardSize}x${BoardSize}")
 set(ModelSources
+  Assert.cpp
   Models.cpp
   Random.cpp
   ScoreMap.cpp

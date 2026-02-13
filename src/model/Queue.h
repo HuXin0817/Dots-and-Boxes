@@ -24,8 +24,6 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <cassert>
-
 #include "Array.h"
 
 namespace dab::__detail__::model {
@@ -62,13 +60,13 @@ constexpr void Queue<T, Cap>::Clear() {
 
 template <typename T, Int Cap>
 constexpr void Queue<T, Cap>::Append(T item) {
-  assert(EndIndex < Cap);
+  Assert(EndIndex < Cap);
   Data.At(EndIndex++) = item;
 }
 
 template <typename T, Int Cap>
 constexpr T Queue<T, Cap>::Pop() {
-  assert(Size() > 0);
+  Assert(Size() > 0);
   return Data.At(BeginIndex++);
 }
 

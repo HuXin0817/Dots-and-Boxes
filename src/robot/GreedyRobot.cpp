@@ -38,7 +38,7 @@ Span<const Edge> GreedyRobot::BestCandidateEdges(const RelativeScoreBoard& board
       Edges.At(--EnemyUnscoreableIndex) = edge;
     }
   }
-  assert(ScoreableIndex <= EnemyUnscoreableIndex);
+  Assert(ScoreableIndex <= EnemyUnscoreableIndex);
 
   if (Scoreable()) {
     return {Edges.begin(), Edges.begin() + ScoreableIndex};
