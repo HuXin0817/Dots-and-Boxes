@@ -37,7 +37,9 @@ void LoggingBoard::Reset() {
 Int LoggingBoard::Add(Edge edge) {
   const int64_t step = NowStep();
   if (step == 0) {
-    std::println(R"({{"BoardSize":{}}})", BoardSize);
+    std::println(R"({{"BoardSize":{},"StartTime":"{}"}})",
+                 BoardSize,
+                 std::format("{:%Y-%m-%dT%H:%M:%S}", std::chrono::floor<std::chrono::seconds>(LastUpdateTime)));
   }
   const Turn turn = static_cast<Turn>(*this);
   const Int score = AbsoluteScoreBoard::Add(edge);
