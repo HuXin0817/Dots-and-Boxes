@@ -1,6 +1,7 @@
 set(ModelLibraryName "model${BoardSize}x${BoardSize}")
 set(ModelSources
   Models.cpp
+  Random.cpp
   ScoreMap.cpp
 )
 add_library(${ModelLibraryName} STATIC ${ModelSources})

@@ -22,35 +22,17 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#pragma once
+#include "Random.h"
 
-#include <cassert>
-#include <random>
-
-#include "Int.h"
+#include <chrono>
 
 namespace dab::__detail__::model {
 
-class Random {
- public:
-  explicit Random();
+Random::Random() { Rng.seed(static_cast<uint64_t>(std::chrono::steady_clock::now().time_since_epoch().count())); }
 
-  Int Range(Int min, Int max);
-  template <typename T>
-  const auto& Choice(const T& data);
-
- private:
-  std::mt19937_64 Rng;
-  std::uniform_int_distribution<Int> Dist;
-};
-
-template <typename T>
-const auto& Random::Choice(const T& data) {
-  assert(!data.Empty());
-  if (data.Size() == 1) {
-    return data.At(0);
-  }
-  return data.At(Range(0, data.Size() - 1));
+Int Random::Range(Int min, Int max) {
+  Dist.param(std::uniform_int_distribution<Int>::param_type(min, max));
+  return Dist(Rng);
 }
 
 }  // namespace dab::__detail__::model
