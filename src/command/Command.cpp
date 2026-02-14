@@ -24,6 +24,7 @@ THE SOFTWARE.
 
 #include "Command.h"
 
+#include <Dab/Log.h>
 #include <Dab/Version.h>
 
 #include <QApplication>
@@ -31,9 +32,7 @@ THE SOFTWARE.
 #include <QCoreApplication>
 #include <QJsonObject>
 #include <cstdlib>
-#include <iostream>
 #include <optional>
-#include <print>
 #include <ranges>
 #include <type_traits>
 
@@ -134,7 +133,7 @@ std::optional<int> ParsePlayerType(const QString& arg) {
       return static_cast<int>(i);
     }
   }
-  std::println(std::cerr, R"({{"Error": "Invalid player type '{}'."}})", arg.toLocal8Bit().constData());
+  LogError("Invalid player type '{}'.", arg.toLocal8Bit().constData());
   return std::nullopt;
 }
 
@@ -142,10 +141,7 @@ std::optional<int64_t> ParseBoardSize(const QString& arg) {
   bool ok = false;
   const int64_t boardSize = arg.toLongLong(&ok);
   if (!ok || boardSize < 1 || boardSize > MaxBoardSize) {
-    std::println(std::cerr,
-                 R"({{"Error": "Invalid board size '{}'. Must be between 1 and {}."}})",
-                 arg.toLocal8Bit().constData(),
-                 MaxBoardSize);
+    LogError("Invalid board size '{}'. Must be between 1 and {}.", arg.toLocal8Bit().constData(), MaxBoardSize);
     return std::nullopt;
   }
   return boardSize;

@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 #include "LoggingBoard.h"
 
-#include <print>
+#include <Dab/Log.h>
 
 namespace dab::__detail__::board {
 
@@ -36,28 +36,26 @@ void LoggingBoard::Reset() {
 Int LoggingBoard::Add(Edge edge) {
   const int64_t step = NowStep();
   if (step == 0) {
-    std::println(R"({{"BoardSize":{},"StartTime":"{}"}})",
-                 BoardSize,
-                 std::format("{:%Y-%m-%dT%H:%M:%S}", std::chrono::floor<std::chrono::seconds>(LastUpdateTime)));
+    LogInfo(R"({{"BoardSize":{}}})", BoardSize);
   }
   const Turn turn = *this;
   const Int score = AbsoluteScoreBoard::Add(edge);
   const std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
   const int64_t time = std::chrono::duration_cast<std::chrono::milliseconds>(now - LastUpdateTime).count();
-  std::println(R"({{"Step":{},"Turn":{},"Move":{},"Score":{{"Player1":{},"Player2":{}}},"Time":{}}})",
-               step,
-               turn.IsPlayer1Turn() ? 1 : 2,
-               static_cast<Int>(edge),
-               Player1Score(),
-               Player2Score(),
-               static_cast<double>(time) / 1000.0);
+  LogInfo(R"({{"Step":{},"Turn":{},"Move":{},"Score":{{"Player1":{},"Player2":{}}},"Time":{}}})",
+          step,
+          turn.IsPlayer1Turn() ? 1 : 2,
+          static_cast<Int>(edge),
+          Player1Score(),
+          Player2Score(),
+          static_cast<double>(time) / 1000.0);
   if (!Gaming()) {
     if (RelativeScore() > 0) {
-      std::println(R"({{"Winner":"Player1"}})");
+      LogInfo(R"({{"Winner":"Player1"}})");
     } else if (RelativeScore() < 0) {
-      std::println(R"({{"Winner":"Player2"}})");
+      LogInfo(R"({{"Winner":"Player2"}})");
     } else {
-      std::println(R"({{"Winner":"Draw"}})");
+      LogInfo(R"({{"Winner":"Draw"}})");
     }
   }
   LastUpdateTime = now;

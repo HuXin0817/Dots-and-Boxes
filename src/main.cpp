@@ -23,11 +23,12 @@ THE SOFTWARE.
 */
 
 #include <Dab/Command.h>
+#include <Dab/Log.h>
 
-#include <print>
+using namespace dab;
 
 int main(int argc, char* argv[]) {
-  const int code = dab::Process(argc, argv);
-  std::println(R"({{"ExitCode":{}}})", code);
+  const int code = Process(argc, argv);
+  LogInfo(R"({{"ExitCode":{}}})", code);
   return code;
 }

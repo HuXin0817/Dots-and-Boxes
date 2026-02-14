@@ -24,19 +24,18 @@ THE SOFTWARE.
 
 #include "Assert.h"
 
-#include <iostream>
+#include <Dab/Log.h>
+
 #include <mutex>
-#include <print>
 
 static std::mutex AssertMutex;
 
 void AssertHelper(const char* expr, std::source_location location) {
   std::unique_lock lock(AssertMutex);
-  std::println(std::cerr,
-               R"(Assertion failed: {{"File":"{}:{}","Function":"{}","Expression":"{}"}})",
-               location.file_name(),
-               location.line(),
-               location.function_name(),
-               expr);
+  dab::LogError(R"(Assertion failed: {{"File":"{}:{}","Function":"{}","Expression":"{}"}})",
+                location.file_name(),
+                location.line(),
+                location.function_name(),
+                expr);
   std::abort();
 }
