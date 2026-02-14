@@ -22,20 +22,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "Assert.h"
+#pragma once
 
 #include <Dab/Log.h>
 
-#include <mutex>
+#ifdef NDEBUG
+#define Assert(expr) ((void)0)
+#else
 
-static std::mutex AssertMutex;
+#define Assert(expr)                                                                   \
+  do {                                                                                 \
+    if (!(expr)) {                                                                     \
+      dab::LogError(R"(ASSERT: "{}" in file {}, line {})", #expr, __FILE__, __LINE__); \
+      std::abort();                                                                    \
+    }                                                                                  \
+  } while (false)
 
-void AssertHelper(const char* expr, std::source_location location) {
-  std::unique_lock lock(AssertMutex);
-  dab::LogError(R"(Assertion failed: {{"File":"{}:{}","Function":"{}","Expression":"{}"}})",
-                location.file_name(),
-                location.line(),
-                location.function_name(),
-                expr);
-  std::abort();
-}
+#endif  // NDEBUG

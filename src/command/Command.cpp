@@ -153,6 +153,8 @@ int Process(int argc, char* argv[]) {
   application.setApplicationVersion(Version);
   application.setOrganizationName("Dots and Boxes");
 
+  Assert(false);
+
   const QCommandLineOption boardSizeOption = CreateBoardSizeOption();
   const QCommandLineOption player1Option = CreatePlayerTypeOption(1);
   const QCommandLineOption player2Option = CreatePlayerTypeOption(2);

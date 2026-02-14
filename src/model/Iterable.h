@@ -24,7 +24,8 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "Assert.h"
+#include <Dab/Assert.h>
+
 #include "Int.h"
 
 namespace dab::__detail__::model {
