@@ -30,7 +30,9 @@ THE SOFTWARE.
 #include <QCommandLineParser>
 #include <QCoreApplication>
 #include <QJsonObject>
+#include <cstdlib>
 #include <iostream>
+#include <optional>
 #include <print>
 #include <ranges>
 #include <type_traits>
@@ -123,7 +125,7 @@ QCommandLineOption CreatePlayerTypeOption(int playerid) {
       defaultPlayerType);
 }
 
-int ParsePlayerType(const QString& arg) {
+std::optional<int> ParsePlayerType(const QString& arg) {
   if (arg.compare("robot", Qt::CaseInsensitive) == 0) {
     return DefaultPlayerType;
   }
@@ -132,19 +134,19 @@ int ParsePlayerType(const QString& arg) {
       return static_cast<int>(i);
     }
   }
-  std::println(std::cerr, "Error: Invalid player type '{}'.", arg.toLocal8Bit().constData());
-  exit(EXIT_FAILURE);
+  std::println(std::cerr, R"({{"Error": "Invalid player type '{}'."}})", arg.toLocal8Bit().constData());
+  return std::nullopt;
 }
 
-int64_t ParseBoardSize(const QString& arg) {
+std::optional<int64_t> ParseBoardSize(const QString& arg) {
   bool ok = false;
   const int64_t boardSize = arg.toLongLong(&ok);
   if (!ok || boardSize < 1 || boardSize > MaxBoardSize) {
     std::println(std::cerr,
-                 "Error: Invalid board size '{}'. Must be between 1 and {}.",
+                 R"({{"Error": "Invalid board size '{}'. Must be between 1 and {}."}})",
                  arg.toLocal8Bit().constData(),
                  MaxBoardSize);
-    exit(EXIT_FAILURE);
+    return std::nullopt;
   }
   return boardSize;
 }
@@ -169,15 +171,25 @@ int Process(int argc, char* argv[]) {
   parser.addOption(backgroundModeOption);
   parser.process(application);
 
-  const int64_t boardSize = ParseBoardSize(parser.value(boardSizeOption));
-  const int player1Type = ParsePlayerType(parser.value(player1Option));
-  const int player2Type = ParsePlayerType(parser.value(player2Option));
+  const std::optional<int64_t> boardSize = ParseBoardSize(parser.value(boardSizeOption));
+  if (!boardSize.has_value()) {
+    return EXIT_FAILURE;
+  }
+  const std::optional<int> player1Type = ParsePlayerType(parser.value(player1Option));
+  if (!player1Type.has_value()) {
+    return EXIT_FAILURE;
+  }
+  const std::optional<int> player2Type = ParsePlayerType(parser.value(player2Option));
+  if (!player2Type.has_value()) {
+    return EXIT_FAILURE;
+  }
   if (parser.isSet(backgroundModeOption)) {
-    Dispatch<MockRunningGame>(boardSize, player1Type, player2Type);
+    Dispatch<MockRunningGame>(boardSize.value(), player1Type.value(), player2Type.value());
     return 0;
   }
 
-  QWidget* mainWindow = Dispatch<CreateMainWindow>(boardSize, player1Type, player2Type, nullptr);
+  QWidget* mainWindow =
+      Dispatch<CreateMainWindow>(boardSize.value(), player1Type.value(), player2Type.value(), nullptr);
   mainWindow->show();
   return application.exec();
 }

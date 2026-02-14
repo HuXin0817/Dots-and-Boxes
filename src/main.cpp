@@ -24,7 +24,10 @@ THE SOFTWARE.
 
 #include <Dab/Command.h>
 
+#include <print>
+
 int main(int argc, char* argv[]) {
   const int code = dab::Process(argc, argv);
+  std::println(R"({{"ExitCode":{}}})", code);
   return code;
 }
