@@ -8,6 +8,6 @@ set(BoardSources
   ScoreableEdgeBoard.cpp
 )
 add_library(${BoardLibraryName} STATIC ${BoardSources})
-target_compile_definitions(${BoardLibraryName} PRIVATE __BoardSize__=${BoardSize} __detail__=__detail${BoardSize}x${BoardSize}__)
+target_compile_definitions(${BoardLibraryName} PRIVATE __BoardSize__=${BoardSize} __detail__=detail${BoardSize}x${BoardSize})
 target_link_libraries(${BoardLibraryName} PRIVATE ${ModelLibraryName})
 set(BoardLibraryName ${BoardLibraryName} PARENT_SCOPE)

@@ -6,5 +6,5 @@ set(ModelSources
   ScoreMap.cpp
 )
 add_library(${ModelLibraryName} STATIC ${ModelSources})
-target_compile_definitions(${ModelLibraryName} PRIVATE __BoardSize__=${BoardSize} __detail__=__detail${BoardSize}x${BoardSize}__)
+target_compile_definitions(${ModelLibraryName} PRIVATE __BoardSize__=${BoardSize} __detail__=detail${BoardSize}x${BoardSize})
 set(ModelLibraryName ${ModelLibraryName} PARENT_SCOPE)
