@@ -7,6 +7,9 @@ set(FrontendSources
   MainWindow.cpp
 )
 qt_add_library(${FrontendLibraryName} STATIC ${FrontendSources})
-target_compile_definitions(${FrontendLibraryName} PRIVATE QT_NO_KEYWORDS __BoardSize__=${BoardSize} __detail__=detail${BoardSize}x${BoardSize})
+target_compile_definitions(${FrontendLibraryName} PRIVATE QT_NO_KEYWORDS 
+  __BoardSize__=${BoardSize} 
+  __detail__=detail${BoardSize}x${BoardSize}
+)
 target_link_libraries(${FrontendLibraryName} PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets ${ModelLibraryName} ${BoardLibraryName} ${RobotLibraryName})
 set(FrontendLibraryName ${FrontendLibraryName} PARENT_SCOPE)
