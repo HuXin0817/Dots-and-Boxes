@@ -22,8 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include <utility>
-
 #include "ParallelSearchRobot.h"
 
 namespace dab::__detail__::robot {

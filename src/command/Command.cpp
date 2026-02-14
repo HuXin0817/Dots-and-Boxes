@@ -30,8 +30,6 @@ THE SOFTWARE.
 #include <QCommandLineParser>
 #include <QCoreApplication>
 #include <QJsonObject>
-#include <QLibrary>
-#include <QWidget>
 #include <iostream>
 #include <print>
 #include <ranges>
@@ -61,13 +59,14 @@ constexpr ReturnType DispatchImpl(int64_t boardSize, Args&&... args) {
         return DispatchImpl<BoardSize - 1, FuncNameTag, ReturnType>(boardSize, std::forward<Args>(args)...);
       } else {
         DispatchImpl<BoardSize - 1, FuncNameTag, ReturnType>(boardSize, std::forward<Args>(args)...);
+        return;
       }
+    }
+    if constexpr (!std::is_void_v<ReturnType>) {
+      return FuncNameTag::template Call<BoardSize>(std::forward<Args>(args)...);
     } else {
-      if constexpr (!std::is_void_v<ReturnType>) {
-        return FuncNameTag::template Call<BoardSize>(std::forward<Args>(args)...);
-      } else {
-        FuncNameTag::template Call<BoardSize>(std::forward<Args>(args)...);
-      }
+      FuncNameTag::template Call<BoardSize>(std::forward<Args>(args)...);
+      return;
     }
   }
 }
@@ -79,7 +78,7 @@ constexpr auto Dispatch(int64_t boardSize, Args&&... args) {
 }
 
 QCommandLineOption CreateBoardSizeOption() {
-  QByteArray boardSizeEnv = qgetenv("BOARD_SIZE");
+  const QByteArray boardSizeEnv = qgetenv("BOARD_SIZE");
   QString defaultBoardSize = QString::number(DefaultBoardSize);
   if (!boardSizeEnv.isEmpty()) {
     defaultBoardSize = boardSizeEnv;
@@ -91,7 +90,7 @@ QCommandLineOption CreateBoardSizeOption() {
 }
 
 QCommandLineOption CreatePlayerTypeOption(int playerid) {
-  QByteArray playerTypeEnv = qgetenv(std::format("PLAYER{}", playerid).c_str());
+  const QByteArray playerTypeEnv = qgetenv(std::format("PLAYER{}", playerid).c_str());
   QString defaultPlayerType = "robot";
   if (!playerTypeEnv.isEmpty()) {
     defaultPlayerType = playerTypeEnv;
@@ -138,7 +137,7 @@ int ParsePlayerType(const QString& arg) {
 
 int64_t ParseBoardSize(const QString& arg) {
   bool ok = false;
-  int64_t boardSize = arg.toLongLong(&ok);
+  const int64_t boardSize = arg.toLongLong(&ok);
   if (!ok || boardSize < 1 || boardSize > MaxBoardSize) {
     std::println(std::cerr,
                  "Error: Invalid board size '{}'. Must be between 1 and {}.",
@@ -155,10 +154,10 @@ int Process(int argc, char* argv[]) {
   application.setApplicationVersion(Version);
   application.setOrganizationName("Dots and Boxes");
 
-  QCommandLineOption boardSizeOption = CreateBoardSizeOption();
-  QCommandLineOption player1Option = CreatePlayerTypeOption(1);
-  QCommandLineOption player2Option = CreatePlayerTypeOption(2);
-  QCommandLineOption backgroundModeOption(QStringList() << "b" << "background", "Running in background mode.");
+  const QCommandLineOption boardSizeOption = CreateBoardSizeOption();
+  const QCommandLineOption player1Option = CreatePlayerTypeOption(1);
+  const QCommandLineOption player2Option = CreatePlayerTypeOption(2);
+  const QCommandLineOption backgroundModeOption(QStringList() << "b" << "background", "Running in background mode.");
 
   QCommandLineParser parser;
   parser.addHelpOption();
@@ -169,17 +168,17 @@ int Process(int argc, char* argv[]) {
   parser.addOption(backgroundModeOption);
   parser.process(application);
 
-  int64_t boardSize = ParseBoardSize(parser.value(boardSizeOption));
-  int player1Type = ParsePlayerType(parser.value(player1Option));
-  int player2Type = ParsePlayerType(parser.value(player2Option));
+  const int64_t boardSize = ParseBoardSize(parser.value(boardSizeOption));
+  const int player1Type = ParsePlayerType(parser.value(player1Option));
+  const int player2Type = ParsePlayerType(parser.value(player2Option));
   if (parser.isSet(backgroundModeOption)) {
     Dispatch<MockRunningGame>(boardSize, player1Type, player2Type);
     return 0;
-  } else {
-    QWidget* mainWindow = Dispatch<CreateMainWindow>(boardSize, player1Type, player2Type, nullptr);
-    mainWindow->show();
-    return application.exec();
   }
+
+  QWidget* mainWindow = Dispatch<CreateMainWindow>(boardSize, player1Type, player2Type, nullptr);
+  mainWindow->show();
+  return application.exec();
 }
 
 }  // namespace dab::command

@@ -44,13 +44,17 @@ QColor BoxCanvas::Color() const {
   static constexpr QColor Player1OccupyColor = QColor(64, 64, 255, 64);
   static constexpr QColor Player2OccupyColor = QColor(255, 64, 64, 64);
 
-  if (GetOwner() == Owner::None) {
-    return QColor(0, 0, 0, 0);
-  } else if (GetOwner() == Owner::Player1) {
-    return Player1OccupyColor;
-  } else {
-    return Player2OccupyColor;
+  switch (GetOwner()) {
+    case Owner::None:
+      return {};
+    case Owner::Player1:
+      return Player1OccupyColor;
+    case Owner::Player2:
+      return Player2OccupyColor;
   }
+
+  std::unreachable();
+  return {};
 }
 
 }  // namespace dab::__detail__::frontend

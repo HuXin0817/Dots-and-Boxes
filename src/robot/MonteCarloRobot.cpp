@@ -24,7 +24,6 @@ THE SOFTWARE.
 
 #include "MonteCarloRobot.h"
 
-#include <cstdint>
 #include <ranges>
 
 namespace dab::__detail__::robot {

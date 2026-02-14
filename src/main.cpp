@@ -25,6 +25,6 @@ THE SOFTWARE.
 #include <Dab/Command.h>
 
 int main(int argc, char* argv[]) {
-  int code = dab::Process(argc, argv);
+  const int code = dab::Process(argc, argv);
   return code;
 }

@@ -32,8 +32,8 @@ THE SOFTWARE.
 namespace dab::__detail__::model {
 
 void ScoreMap::Reset() {
-  std::fill(Time.begin(), Time.end(), 0);
-  std::fill(Score.begin(), Score.end(), 0);
+  std::ranges::fill(Time, 0);
+  std::ranges::fill(Score, 0);
   BestEdges.Clear();
 }
 

@@ -34,11 +34,18 @@ THE SOFTWARE.
 namespace dab::__detail__::frontend {
 
 QColor BaseCanvas::ThemeColor(const QColor& DarkThemeColor, const QColor& LightThemeColor) {
-  if (QApplication::styleHints()->colorScheme() == Qt::ColorScheme::Dark) {
-    return DarkThemeColor;
-  } else {
-    return LightThemeColor;
+  switch (QApplication::styleHints()->colorScheme()) {
+    case Qt::ColorScheme::Light:
+      return LightThemeColor;
+    case Qt::ColorScheme::Dark:
+      return DarkThemeColor;
+    case Qt::ColorScheme::Unknown:
+      break;
+    default:
+      break;
   }
+  std::unreachable();
+  return {};
 }
 
 void BaseCanvas::SetOwner(Turn turn) {

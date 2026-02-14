@@ -24,7 +24,6 @@ THE SOFTWARE.
 
 #include "LoggingBoard.h"
 
-#include <cstdint>
 #include <print>
 
 namespace dab::__detail__::board {
@@ -41,7 +40,7 @@ Int LoggingBoard::Add(Edge edge) {
                  BoardSize,
                  std::format("{:%Y-%m-%dT%H:%M:%S}", std::chrono::floor<std::chrono::seconds>(LastUpdateTime)));
   }
-  const Turn turn = static_cast<Turn>(*this);
+  const Turn turn = *this;
   const Int score = AbsoluteScoreBoard::Add(edge);
   const std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
   const int64_t time = std::chrono::duration_cast<std::chrono::milliseconds>(now - LastUpdateTime).count();

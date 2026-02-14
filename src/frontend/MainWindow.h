@@ -27,7 +27,6 @@ THE SOFTWARE.
 #include <Dab/Robot.h>
 
 #include <QPointer>
-#include <QRunnable>
 #include <QThreadPool>
 #include <QTime>
 
@@ -69,7 +68,9 @@ class MainWindow : public BaseCanvas {
 
  public Q_SLOTS:
   void Run();
-  void AsyncRun() { QThreadPool::globalInstance()->start(std::bind(&MainWindow::Run, this)); }
+  void AsyncRun() {
+    QThreadPool::globalInstance()->start([this] { Run(); });
+  }
   void Add();
   void Restart();
   void HandleGameOver();

@@ -172,7 +172,6 @@ void MainWindow::Add() {
       BoxCanvases[box]->SetOwner(static_cast<Turn>(Board));
     }
   }
-  const Turn turn = static_cast<Turn>(Board);
   Board.Add(edge);
   update();
   QApplication::beep();

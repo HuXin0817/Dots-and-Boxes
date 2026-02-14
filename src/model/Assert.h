@@ -24,7 +24,6 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <cstdlib>
 #include <source_location>
 
 void AssertHelper(const char* expr, std::source_location location = std::source_location::current());
