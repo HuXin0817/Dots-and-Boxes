@@ -24,16 +24,12 @@ THE SOFTWARE.
 
 #include "BasicBoard.h"
 
-#include <ranges>
-
 namespace dab::__detail__::board {
 
 void BasicBoard::Reset() {
   Step = 0;
-  for (const Edge edge : std::views::iota(0, Edge::Max)) {
-    EdgeIndexes.At(edge) = edge;
-    Edges.At(edge) = edge;
-  }
+  std::ranges::iota(EdgeIndexes.begin(), EdgeIndexes.end(), 0);
+  std::ranges::iota(Edges.begin(), Edges.end(), 0);
 }
 
 void BasicBoard::Add(Edge edge) {
