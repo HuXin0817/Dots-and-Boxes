@@ -31,7 +31,6 @@ namespace dab {
 using __detail__::robot::CreateRobot;
 using __detail__::robot::PlayerType;
 using __detail__::robot::PlayerTypeIsRobot;
-using __detail__::robot::PlayerTypeString;
 using __detail__::robot::Robot;
 
 }  // namespace dab

@@ -26,18 +26,6 @@ THE SOFTWARE.
 
 namespace dab::__detail__::robot {
 
-const char* PlayerTypeString(PlayerType playerType) {
-  static constexpr const char* PlayerTypeStringArray[] = {
-      "Human",
-      "GreedyRobot",
-      "ImproveGreedyRobot",
-      "SimulationRobot",
-      "MonteCarloRobot",
-      "ParallelSearchRobot",
-  };
-  return PlayerTypeStringArray[static_cast<int>(playerType)];
-}
-
 Robot* CreateRobot(PlayerType playerType) {
   switch (playerType) {
     case PlayerType::GreedyRobot:

@@ -44,7 +44,6 @@ class Robot {
   virtual Span<const Edge> BestCandidateEdges(const RelativeScoreBoard& board) = 0;
 };
 
-const char* PlayerTypeString(PlayerType playerType);
 inline bool PlayerTypeIsRobot(PlayerType playerType) { return playerType != PlayerType::Human; }
 Robot* CreateRobot(PlayerType playerType);
 
