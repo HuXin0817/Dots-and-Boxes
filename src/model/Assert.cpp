@@ -27,9 +27,6 @@ THE SOFTWARE.
 #include <iostream>
 #include <mutex>
 #include <print>
-#include <utility>
-
-namespace dab::detail::model {
 
 static std::mutex AssertMutex;
 
@@ -41,8 +38,5 @@ void AssertHelper(const char* expr, std::source_location location) {
                location.line(),
                location.function_name(),
                expr);
-  std::unreachable();
   std::abort();
 }
-
-}  // namespace dab::detail::model

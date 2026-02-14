@@ -35,15 +35,93 @@ THE SOFTWARE.
 #include <iostream>
 #include <print>
 #include <ranges>
+#include <type_traits>
 
 #include "../extern/CreateMainWindow.h"
 #include "../extern/MockRunningGame.h"
-#include "Config.h"
-#include "Dispatch.h"
 
 using namespace dab::internal;
 
 namespace dab::command {
+
+static constexpr int64_t DefaultBoardSize = __DefaultBoardSize__;
+static constexpr int64_t MaxBoardSize = __MaxBoardSize__;
+
+template <int64_t BoardSize, typename FuncNameTag, typename ReturnType, typename... Args>
+  requires(BoardSize >= 0)
+constexpr ReturnType DispatchImpl(int64_t boardSize, Args&&... args) {
+  if constexpr (BoardSize == 0) {
+    std::unreachable();
+    if constexpr (!std::is_void_v<ReturnType>) {
+      return ReturnType{};
+    }
+  } else {
+    if (boardSize < BoardSize) {
+      if constexpr (!std::is_void_v<ReturnType>) {
+        return DispatchImpl<BoardSize - 1, FuncNameTag, ReturnType>(boardSize, std::forward<Args>(args)...);
+      } else {
+        DispatchImpl<BoardSize - 1, FuncNameTag, ReturnType>(boardSize, std::forward<Args>(args)...);
+      }
+    } else {
+      if constexpr (!std::is_void_v<ReturnType>) {
+        return FuncNameTag::template Call<BoardSize>(std::forward<Args>(args)...);
+      } else {
+        FuncNameTag::template Call<BoardSize>(std::forward<Args>(args)...);
+      }
+    }
+  }
+}
+
+template <typename FuncNameTag, typename... Args>
+constexpr auto Dispatch(int64_t boardSize, Args&&... args) {
+  using ReturnType = decltype(FuncNameTag::template Call<MaxBoardSize>(std::forward<Args>(args)...));
+  return DispatchImpl<MaxBoardSize, FuncNameTag, ReturnType>(boardSize, std::forward<Args>(args)...);
+}
+
+QCommandLineOption CreateBoardSizeOption() {
+  QByteArray boardSizeEnv = qgetenv("BOARD_SIZE");
+  QString defaultBoardSize = QString::number(DefaultBoardSize);
+  if (!boardSizeEnv.isEmpty()) {
+    defaultBoardSize = boardSizeEnv;
+  }
+  return QCommandLineOption(QStringList() << "s" << "boardsize",
+                            QString("Set board size (1-%1).").arg(MaxBoardSize),
+                            "size",
+                            defaultBoardSize);
+}
+
+QCommandLineOption CreatePlayerTypeOption(int playerid) {
+  QByteArray playerTypeEnv = qgetenv(std::format("PLAYER{}", playerid).c_str());
+  QString defaultPlayerType = "robot";
+  if (!playerTypeEnv.isEmpty()) {
+    defaultPlayerType = playerTypeEnv;
+  }
+
+  QStringList accepted;
+  accepted << "human" << "robot";
+  for (const size_t i : std::views::iota(0ull, std::size(PlayerTypeOptionStrings))) {
+    accepted << QString::fromUtf8(PlayerTypeOptionStrings[i]);
+  }
+
+  QString acceptedStr;
+  if (accepted.size() == 1) {
+    acceptedStr = "'" + accepted[0] + "'";
+  } else if (accepted.size() == 2) {
+    acceptedStr = "'" + accepted[0] + "' or '" + accepted[1] + "'";
+  } else {
+    const QString allButLast = accepted.mid(0, accepted.size() - 1).join("', '");
+    acceptedStr = "'" + allButLast + "' or '" + accepted.last() + "'";
+  }
+
+  return QCommandLineOption(
+      QStringList() << QString("p%1").arg(playerid) << QString("player%1").arg(playerid),
+      QString("Set type of player %1. Accepts: %2 (default: 'robot'). Note: 'robot' is equivalent to '%3'.")
+          .arg(playerid)
+          .arg(acceptedStr)
+          .arg(QString::fromUtf8(PlayerTypeOptionStrings[DefaultPlayerType])),
+      "type",
+      defaultPlayerType);
+}
 
 int ParsePlayerType(const QString& arg) {
   if (arg.compare("robot", Qt::CaseInsensitive) == 0) {
@@ -77,43 +155,10 @@ int Process(int argc, char* argv[]) {
   application.setApplicationVersion(Version);
   application.setOrganizationName("Dots and Boxes");
 
-  QStringList accepted;
-  accepted << "human" << "robot";
-  for (const size_t i : std::views::iota(0ull, std::size(PlayerTypeOptionStrings))) {
-    accepted << QString::fromUtf8(PlayerTypeOptionStrings[i]);
-  }
-
-  QString acceptedStr;
-  if (accepted.size() == 1) {
-    acceptedStr = "'" + accepted[0] + "'";
-  } else if (accepted.size() == 2) {
-    acceptedStr = "'" + accepted[0] + "' or '" + accepted[1] + "'";
-  } else {
-    const QString allButLast = accepted.mid(0, accepted.size() - 1).join("', '");
-    acceptedStr = "'" + allButLast + "' or '" + accepted.last() + "'";
-  }
-
-  const QCommandLineOption boardSizeOption(
-      QStringList() << "s" << "boardsize", QString("Set board size (1-%1).").arg(MaxBoardSize), "size", "6");
-
-  const QCommandLineOption player1Option(
-      QStringList() << "p1" << "player1",
-      QString("Set type of player 1. Accepts: %1 (default: 'robot'). Note: 'robot' is equivalent to '%2'.")
-          .arg(acceptedStr)
-          .arg(QString::fromUtf8(PlayerTypeOptionStrings[DefaultPlayerType])),
-      "Type",
-      "robot");
-
-  const QCommandLineOption player2Option(
-      QStringList() << "p2" << "player2",
-      QString("Set type of player 2. Accepts: %1 (default: 'robot'). Note: 'robot' is equivalent to '%2'.")
-          .arg(acceptedStr)
-          .arg(QString::fromUtf8(PlayerTypeOptionStrings[DefaultPlayerType])),
-      "Type",
-      "robot");
-
-  const QCommandLineOption backgroundModeOption(QStringList() << "b" << "background",
-                                                QString("Running in background mode."));
+  QCommandLineOption boardSizeOption = CreateBoardSizeOption();
+  QCommandLineOption player1Option = CreatePlayerTypeOption(1);
+  QCommandLineOption player2Option = CreatePlayerTypeOption(2);
+  QCommandLineOption backgroundModeOption(QStringList() << "b" << "background", "Running in background mode.");
 
   QCommandLineParser parser;
   parser.addHelpOption();

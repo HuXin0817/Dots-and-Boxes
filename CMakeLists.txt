@@ -14,6 +14,10 @@ if(NOT MaxBoardSize)
   set(MaxBoardSize 36)
 endif()
 
+if(NOT DefaultBoardSize)
+  set(DefaultBoardSize 6)
+endif()
+
 file(READ VERSION Version)
 message(STATUS "Version: ${Version}")
 message(STATUS "MaxBoardSize: ${MaxBoardSize}")

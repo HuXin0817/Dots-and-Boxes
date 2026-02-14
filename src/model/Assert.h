@@ -27,21 +27,17 @@ THE SOFTWARE.
 #include <cstdlib>
 #include <source_location>
 
-namespace dab::detail::model {
-
 void AssertHelper(const char* expr, std::source_location location = std::source_location::current());
 
 #ifdef NDEBUG
 #define Assert(expr) ((void)0)
 #else
 
-#define Assert(expr)                             \
-  do {                                           \
-    if (!(expr)) {                               \
-      ::dab::detail::model::AssertHelper(#expr); \
-    }                                            \
+#define Assert(expr)       \
+  do {                     \
+    if (!(expr)) {         \
+      AssertHelper(#expr); \
+    }                      \
   } while (false)
 
 #endif  // NDEBUG
-
-}  // namespace dab::detail::model
