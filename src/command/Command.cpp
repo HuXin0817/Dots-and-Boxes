@@ -62,14 +62,12 @@ constexpr auto DispatchImpl(int64_t boardSize, Args&&... args) {
         return DispatchImpl<BoardSize - 1, FuncNameTag>(boardSize, std::forward<Args>(args)...);
       } else {
         DispatchImpl<BoardSize - 1, FuncNameTag>(boardSize, std::forward<Args>(args)...);
-        return;
       }
     }
     if constexpr (!std::is_void_v<ReturnType>) {
       return FuncNameTag::template Call<BoardSize>(std::forward<Args>(args)...);
     } else {
       FuncNameTag::template Call<BoardSize>(std::forward<Args>(args)...);
-      return;
     }
   }
 }
