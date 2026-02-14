@@ -44,6 +44,7 @@ namespace dab::command {
 
 static constexpr int64_t DefaultBoardSize = __DefaultBoardSize__;
 static constexpr int64_t MaxBoardSize = __MaxBoardSize__;
+static_assert(DefaultBoardSize <= MaxBoardSize);
 
 template <int64_t BoardSize, typename FuncNameTag, typename ReturnType, typename... Args>
   requires(BoardSize >= 0)
