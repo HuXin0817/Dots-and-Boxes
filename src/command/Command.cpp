@@ -47,9 +47,10 @@ static constexpr int64_t DefaultBoardSize = __DefaultBoardSize__;
 static constexpr int64_t MaxBoardSize = __MaxBoardSize__;
 static_assert(DefaultBoardSize <= MaxBoardSize);
 
-template <int64_t BoardSize, typename FuncNameTag, typename ReturnType, typename... Args>
+template <int64_t BoardSize, typename FuncNameTag, typename... Args>
   requires(BoardSize >= 0)
-constexpr ReturnType DispatchImpl(int64_t boardSize, Args&&... args) {
+constexpr auto DispatchImpl(int64_t boardSize, Args&&... args) {
+  using ReturnType = decltype(FuncNameTag::template Call<BoardSize>(std::forward<Args>(args)...));
   if constexpr (BoardSize == 0) {
     std::unreachable();
     if constexpr (!std::is_void_v<ReturnType>) {
@@ -58,9 +59,9 @@ constexpr ReturnType DispatchImpl(int64_t boardSize, Args&&... args) {
   } else {
     if (boardSize < BoardSize) {
       if constexpr (!std::is_void_v<ReturnType>) {
-        return DispatchImpl<BoardSize - 1, FuncNameTag, ReturnType>(boardSize, std::forward<Args>(args)...);
+        return DispatchImpl<BoardSize - 1, FuncNameTag>(boardSize, std::forward<Args>(args)...);
       } else {
-        DispatchImpl<BoardSize - 1, FuncNameTag, ReturnType>(boardSize, std::forward<Args>(args)...);
+        DispatchImpl<BoardSize - 1, FuncNameTag>(boardSize, std::forward<Args>(args)...);
         return;
       }
     }
@@ -75,8 +76,7 @@ constexpr ReturnType DispatchImpl(int64_t boardSize, Args&&... args) {
 
 template <typename FuncNameTag, typename... Args>
 constexpr auto Dispatch(int64_t boardSize, Args&&... args) {
-  using ReturnType = decltype(FuncNameTag::template Call<MaxBoardSize>(std::forward<Args>(args)...));
-  return DispatchImpl<MaxBoardSize, FuncNameTag, ReturnType>(boardSize, std::forward<Args>(args)...);
+  return DispatchImpl<MaxBoardSize, FuncNameTag>(boardSize, std::forward<Args>(args)...);
 }
 
 QCommandLineOption CreateBoardSizeOption() {
@@ -152,8 +152,6 @@ int Process(int argc, char* argv[]) {
   application.setApplicationName("Dots and Boxes");
   application.setApplicationVersion(Version);
   application.setOrganizationName("Dots and Boxes");
-
-  Assert(false);
 
   const QCommandLineOption boardSizeOption = CreateBoardSizeOption();
   const QCommandLineOption player1Option = CreatePlayerTypeOption(1);
