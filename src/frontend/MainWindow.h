@@ -28,7 +28,6 @@ THE SOFTWARE.
 
 #include <QPointer>
 #include <QThreadPool>
-#include <QTime>
 
 #include "BoxCanvas.h"
 #include "DotCanvas.h"
@@ -58,10 +57,9 @@ class MainWindow : public BaseCanvas {
   std::atomic<Edge> PlayerMoveEdge;
   Edge LastEdge;
   LoggingBoard Board;
-  QList<QPointer<BoxCanvas>> BoxCanvases;
-  QList<QPointer<DotCanvas>> DotCanvases;
-  QList<QPointer<EdgeCanvas>> EdgeCanvases;
-  QTime LastUpdateTime;
+  Array<QPointer<BoxCanvas>, Box::Max> BoxCanvases;
+  Array<QPointer<DotCanvas>, Dot::Max> DotCanvases;
+  Array<QPointer<EdgeCanvas>, Edge::Max> EdgeCanvases;
 
   QColor Color() const;
   QRunnable* SetPlayerMoveEdgeFunc(Edge edge);

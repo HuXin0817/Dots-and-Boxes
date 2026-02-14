@@ -46,7 +46,7 @@ QColor BoxCanvas::Color() const {
 
   switch (GetOwner()) {
     case Owner::None:
-      return {};
+      return {0, 0, 0, 0};
     case Owner::Player1:
       return Player1OccupyColor;
     case Owner::Player2:

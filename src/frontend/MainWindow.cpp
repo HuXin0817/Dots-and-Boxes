@@ -54,20 +54,14 @@ MainWindow::MainWindow(PlayerType player1Type, PlayerType player2Type, QWidget* 
 
   resize(WindowSize, WindowSize);
   setMinimumSize(WindowSize, WindowSize);
-
-  BoxCanvases.reserve(Box::Max);
   for (const Box box : std::views::iota(0, Box::Max)) {
-    BoxCanvases.emplace_back(new BoxCanvas(this));
+    BoxCanvases.At(box) = new BoxCanvas(this);
   }
-
-  EdgeCanvases.reserve(Edge::Max);
   for (const Edge edge : std::views::iota(0, Edge::Max)) {
-    EdgeCanvases.emplace_back(new EdgeCanvas(edge.Rotate(), SetPlayerMoveEdgeFunc(edge), this));
+    EdgeCanvases.At(edge) = new EdgeCanvas(edge.Rotate(), SetPlayerMoveEdgeFunc(edge), this);
   }
-
-  DotCanvases.reserve(Dot::Max);
   for (const Dot dot : std::views::iota(0, Dot::Max)) {
-    DotCanvases.emplace_back(new DotCanvas(this));
+    DotCanvases.At(dot) = new DotCanvas(this);
   }
 }
 
@@ -87,7 +81,7 @@ void MainWindow::resizeEvent(QResizeEvent* event) {
   for (const Box box : std::views::iota(0, Box::Max)) {
     const int x = x0 + box.X() * EdgeCanvas::Height + 2 * UnitSize;
     const int y = y0 + box.Y() * EdgeCanvas::Height + 2 * UnitSize;
-    BoxCanvases[box]->move(x, y);
+    BoxCanvases.At(box)->move(x, y);
   }
 
   for (const Edge edge : std::views::iota(0, Edge::Max)) {
@@ -98,13 +92,13 @@ void MainWindow::resizeEvent(QResizeEvent* event) {
     } else {
       x += UnitSize;
     }
-    EdgeCanvases[edge]->move(x, y);
+    EdgeCanvases.At(edge)->move(x, y);
   }
 
   for (const Dot dot : std::views::iota(0, Dot::Max)) {
     const int x = x0 + dot.X() * EdgeCanvas::Height;
     const int y = y0 + dot.Y() * EdgeCanvas::Height;
-    DotCanvases[dot]->move(x, y);
+    DotCanvases.At(dot)->move(x, y);
   }
 }
 
@@ -160,16 +154,16 @@ void MainWindow::Run() {
 void MainWindow::Add() {
   const Edge edge = PlayerMoveEdge.load();
   if (Board.NowStep() > 0) {
-    EdgeCanvases[LastEdge]->SetHighLight(false);
+    EdgeCanvases.At(LastEdge)->SetHighLight(false);
   }
   LastEdge = edge;
-  EdgeCanvases[edge]->SetOwner(static_cast<Turn>(Board));
-  EdgeCanvases[edge]->raise();
-  DotCanvases[edge.Dot1()]->raise();
-  DotCanvases[edge.Dot2()]->raise();
+  EdgeCanvases.At(edge)->SetOwner(static_cast<Turn>(Board));
+  EdgeCanvases.At(edge)->raise();
+  DotCanvases.At(edge.Dot1())->raise();
+  DotCanvases.At(edge.Dot2())->raise();
   for (const Box box : edge.NearBoxes()) {
     if (Board.EdgeCount(box) == 3) {
-      BoxCanvases[box]->SetOwner(static_cast<Turn>(Board));
+      BoxCanvases.At(box)->SetOwner(static_cast<Turn>(Board));
     }
   }
   Board.Add(edge);
@@ -180,11 +174,11 @@ void MainWindow::Add() {
 void MainWindow::Restart() {
   Board.Reset();
   for (const Edge edge : std::views::iota(0, Edge::Max)) {
-    EdgeCanvases[edge]->SetHighLight(false);
-    EdgeCanvases[edge]->SetOwner(Owner::None);
+    EdgeCanvases.At(edge)->SetHighLight(false);
+    EdgeCanvases.At(edge)->SetOwner(Owner::None);
   }
   for (const Box box : std::views::iota(0, Box::Max)) {
-    BoxCanvases[box]->SetOwner(Owner::None);
+    BoxCanvases.At(box)->SetOwner(Owner::None);
   }
   update();
   AsyncRun();
