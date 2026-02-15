@@ -33,7 +33,7 @@ THE SOFTWARE.
 #define Assert(expr)                                                                   \
   do {                                                                                 \
     if (!(expr)) {                                                                     \
-      dab::LogError(R"(ASSERT: "{}" in file {}, line {})", #expr, __FILE__, __LINE__); \
+      dab::LogError(R"(ASSERT: '{}' in file {}, line {})", #expr, __FILE__, __LINE__); \
       std::abort();                                                                    \
     }                                                                                  \
   } while (false)
