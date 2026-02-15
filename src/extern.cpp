@@ -22,11 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "MockRunningGame.h"
+#include "extern.h"
 
-#include <Dab/Robot.h>
-
-#include <QPointer>
+#include <Dab/Frontend.h>
 
 namespace dab {
 
@@ -48,6 +46,11 @@ void MockRunningGame::Call<BoardSize>(int player1Type, int player2Type) {
       board.Add(random.Choice(robot2->BestCandidateEdges(board)));
     }
   }
+}
+
+template <>
+QWidget* CreateMainWindow::Call<BoardSize>(int player1Type, int player2Type, QWidget* parent) {
+  return new MainWindow(static_cast<PlayerType>(player1Type), static_cast<PlayerType>(player2Type), parent);
 }
 
 }  // namespace dab

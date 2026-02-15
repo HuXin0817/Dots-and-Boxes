@@ -5,10 +5,7 @@ add_subdirectory(robot)
 add_subdirectory(frontend)
 
 set(ExternLibrary "src${BoardSize}x${BoardSize}")
-set(ExternSources 
-  CreateMainWindow.cpp
-  MockRunningGame.cpp
-)
+set(ExternSources extern.cpp)
 add_library(${ExternLibrary} STATIC ${ExternSources})
 target_compile_definitions(${ExternLibrary} PRIVATE QT_NO_KEYWORDS 
   __BoardSize__=${BoardSize} 

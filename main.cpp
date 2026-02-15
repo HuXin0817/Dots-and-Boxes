@@ -33,8 +33,7 @@ THE SOFTWARE.
 #include <ranges>
 #include <type_traits>
 
-#include "src/CreateMainWindow.h"
-#include "src/MockRunningGame.h"
+#include "src/extern.h"
 
 using namespace dab;
 
@@ -52,38 +51,9 @@ static constexpr int64_t DefaultBoardSize = __DefaultBoardSize__;
 static constexpr int64_t MaxBoardSize = __MaxBoardSize__;
 static_assert(DefaultBoardSize <= MaxBoardSize);
 
-template <int64_t BoardSize, typename FuncNameTag, typename... Args>
-  requires(BoardSize >= 0)
-constexpr auto DispatchImpl(int64_t boardSize, Args&&... args) {
-  using ReturnType = decltype(FuncNameTag::template Call<BoardSize>(std::forward<Args>(args)...));
-  static constexpr bool HaveReturnValue = !std::is_void_v<ReturnType>;
-  if constexpr (BoardSize == 0) {
-    std::unreachable();
-    if constexpr (HaveReturnValue) {
-      return ReturnType{};
-    }
-  } else {
-    if (boardSize < BoardSize) {
-      if constexpr (HaveReturnValue) {
-        return DispatchImpl<BoardSize - 1, FuncNameTag>(boardSize, std::forward<Args>(args)...);
-      } else {
-        DispatchImpl<BoardSize - 1, FuncNameTag>(boardSize, std::forward<Args>(args)...);
-        return;
-      }
-    }
-    auto call = FuncNameTag::template Call<BoardSize>;
-    if constexpr (HaveReturnValue) {
-      return call(std::forward<Args>(args)...);
-    } else {
-      call(std::forward<Args>(args)...);
-      return;
-    }
-  }
-}
-
 template <typename FuncNameTag, typename... Args>
 constexpr auto Dispatch(int64_t boardSize, Args&&... args) {
-  return DispatchImpl<MaxBoardSize, FuncNameTag>(boardSize, std::forward<Args>(args)...);
+  return dab::Dispatch<MaxBoardSize, FuncNameTag>(boardSize, std::forward<Args>(args)...);
 }
 
 QCommandLineOption CreateBoardSizeOption() {
