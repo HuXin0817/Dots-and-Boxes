@@ -28,8 +28,8 @@ namespace dab::__detail__::board {
 
 void BasicBoard::Reset() {
   Step = 0;
-  std::ranges::iota(EdgeIndexes.begin(), EdgeIndexes.end(), 0);
-  std::ranges::iota(Edges.begin(), Edges.end(), 0);
+  std::iota(EdgeIndexes.begin(), EdgeIndexes.end(), 0);
+  std::iota(Edges.begin(), Edges.end(), 0);
 }
 
 void BasicBoard::Add(Edge edge) {
