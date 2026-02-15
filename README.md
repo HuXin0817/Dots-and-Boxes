@@ -133,10 +133,10 @@ Dots-and-Boxes/
 │   │   ├── Config.h
 │   │   ├── CreateMainWindow.cpp
 │   │   └── CreateMainWindow.h
-│   ├── extern/         # External dependencies
+│   ├── src/         # External dependencies
 │   │   ├── CMakeLists.txt
-│   │   ├── extern.cpp
-│   │   └── extern.h
+│   │   ├── src.cpp
+│   │   └── src.h
 │   ├── frontend/       # GUI-related files
 │   │   ├── BaseCanvas.cpp
 │   │   ├── BaseCanvas.h

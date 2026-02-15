@@ -1,4 +1,4 @@
-set(RobotLibraryName "robot${BoardSize}x${BoardSize}")
+set(RobotLibrary "robot${BoardSize}x${BoardSize}")
 set(RobotSources
   GreedyRobot.cpp
   ImproveGreedyRobot.cpp
@@ -7,10 +7,15 @@ set(RobotSources
   Robot.cpp
   SimulationRobot.cpp
 )
-add_library(${RobotLibraryName} STATIC ${RobotSources})
-target_compile_definitions(${RobotLibraryName} PRIVATE 
+add_library(${RobotLibrary} STATIC ${RobotSources})
+target_compile_definitions(${RobotLibrary} PRIVATE 
   __BoardSize__=${BoardSize} 
   __detail__=detail${BoardSize}x${BoardSize}
 )
-target_link_libraries(${RobotLibraryName} PRIVATE TBB::tbb ${ModelLibraryName} ${BoardLibraryName})
-set(RobotLibraryName ${RobotLibraryName} PARENT_SCOPE)
+target_link_libraries(${RobotLibrary} PRIVATE 
+  TBB::tbb 
+  ${CommonLibrary}
+  ${ModelLibrary} 
+  ${BoardLibrary}
+)
+set(RobotLibrary ${RobotLibrary} PARENT_SCOPE)

@@ -22,14 +22,32 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#pragma once
+#include "MockRunningGame.h"
 
-#include "../../src/command/Command.h"
+#include <Dab/Robot.h>
+
+#include <QPointer>
 
 namespace dab {
 
-using command::DefaultPlayerType;
-using command::PlayerTypeOptionStrings;
-using command::Process;
+template <>
+void MockRunningGame::Call<BoardSize>(int player1Type, int player2Type) {
+  QScopedPointer<Robot> robot1;
+  QScopedPointer<Robot> robot2;
+  robot1.reset(CreateRobot(static_cast<PlayerType>(player1Type)));
+  robot2.reset(CreateRobot(static_cast<PlayerType>(player2Type)));
+  Assert(!robot1.isNull());
+  Assert(!robot2.isNull());
+
+  Random random;
+  LoggingBoard board;
+  while (board.Gaming()) {
+    if (board.IsPlayer1Turn()) {
+      board.Add(random.Choice(robot1->BestCandidateEdges(board)));
+    } else {
+      board.Add(random.Choice(robot2->BestCandidateEdges(board)));
+    }
+  }
+}
 
 }  // namespace dab

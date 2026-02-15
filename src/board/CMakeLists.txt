@@ -1,4 +1,4 @@
-set(BoardLibraryName "board${BoardSize}x${BoardSize}")
+set(BoardLibrary "board${BoardSize}x${BoardSize}")
 set(BoardSources
   AbsoluteScoreBoard.cpp
   BasicBoard.cpp
@@ -7,10 +7,13 @@ set(BoardSources
   RelativeScoreBoard.cpp
   ScoreableEdgeBoard.cpp
 )
-add_library(${BoardLibraryName} STATIC ${BoardSources})
-target_compile_definitions(${BoardLibraryName} PRIVATE 
+add_library(${BoardLibrary} STATIC ${BoardSources})
+target_compile_definitions(${BoardLibrary} PRIVATE 
   __BoardSize__=${BoardSize} 
   __detail__=detail${BoardSize}x${BoardSize}
 )
-target_link_libraries(${BoardLibraryName} PRIVATE ${ModelLibraryName})
-set(BoardLibraryName ${BoardLibraryName} PARENT_SCOPE)
+target_link_libraries(${BoardLibrary} PRIVATE 
+  ${CommonLibrary}
+  ${ModelLibrary}
+)
+set(BoardLibrary ${BoardLibrary} PARENT_SCOPE)

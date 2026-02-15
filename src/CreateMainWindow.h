@@ -24,8 +24,14 @@ THE SOFTWARE.
 
 #pragma once
 
+#include <QWidget>
+
 namespace dab {
 
-static constexpr const char* Version = __Version__;
+class CreateMainWindow {
+ public:
+  template <int64_t BoardSize>
+  static QWidget* Call(int player1Type, int player2Type, QWidget* parent);
+};
 
 }  // namespace dab

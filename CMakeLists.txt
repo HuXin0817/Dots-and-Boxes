@@ -24,10 +24,22 @@ file(READ VERSION Version)
 message(STATUS "Version: ${Version}")
 message(STATUS "MaxBoardSize: ${MaxBoardSize}")
 message(STATUS "DefaultBoardSize: ${DefaultBoardSize}")
-add_compile_definitions(__Version__="${Version}")
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 find_package(TBB REQUIRED)
 
 include_directories("${CMAKE_SOURCE_DIR}/include")
-add_subdirectory(src)
+
+set(ExternLibraries)
+foreach(BoardSize RANGE 1 ${MaxBoardSize})
+  add_subdirectory(src "src/detail@${BoardSize}x${BoardSize}")
+  list(APPEND ExternLibraries ${ExternLibrary})
+endforeach()
+
+qt_add_executable("${PROJECT_NAME}" main.cpp)
+target_compile_definitions("${PROJECT_NAME}" PRIVATE 
+  __Version__="${Version}"
+  __MaxBoardSize__=${MaxBoardSize} 
+  __DefaultBoardSize__=${DefaultBoardSize}
+)
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets ${ExternLibraries})

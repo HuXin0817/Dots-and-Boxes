@@ -24,18 +24,14 @@ THE SOFTWARE.
 
 #pragma once
 
-namespace dab::command {
+#include <cstdint>
 
-static constexpr int DefaultPlayerType = 5;
-static constexpr const char* PlayerTypeOptionStrings[] = {
-    "human",
-    "robot:easy",
-    "robot:medium",
-    "robot:hard",
-    "robot:expert",
-    "robot:master",
+namespace dab {
+
+class MockRunningGame {
+ public:
+  template <int64_t BoardSize>
+  static void Call(int player1Type, int player2Type);
 };
 
-int Process(int argc, char* argv[]);
-
-}  // namespace dab::command
+}  // namespace dab

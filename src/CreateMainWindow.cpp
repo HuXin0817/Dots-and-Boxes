@@ -22,20 +22,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#pragma once
+#include "CreateMainWindow.h"
 
-#include "Log.h"
+#include <Dab/Frontend.h>
 
-#ifdef NDEBUG
-#define Assert(expr) ((void)0)
-#else
+namespace dab {
 
-#define Assert(expr)                                                                   \
-  do {                                                                                 \
-    if (!(expr)) {                                                                     \
-      dab::LogError(R"(ASSERT: '{}' in file {}, line {})", #expr, __FILE__, __LINE__); \
-      std::abort();                                                                    \
-    }                                                                                  \
-  } while (false)
+template <>
+QWidget* CreateMainWindow::Call<BoardSize>(int player1Type, int player2Type, QWidget* parent) {
+  return new MainWindow(static_cast<PlayerType>(player1Type), static_cast<PlayerType>(player2Type), parent);
+}
 
-#endif  // NDEBUG
+}  // namespace dab

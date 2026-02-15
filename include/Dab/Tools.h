@@ -24,12 +24,46 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "../../src/tools/Assert.h"
-#include "../../src/tools/Log.h"
+#include <chrono>
+#include <format>
+#include <iostream>
+#include <ostream>
+#include <print>
+#include <utility>
 
 namespace dab {
 
-using tools::LogError;
-using tools::LogInfo;
+template <class... Args>
+void Log(std::ostream& os, std::format_string<Args...> fmt, Args&&... args) {
+  std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
+  std::println(os,
+               R"({:%Y-%m-%dT%H:%M:%S} {})",
+               std::chrono::floor<std::chrono::seconds>(now),
+               std::format(fmt, std::forward<Args>(args)...));
+}
+
+template <class... Args>
+void LogInfo(std::format_string<Args...> fmt, Args&&... args) {
+  Log(std::cout, fmt, std::forward<Args>(args)...);
+}
+
+template <class... Args>
+void LogError(std::format_string<Args...> fmt, Args&&... args) {
+  Log(std::cerr, R"({{"Error":"{}"}})", std::format(fmt, std::forward<Args>(args)...));
+}
+
+#ifdef NDEBUG
+#define Assert(expr) ((void)0)
+#else
+
+#define Assert(expr)                                                                   \
+  do {                                                                                 \
+    if (!(expr)) {                                                                     \
+      dab::LogError(R"(ASSERT: '{}' in file {}, line {})", #expr, __FILE__, __LINE__); \
+      std::abort();                                                                    \
+    }                                                                                  \
+  } while (false)
+
+#endif  // NDEBUG
 
 }  // namespace dab

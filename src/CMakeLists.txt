@@ -1,12 +1,18 @@
-set(ExternLibraries)
-foreach(BoardSize RANGE 1 ${MaxBoardSize})
-  add_subdirectory(model "model/model@${BoardSize}x${BoardSize}")
-  add_subdirectory(board "board/board@${BoardSize}x${BoardSize}")
-  add_subdirectory(robot "robot/robot@${BoardSize}x${BoardSize}")
-  add_subdirectory(frontend "frontend/frontend@${BoardSize}x${BoardSize}")
-  add_subdirectory(extern "extern/extern@${BoardSize}x${BoardSize}")
-  list(APPEND ExternLibraries ${ExternLibraryName})
-endforeach()
-add_subdirectory(command)
-qt_add_executable("${PROJECT_NAME}" main.cpp)
-target_link_libraries("${PROJECT_NAME}" PRIVATE ${CommandLibraryName})
+add_subdirectory(common)
+add_subdirectory(model)
+add_subdirectory(board)
+add_subdirectory(robot)
+add_subdirectory(frontend)
+
+set(ExternLibrary "src${BoardSize}x${BoardSize}")
+set(ExternSources 
+  CreateMainWindow.cpp
+  MockRunningGame.cpp
+)
+add_library(${ExternLibrary} STATIC ${ExternSources})
+target_compile_definitions(${ExternLibrary} PRIVATE QT_NO_KEYWORDS 
+  __BoardSize__=${BoardSize} 
+  __detail__=detail${BoardSize}x${BoardSize}
+)
+target_link_libraries(${ExternLibrary} PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets ${FrontendLibrary})
+set(ExternLibrary ${ExternLibrary} PARENT_SCOPE)

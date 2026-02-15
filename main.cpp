@@ -22,10 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "Command.h"
-
 #include <Dab/Tools.h>
-#include <Dab/Version.h>
 
 #include <QApplication>
 #include <QCommandLineParser>
@@ -36,12 +33,20 @@ THE SOFTWARE.
 #include <ranges>
 #include <type_traits>
 
-#include "../extern/CreateMainWindow.h"
-#include "../extern/MockRunningGame.h"
+#include "src/CreateMainWindow.h"
+#include "src/MockRunningGame.h"
 
-using namespace dab::internal;
+using namespace dab;
 
-namespace dab::command {
+static constexpr int DefaultPlayerType = 5;
+static constexpr const char* PlayerTypeOptionStrings[] = {
+    "human",
+    "robot:easy",
+    "robot:medium",
+    "robot:hard",
+    "robot:expert",
+    "robot:master",
+};
 
 static constexpr int64_t DefaultBoardSize = __DefaultBoardSize__;
 static constexpr int64_t MaxBoardSize = __MaxBoardSize__;
@@ -149,10 +154,10 @@ std::optional<int64_t> ParseBoardSize(const QString& arg) {
   return boardSize;
 }
 
-int Process(int argc, char* argv[]) {
+int main(int argc, char* argv[]) {
   QApplication application(argc, argv);
   application.setApplicationName("Dots and Boxes");
-  application.setApplicationVersion(Version);
+  application.setApplicationVersion(__Version__);
   application.setOrganizationName("Dots and Boxes");
 
   const QCommandLineOption boardSizeOption = CreateBoardSizeOption();
@@ -189,7 +194,7 @@ int Process(int argc, char* argv[]) {
   QWidget* mainWindow =
       Dispatch<CreateMainWindow>(boardSize.value(), player1Type.value(), player2Type.value(), nullptr);
   mainWindow->show();
-  return application.exec();
+  const int code = application.exec();
+  LogInfo(R"("ExitCode":{})", code);
+  return code;
 }
-
-}  // namespace dab::command

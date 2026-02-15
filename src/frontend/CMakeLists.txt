@@ -1,4 +1,4 @@
-set(FrontendLibraryName "frontend${BoardSize}x${BoardSize}")
+set(FrontendLibrary "frontend${BoardSize}x${BoardSize}")
 set(FrontendSources
   BaseCanvas.cpp
   BoxCanvas.cpp
@@ -6,10 +6,16 @@ set(FrontendSources
   EdgeCanvas.cpp
   MainWindow.cpp
 )
-qt_add_library(${FrontendLibraryName} STATIC ${FrontendSources})
-target_compile_definitions(${FrontendLibraryName} PRIVATE QT_NO_KEYWORDS 
+add_library(${FrontendLibrary} STATIC ${FrontendSources})
+target_compile_definitions(${FrontendLibrary} PRIVATE QT_NO_KEYWORDS 
   __BoardSize__=${BoardSize} 
   __detail__=detail${BoardSize}x${BoardSize}
 )
-target_link_libraries(${FrontendLibraryName} PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets ${ModelLibraryName} ${BoardLibraryName} ${RobotLibraryName})
-set(FrontendLibraryName ${FrontendLibraryName} PARENT_SCOPE)
+target_link_libraries(${FrontendLibrary} PRIVATE 
+  Qt6::Core Qt6::Gui Qt6::Widgets 
+  ${CommonLibrary} 
+  ${ModelLibrary} 
+  ${BoardLibrary} 
+  ${RobotLibrary}
+)
+set(FrontendLibrary ${FrontendLibrary} PARENT_SCOPE)

@@ -22,16 +22,17 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#pragma once
+#include "Random.h"
 
-#include <QWidget>
+#include <chrono>
 
-namespace dab::internal {
+namespace dab::__detail__::common {
 
-class CreateMainWindow {
- public:
-  template <int64_t BoardSize>
-  static QWidget* Call(int player1Type, int player2Type, QWidget* parent);
-};
+Random::Random() { Rng.seed(static_cast<uint64_t>(std::chrono::steady_clock::now().time_since_epoch().count())); }
 
-}  // namespace dab::internal
+Int Random::Range(Int min, Int max) {
+  Dist.param(std::uniform_int_distribution<Int>::param_type(min, max));
+  return Dist(Rng);
+}
+
+}  // namespace dab::__detail__::common
