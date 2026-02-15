@@ -24,28 +24,15 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "../../src/model/Array.h"
-#include "../../src/model/Int.h"
-#include "../../src/model/List.h"
 #include "../../src/model/Models.h"
-#include "../../src/model/Queue.h"
-#include "../../src/model/Random.h"
 #include "../../src/model/ScoreMap.h"
-#include "../../src/model/Span.h"
 
 namespace dab {
 
-using __detail__::model::Array;
-using __detail__::model::BoardSize;
 using __detail__::model::Box;
 using __detail__::model::Dot;
 using __detail__::model::Edge;
-using __detail__::model::Int;
-using __detail__::model::List;
-using __detail__::model::Queue;
-using __detail__::model::Random;
 using __detail__::model::ScoreMap;
-using __detail__::model::Span;
 using __detail__::model::Turn;
 
 }  // namespace dab

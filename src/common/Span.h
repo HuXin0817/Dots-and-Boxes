@@ -26,25 +26,27 @@ THE SOFTWARE.
 
 #include "Iterable.h"
 
-namespace dab::__detail__::model {
+namespace dab::__detail__::common {
 
-template <typename T, Int Length>
-class Array : public Iterable<Array<T, Length>> {
+template <typename T>
+class Span : public Iterable<Span<T>> {
  public:
-  constexpr Array() = default;
-  constexpr Array(const Array& other) = default;
-  constexpr Array(Array&& other) = default;
-  constexpr Array& operator=(const Array& other) = default;
-  constexpr Array& operator=(Array&& other) = default;
+  constexpr Span() = default;
+  constexpr Span(const Span& other) = default;
+  constexpr Span(Span&& other) = default;
+  constexpr Span& operator=(const Span& other) = default;
+  constexpr Span& operator=(Span&& other) = default;
+  constexpr Span(T* begin, T* end) : BeginPtr(begin), EndPtr(end) {}
 
-  constexpr Int Size() const { return Length; }
-  constexpr T* begin() { return Data; }
-  constexpr const T* begin() const { return Data; }
-  constexpr T* end() { return Data + Length; }
-  constexpr const T* end() const { return Data + Length; }
+  constexpr Int Size() const { return EndPtr - BeginPtr; }
+  constexpr T* begin() { return BeginPtr; }
+  constexpr const T* begin() const { return BeginPtr; }
+  constexpr T* end() { return EndPtr; }
+  constexpr const T* end() const { return EndPtr; }
 
  private:
-  T Data[Length];
+  T* BeginPtr = nullptr;
+  T* EndPtr = nullptr;
 };
 
-}  // namespace dab::__detail__::model
+}  // namespace dab::__detail__::common

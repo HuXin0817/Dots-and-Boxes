@@ -24,23 +24,12 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "Models.h"
+#include "../../src/tools/Assert.h"
+#include "../../src/tools/Log.h"
 
-namespace dab::__detail__::model {
+namespace dab {
 
-class ScoreMap {
- public:
-  ScoreMap() = default;
+using tools::LogError;
+using tools::LogInfo;
 
-  void Reset();
-  void Add(Edge edge, Int score);
-  void Add(const ScoreMap& other);
-  Span<const Edge> Export();
-
- private:
-  Array<int, Edge::Max> Time;
-  Array<int, Edge::Max> Score;
-  List<Edge, Edge::Max> BestEdges;
-};
-
-}  // namespace dab::__detail__::model
+}  // namespace dab

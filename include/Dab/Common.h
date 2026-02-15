@@ -24,32 +24,21 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <random>
+#include "../../src/common/Array.h"
+#include "../../src/common/Int.h"
+#include "../../src/common/List.h"
+#include "../../src/common/Queue.h"
+#include "../../src/common/Random.h"
+#include "../../src/common/Span.h"
 
-#include "Int.h"
+namespace dab {
 
-namespace dab::__detail__::model {
+using __detail__::common::Array;
+using __detail__::common::BoardSize;
+using __detail__::common::Int;
+using __detail__::common::List;
+using __detail__::common::Queue;
+using __detail__::common::Random;
+using __detail__::common::Span;
 
-class Random {
- public:
-  explicit Random();
-
-  Int Range(Int min, Int max);
-  template <typename T>
-  const auto& Choice(const T& data);
-
- private:
-  std::mt19937_64 Rng;
-  std::uniform_int_distribution<Int> Dist;
-};
-
-template <typename T>
-const auto& Random::Choice(const T& data) {
-  Assert(!data.Empty());
-  if (data.Size() == 1) {
-    return data.At(0);
-  }
-  return data.At(Range(0, data.Size() - 1));
-}
-
-}  // namespace dab::__detail__::model
+}  // namespace dab

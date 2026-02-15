@@ -24,27 +24,45 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <cstdint>
-#include <limits>
+#include <Dab/Tools.h>
 
-namespace dab::__detail__::model {
+#include "Array.h"
 
-constexpr auto SelectIntType() {
-  constexpr int64_t MaxValue = 2 * __BoardSize__ * (__BoardSize__ + 1);
+namespace dab::__detail__::common {
 
-  if constexpr (MaxValue <= std::numeric_limits<int8_t>::max()) {
-    return static_cast<int8_t>(0);
-  } else if constexpr (MaxValue <= std::numeric_limits<int16_t>::max()) {
-    return static_cast<int16_t>(0);
-  } else if constexpr (MaxValue <= std::numeric_limits<int32_t>::max()) {
-    return static_cast<int32_t>(0);
-  } else {
-    return static_cast<int64_t>(0);
-  }
+template <typename T, Int Cap>
+class List : public Iterable<List<T, Cap>> {
+ public:
+  constexpr List() = default;
+  constexpr List(const List& other) = default;
+  constexpr List(List&& other) = default;
+  constexpr List& operator=(const List& other) = default;
+  constexpr List& operator=(List&& other) = default;
+
+  constexpr void ClearAndSet(T item);
+  constexpr void Clear() { Length = 0; }
+  constexpr void Append(T item);
+  constexpr Int Size() const { return Length; }
+  constexpr T* begin() { return Data.begin(); }
+  constexpr const T* begin() const { return Data.begin(); }
+  constexpr T* end() { return Data.begin() + Length; }
+  constexpr const T* end() const { return Data.begin() + Length; }
+
+ private:
+  Array<T, Cap> Data;
+  Int Length = 0;
+};
+
+template <typename T, Int Cap>
+constexpr void List<T, Cap>::ClearAndSet(T item) {
+  Data.At(0) = item;
+  Length = 1;
 }
 
-using Int = decltype(SelectIntType());
+template <typename T, Int Cap>
+constexpr void List<T, Cap>::Append(T item) {
+  Assert(Length < Cap);
+  Data.At(Length++) = item;
+}
 
-static constexpr Int BoardSize = __BoardSize__;
-
-}  // namespace dab::__detail__::model
+}  // namespace dab::__detail__::common

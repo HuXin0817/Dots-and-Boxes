@@ -24,18 +24,42 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <Dab/Log.h>
+#include <chrono>
+#include <random>
 
-#ifdef NDEBUG
-#define Assert(expr) ((void)0)
-#else
+#include "Int.h"
 
-#define Assert(expr)                                                                   \
-  do {                                                                                 \
-    if (!(expr)) {                                                                     \
-      dab::LogError(R"(ASSERT: '{}' in file {}, line {})", #expr, __FILE__, __LINE__); \
-      std::abort();                                                                    \
-    }                                                                                  \
-  } while (false)
+namespace dab::__detail__::common {
 
-#endif  // NDEBUG
+class Random {
+ public:
+  explicit Random();
+
+  Int Range(Int min, Int max);
+  template <typename T>
+  const auto& Choice(const T& data);
+
+ private:
+  std::mt19937_64 Rng;
+  std::uniform_int_distribution<Int> Dist;
+};
+
+inline Random::Random() {
+  Rng.seed(static_cast<uint64_t>(std::chrono::steady_clock::now().time_since_epoch().count()));
+}
+
+inline Int Random::Range(Int min, Int max) {
+  Dist.param(std::uniform_int_distribution<Int>::param_type(min, max));
+  return Dist(Rng);
+}
+
+template <typename T>
+const auto& Random::Choice(const T& data) {
+  Assert(!data.Empty());
+  if (data.Size() == 1) {
+    return data.At(0);
+  }
+  return data.At(Range(0, data.Size() - 1));
+}
+
+}  // namespace dab::__detail__::common

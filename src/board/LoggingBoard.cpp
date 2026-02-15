@@ -24,8 +24,6 @@ THE SOFTWARE.
 
 #include "LoggingBoard.h"
 
-#include <Dab/Log.h>
-
 namespace dab::__detail__::board {
 
 void LoggingBoard::Reset() {

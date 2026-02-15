@@ -24,29 +24,18 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "Iterable.h"
+#include "Log.h"
 
-namespace dab::__detail__::model {
+#ifdef NDEBUG
+#define Assert(expr) ((void)0)
+#else
 
-template <typename T>
-class Span : public Iterable<Span<T>> {
- public:
-  constexpr Span() = default;
-  constexpr Span(const Span& other) = default;
-  constexpr Span(Span&& other) = default;
-  constexpr Span& operator=(const Span& other) = default;
-  constexpr Span& operator=(Span&& other) = default;
-  constexpr Span(T* begin, T* end) : BeginPtr(begin), EndPtr(end) {}
+#define Assert(expr)                                                                   \
+  do {                                                                                 \
+    if (!(expr)) {                                                                     \
+      dab::LogError(R"(ASSERT: '{}' in file {}, line {})", #expr, __FILE__, __LINE__); \
+      std::abort();                                                                    \
+    }                                                                                  \
+  } while (false)
 
-  constexpr Int Size() const { return EndPtr - BeginPtr; }
-  constexpr T* begin() { return BeginPtr; }
-  constexpr const T* begin() const { return BeginPtr; }
-  constexpr T* end() { return EndPtr; }
-  constexpr const T* end() const { return EndPtr; }
-
- private:
-  T* BeginPtr = nullptr;
-  T* EndPtr = nullptr;
-};
-
-}  // namespace dab::__detail__::model
+#endif  // NDEBUG

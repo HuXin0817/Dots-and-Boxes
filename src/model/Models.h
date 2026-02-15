@@ -24,9 +24,7 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "Array.h"
-#include "Int.h"
-#include "List.h"
+#include <Dab/Common.h>
 
 namespace dab::__detail__::model {
 

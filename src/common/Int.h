@@ -22,17 +22,29 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "Random.h"
+#pragma once
 
-#include <chrono>
+#include <cstdint>
+#include <limits>
 
-namespace dab::__detail__::model {
+namespace dab::__detail__::common {
 
-Random::Random() { Rng.seed(static_cast<uint64_t>(std::chrono::steady_clock::now().time_since_epoch().count())); }
+constexpr auto SelectIntType() {
+  constexpr int64_t MaxValue = 2 * __BoardSize__ * (__BoardSize__ + 1);
 
-Int Random::Range(Int min, Int max) {
-  Dist.param(std::uniform_int_distribution<Int>::param_type(min, max));
-  return Dist(Rng);
+  if constexpr (MaxValue <= std::numeric_limits<int8_t>::max()) {
+    return static_cast<int8_t>(0);
+  } else if constexpr (MaxValue <= std::numeric_limits<int16_t>::max()) {
+    return static_cast<int16_t>(0);
+  } else if constexpr (MaxValue <= std::numeric_limits<int32_t>::max()) {
+    return static_cast<int32_t>(0);
+  } else {
+    return static_cast<int64_t>(0);
+  }
 }
 
-}  // namespace dab::__detail__::model
+using Int = decltype(SelectIntType());
+
+static constexpr Int BoardSize = __BoardSize__;
+
+}  // namespace dab::__detail__::common

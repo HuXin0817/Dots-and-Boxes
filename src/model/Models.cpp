@@ -26,8 +26,6 @@ THE SOFTWARE.
 
 #include <ranges>
 
-#include "Int.h"
-
 namespace dab::__detail__::model {
 
 class NearEdgesMapper {

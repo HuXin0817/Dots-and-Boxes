@@ -24,11 +24,11 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <Dab/Assert.h>
+#include <Dab/Tools.h>
 
 #include "Int.h"
 
-namespace dab::__detail__::model {
+namespace dab::__detail__::common {
 
 template <typename Derived>
 class Iterable {
@@ -66,4 +66,4 @@ class Iterable {
   constexpr Derived&& derived() && { return static_cast<Derived&&>(*this); }
 };
 
-}  // namespace dab::__detail__::model
+}  // namespace dab::__detail__::common

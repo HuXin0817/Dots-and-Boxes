@@ -24,45 +24,27 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <Dab/Assert.h>
+#include "Iterable.h"
 
-#include "Array.h"
+namespace dab::__detail__::common {
 
-namespace dab::__detail__::model {
-
-template <typename T, Int Cap>
-class List : public Iterable<List<T, Cap>> {
+template <typename T, Int Length>
+class Array : public Iterable<Array<T, Length>> {
  public:
-  constexpr List() = default;
-  constexpr List(const List& other) = default;
-  constexpr List(List&& other) = default;
-  constexpr List& operator=(const List& other) = default;
-  constexpr List& operator=(List&& other) = default;
+  constexpr Array() = default;
+  constexpr Array(const Array& other) = default;
+  constexpr Array(Array&& other) = default;
+  constexpr Array& operator=(const Array& other) = default;
+  constexpr Array& operator=(Array&& other) = default;
 
-  constexpr void ClearAndSet(T item);
-  constexpr void Clear() { Length = 0; }
-  constexpr void Append(T item);
   constexpr Int Size() const { return Length; }
-  constexpr T* begin() { return Data.begin(); }
-  constexpr const T* begin() const { return Data.begin(); }
-  constexpr T* end() { return Data.begin() + Length; }
-  constexpr const T* end() const { return Data.begin() + Length; }
+  constexpr T* begin() { return Data; }
+  constexpr const T* begin() const { return Data; }
+  constexpr T* end() { return Data + Length; }
+  constexpr const T* end() const { return Data + Length; }
 
  private:
-  Array<T, Cap> Data;
-  Int Length = 0;
+  T Data[Length];
 };
 
-template <typename T, Int Cap>
-constexpr void List<T, Cap>::ClearAndSet(T item) {
-  Data.At(0) = item;
-  Length = 1;
-}
-
-template <typename T, Int Cap>
-constexpr void List<T, Cap>::Append(T item) {
-  Assert(Length < Cap);
-  Data.At(Length++) = item;
-}
-
-}  // namespace dab::__detail__::model
+}  // namespace dab::__detail__::common

@@ -31,7 +31,7 @@ THE SOFTWARE.
 #include <print>
 #include <utility>
 
-namespace dab {
+namespace dab::tools {
 
 template <class... Args>
 void Log(std::ostream& os, std::format_string<Args...> fmt, Args&&... args) {
@@ -52,4 +52,4 @@ void LogError(std::format_string<Args...> fmt, Args&&... args) {
   Log(std::cerr, R"({{"Error":"{}"}})", std::format(fmt, std::forward<Args>(args)...));
 }
 
-}  // namespace dab
+}  // namespace dab::tools

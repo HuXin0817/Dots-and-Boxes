@@ -23,7 +23,7 @@ THE SOFTWARE.
 */
 
 #include <Dab/Command.h>
-#include <Dab/Log.h>
+#include <Dab/Tools.h>
 
 using namespace dab;
 

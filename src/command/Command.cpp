@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 #include "Command.h"
 
-#include <Dab/Log.h>
+#include <Dab/Tools.h>
 #include <Dab/Version.h>
 
 #include <QApplication>
