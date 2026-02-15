@@ -25,13 +25,11 @@ THE SOFTWARE.
 #pragma once
 
 #include <QWidget>
-
-namespace dab {
-
-#include <QWidget>
 #include <cstdint>
 #include <type_traits>
 #include <utility>
+
+namespace dab {
 
 template <int64_t BoardSize, typename FuncNameTag, typename... Args>
 constexpr auto Dispatch(int64_t boardSize, Args&&... args) {
