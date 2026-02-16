@@ -31,6 +31,8 @@ THE SOFTWARE.
 #include <QPainter>
 #include <QPointer>
 #include <QPushButton>
+#include <QThread>
+#include <QThreadPool>
 #include <QTime>
 #include <QTimer>
 #include <atomic>
@@ -114,7 +116,7 @@ QColor MainWindow::Color() const {
   return ThemeColor(DarkThemeColor, LightThemeColor);
 }
 
-QRunnable* MainWindow::SetPlayerMoveEdgeFunc(Edge edge) {
+QPointer<QRunnable> MainWindow::SetPlayerMoveEdgeFunc(Edge edge) {
   return QRunnable::create([edge, this]() -> void {
     if (Board.Contains(edge)) {
       return;
@@ -156,6 +158,11 @@ void MainWindow::Run() {
     Assert(Board.Contains(PlayerMoveEdge.load()));
   }
   QMetaObject::invokeMethod(this, &MainWindow::HandleGameOver, Qt::BlockingQueuedConnection);
+}
+
+void MainWindow::AsyncRun() {
+  QPointer asyncRun = QRunnable::create(std::bind(&MainWindow::Run, this));
+  QThreadPool::globalInstance()->start(asyncRun);
 }
 
 void MainWindow::Add() {

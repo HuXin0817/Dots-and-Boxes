@@ -27,7 +27,6 @@ THE SOFTWARE.
 #include <Dab/Robot.h>
 
 #include <QPointer>
-#include <QThreadPool>
 
 #include "BoxCanvas.h"
 #include "DotCanvas.h"
@@ -62,13 +61,11 @@ class MainWindow : public BaseCanvas {
   Array<QPointer<EdgeCanvas>, Edge::Max> EdgeCanvases;
 
   QColor Color() const;
-  QRunnable* SetPlayerMoveEdgeFunc(Edge edge);
+  QPointer<QRunnable> SetPlayerMoveEdgeFunc(Edge edge);
 
  public Q_SLOTS:
   void Run();
-  void AsyncRun() {
-    QThreadPool::globalInstance()->start([this] { Run(); });
-  }
+  void AsyncRun();
   void Add();
   void HandleGameOver();
 };
