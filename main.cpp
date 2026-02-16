@@ -27,22 +27,12 @@ THE SOFTWARE.
 #include <QApplication>
 #include <QCommandLineParser>
 #include <cstdlib>
-#include <optional>
 #include <ranges>
 
+#include "Dab/PlayerType.h"
 #include "src/extern.h"
 
 using namespace dab;
-
-static constexpr int DefaultPlayerType = 5;
-static constexpr const char* PlayerTypeOptionStrings[] = {
-    "human",
-    "robot:easy",
-    "robot:medium",
-    "robot:hard",
-    "robot:expert",
-    "robot:master",
-};
 
 static constexpr int64_t DefaultBoardSize = __DefaultBoardSize__;
 static constexpr int64_t MaxBoardSize = __MaxBoardSize__;
@@ -50,7 +40,7 @@ static_assert(DefaultBoardSize <= MaxBoardSize);
 
 template <typename FuncNameTag, typename... Args>
 constexpr auto Dispatch(int64_t boardSize, Args&&... args) {
-  return dab::Dispatch<MaxBoardSize, FuncNameTag>(boardSize, std::forward<Args>(args)...);
+  return Dispatch<MaxBoardSize, FuncNameTag>(boardSize, std::forward<Args>(args)...);
 }
 
 QCommandLineOption CreateBoardSizeOption() {
@@ -93,30 +83,30 @@ QCommandLineOption CreatePlayerTypeOption(int playerid) {
       QString("Set type of player %1. Accepts: %2 (default: 'robot'). Note: 'robot' is equivalent to '%3'.")
           .arg(playerid)
           .arg(acceptedStr)
-          .arg(QString::fromUtf8(PlayerTypeOptionStrings[DefaultPlayerType])),
+          .arg(QString::fromUtf8(PlayerTypeOptionStrings[static_cast<int>(DefaultPlayerType)])),
       "type",
       defaultPlayerType);
 }
 
-std::optional<int> ParsePlayerType(const QString& arg) {
+PlayerType ParsePlayerType(const QString& arg) {
   if (arg.compare("robot", Qt::CaseInsensitive) == 0) {
     return DefaultPlayerType;
   }
   for (const size_t i : std::views::iota(0ull, std::size(PlayerTypeOptionStrings))) {
     if (arg.compare(PlayerTypeOptionStrings[i], Qt::CaseInsensitive) == 0) {
-      return static_cast<int>(i);
+      return static_cast<PlayerType>(i);
     }
   }
   LogError("Invalid player type '{}'.", arg.toLocal8Bit().constData());
-  return std::nullopt;
+  exit(EXIT_FAILURE);
 }
 
-std::optional<int64_t> ParseBoardSize(const QString& arg) {
+int64_t ParseBoardSize(const QString& arg) {
   bool ok = false;
   const int64_t boardSize = arg.toLongLong(&ok);
   if (!ok || boardSize < 1 || boardSize > MaxBoardSize) {
     LogError("Invalid board size '{}'. Must be between 1 and {}.", arg.toLocal8Bit().constData(), MaxBoardSize);
-    return std::nullopt;
+    exit(EXIT_FAILURE);
   }
   return boardSize;
 }
@@ -141,25 +131,15 @@ int main(int argc, char* argv[]) {
   parser.addOption(backgroundModeOption);
   parser.process(application);
 
-  const std::optional<int64_t> boardSize = ParseBoardSize(parser.value(boardSizeOption));
-  if (!boardSize.has_value()) {
-    return EXIT_FAILURE;
-  }
-  const std::optional<int> player1Type = ParsePlayerType(parser.value(player1Option));
-  if (!player1Type.has_value()) {
-    return EXIT_FAILURE;
-  }
-  const std::optional<int> player2Type = ParsePlayerType(parser.value(player2Option));
-  if (!player2Type.has_value()) {
-    return EXIT_FAILURE;
-  }
+  int64_t boardSize = ParseBoardSize(parser.value(boardSizeOption));
+  PlayerType player1Type = ParsePlayerType(parser.value(player1Option));
+  PlayerType player2Type = ParsePlayerType(parser.value(player2Option));
   if (parser.isSet(backgroundModeOption)) {
-    Dispatch<MockRunningGame>(boardSize.value(), player1Type.value(), player2Type.value());
+    Dispatch<MockRunningGame>(boardSize, player1Type, player2Type);
     return 0;
   }
 
-  QWidget* mainWindow =
-      Dispatch<CreateMainWindow>(boardSize.value(), player1Type.value(), player2Type.value(), nullptr);
+  QWidget* mainWindow = Dispatch<CreateMainWindow>(boardSize, player1Type, player2Type, nullptr);
   mainWindow->show();
   const int code = application.exec();
   LogInfo(R"("ExitCode":{})", code);

@@ -25,17 +25,9 @@ THE SOFTWARE.
 #pragma once
 
 #include <Dab/Board.h>
+#include <Dab/PlayerType.h>
 
 namespace dab::__detail__::robot {
-
-enum class PlayerType {
-  Human = 0,
-  GreedyRobot,
-  ImproveGreedyRobot,
-  SimulationRobot,
-  MonteCarloRobot,
-  ParallelSearchRobot,
-};
 
 class Robot {
  public:
@@ -44,7 +36,6 @@ class Robot {
   virtual Span<const Edge> BestCandidateEdges(const RelativeScoreBoard& board) = 0;
 };
 
-inline bool PlayerTypeIsRobot(PlayerType playerType) { return playerType != PlayerType::Human; }
 Robot* CreateRobot(PlayerType playerType);
 
 }  // namespace dab::__detail__::robot

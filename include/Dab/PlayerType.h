@@ -22,35 +22,30 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "extern.h"
-
-#include <Dab/Frontend.h>
+#pragma once
 
 namespace dab {
 
-template <>
-void MockRunningGame::Call<BoardSize>(PlayerType player1Type, PlayerType player2Type) {
-  std::unique_ptr<Robot> robot1;
-  std::unique_ptr<Robot> robot2;
-  robot1.reset(CreateRobot(static_cast<PlayerType>(player1Type)));
-  robot2.reset(CreateRobot(static_cast<PlayerType>(player2Type)));
-  Assert(robot1);
-  Assert(robot2);
+enum class PlayerType {
+  Human = 0,
+  GreedyRobot,
+  ImproveGreedyRobot,
+  SimulationRobot,
+  MonteCarloRobot,
+  ParallelSearchRobot,
+};
 
-  Random random;
-  LoggingBoard board;
-  while (board.Gaming()) {
-    if (board.IsPlayer1Turn()) {
-      board.Add(random.Choice(robot1->BestCandidateEdges(board)));
-    } else {
-      board.Add(random.Choice(robot2->BestCandidateEdges(board)));
-    }
-  }
-}
+static constexpr const char* PlayerTypeOptionStrings[] = {
+    "human",
+    "robot:easy",
+    "robot:medium",
+    "robot:hard",
+    "robot:expert",
+    "robot:master",
+};
 
-template <>
-QWidget* CreateMainWindow::Call<BoardSize>(PlayerType player1Type, PlayerType player2Type, QWidget* parent) {
-  return new MainWindow(static_cast<PlayerType>(player1Type), static_cast<PlayerType>(player2Type), parent);
-}
+static constexpr PlayerType DefaultPlayerType = PlayerType::ParallelSearchRobot;
+
+inline bool PlayerTypeIsRobot(PlayerType playerType) { return playerType != PlayerType::Human; }
 
 }  // namespace dab

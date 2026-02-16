@@ -24,6 +24,8 @@ THE SOFTWARE.
 
 #pragma once
 
+#include <Dab/PlayerType.h>
+
 #include <QWidget>
 #include <type_traits>
 #include <utility>
@@ -61,13 +63,13 @@ constexpr auto Dispatch(int64_t boardSize, Args&&... args) {
 class MockRunningGame {
  public:
   template <int64_t BoardSize>
-  static void Call(int player1Type, int player2Type);
+  static void Call(PlayerType player1Type, PlayerType player2Type);
 };
 
 class CreateMainWindow {
  public:
   template <int64_t BoardSize>
-  static QWidget* Call(int player1Type, int player2Type, QWidget* parent);
+  static QWidget* Call(PlayerType player1Type, PlayerType player2Type, QWidget* parent);
 };
 
 }  // namespace dab

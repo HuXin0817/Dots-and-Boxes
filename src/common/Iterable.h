@@ -24,6 +24,8 @@ THE SOFTWARE.
 
 #pragma once
 
+#include <Dab/Tools.h>
+
 #include "Int.h"
 
 namespace dab::__detail__::common {

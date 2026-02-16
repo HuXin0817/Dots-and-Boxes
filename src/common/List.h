@@ -24,6 +24,8 @@ THE SOFTWARE.
 
 #pragma once
 
+#include <Dab/Tools.h>
+
 #include "Array.h"
 
 namespace dab::__detail__::common {
