@@ -50,26 +50,19 @@ constexpr auto Dispatch(int64_t boardSize, Args&&... args) {
         Dispatch<BoardSize - 1, FuncNameTag>(boardSize, std::forward<Args>(args)...);
       }
     } else {
-      auto call = FuncNameTag::template Call<BoardSize>;
       if constexpr (HaveReturnValue) {
-        return call(std::forward<Args>(args)...);
+        return FuncNameTag::template Call<BoardSize>(std::forward<Args>(args)...);
       } else {
-        call(std::forward<Args>(args)...);
+        FuncNameTag::template Call<BoardSize>(std::forward<Args>(args)...);
       }
     }
   }
 }
 
-class MockRunningGame {
- public:
-  template <int64_t BoardSize>
-  static void Call(PlayerType player1Type, PlayerType player2Type);
-};
-
 class CreateMainWindow {
  public:
   template <int64_t BoardSize>
-  static QWidget* Call(PlayerType player1Type, PlayerType player2Type, QWidget* parent);
+  static QWidget* Call(PlayerType player1Type, PlayerType player2Type, bool backgroundMode, QWidget* parent);
 };
 
 }  // namespace dab

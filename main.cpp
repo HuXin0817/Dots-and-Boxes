@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
+#include <Dab/PlayerType.h>
 #include <Dab/Tools.h>
 
 #include <QApplication>
@@ -29,7 +30,6 @@ THE SOFTWARE.
 #include <cstdlib>
 #include <ranges>
 
-#include "Dab/PlayerType.h"
 #include "src/extern.h"
 
 using namespace dab;
@@ -134,14 +134,13 @@ int main(int argc, char* argv[]) {
   int64_t boardSize = ParseBoardSize(parser.value(boardSizeOption));
   PlayerType player1Type = ParsePlayerType(parser.value(player1Option));
   PlayerType player2Type = ParsePlayerType(parser.value(player2Option));
-  if (parser.isSet(backgroundModeOption)) {
-    Dispatch<MockRunningGame>(boardSize, player1Type, player2Type);
-    return 0;
-  }
+  bool backgroundMode = parser.isSet(backgroundModeOption);
 
-  QWidget* mainWindow = Dispatch<CreateMainWindow>(boardSize, player1Type, player2Type, nullptr);
+  QWidget* mainWindow = Dispatch<CreateMainWindow>(boardSize, player1Type, player2Type, backgroundMode, nullptr);
   mainWindow->show();
   const int code = application.exec();
-  LogInfo(R"("ExitCode":{})", code);
+  if (code != 0) {
+    LogError("Exit code {}.", code);
+  }
   return code;
 }

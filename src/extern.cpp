@@ -25,11 +25,13 @@ THE SOFTWARE.
 #include "extern.h"
 
 #include <Dab/Frontend.h>
+#include <Dab/PlayerType.h>
 
 namespace dab {
 
-template <>
-void MockRunningGame::Call<BoardSize>(PlayerType player1Type, PlayerType player2Type) {
+namespace __detail__ {
+
+void MockRunningGame(PlayerType player1Type, PlayerType player2Type) {
   std::unique_ptr<Robot> robot1;
   std::unique_ptr<Robot> robot2;
   robot1.reset(CreateRobot(static_cast<PlayerType>(player1Type)));
@@ -48,8 +50,22 @@ void MockRunningGame::Call<BoardSize>(PlayerType player1Type, PlayerType player2
   }
 }
 
+}  // namespace __detail__
+
 template <>
-QWidget* CreateMainWindow::Call<BoardSize>(PlayerType player1Type, PlayerType player2Type, QWidget* parent) {
+QWidget* CreateMainWindow::Call<BoardSize>(PlayerType player1Type,
+                                           PlayerType player2Type,
+                                           bool backgroundMode,
+                                           QWidget* parent) {
+  LogInfo(R"({{"BoardSize":{},"Player1Type":"{}","Player2Type":"{}"}})",
+          BoardSize,
+          PlayerTypeOptionInternalStrings[static_cast<int>(player1Type)],
+          PlayerTypeOptionInternalStrings[static_cast<int>(player2Type)]);
+  if (backgroundMode) {
+    __detail__::MockRunningGame(player1Type, player2Type);
+    exit(0);
+  }
+
   return new MainWindow(static_cast<PlayerType>(player1Type), static_cast<PlayerType>(player2Type), parent);
 }
 
