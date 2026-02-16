@@ -106,11 +106,11 @@ Dots-and-Boxes/
 ├── include/            # Header files
 │   └── Dab/
 │       ├── Board.h
-│       ├── Command.h
+│       ├── Common.h
 │       ├── Frontend.h
 │       ├── Model.h
 │       ├── Robot.h
-│       └── Version.h
+│       └── Tools.h
 ├── src/                # Source files
 │   ├── board/          # Board implementations
 │   │   ├── AbsoluteScoreBoard.cpp
@@ -126,17 +126,16 @@ Dots-and-Boxes/
 │   │   ├── RelativeScoreBoard.h
 │   │   ├── ScoreableEdgeBoard.cpp
 │   │   └── ScoreableEdgeBoard.h
-│   ├── command/        # Command-related files
+│   ├── common/         # Common utility classes
+│   │   ├── Array.h
 │   │   ├── CMakeLists.txt
-│   │   ├── Command.cpp
-│   │   ├── Command.h
-│   │   ├── Config.h
-│   │   ├── CreateMainWindow.cpp
-│   │   └── CreateMainWindow.h
-│   ├── src/         # External dependencies
-│   │   ├── CMakeLists.txt
-│   │   ├── src.cpp
-│   │   └── src.h
+│   │   ├── Int.h
+│   │   ├── Iterable.h
+│   │   ├── List.h
+│   │   ├── Queue.h
+│   │   ├── Random.cpp
+│   │   ├── Random.h
+│   │   └── Span.h
 │   ├── frontend/       # GUI-related files
 │   │   ├── BaseCanvas.cpp
 │   │   ├── BaseCanvas.h
@@ -149,20 +148,12 @@ Dots-and-Boxes/
 │   │   ├── EdgeCanvas.h
 │   │   ├── MainWindow.cpp
 │   │   └── MainWindow.h
-│   ├── model/          # Utility classes
-│   │   ├── Array.h
+│   ├── model/          # Model classes
 │   │   ├── CMakeLists.txt
-│   │   ├── Int.h
-│   │   ├── Iterable.h
-│   │   ├── List.h
 │   │   ├── Models.cpp
 │   │   ├── Models.h
-│   │   ├── Queue.h
-│   │   ├── Random.cpp
-│   │   ├── Random.h
 │   │   ├── ScoreMap.cpp
-│   │   ├── ScoreMap.h
-│   │   └── Span.h
+│   │   └── ScoreMap.h
 │   ├── robot/          # AI implementations
 │   │   ├── CMakeLists.txt
 │   │   ├── GreedyRobot.cpp
@@ -178,14 +169,16 @@ Dots-and-Boxes/
 │   │   ├── SimulationRobot.cpp
 │   │   └── SimulationRobot.h
 │   ├── CMakeLists.txt
-│   └── main.cpp        # Entry point
+│   ├── extern.cpp
+│   └── extern.h
 ├── .clang-format       # Code formatting configuration
 ├── .gitignore          # Git ignore file
 ├── CMakeLists.txt      # Build configuration
 ├── LICENSE             # License file
 ├── README.md           # This file
 ├── VERSION             # Version information
-└── demo.png            # Game demo screenshot
+├── demo.png            # Game demo screenshot
+└── main.cpp            # Entry point
 ```
 
 ## AI Strategies
