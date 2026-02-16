@@ -35,7 +35,7 @@ namespace dab {
 
 template <class... Args>
 void Log(std::ostream& os, std::format_string<Args...> fmt, Args&&... args) {
-  std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
+  const std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
   std::println(os,
                R"({:%Y-%m-%dT%H:%M:%S} {})",
                std::chrono::floor<std::chrono::seconds>(now),

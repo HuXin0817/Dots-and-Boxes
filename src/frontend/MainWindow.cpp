@@ -31,10 +31,8 @@ THE SOFTWARE.
 #include <QPainter>
 #include <QPointer>
 #include <QPushButton>
-#include <QThread>
 #include <QThreadPool>
 #include <QTime>
-#include <QTimer>
 #include <atomic>
 #include <ranges>
 

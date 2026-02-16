@@ -25,7 +25,6 @@ THE SOFTWARE.
 #pragma once
 
 #include <QWidget>
-#include <cstdint>
 #include <type_traits>
 #include <utility>
 
@@ -47,15 +46,14 @@ constexpr auto Dispatch(int64_t boardSize, Args&&... args) {
         return Dispatch<BoardSize - 1, FuncNameTag>(boardSize, std::forward<Args>(args)...);
       } else {
         Dispatch<BoardSize - 1, FuncNameTag>(boardSize, std::forward<Args>(args)...);
-        return;
       }
-    }
-    auto call = FuncNameTag::template Call<BoardSize>;
-    if constexpr (HaveReturnValue) {
-      return call(std::forward<Args>(args)...);
     } else {
-      call(std::forward<Args>(args)...);
-      return;
+      auto call = FuncNameTag::template Call<BoardSize>;
+      if constexpr (HaveReturnValue) {
+        return call(std::forward<Args>(args)...);
+      } else {
+        call(std::forward<Args>(args)...);
+      }
     }
   }
 }

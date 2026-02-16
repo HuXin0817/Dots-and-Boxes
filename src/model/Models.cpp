@@ -52,7 +52,7 @@ constexpr Array<Array<Edge, 4>, Box::Max> CreateNearEdgesMapper() {
 }
 
 const Array<Edge, 4>& Box::NearEdges() const {
-  static constexpr Array<Array<Edge, 4>, Box::Max> Instance = CreateNearEdgesMapper();
+  static constexpr Array<Array<Edge, 4>, Max> Instance = CreateNearEdgesMapper();
   return Instance.At(v);
 }
 
@@ -80,7 +80,7 @@ constexpr Array<List<Box, 2>, Edge::Max> CreateNearBoxesMapper() {
 }
 
 const List<Box, 2>& Edge::NearBoxes() const {
-  static constexpr Array<List<Box, 2>, Edge::Max> Instance = CreateNearBoxesMapper();
+  static constexpr Array<List<Box, 2>, Max> Instance = CreateNearBoxesMapper();
   return Instance.At(v);
 }
 
