@@ -32,6 +32,7 @@ class IntWapper {
  public:
   constexpr IntWapper() = default;
   constexpr IntWapper(Int v) : v(v) {}
+  constexpr operator Int() { return v; }
   constexpr operator Int() const { return v; }
 
  protected:

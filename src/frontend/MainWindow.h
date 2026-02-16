@@ -61,7 +61,7 @@ class MainWindow : public BaseCanvas {
   Array<QPointer<EdgeCanvas>, Edge::Max> EdgeCanvases;
 
   QColor Color() const;
-  QPointer<QRunnable> SetPlayerMoveEdgeFunc(Edge edge);
+  QRunnable* SetPlayerMoveEdgeFunc(Edge edge);
 
  public Q_SLOTS:
   void Run();

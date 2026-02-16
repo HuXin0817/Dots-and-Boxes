@@ -116,7 +116,7 @@ QColor MainWindow::Color() const {
   return ThemeColor(DarkThemeColor, LightThemeColor);
 }
 
-QPointer<QRunnable> MainWindow::SetPlayerMoveEdgeFunc(Edge edge) {
+QRunnable* MainWindow::SetPlayerMoveEdgeFunc(Edge edge) {
   return QRunnable::create([edge, this]() -> void {
     if (Board.Contains(edge)) {
       return;
@@ -160,10 +160,7 @@ void MainWindow::Run() {
   QMetaObject::invokeMethod(this, &MainWindow::HandleGameOver, Qt::BlockingQueuedConnection);
 }
 
-void MainWindow::AsyncRun() {
-  QPointer asyncRun = QRunnable::create(std::bind(&MainWindow::Run, this));
-  QThreadPool::globalInstance()->start(asyncRun);
-}
+void MainWindow::AsyncRun() { QThreadPool::globalInstance()->start(std::bind(&MainWindow::Run, this)); }
 
 void MainWindow::Add() {
   const Edge edge = PlayerMoveEdge.load();

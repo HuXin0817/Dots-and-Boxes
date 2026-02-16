@@ -28,21 +28,7 @@ THE SOFTWARE.
 
 namespace dab::__detail__::model {
 
-class NearEdgesMapper {
- public:
-  constexpr NearEdgesMapper();
-  static constexpr Array<Edge, 4> GetNearEdges(Box box);
-
-  Array<Array<Edge, 4>, Box::Max> BoxNearEdges;
-};
-
-constexpr NearEdgesMapper::NearEdgesMapper() {
-  for (const Box box : std::views::iota(0, Box::Max)) {
-    BoxNearEdges.At(box) = GetNearEdges(box);
-  }
-}
-
-constexpr Array<Edge, 4> NearEdgesMapper::GetNearEdges(Box box) {
+constexpr Array<Edge, 4> GetNearEdges(Box box) {
   Array<Edge, 4> NearEdges;
   const Int x = box.X();
   const Int y = box.Y();
@@ -57,46 +43,45 @@ constexpr Array<Edge, 4> NearEdgesMapper::GetNearEdges(Box box) {
   return NearEdges;
 }
 
-const Array<Edge, 4>& Box::NearEdges() const {
-  static constexpr NearEdgesMapper Instance;
-  return Instance.BoxNearEdges.At(v);
-}
-
-class NearBoxesMapper {
- public:
-  constexpr NearBoxesMapper();
-  static constexpr List<Box, 2> GetNearBoxes(Edge edge);
-
-  Array<List<Box, 2>, Edge::Max> EdgeNearBoxes;
-};
-
-constexpr NearBoxesMapper::NearBoxesMapper() {
-  for (const Edge edge : std::views::iota(0, Edge::Max)) {
-    EdgeNearBoxes.At(edge) = GetNearBoxes(edge);
+constexpr Array<Array<Edge, 4>, Box::Max> CreateNearEdgesMapper() {
+  Array<Array<Edge, 4>, Box::Max> BoxNearEdges;
+  for (const Box box : std::views::iota(0, Box::Max)) {
+    BoxNearEdges.At(box) = GetNearEdges(box);
   }
+  return BoxNearEdges;
 }
 
-constexpr List<Box, 2> NearBoxesMapper::GetNearBoxes(Edge edge) {
-  List<Box, 2> result;
+const Array<Edge, 4>& Box::NearEdges() const {
+  static constexpr Array<Array<Edge, 4>, Box::Max> Instance = CreateNearEdgesMapper();
+  return Instance.At(v);
+}
 
+constexpr List<Box, 2> GetNearBoxes(Edge edge) {
+  List<Box, 2> result;
   Int x = edge.Dot2().X() - 1;
   Int y = edge.Dot2().Y() - 1;
   if (x >= 0 && y >= 0) {
     result.Append(Box(x, y));
   }
-
   x = edge.Dot1().X();
   y = edge.Dot1().Y();
   if (x < BoardSize && y < BoardSize) {
     result.Append(Box(x, y));
   }
-
   return result;
 }
 
+constexpr Array<List<Box, 2>, Edge::Max> CreateNearBoxesMapper() {
+  Array<List<Box, 2>, Edge::Max> EdgeNearBoxes;
+  for (const Edge edge : std::views::iota(0, Edge::Max)) {
+    EdgeNearBoxes.At(edge) = GetNearBoxes(edge);
+  }
+  return EdgeNearBoxes;
+}
+
 const List<Box, 2>& Edge::NearBoxes() const {
-  static constexpr NearBoxesMapper Instance;
-  return Instance.EdgeNearBoxes.At(v);
+  static constexpr Array<List<Box, 2>, Edge::Max> Instance = CreateNearBoxesMapper();
+  return Instance.At(v);
 }
 
 }  // namespace dab::__detail__::model
