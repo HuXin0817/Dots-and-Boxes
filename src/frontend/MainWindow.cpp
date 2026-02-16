@@ -132,6 +132,13 @@ QRunnable* MainWindow::SetPlayerMoveEdgeFunc(Edge edge) {
 
 void MainWindow::Run() {
   Board.Reset();
+  for (const Edge edge : std::views::iota(0, Edge::Max)) {
+    EdgeCanvases.At(edge)->SetHighLight(false);
+    EdgeCanvases.At(edge)->SetOwner(Owner::None);
+  }
+  for (const Box box : std::views::iota(0, Box::Max)) {
+    BoxCanvases.At(box)->SetOwner(Owner::None);
+  }
   Random Random;
   while (Board.Gaming()) {
     if (PlayerTypeIsRobot(Player1Type) && Board.IsPlayer1Turn()) {
@@ -158,6 +165,7 @@ void MainWindow::Add() {
   }
   LastEdge = edge;
   EdgeCanvases.At(edge)->SetOwner(static_cast<Turn>(Board));
+  EdgeCanvases.At(edge)->SetHighLight(true);
   EdgeCanvases.At(edge)->raise();
   DotCanvases.At(edge.Dot1())->raise();
   DotCanvases.At(edge.Dot2())->raise();
@@ -169,19 +177,6 @@ void MainWindow::Add() {
   Board.Add(edge);
   update();
   QApplication::beep();
-}
-
-void MainWindow::Restart() {
-  Board.Reset();
-  for (const Edge edge : std::views::iota(0, Edge::Max)) {
-    EdgeCanvases.At(edge)->SetHighLight(false);
-    EdgeCanvases.At(edge)->SetOwner(Owner::None);
-  }
-  for (const Box box : std::views::iota(0, Box::Max)) {
-    BoxCanvases.At(box)->SetOwner(Owner::None);
-  }
-  update();
-  AsyncRun();
 }
 
 void MainWindow::HandleGameOver() {
@@ -196,7 +191,7 @@ void MainWindow::HandleGameOver() {
   messagebox->setIcon(QMessageBox::Information);
   const QPointer restartButton = messagebox->addButton(QMessageBox::Reset);
   restartButton->setText("Restart");
-  connect(restartButton, &QPushButton::pressed, this, &MainWindow::Restart);
+  connect(restartButton, &QPushButton::pressed, this, &MainWindow::AsyncRun);
   const QPointer closeButton = messagebox->addButton(QMessageBox::Close);
   connect(closeButton, &QPushButton::pressed, this, &MainWindow::close);
   messagebox->exec();

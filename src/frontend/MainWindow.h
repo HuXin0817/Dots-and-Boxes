@@ -70,7 +70,6 @@ class MainWindow : public BaseCanvas {
     QThreadPool::globalInstance()->start([this] { Run(); });
   }
   void Add();
-  void Restart();
   void HandleGameOver();
 };
 
