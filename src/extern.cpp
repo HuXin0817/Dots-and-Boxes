@@ -30,12 +30,12 @@ namespace dab {
 
 template <>
 void MockRunningGame::Call<BoardSize>(int player1Type, int player2Type) {
-  QScopedPointer<Robot> robot1;
-  QScopedPointer<Robot> robot2;
+  std::unique_ptr<Robot> robot1;
+  std::unique_ptr<Robot> robot2;
   robot1.reset(CreateRobot(static_cast<PlayerType>(player1Type)));
   robot2.reset(CreateRobot(static_cast<PlayerType>(player2Type)));
-  Assert(!robot1.isNull());
-  Assert(!robot2.isNull());
+  Assert(robot1);
+  Assert(robot2);
 
   Random random;
   LoggingBoard board;

@@ -52,8 +52,8 @@ class MainWindow : public BaseCanvas {
  private:
   const PlayerType Player1Type;
   const PlayerType Player2Type;
-  QScopedPointer<Robot> Robot1;
-  QScopedPointer<Robot> Robot2;
+  std::unique_ptr<Robot> Robot1;
+  std::unique_ptr<Robot> Robot2;
   std::atomic<Edge> PlayerMoveEdge;
   Edge LastEdge;
   LoggingBoard Board;
