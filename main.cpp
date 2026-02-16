@@ -26,12 +26,9 @@ THE SOFTWARE.
 
 #include <QApplication>
 #include <QCommandLineParser>
-#include <QCoreApplication>
-#include <QJsonObject>
 #include <cstdlib>
 #include <optional>
 #include <ranges>
-#include <type_traits>
 
 #include "src/extern.h"
 
