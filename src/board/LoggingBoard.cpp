@@ -32,7 +32,7 @@ void LoggingBoard::Reset() {
 }
 
 Int LoggingBoard::Add(Edge edge) {
-  const int64_t step = NowStep();
+  const Int step = NowStep();
   const Turn turn = *this;
   const Int score = AbsoluteScoreBoard::Add(edge);
   const std::chrono::system_clock::time_point now = std::chrono::system_clock::now();

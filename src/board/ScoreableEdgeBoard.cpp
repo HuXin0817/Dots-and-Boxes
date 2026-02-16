@@ -50,7 +50,7 @@ Int ScoreableEdgeBoard::Add(Edge edge) {
 
 Int ScoreableEdgeBoard::MaxObtainableScore(Int endScore) {
   Int score = 0;
-  while (Gaming()) {
+  while (Gaming() && score < endScore) {
     if (ScoreableEdges.Empty()) {
       if (const Edge edge = FindScoreableEdge(); edge != Edge::Invalid) {
         ScoreableEdges.Append(edge);
@@ -65,9 +65,6 @@ Int ScoreableEdgeBoard::MaxObtainableScore(Int endScore) {
     const Int addScore = Add(edge);
     Assert(addScore > 0);
     score += addScore;
-    if (score >= endScore) {
-      break;
-    }
   }
   return score;
 }
