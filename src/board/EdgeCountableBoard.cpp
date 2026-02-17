@@ -25,7 +25,6 @@ THE SOFTWARE.
 #include "EdgeCountableBoard.h"
 
 #include <ranges>
-#include <utility>
 
 namespace dab::__detail__::board {
 

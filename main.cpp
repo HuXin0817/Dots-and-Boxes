@@ -131,10 +131,10 @@ int main(int argc, char* argv[]) {
   parser.addOption(backgroundModeOption);
   parser.process(application);
 
-  int64_t boardSize = ParseBoardSize(parser.value(boardSizeOption));
-  PlayerType player1Type = ParsePlayerType(parser.value(player1Option));
-  PlayerType player2Type = ParsePlayerType(parser.value(player2Option));
-  bool backgroundMode = parser.isSet(backgroundModeOption);
+  const int64_t boardSize = ParseBoardSize(parser.value(boardSizeOption));
+  const PlayerType player1Type = ParsePlayerType(parser.value(player1Option));
+  const PlayerType player2Type = ParsePlayerType(parser.value(player2Option));
+  const bool backgroundMode = parser.isSet(backgroundModeOption);
 
   QWidget* mainWindow = Dispatch<CreateMainWindow>(boardSize, player1Type, player2Type, backgroundMode, nullptr);
   mainWindow->show();

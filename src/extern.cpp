@@ -34,8 +34,8 @@ namespace __detail__ {
 void MockRunningGame(PlayerType player1Type, PlayerType player2Type) {
   std::unique_ptr<Robot> robot1;
   std::unique_ptr<Robot> robot2;
-  robot1.reset(CreateRobot(static_cast<PlayerType>(player1Type)));
-  robot2.reset(CreateRobot(static_cast<PlayerType>(player2Type)));
+  robot1.reset(CreateRobot(player1Type));
+  robot2.reset(CreateRobot(player2Type));
   Assert(robot1);
   Assert(robot2);
 
@@ -66,7 +66,7 @@ QWidget* CreateMainWindow::Call<BoardSize>(PlayerType player1Type,
     exit(0);
   }
 
-  return new MainWindow(static_cast<PlayerType>(player1Type), static_cast<PlayerType>(player2Type), parent);
+  return new MainWindow(player1Type, player2Type, parent);
 }
 
 }  // namespace dab
