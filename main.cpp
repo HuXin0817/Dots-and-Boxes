@@ -49,10 +49,9 @@ QCommandLineOption CreateBoardSizeOption() {
   if (!boardSizeEnv.isEmpty()) {
     defaultBoardSize = boardSizeEnv;
   }
-  return QCommandLineOption(QStringList() << "s" << "boardsize",
-                            QString("Set board size (1-%1).").arg(MaxBoardSize),
-                            "size",
-                            defaultBoardSize);
+  const QStringList names = {"s", "boardsize"};
+  const QString description = QString("Set board size (1-%1).").arg(MaxBoardSize);
+  return {names, description, "size", defaultBoardSize};
 }
 
 QCommandLineOption CreatePlayerTypeOption(int playerid) {
@@ -78,14 +77,14 @@ QCommandLineOption CreatePlayerTypeOption(int playerid) {
     acceptedStr = "'" + allButLast + "' or '" + accepted.last() + "'";
   }
 
-  return QCommandLineOption(
-      QStringList() << QString("p%1").arg(playerid) << QString("player%1").arg(playerid),
+  const QStringList names = {QString("p%1").arg(playerid), QString("player%1").arg(playerid)};
+  const QString defaultPlayerTypeString = PlayerTypeOptionStrings[static_cast<int>(DefaultPlayerType)];
+  const QString discription =
       QString("Set type of player %1. Accepts: %2 (default: 'robot'). Note: 'robot' is equivalent to '%3'.")
           .arg(playerid)
           .arg(acceptedStr)
-          .arg(QString::fromUtf8(PlayerTypeOptionStrings[static_cast<int>(DefaultPlayerType)])),
-      "type",
-      defaultPlayerType);
+          .arg(defaultPlayerTypeString);
+  return {names, discription, "type", defaultPlayerType};
 }
 
 PlayerType ParsePlayerType(const QString& arg) {
