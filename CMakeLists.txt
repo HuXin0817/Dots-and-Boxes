@@ -43,9 +43,9 @@ foreach(BoardSize RANGE 1 ${MaxBoardSize})
 endforeach()
 
 qt_add_executable("${PROJECT_NAME}" main.cpp)
-target_compile_definitions("${PROJECT_NAME}" PRIVATE 
+target_compile_definitions("${PROJECT_NAME}" PRIVATE
   __Version__="${Version}"
-  __MaxBoardSize__=${MaxBoardSize} 
+  __MaxBoardSize__=${MaxBoardSize}
   __DefaultBoardSize__=${DefaultBoardSize}
 )
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets ${ExternLibraries})
