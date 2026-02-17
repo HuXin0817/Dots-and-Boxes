@@ -34,7 +34,7 @@ Span<const Edge> SimulationRobot::BestCandidateEdges(const RelativeScoreBoard& b
   SearchEdges.Clear();
   Int maxScore = -Box::Max;
   for (const Edge emptyEdge : board.EmptyEdges()) {
-    SimulationBoard.Reset(static_cast<EdgeCountableBoard>(board));
+    SimulationBoard = board;
     SimulationBoard.Add(emptyEdge);
     while (SimulationBoard.Gaming()) {
       const Edge edge = SubRobot.BestCandidateEdges(SimulationBoard).Front();

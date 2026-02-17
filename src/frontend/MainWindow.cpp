@@ -166,14 +166,14 @@ void MainWindow::Add() {
     EdgeCanvases.At(LastEdge)->SetHighLight(false);
   }
   LastEdge = edge;
-  EdgeCanvases.At(edge)->SetOwner(static_cast<Turn>(Board));
+  EdgeCanvases.At(edge)->SetOwner(Board.Turn);
   EdgeCanvases.At(edge)->SetHighLight(true);
   EdgeCanvases.At(edge)->raise();
   DotCanvases.At(edge.Dot1())->raise();
   DotCanvases.At(edge.Dot2())->raise();
   for (const Box box : edge.NearBoxes()) {
     if (Board.EdgeCount(box) == 3) {
-      BoxCanvases.At(box)->SetOwner(static_cast<Turn>(Board));
+      BoxCanvases.At(box)->SetOwner(Board.Turn);
     }
   }
   Board.Add(edge);

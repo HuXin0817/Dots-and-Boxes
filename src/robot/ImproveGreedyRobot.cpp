@@ -36,7 +36,7 @@ Span<const Edge> ImproveGreedyRobot::BestCandidateEdges(const RelativeScoreBoard
   Int candidateEdgesSize = 0;
 
   for (const Edge edge : board.EmptyEdges()) {
-    SimulationBoard.Reset(static_cast<EdgeCountableBoard>(board));
+    SimulationBoard = board;
     SimulationBoard.Add(edge);
     if (const Int score = SimulationBoard.MaxObtainableScore(minScore); score < minScore) {
       minScore = score;

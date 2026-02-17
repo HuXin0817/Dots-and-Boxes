@@ -36,7 +36,7 @@ Span<const Edge> MonteCarloRobot::BestCandidateEdges(const RelativeScoreBoard& b
   Random Random;
   SearchResult.Reset();
   for (const int64_t i : std::views::iota(0, SearchTime / board.RemainStep() + 1)) {
-    SimulationBoard.Reset(static_cast<EdgeCountableBoard>(board));
+    SimulationBoard = board;
     const Edge edge = Random.Choice(SubRobot.BestCandidateEdges(SimulationBoard));
     SimulationBoard.Add(edge);
     while (SimulationBoard.Gaming()) {
