@@ -55,8 +55,6 @@ Span<const Edge> ImproveGreedyRobot::BestCandidateEdges(const LoggingBoard& boar
   return BestCandidateEdges<>(board);
 }
 
-Span<const Edge> ImproveGreedyRobot::BestCandidateEdges(const RelativeScoreBoard& board) {
-  return BestCandidateEdges<>(board);
-}
+template Span<const Edge> ImproveGreedyRobot::BestCandidateEdges<RelativeScoreBoard>(const RelativeScoreBoard& board);
 
 }  // namespace dab::__detail__::robot

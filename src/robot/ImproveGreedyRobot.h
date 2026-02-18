@@ -34,7 +34,6 @@ class ImproveGreedyRobot : public GreedyRobot {
   template <typename Board>
   Span<const Edge> BestCandidateEdges(const Board& board);
   Span<const Edge> BestCandidateEdges(const LoggingBoard& board) override;
-  Span<const Edge> BestCandidateEdges(const RelativeScoreBoard& board);
 
  private:
   ScoreableEdgeBoard SimulationBoard;

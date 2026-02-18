@@ -55,8 +55,6 @@ Span<const Edge> SimulationRobot::BestCandidateEdges(const Board& board) {
 
 Span<const Edge> SimulationRobot::BestCandidateEdges(const LoggingBoard& board) { return BestCandidateEdges<>(board); }
 
-Span<const Edge> SimulationRobot::BestCandidateEdges(const RelativeScoreBoard& board) {
-  return BestCandidateEdges<>(board);
-}
+template Span<const Edge> SimulationRobot::BestCandidateEdges<RelativeScoreBoard>(const RelativeScoreBoard& board);
 
 }  // namespace dab::__detail__::robot
