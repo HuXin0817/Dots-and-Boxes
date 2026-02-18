@@ -26,9 +26,9 @@ THE SOFTWARE.
 
 #include <Dab/Model.h>
 
-#include <ranges>
+#include <chrono>
+#include <numeric>
 #include <stdexcept>
-#include <type_traits>
 
 namespace dab {
 
@@ -63,8 +63,68 @@ static constexpr int FixedConfig(int config) {
   return static_cast<int>(fixedConfig);
 }
 
+template <int Config, bool Enabled>
+struct EdgeCountMixin;
+
 template <int Config>
-class Board {
+struct EdgeCountMixin<Config, true> {
+  Array<uint8_t, Box::Max> Counter;
+};
+
+template <int Config>
+struct EdgeCountMixin<Config, false> {};
+
+template <int Config, bool Enabled>
+struct ScoreableCountingMixin;
+
+template <int Config>
+struct ScoreableCountingMixin<Config, true> {
+  Queue<Edge, Edge::Max> ScoreableEdges;
+};
+
+template <int Config>
+struct ScoreableCountingMixin<Config, false> {};
+
+template <int Config, bool Enabled>
+struct RelativeScoreMixin;
+
+template <int Config>
+struct RelativeScoreMixin<Config, true> {
+  Int Score;
+  Turn Turn;
+};
+
+template <int Config>
+struct RelativeScoreMixin<Config, false> {};
+
+template <int Config, bool Enabled>
+struct AbsoluteScoreMixin;
+
+template <int Config>
+struct AbsoluteScoreMixin<Config, true> {
+  Int TotalScore;
+};
+
+template <int Config>
+struct AbsoluteScoreMixin<Config, false> {};
+
+template <int Config, bool Enabled>
+struct LoggingMixin;
+
+template <int Config>
+struct LoggingMixin<Config, true> {
+  std::chrono::system_clock::time_point LastUpdateTime;
+};
+
+template <int Config>
+struct LoggingMixin<Config, false> {};
+
+template <int Config>
+class Board : private EdgeCountMixin<Config, HasFlag(FixedConfig(Config), EnableEdgeCount)>,
+              private ScoreableCountingMixin<Config, HasFlag(FixedConfig(Config), EnableScoreableCounting)>,
+              private RelativeScoreMixin<Config, HasFlag(FixedConfig(Config), EnableRelativeScore)>,
+              private AbsoluteScoreMixin<Config, HasFlag(FixedConfig(Config), EnableAbsoluteScore)>,
+              private LoggingMixin<Config, HasFlag(FixedConfig(Config), EnableLogging)> {
   template <int>
   friend class Board;
   static inline std::logic_error UnimplementedError = std::logic_error("unimplemented");
@@ -78,20 +138,20 @@ class Board {
     std::iota(EdgeIndexes.begin(), EdgeIndexes.end(), 0);
     std::iota(Edges.begin(), Edges.end(), 0);
     if constexpr (HasFlag(EnableEdgeCount)) {
-      Counter = Array<uint8_t, Box::Max>();
+      this->Counter = Array<uint8_t, Box::Max>();
     }
     if constexpr (HasFlag(EnableScoreableCounting)) {
-      ScoreableEdges = Queue<Edge, Edge::Max>();
+      this->ScoreableEdges = Queue<Edge, Edge::Max>();
     }
     if constexpr (HasFlag(EnableRelativeScore)) {
-      Score = 0;
-      Turn.Reset();
+      this->Score = 0;
+      this->Turn.Reset();
     }
     if constexpr (HasFlag(EnableAbsoluteScore)) {
-      TotalScore = 0;
+      this->TotalScore = 0;
     }
     if constexpr (HasFlag(EnableLogging)) {
-      LastUpdateTime = std::chrono::system_clock::now();
+      this->LastUpdateTime = std::chrono::system_clock::now();
     }
   }
 
@@ -109,31 +169,32 @@ class Board {
     Int score = 0;
     if constexpr (HasFlag(EnableEdgeCount)) {
       for (const Box box : edge.NearBoxes()) {
-        const uint8_t num = ++Counter.At(box);
+        const uint8_t num = ++this->Counter.At(box);
         Assert(num <= 4);
         if (num == 4) {
           ++score;
         }
         if constexpr (HasFlag(EnableScoreableCounting)) {
           if (num == 3) {
-            ScoreableEdges.Append(FindNotContainsEdgeInBox(box));
+            this->ScoreableEdges.Append(FindNotContainsEdgeInBox(box));
           }
         }
       }
       if constexpr (HasFlag(EnableRelativeScore)) {
-        const class Turn turn = Turn;
+        const class Turn turn = this->Turn;
         if (score > 0) {
-          Score += score * Turn;
+          this->Score += score * this->Turn;
         } else {
-          Turn.Add();
+          this->Turn.Add();
         }
         if constexpr (HasFlag(EnableAbsoluteScore)) {
-          TotalScore += score;
+          this->TotalScore += score;
         }
         if constexpr (HasFlag(EnableLogging)) {
           const Int step = NowStep();
           const std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
-          const int64_t time = std::chrono::duration_cast<std::chrono::milliseconds>(now - LastUpdateTime).count();
+          const int64_t time =
+              std::chrono::duration_cast<std::chrono::milliseconds>(now - this->LastUpdateTime).count();
           LogInfo(R"({{"Step":{},"Turn":{},"Move":{},"Score":{{"Player1":{},"Player2":{}}},"Time":{}}})",
                   step,
                   turn.IsPlayer1Turn() ? 1 : 2,
@@ -150,7 +211,7 @@ class Board {
               LogInfo(R"({{"Winner":"Draw"}})");
             }
           }
-          LastUpdateTime = now;
+          this->LastUpdateTime = now;
         }
       }
     }
@@ -167,7 +228,7 @@ class Board {
 
   Int RelativeScore() const {
     if constexpr (HasFlag(EnableRelativeScore)) {
-      return Score;
+      return this->Score;
     } else {
       throw UnimplementedError;
     }
@@ -175,7 +236,7 @@ class Board {
 
   Int Player1Score() const {
     if constexpr (HasFlag(EnableAbsoluteScore)) {
-      return (TotalScore + Score) / 2;
+      return (this->TotalScore + this->Score) / 2;
     } else {
       throw UnimplementedError;
     }
@@ -183,7 +244,7 @@ class Board {
 
   Int Player2Score() const {
     if constexpr (HasFlag(EnableAbsoluteScore)) {
-      return (TotalScore - Score) / 2;
+      return (this->TotalScore - this->Score) / 2;
     } else {
       throw UnimplementedError;
     }
@@ -191,7 +252,7 @@ class Board {
 
   Turn GetTurn() const {
     if constexpr (HasFlag(EnableRelativeScore)) {
-      return Turn;
+      return this->Turn;
     } else {
       throw UnimplementedError;
     }
@@ -199,7 +260,7 @@ class Board {
 
   bool IsPlayer1Turn() const {
     if constexpr (HasFlag(EnableRelativeScore)) {
-      return Turn.IsPlayer1Turn();
+      return this->Turn.IsPlayer1Turn();
     } else {
       throw UnimplementedError;
     }
@@ -207,7 +268,7 @@ class Board {
 
   bool IsPlayer2Turn() const {
     if constexpr (HasFlag(EnableRelativeScore)) {
-      return Turn.IsPlayer2Turn();
+      return this->Turn.IsPlayer2Turn();
     } else {
       throw UnimplementedError;
     }
@@ -215,7 +276,7 @@ class Board {
 
   Edge FindNotContainsEdgeInBox(Box box) const {
     if constexpr (HasFlag(EnableEdgeCount)) {
-      Assert(Counter.At(box) == 3);
+      Assert(this->Counter.At(box) == 3);
       for (const Edge edge : box.NearEdges()) {
         if (NotContains(edge)) {
           return edge;
@@ -227,27 +288,27 @@ class Board {
     }
   }
 
-  Edge FindScoreableEdge() const {
-    for (const Box box : std::views::iota(0, Box::Max)) {
-      if (Counter.At(box) == 3) {
-        return FindNotContainsEdgeInBox(box);
+  Int FindScoreableEdge() {
+    if constexpr (HasFlag(EnableScoreableCounting)) {
+      for (const Edge edge : EmptyEdges()) {
+        if (Scoreable(edge)) {
+          this->ScoreableEdges.Append(edge);
+        }
       }
+      return this->ScoreableEdges.Size();
+    } else {
+      throw UnimplementedError;
     }
-    return Edge::Invalid;
   }
 
   Int MaxObtainableScore(Int endScore) {
     if constexpr (HasFlag(EnableScoreableCounting)) {
       Int score = 0;
       while (Gaming() && score < endScore) {
-        if (ScoreableEdges.Empty()) {
-          if (const Edge edge = FindScoreableEdge(); edge != Edge::Invalid) {
-            ScoreableEdges.Append(edge);
-          } else {
-            break;
-          }
+        if (this->ScoreableEdges.Empty() && FindScoreableEdge() == 0) {
+          break;
         }
-        const Edge edge = ScoreableEdges.Pop();
+        const Edge edge = this->ScoreableEdges.Pop();
         if (Contains(edge)) {
           continue;
         }
@@ -263,7 +324,7 @@ class Board {
 
   uint8_t EdgeCount(Box box) const {
     if constexpr (HasFlag(EnableEdgeCount)) {
-      return Counter.At(box);
+      return this->Counter.At(box);
     } else {
       throw UnimplementedError;
     }
@@ -272,7 +333,15 @@ class Board {
   uint8_t MaxEdgeCount(Edge edge) const {
     if constexpr (HasFlag(EnableEdgeCount)) {
       const List<Box, 2>& nearBoxes = edge.NearBoxes();
-      return std::max(Counter.At(nearBoxes.Front()), Counter.At(nearBoxes.Back()));
+      return std::max(this->Counter.At(nearBoxes.Front()), this->Counter.At(nearBoxes.Back()));
+    } else {
+      throw UnimplementedError;
+    }
+  }
+
+  bool Scoreable(Edge edge) const {
+    if constexpr (HasFlag(EnableEdgeCount)) {
+      return MaxEdgeCount(edge) == 3;
     } else {
       throw UnimplementedError;
     }
@@ -286,27 +355,27 @@ class Board {
 
     if constexpr (HasFlag(EnableEdgeCount)) {
       static_assert(FromBoard::HasFlag(EnableEdgeCount));
-      Counter = from.Counter;
+      this->Counter = from.Counter;
     }
     if constexpr (HasFlag(EnableScoreableCounting)) {
       if constexpr (FromBoard::HasFlag(EnableScoreableCounting)) {
-        ScoreableEdges = from.ScoreableEdges;
+        this->ScoreableEdges = from.ScoreableEdges;
       } else {
-        ScoreableEdges.Clear();
+        this->ScoreableEdges.Clear();
       }
     }
     if constexpr (HasFlag(EnableRelativeScore)) {
       static_assert(FromBoard::HasFlag(EnableRelativeScore));
-      Score = from.Score;
-      Turn = from.Turn;
+      this->Score = from.Score;
+      this->Turn = from.Turn;
     }
     if constexpr (HasFlag(EnableAbsoluteScore)) {
       static_assert(FromBoard::HasFlag(EnableAbsoluteScore));
-      TotalScore = from.TotalScore;
+      this->TotalScore = from.TotalScore;
     }
     if constexpr (HasFlag(EnableLogging)) {
       static_assert(FromBoard::HasFlag(EnableLogging));
-      LastUpdateTime = from.LastUpdateTime;
+      this->LastUpdateTime = from.LastUpdateTime;
     }
   }
 
@@ -314,30 +383,22 @@ class Board {
   Int Step = 0;
   Array<Edge, Edge::Max> Edges;
   Array<Int, Edge::Max> EdgeIndexes;
-
-  class None {
-    None(const None&) = delete;
-    None& operator=(const None&) = delete;
-  };
-  template <int Flag, typename T>
-  using Member = std::conditional_t<HasFlag(EnableEdgeCount), T, None>;
-
-  [[no_unique_address]] Member<EnableEdgeCount, Array<uint8_t, Box::Max>> Counter;
-  [[no_unique_address]] Member<EnableScoreableCounting, Queue<Edge, Edge::Max>> ScoreableEdges;
-  [[no_unique_address]] Member<EnableRelativeScore, Int> Score;
-  [[no_unique_address]] Member<EnableRelativeScore, Turn> Turn;
-  [[no_unique_address]] Member<EnableAbsoluteScore, Int> TotalScore;
-  [[no_unique_address]] Member<EnableLogging, std::chrono::system_clock::time_point> LastUpdateTime;
 };
+
+struct BasicBoard {
+  Int Step = 0;
+  Array<Edge, Edge::Max> Edges;
+  Array<Int, Edge::Max> EdgeIndexes;
+};
+static_assert(sizeof(Board<0>) == sizeof(BasicBoard));
 
 }  // namespace __detail__::board
 
-using namespace __detail__::board::config;
 using BasicBoard = __detail__::board::Board<0>;
-using EdgeCountableBoard = __detail__::board::Board<EnableEdgeCount>;
-using RelativeScoreBoard = __detail__::board::Board<EnableRelativeScore>;
-using AbsoluteScoreBoard = __detail__::board::Board<EnableAbsoluteScore>;
-using LoggingBoard = __detail__::board::Board<EnableLogging>;
-using ScoreableEdgeBoard = __detail__::board::Board<EnableScoreableCounting>;
+using EdgeCountableBoard = __detail__::board::Board<__detail__::board::config::EnableEdgeCount>;
+using RelativeScoreBoard = __detail__::board::Board<__detail__::board::config::EnableRelativeScore>;
+using AbsoluteScoreBoard = __detail__::board::Board<__detail__::board::config::EnableAbsoluteScore>;
+using LoggingBoard = __detail__::board::Board<__detail__::board::config::EnableLogging>;
+using ScoreableEdgeBoard = __detail__::board::Board<__detail__::board::config::EnableScoreableCounting>;
 
 }  // namespace dab

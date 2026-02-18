@@ -24,6 +24,8 @@ THE SOFTWARE.
 
 #pragma once
 
+#include <ranges>
+
 #include "SimulationRobot.h"
 
 namespace dab::__detail__::robot {
