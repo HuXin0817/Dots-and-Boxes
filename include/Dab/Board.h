@@ -29,10 +29,10 @@ THE SOFTWARE.
 namespace dab {
 
 using BasicBoard = __detail__::board::Board<0>;
-using EdgeCountableBoard = __detail__::board::Board<__detail__::board::config::EnableEdgeCount>;
-using RelativeScoreBoard = __detail__::board::Board<__detail__::board::config::EnableRelativeScore>;
-using AbsoluteScoreBoard = __detail__::board::Board<__detail__::board::config::EnableAbsoluteScore>;
-using LoggingBoard = __detail__::board::Board<__detail__::board::config::EnableLogging>;
-using ScoreableEdgeBoard = __detail__::board::Board<__detail__::board::config::EnableScoreableCounting>;
+using EdgeCountableBoard = __detail__::board::Board<__detail__::board::EnableEdgeCount>;
+using RelativeScoreBoard = __detail__::board::Board<__detail__::board::EnableRelativeScore>;
+using AbsoluteScoreBoard = __detail__::board::Board<__detail__::board::EnableAbsoluteScore>;
+using LoggingBoard = __detail__::board::Board<__detail__::board::EnableLogging>;
+using ScoreableEdgeBoard = __detail__::board::Board<__detail__::board::EnableScoreableCounting>;
 
 }  // namespace dab

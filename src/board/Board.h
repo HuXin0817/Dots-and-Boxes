@@ -28,20 +28,14 @@ THE SOFTWARE.
 
 #include <chrono>
 #include <stdexcept>
-#include <type_traits>
-#include <utility>
 
 namespace dab::__detail__::board {
 
-namespace config {
 static constexpr int EnableEdgeCount = 1 << 0;
 static constexpr int EnableRelativeScore = 1 << 1;
 static constexpr int EnableAbsoluteScore = 1 << 2;
 static constexpr int EnableLogging = 1 << 3;
 static constexpr int EnableScoreableCounting = 1 << 4;
-}  // namespace config
-
-using namespace config;
 
 static constexpr bool HasFlag(int config, int flag) { return (config & flag) != 0; }
 
@@ -155,41 +149,44 @@ class Board : private EdgeCountMixin<Config, HasFlag(FixedConfig(Config), Enable
   bool Scoreable(Edge edge) const;
 
   template <typename FromBoard>
-  void operator=(const FromBoard& from) {
-    Step = from.Step;
-    Edges = from.Edges;
-    EdgeIndexes = from.EdgeIndexes;
-
-    if constexpr (HasFlag(EnableEdgeCount)) {
-      static_assert(FromBoard::HasFlag(EnableEdgeCount));
-      this->Counter = from.Counter;
-    }
-    if constexpr (HasFlag(EnableScoreableCounting)) {
-      if constexpr (FromBoard::HasFlag(EnableScoreableCounting)) {
-        this->ScoreableEdges = from.ScoreableEdges;
-      } else {
-        this->ScoreableEdges.Clear();
-      }
-    }
-    if constexpr (HasFlag(EnableRelativeScore)) {
-      static_assert(FromBoard::HasFlag(EnableRelativeScore));
-      this->Score = from.Score;
-      this->Turn = from.Turn;
-    }
-    if constexpr (HasFlag(EnableAbsoluteScore)) {
-      static_assert(FromBoard::HasFlag(EnableAbsoluteScore));
-      this->TotalScore = from.TotalScore;
-    }
-    if constexpr (HasFlag(EnableLogging)) {
-      static_assert(FromBoard::HasFlag(EnableLogging));
-      this->LastUpdateTime = from.LastUpdateTime;
-    }
-  }
+  void operator=(const FromBoard& from);
 
  private:
   Int Step = 0;
   Array<Edge, Edge::Max> Edges;
   Array<Int, Edge::Max> EdgeIndexes;
 };
+
+template <int Config>
+template <typename FromBoard>
+void Board<Config>::operator=(const FromBoard& from) {
+  Step = from.Step;
+  Edges = from.Edges;
+  EdgeIndexes = from.EdgeIndexes;
+  if constexpr (HasFlag(EnableEdgeCount)) {
+    static_assert(FromBoard::HasFlag(EnableEdgeCount));
+    this->Counter = from.Counter;
+  }
+  if constexpr (HasFlag(EnableScoreableCounting)) {
+    if constexpr (FromBoard::HasFlag(EnableScoreableCounting)) {
+      this->ScoreableEdges = from.ScoreableEdges;
+    } else {
+      this->ScoreableEdges.Clear();
+    }
+  }
+  if constexpr (HasFlag(EnableRelativeScore)) {
+    static_assert(FromBoard::HasFlag(EnableRelativeScore));
+    this->Score = from.Score;
+    this->Turn = from.Turn;
+  }
+  if constexpr (HasFlag(EnableAbsoluteScore)) {
+    static_assert(FromBoard::HasFlag(EnableAbsoluteScore));
+    this->TotalScore = from.TotalScore;
+  }
+  if constexpr (HasFlag(EnableLogging)) {
+    static_assert(FromBoard::HasFlag(EnableLogging));
+    this->LastUpdateTime = from.LastUpdateTime;
+  }
+}
 
 }  // namespace dab::__detail__::board
