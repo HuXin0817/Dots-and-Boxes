@@ -53,7 +53,7 @@ static constexpr int FixedConfig(int config) {
   if (HasFlag(config, EnableScoreableCounting)) {
     fixedConfig |= EnableEdgeCount;
   }
-  return static_cast<int>(fixedConfig);
+  return fixedConfig;
 }
 
 template <int Config, bool Enabled>
@@ -83,7 +83,7 @@ struct RelativeScoreMixin;
 
 template <int Config>
 struct RelativeScoreMixin<Config, true> {
-  Int Score;
+  Int Score = 0;
   Turn Turn;
 };
 
@@ -120,7 +120,7 @@ class Board : private EdgeCountMixin<Config, HasFlag(FixedConfig(Config), Enable
               private LoggingMixin<Config, HasFlag(FixedConfig(Config), EnableLogging)> {
   template <int>
   friend class Board;
-  static inline std::logic_error UnimplementedError = std::logic_error("unimplemented");
+  static std::logic_error UnimplementedError() { return std::logic_error("unimplemented"); }
   static constexpr bool HasFlag(int flag) { return (FixedConfig(Config) & flag) != 0; }
 
  public:
@@ -149,7 +149,7 @@ class Board : private EdgeCountMixin<Config, HasFlag(FixedConfig(Config), Enable
   bool Scoreable(Edge edge) const;
 
   template <typename FromBoard>
-  void operator=(const FromBoard& from);
+  Board& operator=(const FromBoard& from);
 
  private:
   Int Step = 0;
@@ -159,7 +159,7 @@ class Board : private EdgeCountMixin<Config, HasFlag(FixedConfig(Config), Enable
 
 template <int Config>
 template <typename FromBoard>
-void Board<Config>::operator=(const FromBoard& from) {
+Board<Config>& Board<Config>::operator=(const FromBoard& from) {
   Step = from.Step;
   Edges = from.Edges;
   EdgeIndexes = from.EdgeIndexes;
@@ -187,6 +187,7 @@ void Board<Config>::operator=(const FromBoard& from) {
     static_assert(FromBoard::HasFlag(EnableLogging));
     this->LastUpdateTime = from.LastUpdateTime;
   }
+  return *this;
 }
 
 }  // namespace dab::__detail__::board

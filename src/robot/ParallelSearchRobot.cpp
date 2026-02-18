@@ -24,6 +24,8 @@ THE SOFTWARE.
 
 #include "ParallelSearchRobot.h"
 
+#include <tbb/parallel_for_each.h>
+
 namespace dab::__detail__::robot {
 
 template <typename Board>

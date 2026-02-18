@@ -79,7 +79,7 @@ Int Board<Config>::Add(Edge edge) {
       }
     }
     if constexpr (HasFlag(EnableRelativeScore)) {
-      const class Turn turn = this->Turn;
+      const Turn turn = this->Turn;
       if (score > 0) {
         this->Score += score * this->Turn;
       } else {
@@ -120,7 +120,7 @@ Int Board<Config>::RelativeScore() const {
   if constexpr (HasFlag(EnableRelativeScore)) {
     return this->Score;
   } else {
-    throw UnimplementedError;
+    throw UnimplementedError();
   }
 }
 
@@ -129,7 +129,7 @@ Int Board<Config>::Player1Score() const {
   if constexpr (HasFlag(EnableAbsoluteScore)) {
     return (this->TotalScore + this->Score) / 2;
   } else {
-    throw UnimplementedError;
+    throw UnimplementedError();
   }
 }
 
@@ -138,7 +138,7 @@ Int Board<Config>::Player2Score() const {
   if constexpr (HasFlag(EnableAbsoluteScore)) {
     return (this->TotalScore - this->Score) / 2;
   } else {
-    throw UnimplementedError;
+    throw UnimplementedError();
   }
 }
 
@@ -147,7 +147,7 @@ Turn Board<Config>::GetTurn() const {
   if constexpr (HasFlag(EnableRelativeScore)) {
     return this->Turn;
   } else {
-    throw UnimplementedError;
+    throw UnimplementedError();
   }
 }
 
@@ -156,7 +156,7 @@ bool Board<Config>::IsPlayer1Turn() const {
   if constexpr (HasFlag(EnableRelativeScore)) {
     return this->Turn.IsPlayer1Turn();
   } else {
-    throw UnimplementedError;
+    throw UnimplementedError();
   }
 }
 
@@ -165,7 +165,7 @@ bool Board<Config>::IsPlayer2Turn() const {
   if constexpr (HasFlag(EnableRelativeScore)) {
     return this->Turn.IsPlayer2Turn();
   } else {
-    throw UnimplementedError;
+    throw UnimplementedError();
   }
 }
 
@@ -180,7 +180,7 @@ Edge Board<Config>::FindNotContainsEdgeInBox(Box box) const {
     }
     throw std::runtime_error("unreachable");
   } else {
-    throw UnimplementedError;
+    throw UnimplementedError();
   }
 }
 
@@ -194,7 +194,7 @@ Int Board<Config>::FindScoreableEdge() {
     }
     return this->ScoreableEdges.Size();
   } else {
-    throw UnimplementedError;
+    throw UnimplementedError();
   }
 }
 
@@ -216,7 +216,7 @@ Int Board<Config>::MaxObtainableScore(Int endScore) {
     }
     return score;
   } else {
-    throw UnimplementedError;
+    throw UnimplementedError();
   }
 }
 
@@ -225,7 +225,7 @@ uint8_t Board<Config>::EdgeCount(Box box) const {
   if constexpr (HasFlag(EnableEdgeCount)) {
     return this->Counter.At(box);
   } else {
-    throw UnimplementedError;
+    throw UnimplementedError();
   }
 }
 
@@ -235,7 +235,7 @@ uint8_t Board<Config>::MaxEdgeCount(Edge edge) const {
     const List<Box, 2>& nearBoxes = edge.NearBoxes();
     return std::max(this->Counter.At(nearBoxes.Front()), this->Counter.At(nearBoxes.Back()));
   } else {
-    throw UnimplementedError;
+    throw UnimplementedError();
   }
 }
 
@@ -244,7 +244,7 @@ bool Board<Config>::Scoreable(Edge edge) const {
   if constexpr (HasFlag(EnableEdgeCount)) {
     return MaxEdgeCount(edge) == 3;
   } else {
-    throw UnimplementedError;
+    throw UnimplementedError();
   }
 }
 

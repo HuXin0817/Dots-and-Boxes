@@ -42,8 +42,8 @@ class GreedyRobot : public Robot {
   Array<Edge, Edge::Max>& GetEdgeBuffer() { return Edges; }
 
  private:
-  Int EnemyUnscoreableIndex;
-  Int ScoreableIndex;
+  Int EnemyUnscoreableIndex = 0;
+  Int ScoreableIndex = 0;
   Array<Edge, Edge::Max> Edges;
 };
 
