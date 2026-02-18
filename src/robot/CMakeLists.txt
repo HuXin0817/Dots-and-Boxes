@@ -1,5 +1,12 @@
 set(RobotLibrary "robot${BoardSize}x${BoardSize}")
-set(RobotSources Robot.cpp)
+set(RobotSources
+  GreedyRobot.cpp
+  ImproveGreedyRobot.cpp
+  MonteCarloRobot.cpp
+  ParallelSearchRobot.cpp
+  Robot.cpp
+  SimulationRobot.cpp
+)
 add_library(${RobotLibrary} STATIC ${RobotSources})
 target_compile_definitions(${RobotLibrary} PRIVATE
   __BoardSize__=${BoardSize}

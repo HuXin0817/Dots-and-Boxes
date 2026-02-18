@@ -71,7 +71,9 @@ class Board {
   static constexpr bool HasFlag(int flag) { return (FixedConfig(Config) & flag) != 0; }
 
  public:
-  Board() {
+  Board() { Reset(); }
+
+  void Reset() {
     Step = 0;
     std::iota(EdgeIndexes.begin(), EdgeIndexes.end(), 0);
     std::iota(Edges.begin(), Edges.end(), 0);
@@ -92,8 +94,6 @@ class Board {
       LastUpdateTime = std::chrono::system_clock::now();
     }
   }
-
-  void Reset() { operator=(Board()); }
 
   Int Add(Edge edge) {
     Assert(NotContains(edge));
@@ -278,46 +278,6 @@ class Board {
     }
   }
 
-  class None {
-    None(const None&) = delete;
-    None& operator=(const None&) = delete;
-  };
-  template <int Flag, typename T>
-  using Member = std::conditional_t<HasFlag(EnableEdgeCount), T, None>;
-
-  template <typename ToBoard>
-  operator ToBoard() {
-    ToBoard to;
-
-    to.Step = Step;
-    to.Edges = Edges;
-    to.EdgeIndexes = EdgeIndexes;
-
-    if constexpr (ToBoard::HasFlag(EnableEdgeCount)) {
-      static_assert(HasFlag(EnableEdgeCount));
-      to.Counter = Counter;
-    }
-    if constexpr (ToBoard::HasFlag(EnableScoreableCounting)) {
-      static_assert(HasFlag(EnableScoreableCounting));
-      to.ScoreableEdges = ScoreableEdges;
-    }
-    if constexpr (ToBoard::HasFlag(EnableRelativeScore)) {
-      static_assert(HasFlag(EnableRelativeScore));
-      to.Score = Score;
-      to.Turn = Turn;
-    }
-    if constexpr (ToBoard::HasFlag(EnableAbsoluteScore)) {
-      static_assert(HasFlag(EnableAbsoluteScore));
-      to.TotalScore = TotalScore;
-    }
-    if constexpr (ToBoard::HasFlag(EnableLogging)) {
-      static_assert(HasFlag(EnableLogging));
-      to.LastUpdateTime = LastUpdateTime;
-    }
-
-    return to;
-  }
-
   template <typename FromBoard>
   void operator=(const FromBoard& from) {
     Step = from.Step;
@@ -354,6 +314,13 @@ class Board {
   Int Step = 0;
   Array<Edge, Edge::Max> Edges;
   Array<Int, Edge::Max> EdgeIndexes;
+
+  class None {
+    None(const None&) = delete;
+    None& operator=(const None&) = delete;
+  };
+  template <int Flag, typename T>
+  using Member = std::conditional_t<HasFlag(EnableEdgeCount), T, None>;
 
   [[no_unique_address]] Member<EnableEdgeCount, Array<uint8_t, Box::Max>> Counter;
   [[no_unique_address]] Member<EnableScoreableCounting, Queue<Edge, Edge::Max>> ScoreableEdges;

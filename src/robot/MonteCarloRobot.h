@@ -35,9 +35,7 @@ class MonteCarloRobot : public Robot {
   MonteCarloRobot() = default;
   template <typename Board>
   Span<const Edge> BestCandidateEdges(const Board& board);
-  Span<const Edge> BestCandidateEdges(const LoggingBoard& board) override {
-    return BestCandidateEdges<LoggingBoard>(board);
-  }
+  Span<const Edge> BestCandidateEdges(const LoggingBoard& board) override;
   template <typename Board>
   bool CanEarlyExit(const Board& board, Span<const Edge>& result);
   const ScoreMap& GetSearchResult() const { return SearchResult; }

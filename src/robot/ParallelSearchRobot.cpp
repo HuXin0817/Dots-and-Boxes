@@ -22,46 +22,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#pragma once
-
-#include "GreedyRobot.h"
+#include "ParallelSearchRobot.h"
 
 namespace dab::__detail__::robot {
 
-class ImproveGreedyRobot : public GreedyRobot {
- public:
-  ImproveGreedyRobot() = default;
-  template <typename Board>
-  Span<const Edge> BestCandidateEdges(const Board& board);
-  Span<const Edge> BestCandidateEdges(const LoggingBoard& board) override;
-
- private:
-  ScoreableEdgeBoard SimulationBoard;
-};
-
-template <typename Board>
-Span<const Edge> ImproveGreedyRobot ::BestCandidateEdges(const Board& board) {
-  if (const Span<const Edge> edges = GreedyRobot::BestCandidateEdges(board); EnemyUnscoreable() || Scoreable()) {
-    return edges;
-  }
-
-  Int minScore = Box::Max + 1;
-  Array<Edge, Edge::Max>& candidateEdges = GetEdgeBuffer();
-  Int candidateEdgesSize = 0;
-
-  for (const Edge edge : board.EmptyEdges()) {
-    SimulationBoard = board;
-    SimulationBoard.Add(edge);
-    if (const Int score = SimulationBoard.MaxObtainableScore(minScore); score < minScore) {
-      minScore = score;
-      candidateEdgesSize = 1;
-      candidateEdges.At(0) = edge;
-    } else if (score == minScore) {
-      candidateEdges.At(candidateEdgesSize++) = edge;
-    }
-  }
-
-  return {candidateEdges.begin(), candidateEdges.begin() + candidateEdgesSize};
+Span<const Edge> ParallelSearchRobot::BestCandidateEdges(const LoggingBoard& board) {
+  return BestCandidateEdges<>(board);
 }
 
 }  // namespace dab::__detail__::robot

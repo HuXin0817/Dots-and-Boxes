@@ -33,9 +33,7 @@ class GreedyRobot : public Robot {
   GreedyRobot() = default;
   template <typename Board>
   Span<const Edge> BestCandidateEdges(const Board& board);
-  Span<const Edge> BestCandidateEdges(const LoggingBoard& board) override {
-    return BestCandidateEdges<LoggingBoard>(board);
-  }
+  Span<const Edge> BestCandidateEdges(const LoggingBoard& board) override;
   bool EnemyUnscoreable() const { return EnemyUnscoreableIndex < Edge::Max; }
   bool Scoreable() const { return ScoreableIndex > 0; }
 

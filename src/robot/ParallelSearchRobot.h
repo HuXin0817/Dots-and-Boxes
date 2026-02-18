@@ -35,9 +35,7 @@ class ParallelSearchRobot : public Robot {
   ParallelSearchRobot() = default;
   template <typename Board>
   Span<const Edge> BestCandidateEdges(const Board& board);
-  Span<const Edge> BestCandidateEdges(const LoggingBoard& board) override {
-    return BestCandidateEdges<LoggingBoard>(board);
-  }
+  Span<const Edge> BestCandidateEdges(const LoggingBoard& board) override;
 
  private:
   Array<MonteCarloRobot, 32> SubRobots;
