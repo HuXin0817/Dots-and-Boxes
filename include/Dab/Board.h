@@ -318,8 +318,6 @@ class Board {
 
   template <typename FromBoard>
   void operator=(const FromBoard& from) {
-    Reset();
-
     Step = from.Step;
     Edges = from.Edges;
     EdgeIndexes = from.EdgeIndexes;
@@ -331,6 +329,8 @@ class Board {
     if constexpr (If(EnableScoreableCounting)) {
       if constexpr (FromBoard::If(EnableScoreableCounting)) {
         ScoreableEdges = from.ScoreableEdges;
+      } else {
+        ScoreableEdges.Clear();
       }
     }
     if constexpr (If(EnableRelativeScore)) {
