@@ -33,8 +33,13 @@ class MonteCarloRobot : public Robot {
 
  public:
   MonteCarloRobot() = default;
-  Span<const Edge> BestCandidateEdges(const RelativeScoreBoard& board) override;
-  bool CanEarlyExit(const RelativeScoreBoard& board, Span<const Edge>& result);
+  template <typename Board>
+  Span<const Edge> BestCandidateEdges(const Board& board);
+  Span<const Edge> BestCandidateEdges(const LoggingBoard& board) override {
+    return BestCandidateEdges<LoggingBoard>(board);
+  }
+  template <typename Board>
+  bool CanEarlyExit(const Board& board, Span<const Edge>& result);
   const ScoreMap& GetSearchResult() const { return SearchResult; }
 
  private:
@@ -42,5 +47,32 @@ class MonteCarloRobot : public Robot {
   RelativeScoreBoard SimulationBoard;
   ScoreMap SearchResult;
 };
+
+template <typename Board>
+Span<const Edge> MonteCarloRobot::BestCandidateEdges(const Board& board) {
+  if (Span<const Edge> edges; CanEarlyExit(board, edges)) {
+    return edges;
+  }
+
+  Random Random;
+  SearchResult.Reset();
+  for (const int64_t i : std::views::iota(0, SearchTime / board.RemainStep() + 1)) {
+    SimulationBoard = board;
+    const Edge edge = Random.Choice(SubRobot.BestCandidateEdges(SimulationBoard));
+    SimulationBoard.Add(edge);
+    while (SimulationBoard.Gaming()) {
+      SimulationBoard.Add(Random.Choice(SubRobot.BestCandidateEdges(SimulationBoard)));
+    }
+    SearchResult.Add(edge, SimulationBoard.RelativeScore());
+  }
+
+  return SearchResult.Export();
+}
+
+template <typename Board>
+bool MonteCarloRobot::CanEarlyExit(const Board& board, Span<const Edge>& result) {
+  result = SubRobot.BestCandidateEdges(board);
+  return result.Size() == 1;
+}
 
 }  // namespace dab::__detail__::robot

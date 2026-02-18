@@ -44,25 +44,25 @@ enum BoardType : int {
 
 static constexpr bool HasFlag(BoardType type, BoardType flag) { return (type & flag) != 0; }
 
+static constexpr BoardType FixedFlag(BoardType flag) {
+  int fixedFlag = flag;
+  if (HasFlag(flag, EnableRelativeScore)) {
+    fixedFlag |= EnableEdgeCount;
+  }
+  if (HasFlag(flag, EnableAbsoluteScore)) {
+    fixedFlag |= EnableEdgeCount | EnableRelativeScore;
+  }
+  if (HasFlag(flag, EnableLogging)) {
+    fixedFlag |= EnableEdgeCount | EnableRelativeScore | EnableAbsoluteScore;
+  }
+  if (HasFlag(flag, EnableScoreableCounting)) {
+    fixedFlag |= EnableEdgeCount;
+  }
+  return static_cast<BoardType>(fixedFlag);
+}
+
 template <BoardType Type>
 class Board {
-  static constexpr BoardType FixedFlag(BoardType flag) {
-    int fixedFlag = flag;
-    if (HasFlag(flag, EnableRelativeScore)) {
-      fixedFlag |= EnableEdgeCount;
-    }
-    if (HasFlag(flag, EnableAbsoluteScore)) {
-      fixedFlag |= EnableEdgeCount | EnableRelativeScore;
-    }
-    if (HasFlag(flag, EnableLogging)) {
-      fixedFlag |= EnableEdgeCount | EnableRelativeScore | EnableAbsoluteScore;
-    }
-    if (HasFlag(flag, EnableScoreableCounting)) {
-      fixedFlag |= EnableEdgeCount;
-    }
-    return static_cast<BoardType>(fixedFlag);
-  }
-
  public:
   static constexpr bool If(BoardType flag) { return (FixedFlag(Type) & flag) != 0; }
 
