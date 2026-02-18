@@ -34,17 +34,19 @@ namespace dab {
 
 namespace __detail__::board {
 
-enum BoardConfig : int {
-  EnableEdgeCount = 1 << 0,
-  EnableRelativeScore = 1 << 1,
-  EnableAbsoluteScore = 1 << 2,
-  EnableLogging = 1 << 3,
-  EnableScoreableCounting = 1 << 4,
-};
+namespace config {
+static constexpr int EnableEdgeCount = 1 << 0;
+static constexpr int EnableRelativeScore = 1 << 1;
+static constexpr int EnableAbsoluteScore = 1 << 2;
+static constexpr int EnableLogging = 1 << 3;
+static constexpr int EnableScoreableCounting = 1 << 4;
+}  // namespace config
 
-static constexpr bool HasFlag(BoardConfig config, BoardConfig flag) { return (config & flag) != 0; }
+using namespace config;
 
-static constexpr BoardConfig FixedConfig(BoardConfig config) {
+static constexpr bool HasFlag(int config, int flag) { return (config & flag) != 0; }
+
+static constexpr int FixedConfig(int config) {
   int fixedConfig = config;
   if (HasFlag(config, EnableRelativeScore)) {
     fixedConfig |= EnableEdgeCount;
@@ -58,15 +60,15 @@ static constexpr BoardConfig FixedConfig(BoardConfig config) {
   if (HasFlag(config, EnableScoreableCounting)) {
     fixedConfig |= EnableEdgeCount;
   }
-  return static_cast<BoardConfig>(fixedConfig);
+  return static_cast<int>(fixedConfig);
 }
 
-template <BoardConfig Config>
+template <int Config>
 class Board {
-  template <BoardConfig>
+  template <int>
   friend class Board;
   static inline std::logic_error UnimplementedError = std::logic_error("unimplemented");
-  static constexpr bool HasFlag(BoardConfig flag) { return (FixedConfig(Config) & flag) != 0; }
+  static constexpr bool HasFlag(int flag) { return (FixedConfig(Config) & flag) != 0; }
 
  public:
   Board() {
@@ -280,7 +282,7 @@ class Board {
     None(const None&) = delete;
     None& operator=(const None&) = delete;
   };
-  template <BoardConfig Flag, typename T>
+  template <int Flag, typename T>
   using Member = std::conditional_t<HasFlag(EnableEdgeCount), T, None>;
 
   template <typename ToBoard>
@@ -353,17 +355,18 @@ class Board {
   Array<Edge, Edge::Max> Edges;
   Array<Int, Edge::Max> EdgeIndexes;
 
-  Member<EnableEdgeCount, Array<uint8_t, Box::Max>> Counter;
-  Member<EnableScoreableCounting, Queue<Edge, Edge::Max>> ScoreableEdges;
-  Member<EnableRelativeScore, Int> Score;
-  Member<EnableRelativeScore, Turn> Turn;
-  Member<EnableAbsoluteScore, Int> TotalScore;
-  Member<EnableLogging, std::chrono::system_clock::time_point> LastUpdateTime;
+  [[no_unique_address]] Member<EnableEdgeCount, Array<uint8_t, Box::Max>> Counter;
+  [[no_unique_address]] Member<EnableScoreableCounting, Queue<Edge, Edge::Max>> ScoreableEdges;
+  [[no_unique_address]] Member<EnableRelativeScore, Int> Score;
+  [[no_unique_address]] Member<EnableRelativeScore, Turn> Turn;
+  [[no_unique_address]] Member<EnableAbsoluteScore, Int> TotalScore;
+  [[no_unique_address]] Member<EnableLogging, std::chrono::system_clock::time_point> LastUpdateTime;
 };
 
 }  // namespace __detail__::board
 
-using enum __detail__::board::BoardConfig;
+using namespace __detail__::board::config;
+using BasicBoard = __detail__::board::Board<0>;
 using EdgeCountableBoard = __detail__::board::Board<EnableEdgeCount>;
 using RelativeScoreBoard = __detail__::board::Board<EnableRelativeScore>;
 using AbsoluteScoreBoard = __detail__::board::Board<EnableAbsoluteScore>;
