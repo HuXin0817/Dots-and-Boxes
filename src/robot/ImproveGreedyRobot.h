@@ -34,34 +34,10 @@ class ImproveGreedyRobot : public GreedyRobot {
   template <typename Board>
   Span<const Edge> BestCandidateEdges(const Board& board);
   Span<const Edge> BestCandidateEdges(const LoggingBoard& board) override;
+  Span<const Edge> BestCandidateEdges(const RelativeScoreBoard& board);
 
  private:
   ScoreableEdgeBoard SimulationBoard;
 };
-
-template <typename Board>
-Span<const Edge> ImproveGreedyRobot ::BestCandidateEdges(const Board& board) {
-  if (const Span<const Edge> edges = GreedyRobot::BestCandidateEdges(board); EnemyUnscoreable() || Scoreable()) {
-    return edges;
-  }
-
-  Int minScore = Box::Max + 1;
-  Array<Edge, Edge::Max>& candidateEdges = GetEdgeBuffer();
-  Int candidateEdgesSize = 0;
-
-  for (const Edge edge : board.EmptyEdges()) {
-    SimulationBoard = board;
-    SimulationBoard.Add(edge);
-    if (const Int score = SimulationBoard.MaxObtainableScore(minScore); score < minScore) {
-      minScore = score;
-      candidateEdgesSize = 1;
-      candidateEdges.At(0) = edge;
-    } else if (score == minScore) {
-      candidateEdges.At(candidateEdgesSize++) = edge;
-    }
-  }
-
-  return {candidateEdges.begin(), candidateEdges.begin() + candidateEdgesSize};
-}
 
 }  // namespace dab::__detail__::robot

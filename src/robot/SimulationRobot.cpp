@@ -26,6 +26,37 @@ THE SOFTWARE.
 
 namespace dab::__detail__::robot {
 
+template <typename Board>
+Span<const Edge> SimulationRobot::BestCandidateEdges(const Board& board) {
+  if (const Span<const Edge> edges = SubRobot.BestCandidateEdges(board); SubRobot.EnemyUnscoreable()) {
+    return edges;
+  }
+
+  SearchEdges.Clear();
+  Int maxScore = -Box::Max;
+  for (const Edge emptyEdge : board.EmptyEdges()) {
+    SimulationBoard = board;
+    SimulationBoard.Add(emptyEdge);
+    while (SimulationBoard.Gaming()) {
+      const Edge edge = SubRobot.BestCandidateEdges(SimulationBoard).Front();
+      Assert(board.MaxEdgeCount(edge) > 1);
+      SimulationBoard.Add(edge);
+    }
+    if (const Int score = SimulationBoard.RelativeScore(); score > maxScore) {
+      maxScore = score;
+      SearchEdges.ClearAndSet(emptyEdge);
+    } else if (score == maxScore) {
+      SearchEdges.Append(emptyEdge);
+    }
+  }
+
+  return {SearchEdges.begin(), SearchEdges.end()};
+}
+
 Span<const Edge> SimulationRobot::BestCandidateEdges(const LoggingBoard& board) { return BestCandidateEdges<>(board); }
+
+Span<const Edge> SimulationRobot::BestCandidateEdges(const RelativeScoreBoard& board) {
+  return BestCandidateEdges<>(board);
+}
 
 }  // namespace dab::__detail__::robot

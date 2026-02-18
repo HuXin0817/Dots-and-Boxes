@@ -26,6 +26,35 @@ THE SOFTWARE.
 
 namespace dab::__detail__::robot {
 
+template <typename Board>
+Span<const Edge> GreedyRobot::BestCandidateEdges(const Board& board) {
+  ScoreableIndex = 0;
+  EnemyUnscoreableIndex = Edge::Max;
+
+  Span<const Edge> emptyEdges = board.EmptyEdges();
+  for (const Edge edge : emptyEdges) {
+    if (const uint8_t maxCount = board.MaxEdgeCount(edge); maxCount == 3) {
+      Edges.At(ScoreableIndex++) = edge;
+    } else if (maxCount < 2) {
+      Edges.At(--EnemyUnscoreableIndex) = edge;
+    }
+  }
+  Assert(ScoreableIndex <= EnemyUnscoreableIndex);
+
+  if (Scoreable()) {
+    return {Edges.begin(), Edges.begin() + ScoreableIndex};
+  }
+  if (EnemyUnscoreable()) {
+    return {Edges.begin() + EnemyUnscoreableIndex, Edges.end()};
+  }
+
+  return {emptyEdges.begin(), emptyEdges.end()};
+}
+
 Span<const Edge> GreedyRobot::BestCandidateEdges(const LoggingBoard& board) { return BestCandidateEdges<>(board); }
+
+Span<const Edge> GreedyRobot::BestCandidateEdges(const RelativeScoreBoard& board) {
+  return BestCandidateEdges<>(board);
+}
 
 }  // namespace dab::__detail__::robot

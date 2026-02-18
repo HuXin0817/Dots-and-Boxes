@@ -24,7 +24,36 @@ THE SOFTWARE.
 
 #include "MonteCarloRobot.h"
 
+#include <ranges>
+
 namespace dab::__detail__::robot {
+
+template <typename Board>
+Span<const Edge> MonteCarloRobot::BestCandidateEdges(const Board& board) {
+  if (Span<const Edge> edges; CanEarlyExit(board, edges)) {
+    return edges;
+  }
+
+  Random Random;
+  SearchResult.Reset();
+  for (const int64_t i : std::views::iota(0, SearchTime / board.RemainStep() + 1)) {
+    SimulationBoard = board;
+    const Edge edge = Random.Choice(SubRobot.BestCandidateEdges(SimulationBoard));
+    SimulationBoard.Add(edge);
+    while (SimulationBoard.Gaming()) {
+      SimulationBoard.Add(Random.Choice(SubRobot.BestCandidateEdges(SimulationBoard)));
+    }
+    SearchResult.Add(edge, SimulationBoard.RelativeScore());
+  }
+
+  return SearchResult.Export();
+}
+
+template <typename Board>
+bool MonteCarloRobot::CanEarlyExit(const Board& board, Span<const Edge>& result) {
+  result = SubRobot.BestCandidateEdges(board);
+  return result.Size() == 1;
+}
 
 Span<const Edge> MonteCarloRobot::BestCandidateEdges(const LoggingBoard& board) { return BestCandidateEdges<>(board); }
 

@@ -34,6 +34,7 @@ class GreedyRobot : public Robot {
   template <typename Board>
   Span<const Edge> BestCandidateEdges(const Board& board);
   Span<const Edge> BestCandidateEdges(const LoggingBoard& board) override;
+  Span<const Edge> BestCandidateEdges(const RelativeScoreBoard& board);
   bool EnemyUnscoreable() const { return EnemyUnscoreableIndex < Edge::Max; }
   bool Scoreable() const { return ScoreableIndex > 0; }
 
@@ -45,30 +46,5 @@ class GreedyRobot : public Robot {
   Int ScoreableIndex;
   Array<Edge, Edge::Max> Edges;
 };
-
-template <typename Board>
-Span<const Edge> GreedyRobot::BestCandidateEdges(const Board& board) {
-  ScoreableIndex = 0;
-  EnemyUnscoreableIndex = Edge::Max;
-
-  Span<const Edge> emptyEdges = board.EmptyEdges();
-  for (const Edge edge : emptyEdges) {
-    if (const uint8_t maxCount = board.MaxEdgeCount(edge); maxCount == 3) {
-      Edges.At(ScoreableIndex++) = edge;
-    } else if (maxCount < 2) {
-      Edges.At(--EnemyUnscoreableIndex) = edge;
-    }
-  }
-  Assert(ScoreableIndex <= EnemyUnscoreableIndex);
-
-  if (Scoreable()) {
-    return {Edges.begin(), Edges.begin() + ScoreableIndex};
-  }
-  if (EnemyUnscoreable()) {
-    return {Edges.begin() + EnemyUnscoreableIndex, Edges.end()};
-  }
-
-  return {emptyEdges.begin(), emptyEdges.end()};
-}
 
 }  // namespace dab::__detail__::robot

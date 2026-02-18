@@ -24,6 +24,8 @@ THE SOFTWARE.
 
 #pragma once
 
+#include <Dab/Board.h>
+
 #include "ImproveGreedyRobot.h"
 
 namespace dab::__detail__::robot {
@@ -34,38 +36,12 @@ class SimulationRobot : public Robot {
   template <typename Board>
   Span<const Edge> BestCandidateEdges(const Board& board);
   Span<const Edge> BestCandidateEdges(const LoggingBoard& board) override;
+  Span<const Edge> BestCandidateEdges(const RelativeScoreBoard& board);
 
  private:
   ImproveGreedyRobot SubRobot;
   RelativeScoreBoard SimulationBoard;
   List<Edge, Edge::Max> SearchEdges;
 };
-
-template <typename Board>
-Span<const Edge> SimulationRobot::BestCandidateEdges(const Board& board) {
-  if (const Span<const Edge> edges = SubRobot.BestCandidateEdges(board); SubRobot.EnemyUnscoreable()) {
-    return edges;
-  }
-
-  SearchEdges.Clear();
-  Int maxScore = -Box::Max;
-  for (const Edge emptyEdge : board.EmptyEdges()) {
-    SimulationBoard = board;
-    SimulationBoard.Add(emptyEdge);
-    while (SimulationBoard.Gaming()) {
-      const Edge edge = SubRobot.BestCandidateEdges(SimulationBoard).Front();
-      Assert(board.MaxEdgeCount(edge) > 1);
-      SimulationBoard.Add(edge);
-    }
-    if (const Int score = SimulationBoard.RelativeScore(); score > maxScore) {
-      maxScore = score;
-      SearchEdges.ClearAndSet(emptyEdge);
-    } else if (score == maxScore) {
-      SearchEdges.Append(emptyEdge);
-    }
-  }
-
-  return {SearchEdges.begin(), SearchEdges.end()};
-}
 
 }  // namespace dab::__detail__::robot

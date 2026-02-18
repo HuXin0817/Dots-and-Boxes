@@ -26,6 +26,21 @@ THE SOFTWARE.
 
 namespace dab::__detail__::robot {
 
+template <typename Board>
+Span<const Edge> ParallelSearchRobot::BestCandidateEdges(const Board& board) {
+  if (Span<const Edge> edges; SubRobots.Front().CanEarlyExit(board, edges)) {
+    return edges;
+  }
+
+  SearchResult.Reset();
+  tbb::parallel_for_each(SubRobots, [&](MonteCarloRobot& robot) -> void { robot.BestCandidateEdges(board); });
+  for (const MonteCarloRobot& model : SubRobots) {
+    SearchResult.Add(model.GetSearchResult());
+  }
+
+  return SearchResult.Export();
+}
+
 Span<const Edge> ParallelSearchRobot::BestCandidateEdges(const LoggingBoard& board) {
   return BestCandidateEdges<>(board);
 }
