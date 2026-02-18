@@ -291,24 +291,24 @@ class Board {
     to.Edges = Edges;
     to.EdgeIndexes = EdgeIndexes;
 
-    if constexpr (ToBoard::If(EnableEdgeCount)) {
+    if constexpr (ToBoard::HasFlag(EnableEdgeCount)) {
       static_assert(HasFlag(EnableEdgeCount));
       to.Counter = Counter;
     }
-    if constexpr (ToBoard::If(EnableScoreableCounting)) {
+    if constexpr (ToBoard::HasFlag(EnableScoreableCounting)) {
       static_assert(HasFlag(EnableScoreableCounting));
       to.ScoreableEdges = ScoreableEdges;
     }
-    if constexpr (ToBoard::If(EnableRelativeScore)) {
+    if constexpr (ToBoard::HasFlag(EnableRelativeScore)) {
       static_assert(HasFlag(EnableRelativeScore));
       to.Score = Score;
       to.Turn = Turn;
     }
-    if constexpr (ToBoard::If(EnableAbsoluteScore)) {
+    if constexpr (ToBoard::HasFlag(EnableAbsoluteScore)) {
       static_assert(HasFlag(EnableAbsoluteScore));
       to.TotalScore = TotalScore;
     }
-    if constexpr (ToBoard::If(EnableLogging)) {
+    if constexpr (ToBoard::HasFlag(EnableLogging)) {
       static_assert(HasFlag(EnableLogging));
       to.LastUpdateTime = LastUpdateTime;
     }
@@ -323,27 +323,27 @@ class Board {
     EdgeIndexes = from.EdgeIndexes;
 
     if constexpr (HasFlag(EnableEdgeCount)) {
-      static_assert(FromBoard::If(EnableEdgeCount));
+      static_assert(FromBoard::HasFlag(EnableEdgeCount));
       Counter = from.Counter;
     }
     if constexpr (HasFlag(EnableScoreableCounting)) {
-      if constexpr (FromBoard::If(EnableScoreableCounting)) {
+      if constexpr (FromBoard::HasFlag(EnableScoreableCounting)) {
         ScoreableEdges = from.ScoreableEdges;
       } else {
         ScoreableEdges.Clear();
       }
     }
     if constexpr (HasFlag(EnableRelativeScore)) {
-      static_assert(FromBoard::If(EnableRelativeScore));
+      static_assert(FromBoard::HasFlag(EnableRelativeScore));
       Score = from.Score;
       Turn = from.Turn;
     }
     if constexpr (HasFlag(EnableAbsoluteScore)) {
-      static_assert(FromBoard::If(EnableAbsoluteScore));
+      static_assert(FromBoard::HasFlag(EnableAbsoluteScore));
       TotalScore = from.TotalScore;
     }
     if constexpr (HasFlag(EnableLogging)) {
-      static_assert(FromBoard::If(EnableLogging));
+      static_assert(FromBoard::HasFlag(EnableLogging));
       LastUpdateTime = from.LastUpdateTime;
     }
   }
