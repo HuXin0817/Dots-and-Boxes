@@ -127,6 +127,8 @@ struct HashMixin<Config, true> {
   uint32_t HashValue;
 };
 
+static std::logic_error UnimplementedError() { return std::logic_error("unimplemented"); }
+
 template <int Config>
 Array<uint32_t, Edge::Max> HashMixin<Config, true>::HashMapper = []() -> Array<uint32_t, Edge::Max> {
   Random random;
@@ -149,7 +151,6 @@ class BoardImpl : private EdgeCountMixin<Config, HasFlag(FixedConfig(Config), En
                   private HashMixin<Config, HasFlag(FixedConfig(Config), EnableZobristHash)> {
   template <int>
   friend class BoardImpl;
-  static std::logic_error UnimplementedError() { return std::logic_error("unimplemented"); }
   static constexpr bool HasFlag(int flag) { return (FixedConfig(Config) & flag) != 0; }
 
  public:
@@ -467,7 +468,7 @@ BoardImpl<Config>& BoardImpl<Config>::operator=(const FromBoard& from) {
 template <int Config>
 template <typename Other>
 bool BoardImpl<Config>::operator==(const Other& other) const {
-  if constexpr (HasFlag(EnableZobristHash) && other.HasFlag(EnableZobristHash)) {
+  if constexpr (HasFlag(EnableZobristHash) && Other::HasFlag(EnableZobristHash)) {
     if (this->HashValue != other.HashValue) {
       return false;
     }
@@ -498,7 +499,7 @@ struct hash<BoardImpl<Config>> {
     if constexpr (HasFlag(Config, EnableZobristHash)) {
       return board.Hash();
     } else {
-      throw BoardImpl<Config>::UnimplementedError;
+      throw UnimplementedError();
     }
   }
 };
