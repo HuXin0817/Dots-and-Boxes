@@ -64,7 +64,7 @@ class Vector : public Iterable<Vector<T>> {
   ~Vector() = default;
 
  private:
-  std::unique_ptr<Buffer> Data;
+  std::shared_ptr<Buffer> Data;
 };
 
 template <typename T>

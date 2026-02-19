@@ -25,13 +25,15 @@ THE SOFTWARE.
 #pragma once
 
 #include <Dab/Board.h>
-#include <tbb/concurrent_unordered_map.h>
 
+#include "LRUCache.h"
 #include "SimulationRobot.h"
 
 namespace dab::__detail__::robot {
 
 class CachedRobot : public RobotWapper<CachedRobot> {
+  static constexpr int64_t CacheSize = static_cast<int64_t>(Edge::Max) << 8;
+
  public:
   CachedRobot() = default;
 
@@ -39,7 +41,7 @@ class CachedRobot : public RobotWapper<CachedRobot> {
   Span<const Edge> BestCandidateEdges(const Board& board);
 
  private:
-  static inline tbb::concurrent_unordered_map<HashBoard, Vector<Edge>> Map;
+  static inline tstarling::ThreadSafeLRUCache<HashBoard, Vector<Edge>> Map{CacheSize};
 
   HashBoard Key;
   SimulationRobot SubRobot;

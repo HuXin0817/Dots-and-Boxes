@@ -31,16 +31,19 @@ namespace dab::__detail__::robot {
 template <typename Board>
 Span<const Edge> CachedRobot::BestCandidateEdges(const Board& board) {
   Key = board;
-  if (auto it = Map.find(Key); it != Map.end()) {
-    return {it->second.begin(), it->second.end()};
+  tstarling::ThreadSafeLRUCache<HashBoard, Vector<Edge>>::ConstAccessor ac;
+  if (Map.find(ac, Key)) {
+    return {ac->begin(), ac->end()};
   }
 
   Span result = SubRobot.BestCandidateEdges(board);
   Assert(!result.Empty());
-  auto [it, inserted] = Map.emplace(
-      std::piecewise_construct, std::forward_as_tuple(Key), std::forward_as_tuple(result.begin(), result.end()));
-  Assert(inserted);
-  return {it->second.begin(), it->second.end()};
+  Map.insert(Key, Vector<Edge>(result.begin(), result.end()));
+
+  if (Map.find(ac, Key)) {
+    return {ac->begin(), ac->end()};
+  }
+  return result;
 }
 
 template Span<const Edge> CachedRobot::BestCandidateEdges<RelativeScoreBoard>(const RelativeScoreBoard& board);
