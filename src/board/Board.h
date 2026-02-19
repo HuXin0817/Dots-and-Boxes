@@ -63,29 +63,23 @@ static constexpr int FixedConfig(int config) {
 }
 
 template <bool Enabled>
-struct EdgeCountMixin;
+struct EdgeCountMixin {};
 
 template <>
 struct EdgeCountMixin<true> {
   Array<uint8_t, Box::Max> Counter;
 };
 
-template <>
-struct EdgeCountMixin<false> {};
-
 template <bool Enabled>
-struct ScoreableCountingMixin;
+struct ScoreableCountingMixin {};
 
 template <>
 struct ScoreableCountingMixin<true> {
   Queue<Edge, Edge::Max> ScoreableEdges;
 };
 
-template <>
-struct ScoreableCountingMixin<false> {};
-
 template <bool Enabled>
-struct RelativeScoreMixin;
+struct RelativeScoreMixin {};
 
 template <>
 struct RelativeScoreMixin<true> {
@@ -93,33 +87,24 @@ struct RelativeScoreMixin<true> {
   Turn Turn;
 };
 
-template <>
-struct RelativeScoreMixin<false> {};
-
 template <bool Enabled>
-struct AbsoluteScoreMixin;
+struct AbsoluteScoreMixin {};
 
 template <>
 struct AbsoluteScoreMixin<true> {
   Int TotalScore;
 };
 
-template <>
-struct AbsoluteScoreMixin<false> {};
-
 template <bool Enabled>
-struct LoggingMixin;
+struct LoggingMixin {};
 
 template <>
 struct LoggingMixin<true> {
   std::chrono::system_clock::time_point LastUpdateTime;
 };
 
-template <>
-struct LoggingMixin<false> {};
-
 template <bool Enabled>
-struct HashMixin;
+struct HashMixin {};
 
 template <>
 struct HashMixin<true> {
@@ -136,9 +121,6 @@ inline Array<uint32_t, Edge::Max> HashMixin<true>::HashMapper = []() -> Array<ui
   }
   return result;
 }();
-
-template <>
-struct HashMixin<false> {};
 
 static std::logic_error UnimplementedError() { return std::logic_error("unimplemented"); }
 
