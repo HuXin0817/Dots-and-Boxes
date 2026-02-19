@@ -25,6 +25,7 @@ THE SOFTWARE.
 #pragma once
 
 #include <Dab/Model.h>
+#include <Dab/Tools.h>
 
 #include <chrono>
 #include <cstdint>
@@ -122,15 +123,13 @@ struct HashMixin;
 
 template <int Config>
 struct HashMixin<Config, true> {
-  static Array<uint32_t, Edge::Max> HashMapper;
-
   uint32_t HashValue;
 };
 
-static std::logic_error UnimplementedError() { return std::logic_error("unimplemented"); }
-
 template <int Config>
-Array<uint32_t, Edge::Max> HashMixin<Config, true>::HashMapper = []() -> Array<uint32_t, Edge::Max> {
+struct HashMixin<Config, false> {};
+
+static inline Array<uint32_t, Edge::Max> HashMapper = []() -> Array<uint32_t, Edge::Max> {
   Random random;
   Array<uint32_t, Edge::Max> result;
   for (uint32_t& v : result) {
@@ -139,8 +138,14 @@ Array<uint32_t, Edge::Max> HashMixin<Config, true>::HashMapper = []() -> Array<u
   return result;
 }();
 
-template <int Config>
-struct HashMixin<Config, false> {};
+static std::logic_error UnimplementedError() { return std::logic_error("unimplemented"); }
+
+#define Opt(flag, value)         \
+  if constexpr (HasFlag(flag)) { \
+    return value;                \
+  } else {                       \
+    throw UnimplementedError();  \
+  }
 
 template <int Config>
 class BoardImpl : private EdgeCountMixin<Config, HasFlag(FixedConfig(Config), EnableEdgeCount)>,
@@ -165,19 +170,19 @@ class BoardImpl : private EdgeCountMixin<Config, HasFlag(FixedConfig(Config), En
   bool Gaming() const { return Step < Edge::Max; }
   Int RemainStep() const { return Edge::Max - Step; }
   Int NowStep() const { return Step; }
-  Int RelativeScore() const;
-  Int Player1Score() const;
-  Int Player2Score() const;
-  Turn GetTurn() const;
-  bool IsPlayer1Turn() const;
-  bool IsPlayer2Turn() const;
+  uint32_t Hash() const { Opt(EnableZobristHash, this->HashValue); }
+  uint8_t EdgeCount(Box box) const { Opt(EnableEdgeCount, this->Counter.At(box)); }
+  uint8_t MaxEdgeCount(Edge edge) const;
+  bool Scoreable(Edge edge) const { Opt(EnableEdgeCount, MaxEdgeCount(edge) == 3); }
+  Int RelativeScore() const { Opt(EnableRelativeScore, this->Score); }
+  Turn GetTurn() const { Opt(EnableRelativeScore, this->Turn); }
+  bool IsPlayer1Turn() const { Opt(EnableRelativeScore, this->Turn.IsPlayer1Turn()); }
+  bool IsPlayer2Turn() const { Opt(EnableRelativeScore, this->Turn.IsPlayer2Turn()); }
+  Int Player1Score() const { Opt(EnableAbsoluteScore, (this->TotalScore + this->Score) / 2); }
+  Int Player2Score() const { Opt(EnableAbsoluteScore, (this->TotalScore - this->Score) / 2); }
   Edge FindNotContainsEdgeInBox(Box box) const;
   Int FindScoreableEdge();
   Int MaxObtainableScore(Int endScore);
-  uint8_t EdgeCount(Box box) const;
-  uint8_t MaxEdgeCount(Edge edge) const;
-  bool Scoreable(Edge edge) const;
-  uint32_t Hash() const;
 
   BoardImpl& operator=(const BoardImpl& from) = default;
   template <typename FromBoard>
@@ -231,7 +236,7 @@ Int BoardImpl<Config>::Add(Edge edge) {
   EdgeIndexes.At(nowEdge) = edgeIndex;
   ++Step;
   if constexpr (HasFlag(EnableZobristHash)) {
-    this->HashValue += this->HashMapper.At(edge);
+    this->HashValue += HashMapper.At(edge);
   }
   Int score = 0;
   if constexpr (HasFlag(EnableEdgeCount)) {
@@ -285,60 +290,6 @@ Int BoardImpl<Config>::Add(Edge edge) {
 }
 
 template <int Config>
-Int BoardImpl<Config>::RelativeScore() const {
-  if constexpr (HasFlag(EnableRelativeScore)) {
-    return this->Score;
-  } else {
-    throw UnimplementedError();
-  }
-}
-
-template <int Config>
-Int BoardImpl<Config>::Player1Score() const {
-  if constexpr (HasFlag(EnableAbsoluteScore)) {
-    return (this->TotalScore + this->Score) / 2;
-  } else {
-    throw UnimplementedError();
-  }
-}
-
-template <int Config>
-Int BoardImpl<Config>::Player2Score() const {
-  if constexpr (HasFlag(EnableAbsoluteScore)) {
-    return (this->TotalScore - this->Score) / 2;
-  } else {
-    throw UnimplementedError();
-  }
-}
-
-template <int Config>
-Turn BoardImpl<Config>::GetTurn() const {
-  if constexpr (HasFlag(EnableRelativeScore)) {
-    return this->Turn;
-  } else {
-    throw UnimplementedError();
-  }
-}
-
-template <int Config>
-bool BoardImpl<Config>::IsPlayer1Turn() const {
-  if constexpr (HasFlag(EnableRelativeScore)) {
-    return this->Turn.IsPlayer1Turn();
-  } else {
-    throw UnimplementedError();
-  }
-}
-
-template <int Config>
-bool BoardImpl<Config>::IsPlayer2Turn() const {
-  if constexpr (HasFlag(EnableRelativeScore)) {
-    return this->Turn.IsPlayer2Turn();
-  } else {
-    throw UnimplementedError();
-  }
-}
-
-template <int Config>
 Edge BoardImpl<Config>::FindNotContainsEdgeInBox(Box box) const {
   if constexpr (HasFlag(EnableEdgeCount)) {
     Assert(this->Counter.At(box) == 3);
@@ -380,20 +331,10 @@ Int BoardImpl<Config>::MaxObtainableScore(Int endScore) {
       if (Contains(edge)) {
         continue;
       }
-      const Int addScore = Add(edge);
-      Assert(addScore > 0);
-      score += addScore;
+      Assert(Scoreable(edge));
+      score += Add(edge);
     }
     return score;
-  } else {
-    throw UnimplementedError();
-  }
-}
-
-template <int Config>
-uint8_t BoardImpl<Config>::EdgeCount(Box box) const {
-  if constexpr (HasFlag(EnableEdgeCount)) {
-    return this->Counter.At(box);
   } else {
     throw UnimplementedError();
   }
@@ -404,24 +345,6 @@ uint8_t BoardImpl<Config>::MaxEdgeCount(Edge edge) const {
   if constexpr (HasFlag(EnableEdgeCount)) {
     const List<Box, 2>& nearBoxes = edge.NearBoxes();
     return std::max(this->Counter.At(nearBoxes.Front()), this->Counter.At(nearBoxes.Back()));
-  } else {
-    throw UnimplementedError();
-  }
-}
-
-template <int Config>
-bool BoardImpl<Config>::Scoreable(Edge edge) const {
-  if constexpr (HasFlag(EnableEdgeCount)) {
-    return MaxEdgeCount(edge) == 3;
-  } else {
-    throw UnimplementedError();
-  }
-}
-
-template <int Config>
-uint32_t BoardImpl<Config>::Hash() const {
-  if constexpr (HasFlag(EnableZobristHash)) {
-    return this->HashValue;
   } else {
     throw UnimplementedError();
   }
@@ -495,13 +418,7 @@ using namespace dab::__detail__::board;
 
 template <int Config>
 struct hash<BoardImpl<Config>> {
-  uint32_t operator()(const BoardImpl<Config>& board) const {
-    if constexpr (HasFlag(Config, EnableZobristHash)) {
-      return board.Hash();
-    } else {
-      throw UnimplementedError();
-    }
-  }
+  uint32_t operator()(const BoardImpl<Config>& board) const { return board.Hash(); }
 };
 
 }  // namespace std
