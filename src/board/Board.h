@@ -139,6 +139,15 @@ class BoardImpl : EdgeCountMixin<HasFlag(Config, EnableEdgeCount)>,
   friend class BoardImpl;
   static constexpr bool HasFlag(int flag) { return (Config & flag) != 0; }
 
+#define Require(flag, reqFlag) static_assert(HasFlag(flag) ? HasFlag(reqFlag) : true, #flag " require " #reqFlag)
+  Require(EnableRelativeScore, EnableEdgeCount);
+  Require(EnableAbsoluteScore, EnableEdgeCount);
+  Require(EnableAbsoluteScore, EnableRelativeScore);
+  Require(EnableLogging, EnableEdgeCount);
+  Require(EnableLogging, EnableRelativeScore);
+  Require(EnableLogging, EnableAbsoluteScore);
+  Require(EnableScoreableCounting, EnableEdgeCount);
+
 #define Opt(flag, value)         \
   if constexpr (HasFlag(flag)) { \
     return value;                \
