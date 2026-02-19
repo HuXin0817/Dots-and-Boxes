@@ -198,10 +198,10 @@ void BoardImpl<Config>::Reset() {
   std::iota(EdgeIndexes.begin(), EdgeIndexes.end(), 0);
   std::iota(Edges.begin(), Edges.end(), 0);
   if constexpr (HasFlag(EnableEdgeCount)) {
-    this->Counter = Array<uint8_t, Box::Max>();
+    std::ranges::fill(this->Counter, 0);
   }
   if constexpr (HasFlag(EnableScoreableCounting)) {
-    this->ScoreableEdges = Queue<Edge, Edge::Max>();
+    this->ScoreableEdges.Clear();
   }
   if constexpr (HasFlag(EnableRelativeScore)) {
     this->Score = 0;
