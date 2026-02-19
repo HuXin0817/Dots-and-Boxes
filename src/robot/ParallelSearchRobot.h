@@ -28,12 +28,11 @@ THE SOFTWARE.
 
 namespace dab::__detail__::robot {
 
-class ParallelSearchRobot : public Robot {
+class ParallelSearchRobot : public RobotWapper<ParallelSearchRobot> {
  public:
   ParallelSearchRobot() = default;
   template <typename Board>
   Span<const Edge> BestCandidateEdges(const Board& board);
-  Span<const Edge> BestCandidateEdges(const LoggingBoard& board) override;
 
  private:
   Array<MonteCarloRobot, 32> SubRobots;

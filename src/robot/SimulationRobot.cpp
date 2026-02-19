@@ -24,6 +24,8 @@ THE SOFTWARE.
 
 #include "SimulationRobot.h"
 
+#include <Dab/Board.h>
+
 namespace dab::__detail__::robot {
 
 template <typename Board>
@@ -53,8 +55,7 @@ Span<const Edge> SimulationRobot::BestCandidateEdges(const Board& board) {
   return {SearchEdges.begin(), SearchEdges.end()};
 }
 
-Span<const Edge> SimulationRobot::BestCandidateEdges(const LoggingBoard& board) { return BestCandidateEdges<>(board); }
-
 template Span<const Edge> SimulationRobot::BestCandidateEdges<RelativeScoreBoard>(const RelativeScoreBoard& board);
+template Span<const Edge> SimulationRobot::BestCandidateEdges<LoggingBoard>(const LoggingBoard& board);
 
 }  // namespace dab::__detail__::robot

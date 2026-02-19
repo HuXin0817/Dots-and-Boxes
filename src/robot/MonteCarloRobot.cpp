@@ -53,6 +53,6 @@ bool MonteCarloRobot::CanEarlyExit(const Board& board, Span<const Edge>& result)
   return result.Size() == 1;
 }
 
-Span<const Edge> MonteCarloRobot::BestCandidateEdges(const LoggingBoard& board) { return BestCandidateEdges<>(board); }
+template Span<const Edge> MonteCarloRobot::BestCandidateEdges<LoggingBoard>(const LoggingBoard& board);
 
 }  // namespace dab::__detail__::robot

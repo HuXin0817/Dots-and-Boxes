@@ -28,14 +28,16 @@ THE SOFTWARE.
 
 namespace dab::__detail__::robot {
 
-class ImproveGreedyRobot : public GreedyRobot {
+class ImproveGreedyRobot : public RobotWapper<ImproveGreedyRobot> {
  public:
   ImproveGreedyRobot() = default;
   template <typename Board>
   Span<const Edge> BestCandidateEdges(const Board& board);
-  Span<const Edge> BestCandidateEdges(const LoggingBoard& board) override;
+  bool EnemyUnscoreable() const { return SubRobot.EnemyUnscoreable(); }
+  bool Scoreable() const { return SubRobot.Scoreable(); }
 
  private:
+  GreedyRobot SubRobot;
   ScoreableEdgeBoard SimulationBoardBackup;
   ScoreableEdgeBoard SimulationBoard;
 };

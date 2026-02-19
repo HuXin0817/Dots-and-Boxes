@@ -24,6 +24,8 @@ THE SOFTWARE.
 
 #include "CachedRobot.h"
 
+#include <Dab/Board.h>
+
 namespace dab::__detail__::robot {
 
 template <typename Board>
@@ -41,8 +43,7 @@ Span<const Edge> CachedRobot::BestCandidateEdges(const Board& board) {
   return {it->second.begin(), it->second.end()};
 }
 
-Span<const Edge> CachedRobot::BestCandidateEdges(const LoggingBoard& board) { return BestCandidateEdges<>(board); }
-
 template Span<const Edge> CachedRobot::BestCandidateEdges<RelativeScoreBoard>(const RelativeScoreBoard& board);
+template Span<const Edge> CachedRobot::BestCandidateEdges<LoggingBoard>(const LoggingBoard& board);
 
 }  // namespace dab::__detail__::robot

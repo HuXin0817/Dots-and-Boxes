@@ -28,14 +28,13 @@ THE SOFTWARE.
 
 namespace dab::__detail__::robot {
 
-class MonteCarloRobot : public Robot {
+class MonteCarloRobot : public RobotWapper<MonteCarloRobot> {
   static constexpr int64_t SearchTime = static_cast<int64_t>(Edge::Max) << 6;
 
  public:
   MonteCarloRobot() = default;
   template <typename Board>
   Span<const Edge> BestCandidateEdges(const Board& board);
-  Span<const Edge> BestCandidateEdges(const LoggingBoard& board) override;
   template <typename Board>
   bool CanEarlyExit(const Board& board, Span<const Edge>& result);
   const ScoreMap& GetSearchResult() const { return SearchResult; }

@@ -43,8 +43,6 @@ Span<const Edge> ParallelSearchRobot::BestCandidateEdges(const Board& board) {
   return SearchResult.Export();
 }
 
-Span<const Edge> ParallelSearchRobot::BestCandidateEdges(const LoggingBoard& board) {
-  return BestCandidateEdges<>(board);
-}
+template Span<const Edge> ParallelSearchRobot::BestCandidateEdges<LoggingBoard>(const LoggingBoard& board);
 
 }  // namespace dab::__detail__::robot

@@ -31,13 +31,12 @@ THE SOFTWARE.
 
 namespace dab::__detail__::robot {
 
-class CachedRobot : Robot {
+class CachedRobot : public RobotWapper<CachedRobot> {
  public:
   CachedRobot() = default;
 
   template <typename Board>
   Span<const Edge> BestCandidateEdges(const Board& board);
-  Span<const Edge> BestCandidateEdges(const LoggingBoard& board) override;
 
  private:
   static inline tbb::concurrent_unordered_map<HashBoard, Vector<Edge>> Map;

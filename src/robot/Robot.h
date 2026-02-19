@@ -36,6 +36,24 @@ class Robot {
   virtual Span<const Edge> BestCandidateEdges(const LoggingBoard& board) = 0;
 };
 
+template <typename Derived>
+class RobotWapper : public Robot {
+ public:
+  template <typename Board>
+  Span<const Edge> BestCandidateEdges(const Board& board) {
+    return derived().BestCandidateEdges(board);
+  }
+  Span<const Edge> BestCandidateEdges(const LoggingBoard& board) override { return BestCandidateEdges<>(board); }
+
+ protected:
+  ~RobotWapper() = default;
+
+ private:
+  constexpr Derived& derived() & { return static_cast<Derived&>(*this); }
+  constexpr const Derived& derived() const& { return static_cast<const Derived&>(*this); }
+  constexpr Derived&& derived() && { return static_cast<Derived&&>(*this); }
+};
+
 Robot* CreateRobot(PlayerType playerType);
 
 }  // namespace dab::__detail__::robot

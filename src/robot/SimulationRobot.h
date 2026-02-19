@@ -30,12 +30,11 @@ THE SOFTWARE.
 
 namespace dab::__detail__::robot {
 
-class SimulationRobot : public Robot {
+class SimulationRobot : public RobotWapper<SimulationRobot> {
  public:
   SimulationRobot() = default;
   template <typename Board>
   Span<const Edge> BestCandidateEdges(const Board& board);
-  Span<const Edge> BestCandidateEdges(const LoggingBoard& board) override;
 
  private:
   ImproveGreedyRobot SubRobot;

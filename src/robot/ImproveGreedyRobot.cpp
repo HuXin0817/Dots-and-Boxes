@@ -28,12 +28,12 @@ namespace dab::__detail__::robot {
 
 template <typename Board>
 Span<const Edge> ImproveGreedyRobot ::BestCandidateEdges(const Board& board) {
-  if (const Span<const Edge> edges = GreedyRobot::BestCandidateEdges(board); EnemyUnscoreable() || Scoreable()) {
+  if (const Span<const Edge> edges = SubRobot.BestCandidateEdges(board); EnemyUnscoreable() || Scoreable()) {
     return edges;
   }
 
   Int minScore = Box::Max + 1;
-  Array<Edge, Edge::Max>& candidateEdges = GetEdgeBuffer();
+  Array<Edge, Edge::Max>& candidateEdges = SubRobot.GetEdgeBuffer();
   Int candidateEdgesSize = 0;
 
   SimulationBoardBackup = board;
@@ -52,10 +52,7 @@ Span<const Edge> ImproveGreedyRobot ::BestCandidateEdges(const Board& board) {
   return {candidateEdges.begin(), candidateEdges.begin() + candidateEdgesSize};
 }
 
-Span<const Edge> ImproveGreedyRobot::BestCandidateEdges(const LoggingBoard& board) {
-  return BestCandidateEdges<>(board);
-}
-
 template Span<const Edge> ImproveGreedyRobot::BestCandidateEdges<RelativeScoreBoard>(const RelativeScoreBoard& board);
+template Span<const Edge> ImproveGreedyRobot::BestCandidateEdges<LoggingBoard>(const LoggingBoard& board);
 
 }  // namespace dab::__detail__::robot
