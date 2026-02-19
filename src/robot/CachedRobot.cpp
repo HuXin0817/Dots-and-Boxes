@@ -22,28 +22,26 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#pragma once
-
 #include "CachedRobot.h"
 
 namespace dab::__detail__::robot {
 
-class MonteCarloRobot : public Robot {
-  static constexpr int64_t SearchTime = static_cast<int64_t>(Edge::Max) << 6;
+template <typename Board>
+Span<const Edge> CachedRobot::BestCandidateEdges(const Board& board) {
+  Key = board;
+  if (auto it = Map.find(Key); it != Map.end()) {
+    return {it->second.data(), it->second.data() + it->second.size()};
+  }
 
- public:
-  MonteCarloRobot() = default;
-  template <typename Board>
-  Span<const Edge> BestCandidateEdges(const Board& board);
-  Span<const Edge> BestCandidateEdges(const LoggingBoard& board) override;
-  template <typename Board>
-  bool CanEarlyExit(const Board& board, Span<const Edge>& result);
-  const ScoreMap& GetSearchResult() const { return SearchResult; }
+  Span result = SubRobot.BestCandidateEdges(board);
+  Assert(!result.Empty());
+  auto [it, inserted] = Map.emplace(Key, std::vector(result.begin(), result.end()));
+  Assert(inserted);
+  return {it->second.data(), it->second.data() + it->second.size()};
+}
 
- private:
-  CachedRobot SubRobot;
-  RelativeScoreBoard SimulationBoard;
-  ScoreMap SearchResult;
-};
+Span<const Edge> CachedRobot::BestCandidateEdges(const LoggingBoard& board) { return BestCandidateEdges<>(board); }
+
+template Span<const Edge> CachedRobot::BestCandidateEdges<RelativeScoreBoard>(const RelativeScoreBoard& board);
 
 }  // namespace dab::__detail__::robot

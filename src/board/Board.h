@@ -28,6 +28,7 @@ THE SOFTWARE.
 
 #include <chrono>
 #include <cstdint>
+#include <functional>
 #include <limits>
 #include <numeric>
 #include <stdexcept>
@@ -175,6 +176,7 @@ class BoardImpl : private EdgeCountMixin<Config, HasFlag(FixedConfig(Config), En
   uint8_t EdgeCount(Box box) const;
   uint8_t MaxEdgeCount(Edge edge) const;
   bool Scoreable(Edge edge) const;
+  uint32_t Hash() const;
 
   BoardImpl& operator=(const BoardImpl& from) = default;
   template <typename FromBoard>
@@ -416,6 +418,15 @@ bool BoardImpl<Config>::Scoreable(Edge edge) const {
 }
 
 template <int Config>
+uint32_t BoardImpl<Config>::Hash() const {
+  if constexpr (HasFlag(EnableZobristHash)) {
+    return this->HashValue;
+  } else {
+    throw UnimplementedError();
+  }
+}
+
+template <int Config>
 template <typename FromBoard>
 BoardImpl<Config>& BoardImpl<Config>::operator=(const FromBoard& from) {
   Step = from.Step;
@@ -457,9 +468,12 @@ template <int Config>
 template <typename Other>
 bool BoardImpl<Config>::operator==(const Other& other) const {
   if constexpr (HasFlag(EnableZobristHash) && other.HasFlag(EnableZobristHash)) {
-    if (this->HashValue != other->HashValue) {
+    if (this->HashValue != other.HashValue) {
       return false;
     }
+  }
+  if (Step != other.Step) {
+    return false;
   }
   for (const Edge& edge : EmptyEdges()) {
     if (other.Contains(edge)) {
@@ -479,10 +493,10 @@ namespace std {
 using namespace dab::__detail__::board;
 
 template <int Config>
-class hash<BoardImpl<Config>> {
-  uint32_t operator()(const BoardImpl<Config>& board) {
+struct hash<BoardImpl<Config>> {
+  uint32_t operator()(const BoardImpl<Config>& board) const {
     if constexpr (HasFlag(Config, EnableZobristHash)) {
-      return board.HashValue;
+      return board.Hash();
     } else {
       throw BoardImpl<Config>::UnimplementedError;
     }

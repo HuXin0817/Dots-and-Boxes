@@ -1,5 +1,6 @@
 set(RobotLibrary "robot${BoardSize}x${BoardSize}")
 set(RobotSources
+  CachedRobot.cpp
   GreedyRobot.cpp
   ImproveGreedyRobot.cpp
   MonteCarloRobot.cpp

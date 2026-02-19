@@ -30,10 +30,13 @@ namespace dab {
 
 using BasicBoard = __detail__::board::Board<0>;
 using HashBoard = __detail__::board::Board<__detail__::board::EnableZobristHash>;
-using EdgeCountableBoard = __detail__::board::Board<__detail__::board::EnableEdgeCount>;
-using RelativeScoreBoard = __detail__::board::Board<__detail__::board::EnableRelativeScore>;
-using AbsoluteScoreBoard = __detail__::board::Board<__detail__::board::EnableAbsoluteScore>;
-using LoggingBoard = __detail__::board::Board<__detail__::board::EnableLogging>;
+using EdgeCountableBoard =
+    __detail__::board::Board<__detail__::board::EnableEdgeCount | __detail__::board::EnableZobristHash>;
+using RelativeScoreBoard =
+    __detail__::board::Board<__detail__::board::EnableRelativeScore | __detail__::board::EnableZobristHash>;
+using AbsoluteScoreBoard =
+    __detail__::board::Board<__detail__::board::EnableAbsoluteScore | __detail__::board::EnableZobristHash>;
+using LoggingBoard = __detail__::board::Board<__detail__::board::EnableLogging | __detail__::board::EnableZobristHash>;
 using ScoreableEdgeBoard = __detail__::board::Board<__detail__::board::EnableScoreableCounting>;
 
 }  // namespace dab

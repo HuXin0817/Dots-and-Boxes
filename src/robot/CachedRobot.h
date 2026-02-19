@@ -24,26 +24,28 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "CachedRobot.h"
+#include <Dab/Board.h>
+#include <tbb/concurrent_unordered_map.h>
+
+#include <vector>
+
+#include "SimulationRobot.h"
 
 namespace dab::__detail__::robot {
 
-class MonteCarloRobot : public Robot {
-  static constexpr int64_t SearchTime = static_cast<int64_t>(Edge::Max) << 6;
-
+class CachedRobot : Robot {
  public:
-  MonteCarloRobot() = default;
+  CachedRobot() = default;
+
   template <typename Board>
   Span<const Edge> BestCandidateEdges(const Board& board);
   Span<const Edge> BestCandidateEdges(const LoggingBoard& board) override;
-  template <typename Board>
-  bool CanEarlyExit(const Board& board, Span<const Edge>& result);
-  const ScoreMap& GetSearchResult() const { return SearchResult; }
 
  private:
-  CachedRobot SubRobot;
-  RelativeScoreBoard SimulationBoard;
-  ScoreMap SearchResult;
+  static inline tbb::concurrent_unordered_map<HashBoard, std::vector<Edge>> Map;
+
+  HashBoard Key;
+  SimulationRobot SubRobot;
 };
 
 }  // namespace dab::__detail__::robot
