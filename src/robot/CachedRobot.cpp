@@ -30,14 +30,15 @@ template <typename Board>
 Span<const Edge> CachedRobot::BestCandidateEdges(const Board& board) {
   Key = board;
   if (auto it = Map.find(Key); it != Map.end()) {
-    return {it->second.data(), it->second.data() + it->second.size()};
+    return {it->second.begin(), it->second.end()};
   }
 
   Span result = SubRobot.BestCandidateEdges(board);
   Assert(!result.Empty());
-  auto [it, inserted] = Map.emplace(Key, std::vector(result.begin(), result.end()));
+  auto [it, inserted] = Map.emplace(
+      std::piecewise_construct, std::forward_as_tuple(Key), std::forward_as_tuple(result.begin(), result.end()));
   Assert(inserted);
-  return {it->second.data(), it->second.data() + it->second.size()};
+  return {it->second.begin(), it->second.end()};
 }
 
 Span<const Edge> CachedRobot::BestCandidateEdges(const LoggingBoard& board) { return BestCandidateEdges<>(board); }

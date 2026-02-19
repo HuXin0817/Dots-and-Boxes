@@ -27,8 +27,6 @@ THE SOFTWARE.
 #include <Dab/Board.h>
 #include <tbb/concurrent_unordered_map.h>
 
-#include <vector>
-
 #include "SimulationRobot.h"
 
 namespace dab::__detail__::robot {
@@ -42,7 +40,7 @@ class CachedRobot : Robot {
   Span<const Edge> BestCandidateEdges(const LoggingBoard& board) override;
 
  private:
-  static inline tbb::concurrent_unordered_map<HashBoard, std::vector<Edge>> Map;
+  static inline tbb::concurrent_unordered_map<HashBoard, Vector<Edge>> Map;
 
   HashBoard Key;
   SimulationRobot SubRobot;

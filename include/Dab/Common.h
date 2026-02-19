@@ -30,6 +30,7 @@ THE SOFTWARE.
 #include "../../src/common/Queue.h"
 #include "../../src/common/Random.h"
 #include "../../src/common/Span.h"
+#include "../../src/common/Vector.h"
 
 namespace dab {
 
@@ -40,5 +41,6 @@ using __detail__::common::List;
 using __detail__::common::Queue;
 using __detail__::common::Random;
 using __detail__::common::Span;
+using __detail__::common::Vector;
 
 }  // namespace dab
