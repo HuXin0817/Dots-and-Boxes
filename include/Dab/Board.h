@@ -29,6 +29,7 @@ THE SOFTWARE.
 namespace dab {
 
 using BasicBoard = __detail__::board::Board<0>;
+using HashBoard = __detail__::board::Board<__detail__::board::EnableZobristHash>;
 using EdgeCountableBoard = __detail__::board::Board<__detail__::board::EnableEdgeCount>;
 using RelativeScoreBoard = __detail__::board::Board<__detail__::board::EnableRelativeScore>;
 using AbsoluteScoreBoard = __detail__::board::Board<__detail__::board::EnableAbsoluteScore>;

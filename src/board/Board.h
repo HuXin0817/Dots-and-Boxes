@@ -27,6 +27,9 @@ THE SOFTWARE.
 #include <Dab/Model.h>
 
 #include <chrono>
+#include <cstdint>
+#include <limits>
+#include <numeric>
 #include <stdexcept>
 
 namespace dab::__detail__::board {
@@ -36,6 +39,7 @@ static constexpr int EnableRelativeScore = 1 << 1;
 static constexpr int EnableAbsoluteScore = 1 << 2;
 static constexpr int EnableLogging = 1 << 3;
 static constexpr int EnableScoreableCounting = 1 << 4;
+static constexpr int EnableZobristHash = 1 << 5;
 
 static constexpr bool HasFlag(int config, int flag) { return (config & flag) != 0; }
 
@@ -112,19 +116,43 @@ struct LoggingMixin<Config, true> {
 template <int Config>
 struct LoggingMixin<Config, false> {};
 
+template <int Config, bool Enabled>
+struct HashMixin;
+
 template <int Config>
-class Board : private EdgeCountMixin<Config, HasFlag(FixedConfig(Config), EnableEdgeCount)>,
-              private ScoreableCountingMixin<Config, HasFlag(FixedConfig(Config), EnableScoreableCounting)>,
-              private RelativeScoreMixin<Config, HasFlag(FixedConfig(Config), EnableRelativeScore)>,
-              private AbsoluteScoreMixin<Config, HasFlag(FixedConfig(Config), EnableAbsoluteScore)>,
-              private LoggingMixin<Config, HasFlag(FixedConfig(Config), EnableLogging)> {
+struct HashMixin<Config, true> {
+  static Array<uint32_t, Edge::Max> HashMapper;
+
+  uint32_t HashValue;
+};
+
+template <int Config>
+Array<uint32_t, Edge::Max> HashMixin<Config, true>::HashMapper = []() -> Array<uint32_t, Edge::Max> {
+  Random random;
+  Array<uint32_t, Edge::Max> result;
+  for (uint32_t& v : result) {
+    v = random.Range(std::numeric_limits<uint32_t>::min(), std::numeric_limits<uint32_t>::max());
+  }
+  return result;
+}();
+
+template <int Config>
+struct HashMixin<Config, false> {};
+
+template <int Config>
+class BoardImpl : private EdgeCountMixin<Config, HasFlag(FixedConfig(Config), EnableEdgeCount)>,
+                  private ScoreableCountingMixin<Config, HasFlag(FixedConfig(Config), EnableScoreableCounting)>,
+                  private RelativeScoreMixin<Config, HasFlag(FixedConfig(Config), EnableRelativeScore)>,
+                  private AbsoluteScoreMixin<Config, HasFlag(FixedConfig(Config), EnableAbsoluteScore)>,
+                  private LoggingMixin<Config, HasFlag(FixedConfig(Config), EnableLogging)>,
+                  private HashMixin<Config, HasFlag(FixedConfig(Config), EnableZobristHash)> {
   template <int>
-  friend class Board;
+  friend class BoardImpl;
   static std::logic_error UnimplementedError() { return std::logic_error("unimplemented"); }
   static constexpr bool HasFlag(int flag) { return (FixedConfig(Config) & flag) != 0; }
 
  public:
-  Board() { Reset(); }
+  BoardImpl() { Reset(); }
 
   void Reset();
   Int Add(Edge edge);
@@ -148,9 +176,12 @@ class Board : private EdgeCountMixin<Config, HasFlag(FixedConfig(Config), Enable
   uint8_t MaxEdgeCount(Edge edge) const;
   bool Scoreable(Edge edge) const;
 
-  Board& operator=(const Board& from) = default;
+  BoardImpl& operator=(const BoardImpl& from) = default;
   template <typename FromBoard>
-  Board& operator=(const FromBoard& from);
+  BoardImpl& operator=(const FromBoard& from);
+
+  template <typename Other>
+  bool operator==(const Other& from) const;
 
  private:
   Int Step = 0;
@@ -159,8 +190,234 @@ class Board : private EdgeCountMixin<Config, HasFlag(FixedConfig(Config), Enable
 };
 
 template <int Config>
+void BoardImpl<Config>::Reset() {
+  Step = 0;
+  std::iota(EdgeIndexes.begin(), EdgeIndexes.end(), 0);
+  std::iota(Edges.begin(), Edges.end(), 0);
+  if constexpr (HasFlag(EnableEdgeCount)) {
+    this->Counter = Array<uint8_t, Box::Max>();
+  }
+  if constexpr (HasFlag(EnableScoreableCounting)) {
+    this->ScoreableEdges = Queue<Edge, Edge::Max>();
+  }
+  if constexpr (HasFlag(EnableRelativeScore)) {
+    this->Score = 0;
+    this->Turn.Reset();
+  }
+  if constexpr (HasFlag(EnableAbsoluteScore)) {
+    this->TotalScore = 0;
+  }
+  if constexpr (HasFlag(EnableLogging)) {
+    this->LastUpdateTime = std::chrono::system_clock::now();
+  }
+  if constexpr (HasFlag(EnableZobristHash)) {
+    this->HashValue = 0;
+  }
+}
+
+template <int Config>
+Int BoardImpl<Config>::Add(Edge edge) {
+  Assert(NotContains(edge));
+  const Edge nowEdge = Edges.At(Step);
+  const Int edgeIndex = EdgeIndexes.At(edge);
+  Assert(Edges.At(edgeIndex) == edge);
+  Assert(edgeIndex >= Step);
+  Edges.At(Step) = edge;
+  Edges.At(edgeIndex) = nowEdge;
+  EdgeIndexes.At(edge) = Step;
+  EdgeIndexes.At(nowEdge) = edgeIndex;
+  ++Step;
+  if constexpr (HasFlag(EnableZobristHash)) {
+    this->HashValue += this->HashMapper.At(edge);
+  }
+  Int score = 0;
+  if constexpr (HasFlag(EnableEdgeCount)) {
+    for (const Box box : edge.NearBoxes()) {
+      const uint8_t num = ++this->Counter.At(box);
+      Assert(num <= 4);
+      if (num == 4) {
+        ++score;
+      }
+      if constexpr (HasFlag(EnableScoreableCounting)) {
+        if (num == 3) {
+          this->ScoreableEdges.Append(FindNotContainsEdgeInBox(box));
+        }
+      }
+    }
+    if constexpr (HasFlag(EnableRelativeScore)) {
+      const Turn turn = this->Turn;
+      if (score > 0) {
+        this->Score += score * this->Turn;
+      } else {
+        this->Turn.Add();
+      }
+      if constexpr (HasFlag(EnableAbsoluteScore)) {
+        this->TotalScore += score;
+      }
+      if constexpr (HasFlag(EnableLogging)) {
+        const Int step = NowStep();
+        const std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
+        const int64_t time = std::chrono::duration_cast<std::chrono::milliseconds>(now - this->LastUpdateTime).count();
+        LogInfo(R"({{"Step":{},"Turn":{},"Move":{},"Score":{{"Player1":{},"Player2":{}}},"Time":{}}})",
+                step,
+                turn.IsPlayer1Turn() ? 1 : 2,
+                static_cast<Int>(edge),
+                Player1Score(),
+                Player2Score(),
+                static_cast<double>(time) / 1000.0);
+        if (!Gaming()) {
+          if (RelativeScore() > 0) {
+            LogInfo(R"({{"Winner":"Player1"}})");
+          } else if (RelativeScore() < 0) {
+            LogInfo(R"({{"Winner":"Player2"}})");
+          } else {
+            LogInfo(R"({{"Winner":"Draw"}})");
+          }
+        }
+        this->LastUpdateTime = now;
+      }
+    }
+  }
+  return score;
+}
+
+template <int Config>
+Int BoardImpl<Config>::RelativeScore() const {
+  if constexpr (HasFlag(EnableRelativeScore)) {
+    return this->Score;
+  } else {
+    throw UnimplementedError();
+  }
+}
+
+template <int Config>
+Int BoardImpl<Config>::Player1Score() const {
+  if constexpr (HasFlag(EnableAbsoluteScore)) {
+    return (this->TotalScore + this->Score) / 2;
+  } else {
+    throw UnimplementedError();
+  }
+}
+
+template <int Config>
+Int BoardImpl<Config>::Player2Score() const {
+  if constexpr (HasFlag(EnableAbsoluteScore)) {
+    return (this->TotalScore - this->Score) / 2;
+  } else {
+    throw UnimplementedError();
+  }
+}
+
+template <int Config>
+Turn BoardImpl<Config>::GetTurn() const {
+  if constexpr (HasFlag(EnableRelativeScore)) {
+    return this->Turn;
+  } else {
+    throw UnimplementedError();
+  }
+}
+
+template <int Config>
+bool BoardImpl<Config>::IsPlayer1Turn() const {
+  if constexpr (HasFlag(EnableRelativeScore)) {
+    return this->Turn.IsPlayer1Turn();
+  } else {
+    throw UnimplementedError();
+  }
+}
+
+template <int Config>
+bool BoardImpl<Config>::IsPlayer2Turn() const {
+  if constexpr (HasFlag(EnableRelativeScore)) {
+    return this->Turn.IsPlayer2Turn();
+  } else {
+    throw UnimplementedError();
+  }
+}
+
+template <int Config>
+Edge BoardImpl<Config>::FindNotContainsEdgeInBox(Box box) const {
+  if constexpr (HasFlag(EnableEdgeCount)) {
+    Assert(this->Counter.At(box) == 3);
+    for (const Edge edge : box.NearEdges()) {
+      if (NotContains(edge)) {
+        return edge;
+      }
+    }
+    throw std::runtime_error("unreachable");
+  } else {
+    throw UnimplementedError();
+  }
+}
+
+template <int Config>
+Int BoardImpl<Config>::FindScoreableEdge() {
+  if constexpr (HasFlag(EnableScoreableCounting)) {
+    for (const Edge edge : EmptyEdges()) {
+      if (Scoreable(edge)) {
+        this->ScoreableEdges.Append(edge);
+      }
+    }
+    return this->ScoreableEdges.Size();
+  } else {
+    throw UnimplementedError();
+  }
+}
+
+template <int Config>
+Int BoardImpl<Config>::MaxObtainableScore(Int endScore) {
+  if constexpr (HasFlag(EnableScoreableCounting)) {
+    Int score = 0;
+    while (Gaming() && score < endScore) {
+      if (this->ScoreableEdges.Empty()) {
+        Assert(FindScoreableEdge() == 0);
+        break;
+      }
+      const Edge edge = this->ScoreableEdges.Pop();
+      if (Contains(edge)) {
+        continue;
+      }
+      const Int addScore = Add(edge);
+      Assert(addScore > 0);
+      score += addScore;
+    }
+    return score;
+  } else {
+    throw UnimplementedError();
+  }
+}
+
+template <int Config>
+uint8_t BoardImpl<Config>::EdgeCount(Box box) const {
+  if constexpr (HasFlag(EnableEdgeCount)) {
+    return this->Counter.At(box);
+  } else {
+    throw UnimplementedError();
+  }
+}
+
+template <int Config>
+uint8_t BoardImpl<Config>::MaxEdgeCount(Edge edge) const {
+  if constexpr (HasFlag(EnableEdgeCount)) {
+    const List<Box, 2>& nearBoxes = edge.NearBoxes();
+    return std::max(this->Counter.At(nearBoxes.Front()), this->Counter.At(nearBoxes.Back()));
+  } else {
+    throw UnimplementedError();
+  }
+}
+
+template <int Config>
+bool BoardImpl<Config>::Scoreable(Edge edge) const {
+  if constexpr (HasFlag(EnableEdgeCount)) {
+    return MaxEdgeCount(edge) == 3;
+  } else {
+    throw UnimplementedError();
+  }
+}
+
+template <int Config>
 template <typename FromBoard>
-Board<Config>& Board<Config>::operator=(const FromBoard& from) {
+BoardImpl<Config>& BoardImpl<Config>::operator=(const FromBoard& from) {
   Step = from.Step;
   Edges = from.Edges;
   EdgeIndexes = from.EdgeIndexes;
@@ -189,7 +446,47 @@ Board<Config>& Board<Config>::operator=(const FromBoard& from) {
     static_assert(FromBoard::HasFlag(EnableLogging));
     this->LastUpdateTime = from.LastUpdateTime;
   }
+  if constexpr (HasFlag(EnableZobristHash)) {
+    static_assert(FromBoard::HasFlag(EnableZobristHash));
+    this->HashValue = from.HashValue;
+  }
   return *this;
 }
 
+template <int Config>
+template <typename Other>
+bool BoardImpl<Config>::operator==(const Other& other) const {
+  if constexpr (HasFlag(EnableZobristHash) && other.HasFlag(EnableZobristHash)) {
+    if (this->HashValue != other->HashValue) {
+      return false;
+    }
+  }
+  for (const Edge& edge : EmptyEdges()) {
+    if (other.Contains(edge)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+template <int Config>
+using Board = BoardImpl<FixedConfig(Config)>;
+
 }  // namespace dab::__detail__::board
+
+namespace std {
+
+using namespace dab::__detail__::board;
+
+template <int Config>
+class hash<BoardImpl<Config>> {
+  uint32_t operator()(const BoardImpl<Config>& board) {
+    if constexpr (HasFlag(Config, EnableZobristHash)) {
+      return board.HashValue;
+    } else {
+      throw BoardImpl<Config>::UnimplementedError;
+    }
+  }
+};
+
+}  // namespace std

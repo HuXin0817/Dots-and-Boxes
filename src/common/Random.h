@@ -24,7 +24,9 @@ THE SOFTWARE.
 
 #pragma once
 
+#include <chrono>
 #include <random>
+#include <type_traits>
 
 #include "Int.h"
 
@@ -34,7 +36,8 @@ class Random {
  public:
   explicit Random();
 
-  Int Range(Int min, Int max);
+  template <typename T>
+  T Range(T min, T max);
   template <typename T>
   const auto& Choice(const T& data);
 
@@ -42,6 +45,22 @@ class Random {
   std::mt19937_64 Rng;
   std::uniform_int_distribution<Int> Dist;
 };
+
+inline Random::Random() {
+  uint64_t sd = std::chrono::steady_clock::now().time_since_epoch().count();
+  Rng.seed(sd);
+}
+
+template <typename T>
+T Random::Range(T min, T max) {
+  if constexpr (std::is_same_v<T, Int>) {
+    Dist.param(std::uniform_int_distribution<Int>::param_type(min, max));
+    return Dist(Rng);
+  } else {
+    std::uniform_int_distribution<T> dist(min, max);
+    return dist(Rng);
+  }
+}
 
 template <typename T>
 const auto& Random::Choice(const T& data) {
