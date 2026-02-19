@@ -36,12 +36,16 @@ THE SOFTWARE.
 
 namespace dab::__detail__::board {
 
+namespace config {
 static constexpr int EnableEdgeCount = 1 << 0;
 static constexpr int EnableRelativeScore = 1 << 1;
 static constexpr int EnableAbsoluteScore = 1 << 2;
 static constexpr int EnableLogging = 1 << 3;
 static constexpr int EnableScoreableCounting = 1 << 4;
-static constexpr int EnableZobristHash = 1 << 5;
+static constexpr int EnableHashValue = 1 << 5;
+}  // namespace config
+
+using namespace config;
 
 static constexpr bool HasFlag(int config, int flag) { return (config & flag) != 0; }
 
@@ -124,23 +128,23 @@ inline Array<uint32_t, Edge::Max> HashMixin<true>::HashMapper = []() -> Array<ui
 
 static std::logic_error UnimplementedError() { return std::logic_error("unimplemented"); }
 
-#define Opt(flag, value)         \
-  if constexpr (HasFlag(flag)) { \
-    return value;                \
-  } else {                       \
-    throw UnimplementedError();  \
-  }
-
 template <int Config>
 class BoardImpl : EdgeCountMixin<HasFlag(Config, EnableEdgeCount)>,
                   ScoreableCountingMixin<HasFlag(Config, EnableScoreableCounting)>,
                   RelativeScoreMixin<HasFlag(Config, EnableRelativeScore)>,
                   AbsoluteScoreMixin<HasFlag(Config, EnableAbsoluteScore)>,
                   LoggingMixin<HasFlag(Config, EnableLogging)>,
-                  HashMixin<HasFlag(Config, EnableZobristHash)> {
+                  HashMixin<HasFlag(Config, EnableHashValue)> {
   template <int>
   friend class BoardImpl;
   static constexpr bool HasFlag(int flag) { return (Config & flag) != 0; }
+
+#define Opt(flag, value)         \
+  if constexpr (HasFlag(flag)) { \
+    return value;                \
+  } else {                       \
+    throw UnimplementedError();  \
+  }
 
  public:
   BoardImpl() { Reset(); }
@@ -154,7 +158,7 @@ class BoardImpl : EdgeCountMixin<HasFlag(Config, EnableEdgeCount)>,
   bool Gaming() const { return Step < Edge::Max; }
   Int RemainStep() const { return Edge::Max - Step; }
   Int NowStep() const { return Step; }
-  uint32_t Hash() const { Opt(EnableZobristHash, this->HashValue); }
+  uint32_t Hash() const { Opt(EnableHashValue, this->HashValue); }
   uint8_t EdgeCount(Box box) const { Opt(EnableEdgeCount, this->Counter.At(box)); }
   uint8_t MaxEdgeCount(Edge edge) const;
   bool Scoreable(Edge edge) const { Opt(EnableEdgeCount, MaxEdgeCount(edge) == 3); }
@@ -202,7 +206,7 @@ void BoardImpl<Config>::Reset() {
   if constexpr (HasFlag(EnableLogging)) {
     this->LastUpdateTime = std::chrono::system_clock::now();
   }
-  if constexpr (HasFlag(EnableZobristHash)) {
+  if constexpr (HasFlag(EnableHashValue)) {
     this->HashValue = 0;
   }
 }
@@ -219,7 +223,7 @@ Int BoardImpl<Config>::Add(Edge edge) {
   EdgeIndexes.At(edge) = Step;
   EdgeIndexes.At(nowEdge) = edgeIndex;
   ++Step;
-  if constexpr (HasFlag(EnableZobristHash)) {
+  if constexpr (HasFlag(EnableHashValue)) {
     this->HashValue += this->HashMapper.At(edge);
   }
   Int score = 0;
@@ -365,8 +369,8 @@ BoardImpl<Config>& BoardImpl<Config>::operator=(const FromBoard& from) {
     static_assert(FromBoard::HasFlag(EnableLogging));
     this->LastUpdateTime = from.LastUpdateTime;
   }
-  if constexpr (HasFlag(EnableZobristHash)) {
-    static_assert(FromBoard::HasFlag(EnableZobristHash));
+  if constexpr (HasFlag(EnableHashValue)) {
+    static_assert(FromBoard::HasFlag(EnableHashValue));
     this->HashValue = from.HashValue;
   }
   return *this;
@@ -375,7 +379,7 @@ BoardImpl<Config>& BoardImpl<Config>::operator=(const FromBoard& from) {
 template <int Config>
 template <typename Other>
 bool BoardImpl<Config>::operator==(const Other& other) const {
-  if constexpr (HasFlag(EnableZobristHash) && Other::HasFlag(EnableZobristHash)) {
+  if constexpr (HasFlag(EnableHashValue) && Other::HasFlag(EnableHashValue)) {
     if (this->HashValue != other.HashValue) {
       return false;
     }

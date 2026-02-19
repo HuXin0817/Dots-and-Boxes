@@ -28,15 +28,13 @@ THE SOFTWARE.
 
 namespace dab {
 
+using namespace __detail__::board::config;
 using BasicBoard = __detail__::board::Board<0>;
-using HashBoard = __detail__::board::Board<__detail__::board::EnableZobristHash>;
-using EdgeCountableBoard =
-    __detail__::board::Board<__detail__::board::EnableEdgeCount | __detail__::board::EnableZobristHash>;
-using RelativeScoreBoard =
-    __detail__::board::Board<__detail__::board::EnableRelativeScore | __detail__::board::EnableZobristHash>;
-using AbsoluteScoreBoard =
-    __detail__::board::Board<__detail__::board::EnableAbsoluteScore | __detail__::board::EnableZobristHash>;
-using LoggingBoard = __detail__::board::Board<__detail__::board::EnableLogging | __detail__::board::EnableZobristHash>;
-using ScoreableEdgeBoard = __detail__::board::Board<__detail__::board::EnableScoreableCounting>;
+using HashBoard = __detail__::board::Board<EnableHashValue>;
+using EdgeCountableBoard = __detail__::board::Board<EnableEdgeCount | EnableHashValue>;
+using RelativeScoreBoard = __detail__::board::Board<EnableRelativeScore | EnableHashValue>;
+using AbsoluteScoreBoard = __detail__::board::Board<EnableAbsoluteScore | EnableHashValue>;
+using LoggingBoard = __detail__::board::Board<EnableLogging | EnableHashValue>;
+using ScoreableEdgeBoard = __detail__::board::Board<EnableScoreableCounting>;
 
 }  // namespace dab
