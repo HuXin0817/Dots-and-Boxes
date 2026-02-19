@@ -18,6 +18,7 @@
 #define incl_tstarling_LRU_CACHE_H
 
 #include <tbb/concurrent_hash_map.h>
+#include <tbb/spin_mutex.h>
 
 #include <atomic>
 #include <mutex>
@@ -117,7 +118,7 @@ class ThreadSafeLRUCache {
   /**
    * Create a container with a given maximum size
    */
-  explicit ThreadSafeLRUCache(size_t maxSize);
+  explicit ThreadSafeLRUCache(uint32_t maxSize);
 
   ThreadSafeLRUCache(const ThreadSafeLRUCache& other) = delete;
   ThreadSafeLRUCache& operator=(const ThreadSafeLRUCache&) = delete;
@@ -161,7 +162,7 @@ class ThreadSafeLRUCache {
    * Get the approximate size of the container. May be slightly too low when
    * insertion is in progress.
    */
-  size_t size() const { return m_size.load(); }
+  uint32_t size() const { return m_size.load(); }
 
  private:
   /**
@@ -185,14 +186,14 @@ class ThreadSafeLRUCache {
   /**
    * The maximum number of elements in the container.
    */
-  size_t m_maxSize;
+  uint32_t m_maxSize;
 
   /**
    * This atomic variable is used to signal to all threads whether or not
    * eviction should be done on insert. It is approximately equal to the
    * number of elements in the container.
    */
-  std::atomic<size_t> m_size;
+  std::atomic<uint32_t> m_size;
 
   /**
    * The underlying TBB hash map.
@@ -206,7 +207,7 @@ class ThreadSafeLRUCache {
    */
   ListNode m_head;
   ListNode m_tail;
-  typedef std::mutex ListMutex;
+  typedef tbb::spin_mutex ListMutex;
   ListMutex m_listMutex;
 };
 
@@ -215,7 +216,7 @@ typename ThreadSafeLRUCache<TKey, TValue, THash>::ListNode* const
     ThreadSafeLRUCache<TKey, TValue, THash>::OutOfListMarker = (ListNode*)-1;
 
 template <class TKey, class TValue, class THash>
-ThreadSafeLRUCache<TKey, TValue, THash>::ThreadSafeLRUCache(size_t maxSize)
+ThreadSafeLRUCache<TKey, TValue, THash>::ThreadSafeLRUCache(uint32_t maxSize)
     : m_maxSize(maxSize),
       m_size(0),
       m_map(std::thread::hardware_concurrency() * 4)  // it will automatically grow
@@ -261,7 +262,7 @@ bool ThreadSafeLRUCache<TKey, TValue, THash>::insert(const TKey& key, const TVal
   hashAccessor.release();
 
   // Evict if necessary, now that we know the hashmap insertion was successful.
-  size_t size = m_size.load();
+  uint32_t size = m_size.load();
   bool evictionDone = false;
   if (size >= m_maxSize) {
     // The container is at (or over) capacity, so eviction needs to be done.

@@ -32,7 +32,7 @@ THE SOFTWARE.
 namespace dab::__detail__::robot {
 
 class CachedRobot : public RobotWapper<CachedRobot> {
-  static constexpr int64_t CacheSize = static_cast<int64_t>(Edge::Max) << 8;
+  static constexpr uint32_t CacheSize = static_cast<int64_t>(Edge::Max) << 8;
 
  public:
   CachedRobot() = default;
