@@ -36,6 +36,7 @@ class ImproveGreedyRobot : public GreedyRobot {
   Span<const Edge> BestCandidateEdges(const LoggingBoard& board) override;
 
  private:
+  ScoreableEdgeBoard SimulationBoardBackup;
   ScoreableEdgeBoard SimulationBoard;
 };
 

@@ -27,6 +27,8 @@ THE SOFTWARE.
 #include <chrono>
 #include <numeric>
 
+#include "Dab/Tools.h"
+
 namespace dab::__detail__::board {
 
 template <int Config>
@@ -203,7 +205,8 @@ Int Board<Config>::MaxObtainableScore(Int endScore) {
   if constexpr (HasFlag(EnableScoreableCounting)) {
     Int score = 0;
     while (Gaming() && score < endScore) {
-      if (this->ScoreableEdges.Empty() && FindScoreableEdge() == 0) {
+      if (this->ScoreableEdges.Empty()) {
+        Assert(FindScoreableEdge() == 0);
         break;
       }
       const Edge edge = this->ScoreableEdges.Pop();

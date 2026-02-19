@@ -148,6 +148,7 @@ class Board : private EdgeCountMixin<Config, HasFlag(FixedConfig(Config), Enable
   uint8_t MaxEdgeCount(Edge edge) const;
   bool Scoreable(Edge edge) const;
 
+  Board& operator=(const Board& from) = default;
   template <typename FromBoard>
   Board& operator=(const FromBoard& from);
 
@@ -172,6 +173,7 @@ Board<Config>& Board<Config>::operator=(const FromBoard& from) {
       this->ScoreableEdges = from.ScoreableEdges;
     } else {
       this->ScoreableEdges.Clear();
+      FindScoreableEdge();
     }
   }
   if constexpr (HasFlag(EnableRelativeScore)) {
