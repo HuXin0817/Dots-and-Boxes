@@ -62,74 +62,73 @@ static constexpr int FixedConfig(int config) {
   return fixedConfig;
 }
 
-template <int Config, bool Enabled>
+template <bool Enabled>
 struct EdgeCountMixin;
 
-template <int Config>
-struct EdgeCountMixin<Config, true> {
+template <>
+struct EdgeCountMixin<true> {
   Array<uint8_t, Box::Max> Counter;
 };
 
-template <int Config>
-struct EdgeCountMixin<Config, false> {};
+template <>
+struct EdgeCountMixin<false> {};
 
-template <int Config, bool Enabled>
+template <bool Enabled>
 struct ScoreableCountingMixin;
 
-template <int Config>
-struct ScoreableCountingMixin<Config, true> {
+template <>
+struct ScoreableCountingMixin<true> {
   Queue<Edge, Edge::Max> ScoreableEdges;
 };
 
-template <int Config>
-struct ScoreableCountingMixin<Config, false> {};
+template <>
+struct ScoreableCountingMixin<false> {};
 
-template <int Config, bool Enabled>
+template <bool Enabled>
 struct RelativeScoreMixin;
 
-template <int Config>
-struct RelativeScoreMixin<Config, true> {
+template <>
+struct RelativeScoreMixin<true> {
   Int Score = 0;
   Turn Turn;
 };
 
-template <int Config>
-struct RelativeScoreMixin<Config, false> {};
+template <>
+struct RelativeScoreMixin<false> {};
 
-template <int Config, bool Enabled>
+template <bool Enabled>
 struct AbsoluteScoreMixin;
 
-template <int Config>
-struct AbsoluteScoreMixin<Config, true> {
+template <>
+struct AbsoluteScoreMixin<true> {
   Int TotalScore;
 };
 
-template <int Config>
-struct AbsoluteScoreMixin<Config, false> {};
+template <>
+struct AbsoluteScoreMixin<false> {};
 
-template <int Config, bool Enabled>
+template <bool Enabled>
 struct LoggingMixin;
 
-template <int Config>
-struct LoggingMixin<Config, true> {
+template <>
+struct LoggingMixin<true> {
   std::chrono::system_clock::time_point LastUpdateTime;
 };
 
-template <int Config>
-struct LoggingMixin<Config, false> {};
+template <>
+struct LoggingMixin<false> {};
 
-template <int Config, bool Enabled>
+template <bool Enabled>
 struct HashMixin;
 
-template <int Config>
-struct HashMixin<Config, true> {
+template <>
+struct HashMixin<true> {
+  static Array<uint32_t, Edge::Max> HashMapper;
+
   uint32_t HashValue;
 };
 
-template <int Config>
-struct HashMixin<Config, false> {};
-
-static inline Array<uint32_t, Edge::Max> HashMapper = []() -> Array<uint32_t, Edge::Max> {
+inline Array<uint32_t, Edge::Max> HashMixin<true>::HashMapper = []() -> Array<uint32_t, Edge::Max> {
   Random random;
   Array<uint32_t, Edge::Max> result;
   for (uint32_t& v : result) {
@@ -137,6 +136,9 @@ static inline Array<uint32_t, Edge::Max> HashMapper = []() -> Array<uint32_t, Ed
   }
   return result;
 }();
+
+template <>
+struct HashMixin<false> {};
 
 static std::logic_error UnimplementedError() { return std::logic_error("unimplemented"); }
 
@@ -148,15 +150,15 @@ static std::logic_error UnimplementedError() { return std::logic_error("unimplem
   }
 
 template <int Config>
-class BoardImpl : private EdgeCountMixin<Config, HasFlag(FixedConfig(Config), EnableEdgeCount)>,
-                  private ScoreableCountingMixin<Config, HasFlag(FixedConfig(Config), EnableScoreableCounting)>,
-                  private RelativeScoreMixin<Config, HasFlag(FixedConfig(Config), EnableRelativeScore)>,
-                  private AbsoluteScoreMixin<Config, HasFlag(FixedConfig(Config), EnableAbsoluteScore)>,
-                  private LoggingMixin<Config, HasFlag(FixedConfig(Config), EnableLogging)>,
-                  private HashMixin<Config, HasFlag(FixedConfig(Config), EnableZobristHash)> {
+class BoardImpl : EdgeCountMixin<HasFlag(Config, EnableEdgeCount)>,
+                  ScoreableCountingMixin<HasFlag(Config, EnableScoreableCounting)>,
+                  RelativeScoreMixin<HasFlag(Config, EnableRelativeScore)>,
+                  AbsoluteScoreMixin<HasFlag(Config, EnableAbsoluteScore)>,
+                  LoggingMixin<HasFlag(Config, EnableLogging)>,
+                  HashMixin<HasFlag(Config, EnableZobristHash)> {
   template <int>
   friend class BoardImpl;
-  static constexpr bool HasFlag(int flag) { return (FixedConfig(Config) & flag) != 0; }
+  static constexpr bool HasFlag(int flag) { return (Config & flag) != 0; }
 
  public:
   BoardImpl() { Reset(); }
@@ -236,7 +238,7 @@ Int BoardImpl<Config>::Add(Edge edge) {
   EdgeIndexes.At(nowEdge) = edgeIndex;
   ++Step;
   if constexpr (HasFlag(EnableZobristHash)) {
-    this->HashValue += HashMapper.At(edge);
+    this->HashValue += this->HashMapper.At(edge);
   }
   Int score = 0;
   if constexpr (HasFlag(EnableEdgeCount)) {
