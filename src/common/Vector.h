@@ -24,6 +24,8 @@ THE SOFTWARE.
 
 #pragma once
 
+#include <Dab/Tools.h>
+
 #include <algorithm>
 #include <memory>
 
@@ -33,6 +35,11 @@ namespace dab::__detail__::common {
 
 template <typename T>
 class Vector : public Iterable<Vector<T>> {
+  struct Buffer {
+    Int Length;
+    char Data[0];
+  };
+
  public:
   constexpr Vector() = default;
   constexpr Vector(Int length) { Reset(length); }
@@ -48,35 +55,36 @@ class Vector : public Iterable<Vector<T>> {
   constexpr void Reset(T* begin, T* end);
   constexpr void Reset(const T* begin, const T* end);
 
-  constexpr Int Size() const { return Length; }
-  constexpr T* begin() { return Data.get(); }
-  constexpr const T* begin() const { return Data.get(); }
-  constexpr T* end() { return Data.get() + Length; }
-  constexpr const T* end() const { return Data.get() + Length; }
+  constexpr Int Size() const { return Data->Length; }
+  constexpr T* begin() { return reinterpret_cast<T*>(Data->Data); }
+  constexpr const T* begin() const { return reinterpret_cast<const T*>(Data->Data); }
+  constexpr T* end() { return reinterpret_cast<T*>(Data->Data) + Data->Length; }
+  constexpr const T* end() const { return reinterpret_cast<const T*>(Data->Data) + Data->Length; }
 
   ~Vector() = default;
 
  private:
-  std::unique_ptr<T[]> Data;
-  Int Length;
+  std::unique_ptr<Buffer> Data;
 };
 
 template <typename T>
 constexpr void Vector<T>::Reset(Int length) {
-  Length = length;
-  Data = std::make_unique<T[]>(length);
+  Assert(Data == nullptr);
+  char* const memory = new char[sizeof(Int) + sizeof(T) * length];
+  Data.reset(reinterpret_cast<Buffer*>(memory));
+  Data->Length = length;
 }
 
 template <typename T>
 constexpr void Vector<T>::Reset(T* begin, T* end) {
   Reset(end - begin);
-  std::ranges::copy(begin, end, Data.get());
+  std::ranges::copy(begin, end, reinterpret_cast<T*>(Data->Data));
 }
 
 template <typename T>
 constexpr void Vector<T>::Reset(const T* begin, const T* end) {
   Reset(end - begin);
-  std::ranges::copy(begin, end, Data.get());
+  std::ranges::copy(begin, end, reinterpret_cast<T*>(Data->Data));
 }
 
 }  // namespace dab::__detail__::common
