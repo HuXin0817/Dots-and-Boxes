@@ -46,7 +46,7 @@ class ImproveGreedyRobot : public RobotWapper<ImproveGreedyRobot> {
 };
 
 template <typename Board>
-Span<const Edge> ImproveGreedyRobot ::BestCandidateEdges(const Board& board) {
+Span<const Edge> ImproveGreedyRobot::BestCandidateEdges(const Board& board) {
   if (const Span<const Edge> edges = SubRobot.BestCandidateEdges(board); EnemyUnscoreable() || Scoreable()) {
     return edges;
   }
