@@ -43,14 +43,12 @@ static constexpr int EnableAbsoluteScore = 1 << 2;
 static constexpr int EnableLogging = 1 << 3;
 static constexpr int EnableScoreableCounting = 1 << 4;
 static constexpr int EnableHashValue = 1 << 5;
-}  // namespace config
-
-using namespace config;
+static constexpr int MaxFlag = 1 << 5;
 
 static constexpr bool HasFlag(int config, int flag) { return (config & flag) != 0; }
 
 static constexpr int FixedConfig(int config) {
-  int fixedConfig = config;
+  int fixedConfig = config % MaxFlag;
   if (HasFlag(config, EnableRelativeScore)) {
     fixedConfig |= EnableEdgeCount;
   }
@@ -65,6 +63,23 @@ static constexpr int FixedConfig(int config) {
   }
   return fixedConfig;
 }
+
+template <int Config>
+struct StaticCheckConfig {
+#define Require(flag, reqFlag) \
+  static_assert(HasFlag(Config, flag) ? HasFlag(Config, reqFlag) : true, #flag " require " #reqFlag)
+  Require(EnableRelativeScore, EnableEdgeCount);
+  Require(EnableAbsoluteScore, EnableEdgeCount);
+  Require(EnableAbsoluteScore, EnableRelativeScore);
+  Require(EnableLogging, EnableEdgeCount);
+  Require(EnableLogging, EnableRelativeScore);
+  Require(EnableLogging, EnableAbsoluteScore);
+  Require(EnableScoreableCounting, EnableEdgeCount);
+};
+
+}  // namespace config
+
+using namespace config;
 
 template <bool Enabled>
 struct EdgeCountMixin {};
@@ -138,15 +153,7 @@ class BoardImpl : EdgeCountMixin<HasFlag(Config, EnableEdgeCount)>,
   template <int>
   friend class BoardImpl;
   static constexpr bool HasFlag(int flag) { return (Config & flag) != 0; }
-
-#define Require(flag, reqFlag) static_assert(HasFlag(flag) ? HasFlag(reqFlag) : true, #flag " require " #reqFlag)
-  Require(EnableRelativeScore, EnableEdgeCount);
-  Require(EnableAbsoluteScore, EnableEdgeCount);
-  Require(EnableAbsoluteScore, EnableRelativeScore);
-  Require(EnableLogging, EnableEdgeCount);
-  Require(EnableLogging, EnableRelativeScore);
-  Require(EnableLogging, EnableAbsoluteScore);
-  Require(EnableScoreableCounting, EnableEdgeCount);
+  using StaticCheckConfig = StaticCheckConfig<Config>;
 
 #define Opt(flag, value)         \
   if constexpr (HasFlag(flag)) { \
