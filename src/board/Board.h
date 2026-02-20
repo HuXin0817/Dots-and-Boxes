@@ -165,12 +165,11 @@ class BoardImpl : EdgeCountMixin<HasFlag(Config, EnableEdgeCount)>,
   Int FindScoreableEdge();
   Int MaxObtainableScore(Int endScore);
 
-  BoardImpl& operator=(const BoardImpl& from) = default;
-  template <typename FromBoard>
-  BoardImpl& operator=(const FromBoard& from);
-
+  BoardImpl& operator=(const BoardImpl& other) = default;
   template <typename Other>
-  bool operator==(const Other& from) const;
+  BoardImpl& operator=(const Other& other);
+  template <typename Other>
+  bool operator==(const Other& other) const;
 
  private:
   Int Step = 0;
@@ -317,39 +316,39 @@ uint8_t BoardImpl<Config>::MaxEdgeCount(Edge edge) const {
 }
 
 template <int Config>
-template <typename FromBoard>
-BoardImpl<Config>& BoardImpl<Config>::operator=(const FromBoard& from) {
-  Step = from.Step;
-  Edges = from.Edges;
-  EdgeIndexes = from.EdgeIndexes;
+template <typename Other>
+BoardImpl<Config>& BoardImpl<Config>::operator=(const Other& other) {
+  Step = other.Step;
+  Edges = other.Edges;
+  EdgeIndexes = other.EdgeIndexes;
   if constexpr (HasFlag(EnableEdgeCount)) {
-    static_assert(FromBoard::HasFlag(EnableEdgeCount));
-    this->Counter = from.Counter;
+    static_assert(Other::HasFlag(EnableEdgeCount));
+    this->Counter = other.Counter;
   }
   if constexpr (HasFlag(EnableScoreableCount)) {
-    if constexpr (FromBoard::HasFlag(EnableScoreableCount)) {
-      this->ScoreableEdges = from.ScoreableEdges;
+    if constexpr (Other::HasFlag(EnableScoreableCount)) {
+      this->ScoreableEdges = other.ScoreableEdges;
     } else {
       this->ScoreableEdges.Clear();
       FindScoreableEdge();
     }
   }
   if constexpr (HasFlag(EnableRelativeScore)) {
-    static_assert(FromBoard::HasFlag(EnableRelativeScore));
-    this->Score = from.Score;
-    this->Turn = from.Turn;
+    static_assert(Other::HasFlag(EnableRelativeScore));
+    this->Score = other.Score;
+    this->Turn = other.Turn;
   }
   if constexpr (HasFlag(EnableAbsoluteScore)) {
-    static_assert(FromBoard::HasFlag(EnableAbsoluteScore));
-    this->TotalScore = from.TotalScore;
+    static_assert(Other::HasFlag(EnableAbsoluteScore));
+    this->TotalScore = other.TotalScore;
   }
   if constexpr (HasFlag(EnableLogging)) {
-    static_assert(FromBoard::HasFlag(EnableLogging));
-    this->LastUpdateTime = from.LastUpdateTime;
+    static_assert(Other::HasFlag(EnableLogging));
+    this->LastUpdateTime = other.LastUpdateTime;
   }
   if constexpr (HasFlag(EnableHashValue)) {
-    static_assert(FromBoard::HasFlag(EnableHashValue));
-    this->HashValue = from.HashValue;
+    static_assert(Other::HasFlag(EnableHashValue));
+    this->HashValue = other.HashValue;
   }
   return *this;
 }
