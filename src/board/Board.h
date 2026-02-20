@@ -32,7 +32,6 @@ THE SOFTWARE.
 #include <functional>
 #include <limits>
 #include <numeric>
-#include <stdexcept>
 
 namespace dab::__detail__::board {
 
@@ -140,13 +139,6 @@ class BoardImpl : EdgeCountMixin<HasFlag(Config, EnableEdgeCount)>,
   static constexpr bool HasFlag(int flag) { return (Config & flag) != 0; }
   static_assert(Config == FixedConfig(Config));
 
-#define Opt(flag, value)                           \
-  if constexpr (HasFlag(flag)) {                   \
-    return value;                                  \
-  } else {                                         \
-    static_assert(false, #flag " is not enabled"); \
-  }
-
  public:
   BoardImpl() { Reset(); }
 
@@ -159,16 +151,16 @@ class BoardImpl : EdgeCountMixin<HasFlag(Config, EnableEdgeCount)>,
   bool Gaming() const { return Step < Edge::Max; }
   Int RemainStep() const { return Edge::Max - Step; }
   Int NowStep() const { return Step; }
-  uint32_t Hash() const { Opt(EnableHashValue, this->HashValue); }
-  uint8_t EdgeCount(Box box) const { Opt(EnableEdgeCount, this->Counter.At(box)); }
+  uint32_t Hash() const { return this->HashValue; }
+  uint8_t EdgeCount(Box box) const { return this->Counter.At(box); }
   uint8_t MaxEdgeCount(Edge edge) const;
-  bool Scoreable(Edge edge) const { Opt(EnableEdgeCount, MaxEdgeCount(edge) == 3); }
-  Int RelativeScore() const { Opt(EnableRelativeScore, this->Score); }
-  Turn GetTurn() const { Opt(EnableRelativeScore, this->Turn); }
-  bool IsPlayer1Turn() const { Opt(EnableRelativeScore, this->Turn.IsPlayer1Turn()); }
-  bool IsPlayer2Turn() const { Opt(EnableRelativeScore, this->Turn.IsPlayer2Turn()); }
-  Int Player1Score() const { Opt(EnableAbsoluteScore, (this->TotalScore + this->Score) / 2); }
-  Int Player2Score() const { Opt(EnableAbsoluteScore, (this->TotalScore - this->Score) / 2); }
+  bool Scoreable(Edge edge) const { return MaxEdgeCount(edge) == 3; }
+  Int RelativeScore() const { return this->Score; }
+  Turn GetTurn() const { return this->Turn; }
+  bool IsPlayer1Turn() const { return this->Turn.IsPlayer1Turn(); }
+  bool IsPlayer2Turn() const { return this->Turn.IsPlayer2Turn(); }
+  Int Player1Score() const { return (this->TotalScore + this->Score) / 2; }
+  Int Player2Score() const { return (this->TotalScore - this->Score) / 2; }
   Edge FindNotContainsEdgeInBox(Box box) const;
   Int FindScoreableEdge();
   Int MaxObtainableScore(Int endScore);
@@ -280,63 +272,48 @@ Int BoardImpl<Config>::Add(Edge edge) {
 
 template <int Config>
 Edge BoardImpl<Config>::FindNotContainsEdgeInBox(Box box) const {
-  if constexpr (HasFlag(EnableEdgeCount)) {
-    Assert(this->Counter.At(box) == 3);
-    for (const Edge edge : box.NearEdges()) {
-      if (NotContains(edge)) {
-        return edge;
-      }
+  Assert(this->Counter.At(box) == 3);
+  for (const Edge edge : box.NearEdges()) {
+    if (NotContains(edge)) {
+      return edge;
     }
-    throw std::runtime_error("unreachable");
-  } else {
-    static_assert(false, "EnableEdgeCount is not enabled");
   }
+  Assert(false);
+  return Edge::Invalid;
 }
 
 template <int Config>
 Int BoardImpl<Config>::FindScoreableEdge() {
-  if constexpr (HasFlag(EnableScoreableCounting)) {
-    for (const Edge edge : EmptyEdges()) {
-      if (Scoreable(edge)) {
-        this->ScoreableEdges.Append(edge);
-      }
+  for (const Edge edge : EmptyEdges()) {
+    if (Scoreable(edge)) {
+      this->ScoreableEdges.Append(edge);
     }
-    return this->ScoreableEdges.Size();
-  } else {
-    static_assert(false, "EnableScoreableCounting is not enabled");
   }
+  return this->ScoreableEdges.Size();
 }
 
 template <int Config>
 Int BoardImpl<Config>::MaxObtainableScore(Int endScore) {
-  if constexpr (HasFlag(EnableScoreableCounting)) {
-    Int score = 0;
-    while (Gaming() && score < endScore) {
-      if (this->ScoreableEdges.Empty()) {
-        Assert(FindScoreableEdge() == 0);
-        break;
-      }
-      const Edge edge = this->ScoreableEdges.Pop();
-      if (Contains(edge)) {
-        continue;
-      }
-      Assert(Scoreable(edge));
-      score += Add(edge);
+  Int score = 0;
+  while (Gaming() && score < endScore) {
+    if (this->ScoreableEdges.Empty()) {
+      Assert(FindScoreableEdge() == 0);
+      break;
     }
-    return score;
-  } else {
-    static_assert(false, "EnableScoreableCounting is not enabled");
+    const Edge edge = this->ScoreableEdges.Pop();
+    if (Contains(edge)) {
+      continue;
+    }
+    Assert(Scoreable(edge));
+    score += Add(edge);
   }
+  return score;
 }
 
 template <int Config>
 uint8_t BoardImpl<Config>::MaxEdgeCount(Edge edge) const {
-  if constexpr (HasFlag(EnableEdgeCount)) {
-    const List<Box, 2>& nearBoxes = edge.NearBoxes();
-    return std::max(this->Counter.At(nearBoxes.Front()), this->Counter.At(nearBoxes.Back()));
-  } else {
-    static_assert(false, "EnableEdgeCount is not enabled");
-  }
+  const List<Box, 2>& nearBoxes = edge.NearBoxes();
+  return std::max(this->Counter.At(nearBoxes.Front()), this->Counter.At(nearBoxes.Back()));
 }
 
 template <int Config>
