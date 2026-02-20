@@ -56,12 +56,12 @@ void LogError(std::format_string<Args...> fmt, Args&&... args) {
 #define Assert(expr) ((void)0)
 #else
 
-#define Assert(expr)                                                                   \
-  do {                                                                                 \
-    if (!(expr)) {                                                                     \
-      dab::LogError(R"(ASSERT: '{}' in file {}, line {})", #expr, __FILE__, __LINE__); \
-      std::abort();                                                                    \
-    }                                                                                  \
+#define Assert(expr)                                                                \
+  do {                                                                              \
+    if (!(expr)) {                                                                  \
+      dab::LogError("ASSERT: '{}' in file {}, line {}", #expr, __FILE__, __LINE__); \
+      std::abort();                                                                 \
+    }                                                                               \
   } while (false)
 
 #endif  // NDEBUG
