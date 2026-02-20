@@ -38,11 +38,7 @@ Span<const Edge> CachedRobot::BestCandidateEdges(const Board& board) {
 
   Span result = SubRobot.BestCandidateEdges(board);
   Assert(!result.Empty());
-  Map.insert(Key, Vector<Edge>(result.begin(), result.end()));
-
-  if (Map.find(ac, Key)) {
-    return {ac->begin(), ac->end()};
-  }
+  Map.insert(Key, Vector(result.begin(), result.end()));
   return result;
 }
 
