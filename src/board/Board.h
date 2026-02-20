@@ -43,7 +43,7 @@ static constexpr int EnableAbsoluteScore = 1 << 2;
 static constexpr int EnableLogging = 1 << 3;
 static constexpr int EnableScoreableCounting = 1 << 4;
 static constexpr int EnableHashValue = 1 << 5;
-static constexpr int MaxFlag = 1 << 5;
+static constexpr int MaxFlag = 1 << 6;
 
 static constexpr bool HasFlag(int config, int flag) { return (config & flag) != 0; }
 
@@ -63,19 +63,6 @@ static constexpr int FixedConfig(int config) {
   }
   return fixedConfig;
 }
-
-template <int Config>
-struct StaticCheckConfig {
-#define Require(flag, reqFlag) \
-  static_assert(HasFlag(Config, flag) ? HasFlag(Config, reqFlag) : true, #flag " require " #reqFlag)
-  Require(EnableRelativeScore, EnableEdgeCount);
-  Require(EnableAbsoluteScore, EnableEdgeCount);
-  Require(EnableAbsoluteScore, EnableRelativeScore);
-  Require(EnableLogging, EnableEdgeCount);
-  Require(EnableLogging, EnableRelativeScore);
-  Require(EnableLogging, EnableAbsoluteScore);
-  Require(EnableScoreableCounting, EnableEdgeCount);
-};
 
 }  // namespace config
 
@@ -141,8 +128,6 @@ inline Array<uint32_t, Edge::Max> HashMixin<true>::HashMapper = []() -> Array<ui
   return result;
 }();
 
-static std::logic_error UnimplementedError() { return std::logic_error("unimplemented"); }
-
 template <int Config>
 class BoardImpl : EdgeCountMixin<HasFlag(Config, EnableEdgeCount)>,
                   ScoreableCountingMixin<HasFlag(Config, EnableScoreableCounting)>,
@@ -153,13 +138,13 @@ class BoardImpl : EdgeCountMixin<HasFlag(Config, EnableEdgeCount)>,
   template <int>
   friend class BoardImpl;
   static constexpr bool HasFlag(int flag) { return (Config & flag) != 0; }
-  using StaticCheckConfig = StaticCheckConfig<Config>;
+  static_assert(Config == FixedConfig(Config));
 
-#define Opt(flag, value)         \
-  if constexpr (HasFlag(flag)) { \
-    return value;                \
-  } else {                       \
-    throw UnimplementedError();  \
+#define Opt(flag, value)                           \
+  if constexpr (HasFlag(flag)) {                   \
+    return value;                                  \
+  } else {                                         \
+    static_assert(false, #flag " is not enabled"); \
   }
 
  public:
@@ -304,7 +289,7 @@ Edge BoardImpl<Config>::FindNotContainsEdgeInBox(Box box) const {
     }
     throw std::runtime_error("unreachable");
   } else {
-    throw UnimplementedError();
+    static_assert(false, "EnableEdgeCount is not enabled");
   }
 }
 
@@ -318,7 +303,7 @@ Int BoardImpl<Config>::FindScoreableEdge() {
     }
     return this->ScoreableEdges.Size();
   } else {
-    throw UnimplementedError();
+    static_assert(false, "EnableScoreableCounting is not enabled");
   }
 }
 
@@ -340,7 +325,7 @@ Int BoardImpl<Config>::MaxObtainableScore(Int endScore) {
     }
     return score;
   } else {
-    throw UnimplementedError();
+    static_assert(false, "EnableScoreableCounting is not enabled");
   }
 }
 
@@ -350,7 +335,7 @@ uint8_t BoardImpl<Config>::MaxEdgeCount(Edge edge) const {
     const List<Box, 2>& nearBoxes = edge.NearBoxes();
     return std::max(this->Counter.At(nearBoxes.Front()), this->Counter.At(nearBoxes.Back()));
   } else {
-    throw UnimplementedError();
+    static_assert(false, "EnableEdgeCount is not enabled");
   }
 }
 
@@ -421,6 +406,7 @@ namespace std {
 using namespace dab::__detail__::board;
 
 template <int Config>
+  requires(HasFlag(Config, EnableHashValue))
 struct hash<BoardImpl<Config>> {
   uint32_t operator()(const BoardImpl<Config>& board) const { return board.Hash(); }
 };
