@@ -38,7 +38,7 @@ class GreedyRobot : public RobotWapper<GreedyRobot> {
   template <typename Board>
   Span<const Edge> BestCandidateEdges(const Board& board);
   template <typename Board>
-  static Edge SearchOne(const Board& board);
+  Edge SearchOne(const Board& board);
 
  private:
   Int EnemyUnscoreableIndex = 0;
