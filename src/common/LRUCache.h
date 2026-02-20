@@ -324,7 +324,7 @@ void ThreadSafeLRUCache<TKey, TValue, THash>::snapshotKeys(std::vector<TKey>& ke
 }
 
 template <class TKey, class TValue, class THash>
-inline void ThreadSafeLRUCache<TKey, TValue, THash>::delink(ListNode* node) {
+void ThreadSafeLRUCache<TKey, TValue, THash>::delink(ListNode* node) {
   ListNode* prev = node->m_prev;
   ListNode* next = node->m_next;
   prev->m_next = next;
@@ -333,7 +333,7 @@ inline void ThreadSafeLRUCache<TKey, TValue, THash>::delink(ListNode* node) {
 }
 
 template <class TKey, class TValue, class THash>
-inline void ThreadSafeLRUCache<TKey, TValue, THash>::pushFront(ListNode* node) {
+void ThreadSafeLRUCache<TKey, TValue, THash>::pushFront(ListNode* node) {
   ListNode* oldRealHead = m_head.m_next;
   node->m_prev = &m_head;
   node->m_next = oldRealHead;

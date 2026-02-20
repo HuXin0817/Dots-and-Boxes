@@ -31,8 +31,7 @@ namespace dab::__detail__::robot {
 template <typename Board>
 Span<const Edge> CachedRobot::BestCandidateEdges(const Board& board) {
   Key = board;
-  tstarling::ThreadSafeLRUCache<HashValueBoard, Vector<Edge>>::ConstAccessor ac;
-  if (Map.find(ac, Key)) {
+  if (ThreadSafeLRUCache<HashValueBoard, Vector<Edge>>::ConstAccessor ac; Map.find(ac, Key)) {
     return {ac->begin(), ac->end()};
   }
 

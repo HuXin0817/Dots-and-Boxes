@@ -28,7 +28,6 @@ THE SOFTWARE.
 #include <tbb/tbb_allocator.h>
 
 #include <algorithm>
-#include <utility>
 
 #include "Iterable.h"
 

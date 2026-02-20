@@ -46,10 +46,7 @@ class Random {
   std::uniform_int_distribution<Int> Dist;
 };
 
-inline Random::Random() {
-  uint64_t sd = std::chrono::steady_clock::now().time_since_epoch().count();
-  Rng.seed(sd);
-}
+inline Random::Random() { Rng.seed(std::chrono::steady_clock::now().time_since_epoch().count()); }
 
 template <typename T>
 T Random::Range(T min, T max) {
