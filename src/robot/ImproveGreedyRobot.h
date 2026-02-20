@@ -31,15 +31,65 @@ namespace dab::__detail__::robot {
 class ImproveGreedyRobot : public RobotWapper<ImproveGreedyRobot> {
  public:
   ImproveGreedyRobot() = default;
-  template <typename Board>
-  Span<const Edge> BestCandidateEdges(const Board& board);
+
   bool EnemyUnscoreable() const { return SubRobot.EnemyUnscoreable(); }
   bool Scoreable() const { return SubRobot.Scoreable(); }
+  template <typename Board>
+  Span<const Edge> BestCandidateEdges(const Board& board);
+  template <typename Board>
+  Edge SearchOne(const Board& board);
 
  private:
   GreedyRobot SubRobot;
   ScoreableCountBoard SimulationBoardBackup;
   ScoreableCountBoard SimulationBoard;
 };
+
+template <typename Board>
+Span<const Edge> ImproveGreedyRobot ::BestCandidateEdges(const Board& board) {
+  if (const Span<const Edge> edges = SubRobot.BestCandidateEdges(board); EnemyUnscoreable() || Scoreable()) {
+    return edges;
+  }
+
+  Int minScore = Box::Max + 1;
+  Array<Edge, Edge::Max>& candidateEdges = SubRobot.GetEdgeBuffer();
+  Int candidateEdgesSize = 0;
+
+  SimulationBoardBackup = board;
+  for (const Edge edge : board.EmptyEdges()) {
+    SimulationBoard = SimulationBoardBackup;
+    SimulationBoard.Add(edge);
+    if (const Int score = SimulationBoard.MaxObtainableScore(minScore); score < minScore) {
+      minScore = score;
+      candidateEdgesSize = 1;
+      candidateEdges.At(0) = edge;
+    } else if (score == minScore) {
+      candidateEdges.At(candidateEdgesSize++) = edge;
+    }
+  }
+
+  return {candidateEdges.begin(), candidateEdges.begin() + candidateEdgesSize};
+}
+
+template <typename Board>
+Edge ImproveGreedyRobot::SearchOne(const Board& board) {
+  Edge result;
+  if (result = GreedyRobot::SearchOne(board); result != Edge::Invalid) {
+    return result;
+  }
+
+  Int minScore = Box::Max + 1;
+  SimulationBoardBackup = board;
+  for (const Edge edge : board.EmptyEdges()) {
+    SimulationBoard = SimulationBoardBackup;
+    SimulationBoard.Add(edge);
+    if (const Int score = SimulationBoard.MaxObtainableScore(minScore); score < minScore) {
+      minScore = score;
+      result = edge;
+    }
+  }
+
+  return result;
+}
 
 }  // namespace dab::__detail__::robot

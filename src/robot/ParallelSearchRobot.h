@@ -24,6 +24,8 @@ THE SOFTWARE.
 
 #pragma once
 
+#include <tbb/parallel_for_each.h>
+
 #include "MonteCarloRobot.h"
 
 namespace dab::__detail__::robot {
@@ -38,5 +40,20 @@ class ParallelSearchRobot : public RobotWapper<ParallelSearchRobot> {
   Array<MonteCarloRobot, 32> SubRobots;
   ScoreMap SearchResult;
 };
+
+template <typename Board>
+Span<const Edge> ParallelSearchRobot::BestCandidateEdges(const Board& board) {
+  if (Span<const Edge> edges; SubRobots.Front().CanEarlyExit(board, edges)) {
+    return edges;
+  }
+
+  SearchResult.Reset();
+  tbb::parallel_for_each(SubRobots, [&](MonteCarloRobot& robot) -> void { robot.BestCandidateEdges(board); });
+  for (const MonteCarloRobot& model : SubRobots) {
+    SearchResult.Add(model.GetSearchResult());
+  }
+
+  return SearchResult.Export();
+}
 
 }  // namespace dab::__detail__::robot

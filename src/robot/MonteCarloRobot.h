@@ -25,6 +25,7 @@ THE SOFTWARE.
 #pragma once
 
 #include "CachedRobot.h"
+#include "SimulationRobot.h"
 
 namespace dab::__detail__::robot {
 
@@ -40,10 +41,37 @@ class MonteCarloRobot : public RobotWapper<MonteCarloRobot> {
   const ScoreMap& GetSearchResult() const { return SearchResult; }
 
  private:
-  CachedRobot SubRobot;
+  CachedRobot<SimulationRobot> SubRobot;
   RelativeScoreBoard SimulationBoard;
   Random Random;
   ScoreMap SearchResult;
 };
+
+template <typename Board>
+Span<const Edge> MonteCarloRobot::BestCandidateEdges(const Board& board) {
+  if (Span<const Edge> edges; CanEarlyExit(board, edges)) {
+    return edges;
+  }
+
+  SearchResult.Reset();
+  const Turn turn = board.GetTurn();
+  for (int64_t i = 0; i < SearchTime / board.RemainStep(); i++) {
+    SimulationBoard = board;
+    const Edge edge = Random.Choice(SubRobot.BestCandidateEdges(SimulationBoard));
+    SimulationBoard.Add(edge);
+    while (SimulationBoard.Gaming()) {
+      SimulationBoard.Add(Random.Choice(SubRobot.BestCandidateEdges(SimulationBoard)));
+    }
+    SearchResult.Add(edge, turn * SimulationBoard.RelativeScore());
+  }
+
+  return SearchResult.Export();
+}
+
+template <typename Board>
+bool MonteCarloRobot::CanEarlyExit(const Board& board, Span<const Edge>& result) {
+  result = SubRobot.BestCandidateEdges(board);
+  return result.Size() == 1;
+}
 
 }  // namespace dab::__detail__::robot
