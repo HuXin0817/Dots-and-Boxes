@@ -42,6 +42,7 @@ class MonteCarloRobot : public RobotWapper<MonteCarloRobot> {
  private:
   CachedRobot SubRobot;
   RelativeScoreBoard SimulationBoard;
+  Random Random;
   ScoreMap SearchResult;
 };
 

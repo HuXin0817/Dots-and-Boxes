@@ -32,8 +32,8 @@ Span<const Edge> MonteCarloRobot::BestCandidateEdges(const Board& board) {
     return edges;
   }
 
-  Random Random;
   SearchResult.Reset();
+  const Turn turn = board.GetTurn();
   for (int64_t i = 0; i < SearchTime / board.RemainStep(); i++) {
     SimulationBoard = board;
     const Edge edge = Random.Choice(SubRobot.BestCandidateEdges(SimulationBoard));
@@ -41,7 +41,7 @@ Span<const Edge> MonteCarloRobot::BestCandidateEdges(const Board& board) {
     while (SimulationBoard.Gaming()) {
       SimulationBoard.Add(Random.Choice(SubRobot.BestCandidateEdges(SimulationBoard)));
     }
-    SearchResult.Add(edge, SimulationBoard.RelativeScore());
+    SearchResult.Add(edge, turn * SimulationBoard.RelativeScore());
   }
 
   return SearchResult.Export();

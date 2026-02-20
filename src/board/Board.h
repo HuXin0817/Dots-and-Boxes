@@ -246,18 +246,18 @@ Int BoardImpl<Config>::Add(Edge edge) {
         const Int step = NowStep();
         const std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
         const int64_t time = std::chrono::duration_cast<std::chrono::milliseconds>(now - this->LastUpdateTime).count();
-        LogInfo(R"({{"Step":{},"Turn":{},"Move":{},"Score":{{"Player1":{},"Player2":{}}},"Time":{}}})",
+        const std::string scoreMap = std::format(R"({{"Player1":{},"Player2":{}}})", Player1Score(), Player2Score());
+        LogInfo(R"({{"Step":{},"Turn":{},"Move":{},"Score":{},"Time":{}}})",
                 step,
                 turn.IsPlayer1Turn() ? 1 : 2,
                 static_cast<Int>(edge),
-                Player1Score(),
-                Player2Score(),
+                scoreMap,
                 static_cast<double>(time) / 1000.0);
         if (!Gaming()) {
           if (RelativeScore() > 0) {
-            LogInfo(R"({{"Winner":"Player1"}})");
+            LogInfo(R"({{"Winner":"Player1","Score":{}}})", scoreMap);
           } else if (RelativeScore() < 0) {
-            LogInfo(R"({{"Winner":"Player2"}})");
+            LogInfo(R"({{"Winner":"Player2","Score":{}}})", scoreMap);
           } else {
             LogInfo(R"({{"Winner":"Draw"}})");
           }

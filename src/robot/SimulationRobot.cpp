@@ -36,6 +36,7 @@ Span<const Edge> SimulationRobot::BestCandidateEdges(const Board& board) {
 
   SearchEdges.Clear();
   Int maxScore = -Box::Max;
+  const Turn turn = board.GetTurn();
   for (const Edge emptyEdge : board.EmptyEdges()) {
     SimulationBoard = board;
     SimulationBoard.Add(emptyEdge);
@@ -44,7 +45,7 @@ Span<const Edge> SimulationRobot::BestCandidateEdges(const Board& board) {
       Assert(board.MaxEdgeCount(edge) > 1);
       SimulationBoard.Add(edge);
     }
-    if (const Int score = SimulationBoard.RelativeScore(); score > maxScore) {
+    if (const Int score = turn * SimulationBoard.RelativeScore(); score > maxScore) {
       maxScore = score;
       SearchEdges.ClearAndSet(emptyEdge);
     } else if (score == maxScore) {

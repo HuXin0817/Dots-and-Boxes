@@ -102,7 +102,7 @@ constexpr Dot Edge::Dot2() const {
 
 class Turn : public IntWapper {
  public:
-  constexpr Turn() : IntWapper(Player1Turn) {}
+  constexpr Turn() { Reset(); }
   constexpr void Reset() { v = Player1Turn; }
   constexpr void Add() { v = -v; }
   constexpr bool IsPlayer1Turn() const { return v == Player1Turn; }
