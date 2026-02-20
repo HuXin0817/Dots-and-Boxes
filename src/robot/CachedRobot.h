@@ -40,9 +40,9 @@ class CachedRobot : public RobotWapper<CachedRobot> {
   Span<const Edge> BestCandidateEdges(const Board& board);
 
  private:
-  static inline ThreadSafeLRUCache<HashBoard, Vector<Edge>> Map{CacheSize};
+  static inline ThreadSafeLRUCache<HashValueBoard, Vector<Edge>> Map{CacheSize};
 
-  HashBoard Key;
+  HashValueBoard Key;
   SimulationRobot SubRobot;
 };
 

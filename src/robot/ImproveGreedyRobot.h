@@ -38,8 +38,8 @@ class ImproveGreedyRobot : public RobotWapper<ImproveGreedyRobot> {
 
  private:
   GreedyRobot SubRobot;
-  ScoreableEdgeBoard SimulationBoardBackup;
-  ScoreableEdgeBoard SimulationBoard;
+  ScoreableCountBoard SimulationBoardBackup;
+  ScoreableCountBoard SimulationBoard;
 };
 
 }  // namespace dab::__detail__::robot

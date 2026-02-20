@@ -29,12 +29,13 @@ THE SOFTWARE.
 namespace dab {
 
 using namespace __detail__::board::config;
-using BasicBoard = __detail__::board::Board<0>;
-using HashBoard = __detail__::board::Board<EnableHashValue>;
-using EdgeCountableBoard = __detail__::board::Board<EnableEdgeCount | EnableHashValue>;
-using RelativeScoreBoard = __detail__::board::Board<EnableRelativeScore | EnableHashValue>;
-using AbsoluteScoreBoard = __detail__::board::Board<EnableAbsoluteScore | EnableHashValue>;
-using LoggingBoard = __detail__::board::Board<EnableLogging | EnableHashValue>;
-using ScoreableEdgeBoard = __detail__::board::Board<EnableScoreableCounting>;
+using __detail__::board::Board;
+using BasicBoard = Board<0>;
+using HashValueBoard = Board<EnableHashValue>;
+using EdgeCountBoard = Board<EnableEdgeCount | EnableHashValue>;
+using RelativeScoreBoard = Board<EnableRelativeScore | EnableHashValue>;
+using AbsoluteScoreBoard = Board<EnableAbsoluteScore | EnableHashValue>;
+using LoggingBoard = Board<EnableLogging | EnableHashValue>;
+using ScoreableCountBoard = Board<EnableScoreableCount>;
 
 }  // namespace dab

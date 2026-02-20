@@ -40,7 +40,7 @@ static constexpr int EnableEdgeCount = 1 << 0;
 static constexpr int EnableRelativeScore = 1 << 1;
 static constexpr int EnableAbsoluteScore = 1 << 2;
 static constexpr int EnableLogging = 1 << 3;
-static constexpr int EnableScoreableCounting = 1 << 4;
+static constexpr int EnableScoreableCount = 1 << 4;
 static constexpr int EnableHashValue = 1 << 5;
 static constexpr int MaxFlag = 1 << 6;
 
@@ -57,7 +57,7 @@ static constexpr int FixedConfig(int config) {
   if (HasFlag(config, EnableLogging)) {
     fixedConfig |= EnableEdgeCount | EnableRelativeScore | EnableAbsoluteScore;
   }
-  if (HasFlag(config, EnableScoreableCounting)) {
+  if (HasFlag(config, EnableScoreableCount)) {
     fixedConfig |= EnableEdgeCount;
   }
   return fixedConfig;
@@ -129,7 +129,7 @@ inline Array<uint32_t, Edge::Max> HashMixin<true>::HashMapper = []() -> Array<ui
 
 template <int Config>
 class BoardImpl : EdgeCountMixin<HasFlag(Config, EnableEdgeCount)>,
-                  ScoreableCountingMixin<HasFlag(Config, EnableScoreableCounting)>,
+                  ScoreableCountingMixin<HasFlag(Config, EnableScoreableCount)>,
                   RelativeScoreMixin<HasFlag(Config, EnableRelativeScore)>,
                   AbsoluteScoreMixin<HasFlag(Config, EnableAbsoluteScore)>,
                   LoggingMixin<HasFlag(Config, EnableLogging)>,
@@ -186,7 +186,7 @@ void BoardImpl<Config>::Reset() {
   if constexpr (HasFlag(EnableEdgeCount)) {
     std::ranges::fill(this->Counter, 0);
   }
-  if constexpr (HasFlag(EnableScoreableCounting)) {
+  if constexpr (HasFlag(EnableScoreableCount)) {
     this->ScoreableEdges.Clear();
   }
   if constexpr (HasFlag(EnableRelativeScore)) {
@@ -227,7 +227,7 @@ Int BoardImpl<Config>::Add(Edge edge) {
       if (num == 4) {
         ++score;
       }
-      if constexpr (HasFlag(EnableScoreableCounting)) {
+      if constexpr (HasFlag(EnableScoreableCount)) {
         if (num == 3) {
           this->ScoreableEdges.Append(FindNotContainsEdgeInBox(box));
         }
@@ -326,8 +326,8 @@ BoardImpl<Config>& BoardImpl<Config>::operator=(const FromBoard& from) {
     static_assert(FromBoard::HasFlag(EnableEdgeCount));
     this->Counter = from.Counter;
   }
-  if constexpr (HasFlag(EnableScoreableCounting)) {
-    if constexpr (FromBoard::HasFlag(EnableScoreableCounting)) {
+  if constexpr (HasFlag(EnableScoreableCount)) {
+    if constexpr (FromBoard::HasFlag(EnableScoreableCount)) {
       this->ScoreableEdges = from.ScoreableEdges;
     } else {
       this->ScoreableEdges.Clear();
