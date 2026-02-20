@@ -26,6 +26,7 @@ THE SOFTWARE.
 
 #include "../../src/common/Array.h"
 #include "../../src/common/Int.h"
+#include "../../src/common/LRUCache.h"
 #include "../../src/common/List.h"
 #include "../../src/common/Queue.h"
 #include "../../src/common/Random.h"
@@ -42,5 +43,6 @@ using __detail__::common::Queue;
 using __detail__::common::Random;
 using __detail__::common::Span;
 using __detail__::common::Vector;
+using tstarling::ThreadSafeLRUCache;
 
 }  // namespace dab

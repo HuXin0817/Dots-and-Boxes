@@ -8,5 +8,5 @@ target_compile_definitions(${ModelLibrary} PRIVATE
   __BoardSize__=${BoardSize}
   __detail__=detail${BoardSize}x${BoardSize}
 )
-target_link_libraries(${ModelLibrary} PRIVATE ${CommonLibrary})
+target_link_libraries(${ModelLibrary} PRIVATE TBB::tbb)
 set(ModelLibrary ${ModelLibrary} PARENT_SCOPE)
