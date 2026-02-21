@@ -68,7 +68,7 @@ Span<const Edge> ImproveGreedyRobot::BestCandidateEdges(const Board& board) {
     }
   }
 
-  return {candidateEdges.begin(), candidateEdges.begin() + candidateEdgesSize};
+  return {candidateEdges.begin(), candidateEdgesSize};
 }
 
 template <typename Board>

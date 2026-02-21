@@ -36,17 +36,18 @@ class Span : public Iterable<Span<T>> {
   constexpr Span(Span&& other) = default;
   constexpr Span& operator=(const Span& other) = default;
   constexpr Span& operator=(Span&& other) = default;
-  constexpr Span(T* begin, T* end) : BeginPtr(begin), EndPtr(end) {}
+  constexpr Span(T* begin, Int length) : BeginPtr(begin), Length(length) {}
+  constexpr Span(T* begin, T* end) : BeginPtr(begin), Length(end - begin) {}
 
-  constexpr Int Size() const { return EndPtr - BeginPtr; }
+  constexpr Int Size() const { return Length; }
   constexpr T* begin() { return BeginPtr; }
   constexpr const T* begin() const { return BeginPtr; }
-  constexpr T* end() { return EndPtr; }
-  constexpr const T* end() const { return EndPtr; }
+  constexpr T* end() { return BeginPtr + Length; }
+  constexpr const T* end() const { return BeginPtr + Length; }
 
  private:
   T* BeginPtr = nullptr;
-  T* EndPtr = nullptr;
+  Int Length = 0;
 };
 
 }  // namespace dab::__detail__::common

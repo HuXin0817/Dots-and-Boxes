@@ -67,7 +67,7 @@ Span<const Edge> SimulationRobot::BestCandidateEdges(const Board& board) {
     }
   }
 
-  return {SearchEdges.begin(), SearchEdges.end()};
+  return {SearchEdges.begin(), SearchEdges.Size()};
 }
 
 }  // namespace dab::__detail__::robot

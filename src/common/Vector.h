@@ -43,50 +43,35 @@ class Vector : public Iterable<Vector<T>> {
   static inline tbb::tbb_allocator<char> Allocator;
 
  public:
-  constexpr Vector() noexcept;
-  constexpr explicit Vector(Int length);
-  constexpr Vector(T* begin, T* end);
-  constexpr Vector(const T* begin, const T* end);
+  constexpr Vector() : Data(nullptr) {}
+  constexpr explicit Vector(Int length) { Reset(length); }
+  constexpr Vector(T* begin, T* end) { Reset(begin, end); }
+  constexpr Vector(const T* begin, const T* end) { Reset(begin, end); }
+  constexpr Vector(T* begin, Int length) { Reset(begin, length); }
+  constexpr Vector(const T* begin, Int length) { Reset(begin, length); }
 
   constexpr Vector(const Vector& other);
   constexpr Vector& operator=(const Vector& other);
-
-  constexpr Vector(Vector&& other) noexcept;
-  constexpr Vector& operator=(Vector&& other) noexcept;
+  constexpr Vector(Vector&& other);
+  constexpr Vector& operator=(Vector&& other);
 
   constexpr void Reset(Int length);
+  constexpr void Reset(T* begin, Int length);
+  constexpr void Reset(const T* begin, Int length);
   constexpr void Reset(T* begin, T* end);
   constexpr void Reset(const T* begin, const T* end);
 
-  constexpr Int Size() const noexcept;
-  constexpr T* begin() noexcept;
-  constexpr const T* begin() const noexcept;
-  constexpr T* end() noexcept;
-  constexpr const T* end() const noexcept;
+  constexpr Int Size() const;
+  constexpr T* begin();
+  constexpr const T* begin() const;
+  constexpr T* end();
+  constexpr const T* end() const;
 
-  ~Vector() noexcept;
+  ~Vector();
 
  private:
   Buffer* Data = nullptr;
 };
-
-template <typename T>
-constexpr Vector<T>::Vector() noexcept : Data(nullptr) {}
-
-template <typename T>
-constexpr Vector<T>::Vector(Int length) : Data(nullptr) {
-  Reset(length);
-}
-
-template <typename T>
-constexpr Vector<T>::Vector(T* begin, T* end) : Data(nullptr) {
-  Reset(begin, end);
-}
-
-template <typename T>
-constexpr Vector<T>::Vector(const T* begin, const T* end) : Data(nullptr) {
-  Reset(begin, end);
-}
 
 template <typename T>
 constexpr Vector<T>::Vector(const Vector& other) : Data(nullptr) {
@@ -106,13 +91,13 @@ constexpr Vector<T>& Vector<T>::operator=(const Vector& other) {
 }
 
 template <typename T>
-constexpr Vector<T>::Vector(Vector&& other) noexcept : Data(nullptr) {
+constexpr Vector<T>::Vector(Vector&& other) : Data(nullptr) {
   Data = other.Data;
   other.Data = nullptr;
 }
 
 template <typename T>
-constexpr Vector<T>& Vector<T>::operator=(Vector&& other) noexcept {
+constexpr Vector<T>& Vector<T>::operator=(Vector&& other) {
   if (this != &other) {
     if (Data != nullptr) {
       std::destroy(begin(), end());
@@ -144,6 +129,24 @@ constexpr void Vector<T>::Reset(Int length) {
 }
 
 template <typename T>
+constexpr void Vector<T>::Reset(T* begin, Int length) {
+  Assert(length >= 0);
+  Reset(length);
+  if (length > 0) {
+    std::uninitialized_copy(begin, begin + length, this->begin());
+  }
+}
+
+template <typename T>
+constexpr void Vector<T>::Reset(const T* begin, Int length) {
+  Assert(length >= 0);
+  Reset(length);
+  if (length > 0) {
+    std::uninitialized_copy(begin, begin + length, this->begin());
+  }
+}
+
+template <typename T>
 constexpr void Vector<T>::Reset(T* begin, T* end) {
   Assert(begin <= end);
   const Int length = static_cast<Int>(end - begin);
@@ -164,32 +167,32 @@ constexpr void Vector<T>::Reset(const T* begin, const T* end) {
 }
 
 template <typename T>
-constexpr Int Vector<T>::Size() const noexcept {
+constexpr Int Vector<T>::Size() const {
   return Data ? Data->Length : 0;
 }
 
 template <typename T>
-constexpr T* Vector<T>::begin() noexcept {
+constexpr T* Vector<T>::begin() {
   return Data ? reinterpret_cast<T*>(Data->Data) : nullptr;
 }
 
 template <typename T>
-constexpr const T* Vector<T>::begin() const noexcept {
+constexpr const T* Vector<T>::begin() const {
   return Data ? reinterpret_cast<const T*>(Data->Data) : nullptr;
 }
 
 template <typename T>
-constexpr T* Vector<T>::end() noexcept {
+constexpr T* Vector<T>::end() {
   return begin() + Size();
 }
 
 template <typename T>
-constexpr const T* Vector<T>::end() const noexcept {
+constexpr const T* Vector<T>::end() const {
   return begin() + Size();
 }
 
 template <typename T>
-Vector<T>::~Vector() noexcept {
+Vector<T>::~Vector() {
   if (Data != nullptr) {
     std::destroy(begin(), end());
     Allocator.deallocate(reinterpret_cast<char*>(Data), sizeof(Buffer) + sizeof(T) * Data->Length);

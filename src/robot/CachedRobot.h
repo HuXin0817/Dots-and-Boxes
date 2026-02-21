@@ -51,12 +51,12 @@ template <typename Board>
 Span<const Edge> CachedRobot<SubRobotType>::BestCandidateEdges(const Board& board) {
   Key = board;
   if (ThreadSafeLRUCache<HashValueBoard, Vector<Edge>>::ConstAccessor ac; Map.find(ac, Key)) {
-    return {ac->begin(), ac->end()};
+    return {ac->begin(), ac->Size()};
   }
 
   Span result = SubRobot.BestCandidateEdges(board);
   Assert(!result.Empty());
-  Map.insert(Key, Vector(result.begin(), result.end()));
+  Map.insert(Key, Vector(result.begin(), result.Size()));
   return result;
 }
 

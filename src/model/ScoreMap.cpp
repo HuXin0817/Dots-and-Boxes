@@ -61,7 +61,7 @@ Span<const Edge> ScoreMap::Export() {
       }
     }
   }
-  return {BestEdges.begin(), BestEdges.end()};
+  return {BestEdges.begin(), BestEdges.Size()};
 }
 
 }  // namespace dab::__detail__::model
