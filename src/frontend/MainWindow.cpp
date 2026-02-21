@@ -161,11 +161,10 @@ void MainWindow::Run() {
 void MainWindow::AsyncRun() { QThreadPool::globalInstance()->start(std::bind(&MainWindow::Run, this)); }
 
 void MainWindow::Add() {
-  const Edge edge = PlayerMoveEdge.load();
-  if (Board.NowStep() > 0) {
-    EdgeCanvases.At(LastEdge)->SetHighLight(false);
+  if (!Board.MoveRecord().Empty()) {
+    EdgeCanvases.At(Board.MoveRecord().Back())->SetHighLight(false);
   }
-  LastEdge = edge;
+  const Edge edge = PlayerMoveEdge.load();
   EdgeCanvases.At(edge)->SetOwner(Board.GetTurn());
   EdgeCanvases.At(edge)->SetHighLight(true);
   EdgeCanvases.At(edge)->raise();
