@@ -73,8 +73,8 @@ Span<const Edge> ImproveGreedyRobot::BestCandidateEdges(const Board& board) {
 
 template <typename Board>
 Edge ImproveGreedyRobot::SearchOne(const Board& board) {
-  Edge result;
-  if (result = SubRobot.SearchOne(board); result != Edge::Invalid) {
+  Edge result = SubRobot.SearchOne(board);
+  if (result != Edge::Invalid) {
     return result;
   }
 
