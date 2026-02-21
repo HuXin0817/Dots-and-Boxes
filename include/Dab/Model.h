@@ -32,6 +32,7 @@ namespace dab {
 using __detail__::model::Box;
 using __detail__::model::Dot;
 using __detail__::model::Edge;
+using __detail__::model::Iota;
 using __detail__::model::ScoreMap;
 using __detail__::model::Turn;
 

@@ -26,6 +26,8 @@ THE SOFTWARE.
 
 #include <Dab/Common.h>
 
+#include <ranges>
+
 namespace dab::__detail__::model {
 
 class IntWapper {
@@ -99,6 +101,11 @@ constexpr Dot Edge::Dot2() const {
   }
   return dot;
 }
+
+template <typename T>
+constexpr auto Iota() {
+  return std::views::iota(static_cast<Int>(0), T::Max);
+};
 
 class Turn : public IntWapper {
  public:

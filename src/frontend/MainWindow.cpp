@@ -33,7 +33,6 @@ THE SOFTWARE.
 #include <QPushButton>
 #include <QThreadPool>
 #include <QTime>
-#include <ranges>
 
 #include "BaseCanvas.h"
 #include "BoxCanvas.h"
@@ -53,14 +52,14 @@ MainWindow::MainWindow(PlayerType player1Type, PlayerType player2Type, QWidget* 
 
   resize(WindowSize, WindowSize);
   setMinimumSize(WindowSize, WindowSize);
-  for (const Box box : std::views::iota(0, Box::Max)) {
-    BoxCanvases.At(box) = new BoxCanvas(this);
+  for (QPointer<BoxCanvas>& boxCanvas : BoxCanvases) {
+    boxCanvas = new BoxCanvas(this);
   }
-  for (const Edge edge : std::views::iota(0, Edge::Max)) {
+  for (const Edge edge : Iota<Edge>()) {
     EdgeCanvases.At(edge) = new EdgeCanvas(edge.Rotate(), SetPlayerMoveEdgeFunc(edge), this);
   }
-  for (const Dot dot : std::views::iota(0, Dot::Max)) {
-    DotCanvases.At(dot) = new DotCanvas(this);
+  for (QPointer<DotCanvas>& dotCanvas : DotCanvases) {
+    dotCanvas = new DotCanvas(this);
   }
 }
 
@@ -77,13 +76,13 @@ void MainWindow::resizeEvent(QResizeEvent* event) {
   const int x0 = (width() - BoardWidth) / 2 - UnitSize;
   const int y0 = (height() - BoardWidth) / 2 - UnitSize;
 
-  for (const Box box : std::views::iota(0, Box::Max)) {
+  for (const Box box : Iota<Box>()) {
     const int x = x0 + box.X() * EdgeCanvas::Height + 2 * UnitSize;
     const int y = y0 + box.Y() * EdgeCanvas::Height + 2 * UnitSize;
     BoxCanvases.At(box)->move(x, y);
   }
 
-  for (const Edge edge : std::views::iota(0, Edge::Max)) {
+  for (const Edge edge : Iota<Edge>()) {
     int x = x0 + edge.Dot1().X() * EdgeCanvas::Height;
     int y = y0 + edge.Dot1().Y() * EdgeCanvas::Height;
     if (edge.Rotate()) {
@@ -94,7 +93,7 @@ void MainWindow::resizeEvent(QResizeEvent* event) {
     EdgeCanvases.At(edge)->move(x, y);
   }
 
-  for (const Dot dot : std::views::iota(0, Dot::Max)) {
+  for (const Dot dot : Iota<Dot>()) {
     const int x = x0 + dot.X() * EdgeCanvas::Height;
     const int y = y0 + dot.Y() * EdgeCanvas::Height;
     DotCanvases.At(dot)->move(x, y);
@@ -130,11 +129,11 @@ QRunnable* MainWindow::SetPlayerMoveEdgeFunc(Edge edge) {
 
 void MainWindow::Run() {
   Board.Reset();
-  for (const Edge edge : std::views::iota(0, Edge::Max)) {
+  for (const Edge edge : Iota<Edge>()) {
     EdgeCanvases.At(edge)->SetHighLight(false);
     EdgeCanvases.At(edge)->SetOwner(Owner::None);
   }
-  for (const Box box : std::views::iota(0, Box::Max)) {
+  for (const Box box : Iota<Box>()) {
     BoxCanvases.At(box)->SetOwner(Owner::None);
   }
   Random Random;

@@ -24,8 +24,6 @@ THE SOFTWARE.
 
 #include "Models.h"
 
-#include <ranges>
-
 namespace dab::__detail__::model {
 
 constexpr Array<Edge, 4> GetNearEdges(Box box) {
@@ -45,7 +43,7 @@ constexpr Array<Edge, 4> GetNearEdges(Box box) {
 
 constexpr Array<Array<Edge, 4>, Box::Max> CreateNearEdgesMapper() {
   Array<Array<Edge, 4>, Box::Max> BoxNearEdges;
-  for (const Box box : std::views::iota(0, Box::Max)) {
+  for (const Box box : Iota<Box>()) {
     BoxNearEdges.At(box) = GetNearEdges(box);
   }
   return BoxNearEdges;
@@ -73,7 +71,7 @@ constexpr List<Box, 2> GetNearBoxes(Edge edge) {
 
 constexpr Array<List<Box, 2>, Edge::Max> CreateNearBoxesMapper() {
   Array<List<Box, 2>, Edge::Max> EdgeNearBoxes;
-  for (const Edge edge : std::views::iota(0, Edge::Max)) {
+  for (const Edge edge : Iota<Edge>()) {
     EdgeNearBoxes.At(edge) = GetNearBoxes(edge);
   }
   return EdgeNearBoxes;
