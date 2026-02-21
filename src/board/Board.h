@@ -278,7 +278,7 @@ Edge BoardImpl<Config>::FindNotContainsEdgeInBox(Box box) const {
     }
   }
   Assert(false);
-  return Edge::Invalid;
+  return {};
 }
 
 template <int Config>

@@ -73,7 +73,7 @@ Span<const Edge> GreedyRobot::BestCandidateEdges(const Board& board) {
 
 template <typename Board>
 Edge GreedyRobot::SearchOne(const Board& board) {
-  Edge result = Edge::Invalid;
+  Edge result;
   for (const Edge edge : board.EmptyEdges()) {
     if (const uint8_t maxCount = board.MaxEdgeCount(edge); maxCount == 3) {
       return edge;

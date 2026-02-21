@@ -42,7 +42,7 @@ THE SOFTWARE.
 namespace dab::__detail__::frontend {
 
 MainWindow::MainWindow(PlayerType player1Type, PlayerType player2Type, QWidget* parent)
-    : BaseCanvas(parent), Player1Type(player1Type), Player2Type(player2Type), PlayerMoveEdge(Edge::Invalid) {
+    : BaseCanvas(parent), Player1Type(player1Type), Player2Type(player2Type) {
   if (PlayerTypeIsRobot(Player1Type)) {
     Robot1.reset(CreateRobot(Player1Type));
   }
@@ -143,8 +143,8 @@ void MainWindow::Run() {
     } else if (PlayerTypeIsRobot(Player2Type) && Board.IsPlayer2Turn()) {
       PlayerMoveEdge = Random.Choice(Robot2->BestCandidateEdges(Board));
     } else {
-      PlayerMoveEdge = Edge::Invalid;
-      while (PlayerMoveEdge == Edge::Invalid) {
+      PlayerMoveEdge.Reset();
+      while (!PlayerMoveEdge.Valid()) {
         QThread::yieldCurrentThread();
       }
     }

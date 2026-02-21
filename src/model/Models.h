@@ -25,6 +25,7 @@ THE SOFTWARE.
 #pragma once
 
 #include <Dab/Common.h>
+#include <Dab/Tools.h>
 
 #include <ranges>
 
@@ -65,13 +66,15 @@ class Box : public Square<BoardSize> {
 class Edge : public IntWapper {
  public:
   static constexpr Int Max = 2 * BoardSize * (BoardSize + 1);
-  static constexpr Int Invalid = -1;
 
   using IntWapper::IntWapper;
+  constexpr Edge() { Reset(); }
   constexpr Edge(Dot dot1, Dot dot2);
+  constexpr void Reset() { v = -1; }
   constexpr Dot Dot1() const;
   constexpr Dot Dot2() const;
-  constexpr bool Rotate() const { return v & 1; }
+  constexpr bool Rotate() const;
+  constexpr bool Valid() const { return v != -1; }
   const List<Box, 2>& NearBoxes() const;
 };
 
@@ -85,6 +88,7 @@ constexpr Edge::Edge(Dot dot1, Dot dot2) {
 }
 
 constexpr Dot Edge::Dot1() const {
+  Assert(Valid());
   Int dot = v >> 1;
   if (v & 1) {
     dot += dot / BoardSize;
@@ -93,6 +97,7 @@ constexpr Dot Edge::Dot1() const {
 }
 
 constexpr Dot Edge::Dot2() const {
+  Assert(Valid());
   Int dot = v >> 1;
   if (v & 1) {
     dot += dot / BoardSize + 1;
@@ -100,6 +105,11 @@ constexpr Dot Edge::Dot2() const {
     dot += BoardSize + 1;
   }
   return dot;
+}
+
+constexpr bool Edge::Rotate() const {
+  Assert(Valid());
+  return v & 1;
 }
 
 template <typename T>
