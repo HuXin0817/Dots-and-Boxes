@@ -66,15 +66,16 @@ class Box : public Square<BoardSize> {
 class Edge : public IntWapper {
  public:
   static constexpr Int Max = 2 * BoardSize * (BoardSize + 1);
+  static constexpr Int Invalid = -1;
 
   using IntWapper::IntWapper;
   constexpr Edge() { Reset(); }
   constexpr Edge(Dot dot1, Dot dot2);
-  constexpr void Reset() { v = -1; }
+  constexpr void Reset() { v = Invalid; }
   constexpr Dot Dot1() const;
   constexpr Dot Dot2() const;
   constexpr bool Rotate() const;
-  constexpr bool Valid() const { return v != -1; }
+  constexpr bool Valid() const { return v != Invalid; }
   const List<Box, 2>& NearBoxes() const;
 };
 
