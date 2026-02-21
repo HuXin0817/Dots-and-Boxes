@@ -17,10 +17,10 @@ A sophisticated implementation of the classic Dots and Boxes game with multiple 
 
 ## Requirements
 
-- C++17 compatible compiler
+- C++23 compatible compiler
 - Qt6 (Core, Gui, Widgets)
 - CMake 3.16 or higher
-- OpenMP (for parallel processing)
+- Intel TBB (Threading Building Blocks) for parallel processing
 
 ## Build Instructions
 
@@ -109,33 +109,25 @@ Dots-and-Boxes/
 │       ├── Common.h
 │       ├── Frontend.h
 │       ├── Model.h
+│       ├── PlayerType.h
 │       ├── Robot.h
 │       └── Tools.h
 ├── src/                # Source files
-│   ├── board/          # Board implementations
-│   │   ├── AbsoluteScoreBoard.cpp
-│   │   ├── AbsoluteScoreBoard.h
-│   │   ├── BasicBoard.cpp
-│   │   ├── BasicBoard.h
-│   │   ├── CMakeLists.txt
-│   │   ├── EdgeCountableBoard.cpp
-│   │   ├── EdgeCountableBoard.h
-│   │   ├── LoggingBoard.cpp
-│   │   ├── LoggingBoard.h
-│   │   ├── RelativeScoreBoard.cpp
-│   │   ├── RelativeScoreBoard.h
-│   │   ├── ScoreableEdgeBoard.cpp
-│   │   └── ScoreableEdgeBoard.h
+│   ├── board/          # Board implementation
+│   │   ├── Board.cpp
+│   │   ├── Board.h
+│   │   └── CMakeLists.txt
 │   ├── common/         # Common utility classes
 │   │   ├── Array.h
 │   │   ├── CMakeLists.txt
 │   │   ├── Int.h
 │   │   ├── Iterable.h
+│   │   ├── LRUCache.h
 │   │   ├── List.h
 │   │   ├── Queue.h
-│   │   ├── Random.cpp
 │   │   ├── Random.h
-│   │   └── Span.h
+│   │   ├── Span.h
+│   │   └── Vector.h
 │   ├── frontend/       # GUI-related files
 │   │   ├── BaseCanvas.cpp
 │   │   ├── BaseCanvas.h
@@ -156,17 +148,13 @@ Dots-and-Boxes/
 │   │   └── ScoreMap.h
 │   ├── robot/          # AI implementations
 │   │   ├── CMakeLists.txt
-│   │   ├── GreedyRobot.cpp
+│   │   ├── CachedRobot.h
 │   │   ├── GreedyRobot.h
-│   │   ├── ImproveGreedyRobot.cpp
 │   │   ├── ImproveGreedyRobot.h
-│   │   ├── MonteCarloRobot.cpp
 │   │   ├── MonteCarloRobot.h
-│   │   ├── ParallelSearchRobot.cpp
 │   │   ├── ParallelSearchRobot.h
 │   │   ├── Robot.cpp
 │   │   ├── Robot.h
-│   │   ├── SimulationRobot.cpp
 │   │   └── SimulationRobot.h
 │   ├── CMakeLists.txt
 │   ├── extern.cpp
@@ -191,9 +179,9 @@ Dots-and-Boxes/
 
 ## Technical Details
 
-- **Language**: C++17
+- **Language**: C++23
 - **GUI Framework**: Qt6
-- **Parallel Processing**: OpenMP
+- **Parallel Processing**: Intel TBB (Threading Building Blocks)
 - **Build System**: CMake
 
 ## License
@@ -207,4 +195,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## Acknowledgments
 
 - Qt6 for the graphical user interface
-- OpenMP for parallel processing capabilities
+- Intel TBB for parallel processing capabilities
