@@ -33,7 +33,6 @@ THE SOFTWARE.
 #include <QPushButton>
 #include <QThreadPool>
 #include <QTime>
-#include <atomic>
 #include <ranges>
 
 #include "BaseCanvas.h"
@@ -125,8 +124,7 @@ QRunnable* MainWindow::SetPlayerMoveEdgeFunc(Edge edge) {
     if (PlayerTypeIsRobot(Player2Type) && Board.IsPlayer2Turn()) {
       return;
     }
-    Edge expected = Edge::Invalid;
-    PlayerMoveEdge.compare_exchange_strong(expected, edge);
+    PlayerMoveEdge = edge;
   });
 }
 
@@ -147,13 +145,13 @@ void MainWindow::Run() {
       PlayerMoveEdge = Random.Choice(Robot2->BestCandidateEdges(Board));
     } else {
       PlayerMoveEdge = Edge::Invalid;
-      while (PlayerMoveEdge.load() == Edge::Invalid) {
+      while (PlayerMoveEdge == Edge::Invalid) {
         QThread::yieldCurrentThread();
       }
     }
-    Assert(Board.NotContains(PlayerMoveEdge.load()));
+    Assert(Board.NotContains(PlayerMoveEdge));
     QMetaObject::invokeMethod(this, &MainWindow::Add, Qt::BlockingQueuedConnection);
-    Assert(Board.Contains(PlayerMoveEdge.load()));
+    Assert(Board.Contains(PlayerMoveEdge));
   }
   QMetaObject::invokeMethod(this, &MainWindow::HandleGameOver, Qt::BlockingQueuedConnection);
 }
@@ -164,18 +162,17 @@ void MainWindow::Add() {
   if (!Board.MoveRecord().Empty()) {
     EdgeCanvases.At(Board.MoveRecord().Back())->SetHighLight(false);
   }
-  const Edge edge = PlayerMoveEdge.load();
-  EdgeCanvases.At(edge)->SetOwner(Board.GetTurn());
-  EdgeCanvases.At(edge)->SetHighLight(true);
-  EdgeCanvases.At(edge)->raise();
-  DotCanvases.At(edge.Dot1())->raise();
-  DotCanvases.At(edge.Dot2())->raise();
-  for (const Box box : edge.NearBoxes()) {
+  EdgeCanvases.At(PlayerMoveEdge)->SetOwner(Board.GetTurn());
+  EdgeCanvases.At(PlayerMoveEdge)->SetHighLight(true);
+  EdgeCanvases.At(PlayerMoveEdge)->raise();
+  DotCanvases.At(PlayerMoveEdge.Dot1())->raise();
+  DotCanvases.At(PlayerMoveEdge.Dot2())->raise();
+  for (const Box box : PlayerMoveEdge.NearBoxes()) {
     if (Board.EdgeCount(box) == 3) {
       BoxCanvases.At(box)->SetOwner(Board.GetTurn());
     }
   }
-  Board.Add(edge);
+  Board.Add(PlayerMoveEdge);
   update();
   QApplication::beep();
 }

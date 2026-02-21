@@ -53,7 +53,7 @@ class MainWindow : public BaseCanvas {
   const PlayerType Player2Type;
   std::unique_ptr<Robot> Robot1;
   std::unique_ptr<Robot> Robot2;
-  std::atomic<Edge> PlayerMoveEdge;
+  Edge PlayerMoveEdge;
   LoggingBoard Board;
   Array<QPointer<BoxCanvas>, Box::Max> BoxCanvases;
   Array<QPointer<DotCanvas>, Dot::Max> DotCanvases;
