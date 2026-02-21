@@ -53,10 +53,7 @@ void MockRunningGame(PlayerType player1Type, PlayerType player2Type) {
 }  // namespace __detail__
 
 template <>
-QWidget* CreateMainWindow::Call<BoardSize>(PlayerType player1Type,
-                                           PlayerType player2Type,
-                                           bool backgroundMode,
-                                           QWidget* parent) {
+QWidget* CreateMainWindowImpl<BoardSize>(PlayerType player1Type, PlayerType player2Type, bool backgroundMode) {
   LogInfo(R"({{"BoardSize":{},"Player1Type":"{}","Player2Type":"{}"}})",
           BoardSize,
           PlayerTypeOptionInternalStrings[static_cast<int>(player1Type)],
@@ -66,7 +63,7 @@ QWidget* CreateMainWindow::Call<BoardSize>(PlayerType player1Type,
     exit(0);
   }
 
-  return new MainWindow(player1Type, player2Type, parent);
+  return new MainWindow(player1Type, player2Type);
 }
 
 }  // namespace dab

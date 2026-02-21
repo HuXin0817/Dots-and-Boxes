@@ -36,6 +36,7 @@ THE SOFTWARE.
 namespace dab::__detail__::board {
 
 namespace config {
+
 static constexpr int EnableEdgeCount = 1 << 0;
 static constexpr int EnableRelativeScore = 1 << 1;
 static constexpr int EnableAbsoluteScore = 1 << 2;

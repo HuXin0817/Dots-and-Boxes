@@ -38,11 +38,6 @@ static constexpr int64_t DefaultBoardSize = __DefaultBoardSize__;
 static constexpr int64_t MaxBoardSize = __MaxBoardSize__;
 static_assert(DefaultBoardSize <= MaxBoardSize);
 
-template <typename FuncNameTag, typename... Args>
-constexpr auto Dispatch(int64_t boardSize, Args&&... args) {
-  return Dispatch<MaxBoardSize, FuncNameTag>(boardSize, std::forward<Args>(args)...);
-}
-
 QCommandLineOption CreateBoardSizeOption() {
   const QByteArray boardSizeEnv = qgetenv("BOARD_SIZE");
   QString defaultBoardSize = QString::number(DefaultBoardSize);
@@ -135,7 +130,7 @@ int main(int argc, char* argv[]) {
   const PlayerType player2Type = ParsePlayerType(parser.value(player2Option));
   const bool backgroundMode = parser.isSet(backgroundModeOption);
 
-  QWidget* mainWindow = Dispatch<CreateMainWindow>(boardSize, player1Type, player2Type, backgroundMode, nullptr);
+  QWidget* mainWindow = CreateMainWindow<MaxBoardSize>(boardSize, player1Type, player2Type, backgroundMode);
   mainWindow->show();
   const int code = application.exec();
   if (code != 0) {

@@ -41,7 +41,7 @@ class MainWindow : public BaseCanvas {
   static constexpr int WindowSize = BoardWidth + 2 * BoxCanvas::Width;
 
  public:
-  explicit MainWindow(PlayerType player1Type, PlayerType player2Type, QWidget* parent);
+  explicit MainWindow(PlayerType player1Type, PlayerType player2Type, QWidget* parent = nullptr);
 
  protected:
   void paintEvent(QPaintEvent* event) override;
