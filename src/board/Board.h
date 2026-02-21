@@ -27,6 +27,7 @@ THE SOFTWARE.
 #include <Dab/Model.h>
 #include <Dab/Tools.h>
 
+#include <algorithm>
 #include <chrono>
 #include <cstdint>
 #include <functional>
@@ -313,7 +314,11 @@ Int BoardImpl<Config>::MaxObtainableScore(Int endScore) {
 template <int Config>
 uint8_t BoardImpl<Config>::MaxEdgeCount(Edge edge) const {
   const List<Box, 2>& nearBoxes = edge.NearBoxes();
-  return std::max(this->Counter.At(nearBoxes.Front()), this->Counter.At(nearBoxes.Back()));
+  uint8_t maxCount = this->Counter.At(nearBoxes.At(0));
+  if (nearBoxes.Size() > 1) {
+    maxCount = std::max(maxCount, this->Counter.At(nearBoxes.At(1)));
+  }
+  return maxCount;
 }
 
 template <int Config>
