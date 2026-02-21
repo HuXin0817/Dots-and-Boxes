@@ -7,7 +7,6 @@ target_compile_definitions(${RobotLibrary} PRIVATE
 )
 target_link_libraries(${RobotLibrary} PRIVATE
   TBB::tbb
-  ${CommonLibrary}
   ${ModelLibrary}
   ${BoardLibrary}
 )

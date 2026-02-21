@@ -13,7 +13,6 @@ target_compile_definitions(${FrontendLibrary} PRIVATE QT_NO_KEYWORDS
 )
 target_link_libraries(${FrontendLibrary} PRIVATE
   Qt6::Core Qt6::Gui Qt6::Widgets
-  ${CommonLibrary}
   ${ModelLibrary}
   ${BoardLibrary}
   ${RobotLibrary}
