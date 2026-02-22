@@ -25,6 +25,7 @@ THE SOFTWARE.
 #pragma once
 
 #include "CachedRobot.h"
+#include "ScoreMap.h"
 #include "SimulationRobot.h"
 
 namespace dab::__detail__::robot {

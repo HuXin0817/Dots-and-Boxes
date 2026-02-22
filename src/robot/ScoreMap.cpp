@@ -26,9 +26,7 @@ THE SOFTWARE.
 
 #include <algorithm>
 
-#include "Models.h"
-
-namespace dab::__detail__::model {
+namespace dab::__detail__::robot {
 
 void ScoreMap::Reset() {
   std::ranges::fill(Time, 0);
@@ -64,4 +62,4 @@ Span<const Edge> ScoreMap::Export() {
   return {BestEdges.begin(), BestEdges.Size()};
 }
 
-}  // namespace dab::__detail__::model
+}  // namespace dab::__detail__::robot

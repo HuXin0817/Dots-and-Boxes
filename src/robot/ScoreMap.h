@@ -24,9 +24,9 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "Models.h"
+#include <Dab/Model.h>
 
-namespace dab::__detail__::model {
+namespace dab::__detail__::robot {
 
 class ScoreMap {
  public:
@@ -43,4 +43,4 @@ class ScoreMap {
   List<Edge, Edge::Max> BestEdges;
 };
 
-}  // namespace dab::__detail__::model
+}  // namespace dab::__detail__::robot
