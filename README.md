@@ -14,6 +14,8 @@ A sophisticated implementation of the classic Dots and Boxes game with multiple 
 - Configurable game settings
 - Score tracking and display
 - Visual representation of the game board
+- Background mode for automated gameplay
+- LRU cache optimization for AI move evaluation
 
 ## Requirements
 
@@ -62,11 +64,24 @@ The project can be built on other platforms with Qt6 support. Follow similar ste
 
 The game supports the following command line arguments:
 
-| Option        | Short | Long        | Description                         | Default |
-| ------------- | ----- | ----------- | ----------------------------------- | ------- |
-| Board Size    | `-s`  | `--size`    | Set board size ranging from [1, 36] | 6       |
-| Player 1 Type | `-p1` | `--player1` | Set type of player 1                | robot   |
-| Player 2 Type | `-p2` | `--player2` | Set type of player 2                | robot   |
+| Option          | Short | Long           | Description            | Default |
+| --------------- | ----- | -------------- | ---------------------- | ------- |
+| Board Size      | `-s`  | `--boardsize`  | Set board size (1-36)  | 6       |
+| Player 1 Type   | `-p1` | `--player1`    | Set type of player 1   | robot   |
+| Player 2 Type   | `-p2` | `--player2`    | Set type of player 2   | robot   |
+| Background Mode | `-b`  | `--background` | Run in background mode | false   |
+
+### Environment Variables
+
+The following environment variables can be used to set default values:
+
+| Variable     | Description               |
+| ------------ | ------------------------- |
+| `BOARD_SIZE` | Default board size (1-36) |
+| `PLAYER1`    | Default type for player 1 |
+| `PLAYER2`    | Default type for player 2 |
+
+Environment variables take precedence over command line defaults but can be overridden by explicit command line arguments.
 
 #### Player Type Values
 
@@ -87,13 +102,16 @@ The game supports the following command line arguments:
 ./Dots_and_Boxes
 
 # Start with a 10x10 board
-./Dots_and_Boxes --size 10
+./Dots_and_Boxes --boardsize 10
 
 # Start with human player 1 and expert robot player 2
 ./Dots_and_Boxes --player1 human --player2 robot:expert
 
 # Start with medium board size and both players as robots
 ./Dots_and_Boxes -s 8 -p1 robot:medium -p2 robot:hard
+
+# Start in background mode
+./Dots_and_Boxes --background
 ```
 
 ## Project Structure
@@ -113,10 +131,6 @@ Dots-and-Boxes/
 │       ├── Robot.h
 │       └── Tools.h
 ├── src/                # Source files
-│   ├── board/          # Board implementation
-│   │   ├── Board.cpp
-│   │   ├── Board.h
-│   │   └── CMakeLists.txt
 │   ├── common/         # Common utility classes
 │   │   ├── Array.h
 │   │   ├── CMakeLists.txt
@@ -140,12 +154,6 @@ Dots-and-Boxes/
 │   │   ├── EdgeCanvas.h
 │   │   ├── MainWindow.cpp
 │   │   └── MainWindow.h
-│   ├── model/          # Model classes
-│   │   ├── CMakeLists.txt
-│   │   ├── Models.cpp
-│   │   ├── Models.h
-│   │   ├── ScoreMap.cpp
-│   │   └── ScoreMap.h
 │   ├── robot/          # AI implementations
 │   │   ├── CMakeLists.txt
 │   │   ├── CachedRobot.h
@@ -155,6 +163,8 @@ Dots-and-Boxes/
 │   │   ├── ParallelSearchRobot.h
 │   │   ├── Robot.cpp
 │   │   ├── Robot.h
+│   │   ├── ScoreMap.cpp
+│   │   ├── ScoreMap.h
 │   │   └── SimulationRobot.h
 │   ├── CMakeLists.txt
 │   ├── extern.cpp
@@ -177,6 +187,8 @@ Dots-and-Boxes/
 4. **MonteCarloRobot**: Uses Monte Carlo simulation for move selection
 5. **ParallelSearchRobot**: Leverages multi-core processing for faster search
 
+All robot strategies use **CachedRobot** for performance optimization, which caches move evaluations using an LRU cache to reduce redundant computations.
+
 ## Technical Details
 
 - **Language**: C++23
@@ -187,6 +199,8 @@ Dots-and-Boxes/
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
+
+Copyright (c) 2025 Xin Hu <202219120810@stu.cdut.edu.cn>
 
 ## Contributing
 
