@@ -76,7 +76,7 @@ struct BasicMixin {
   Array<Int, Edge::Max> EdgeIndexes;
 };
 
-template <bool Enabled>
+template <bool>
 struct EdgeCountMixin {};
 
 template <>
@@ -84,7 +84,7 @@ struct EdgeCountMixin<true> {
   Array<uint8_t, Box::Max> Counter;
 };
 
-template <bool Enabled>
+template <bool>
 struct ScoreableCountingMixin {};
 
 template <>
@@ -92,7 +92,7 @@ struct ScoreableCountingMixin<true> {
   Queue<Edge, Edge::Max> ScoreableEdges;
 };
 
-template <bool Enabled>
+template <bool>
 struct RelativeScoreMixin {};
 
 template <>
@@ -101,7 +101,7 @@ struct RelativeScoreMixin<true> {
   Turn Turn;
 };
 
-template <bool Enabled>
+template <bool>
 struct AbsoluteScoreMixin {};
 
 template <>
@@ -109,7 +109,7 @@ struct AbsoluteScoreMixin<true> {
   Int TotalScore;
 };
 
-template <bool Enabled>
+template <bool>
 struct LoggingMixin {};
 
 template <>
@@ -117,7 +117,7 @@ struct LoggingMixin<true> {
   std::chrono::system_clock::time_point LastUpdateTime;
 };
 
-template <bool Enabled>
+template <bool>
 struct HashMixin {};
 
 template <>

@@ -46,7 +46,7 @@ class RobotWapper : public Robot {
   Span<const Edge> BestCandidateEdges(const LoggingBoard& board) override { return BestCandidateEdges<>(board); }
 
  protected:
-  ~RobotWapper() = default;
+  ~RobotWapper() override = default;
 
  private:
   constexpr Derived& derived() & { return static_cast<Derived&>(*this); }
