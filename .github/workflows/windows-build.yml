@@ -1,0 +1,29 @@
+name: Windows Build
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master, develop]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install requirements
+        run: |
+          choco install qt6-base qt6-declarative -y
+          echo "CMAKE_PREFIX_PATH=C:/Qt/6.x.x/msvc2019_64/lib/cmake" >> $env:GITHUB_ENV
+
+      - name: Configure CMake
+        run: |
+          cmake -B build -S . -DCMAKE_PREFIX_PATH=$env:CMAKE_PREFIX_PATH -DCMAKE_UNITY_BUILD=ON -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
+
+      - name: Build
+        run: |
+          cmake --build build --config Release -j $env:NUMBER_OF_PROCESSORS
