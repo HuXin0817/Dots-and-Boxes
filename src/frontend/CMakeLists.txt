@@ -12,9 +12,10 @@ target_compile_definitions(${FrontendLibrary} PRIVATE QT_NO_KEYWORDS
   __detail__=detail${BoardSize}x${BoardSize}
 )
 target_link_libraries(${FrontendLibrary} PRIVATE
-  TBB::tbb Qt6::Core Qt6::Gui Qt6::Widgets
-  ${ModelLibrary}
-  ${BoardLibrary}
+  TBB::tbb
+  Qt6::Core
+  Qt6::Gui
+  Qt6::Widgets
   ${RobotLibrary}
 )
 set(FrontendLibrary ${FrontendLibrary} PARENT_SCOPE)
