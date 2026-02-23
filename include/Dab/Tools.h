@@ -33,6 +33,8 @@ THE SOFTWARE.
 
 namespace dab {
 
+namespace __detail__::tools {
+
 template <class... Args>
 void Log(std::ostream& os, std::format_string<Args...> fmt, Args&&... args) {
   const std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
@@ -56,14 +58,19 @@ void LogError(std::format_string<Args...> fmt, Args&&... args) {
 #define Assert(expr) ((void)0)
 #else
 
-#define Assert(expr)                                                                \
-  do {                                                                              \
-    if (!(expr)) {                                                                  \
-      dab::LogError("ASSERT: '{}' in file {}, line {}", #expr, __FILE__, __LINE__); \
-      std::abort();                                                                 \
-    }                                                                               \
+#define Assert(expr)                                                           \
+  do {                                                                         \
+    if (!(expr)) {                                                             \
+      LogError("ASSERT: '{}' in file {}, line {}", #expr, __FILE__, __LINE__); \
+      std::abort();                                                            \
+    }                                                                          \
   } while (false)
 
 #endif  // NDEBUG
+
+}  // namespace __detail__::tools
+
+using __detail__::tools::LogError;
+using __detail__::tools::LogInfo;
 
 }  // namespace dab
