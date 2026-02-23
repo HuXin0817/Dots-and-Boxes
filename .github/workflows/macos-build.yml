@@ -24,3 +24,7 @@ jobs:
         run: |
           cmake -B build -S .
           cmake --build build -j $(nproc)
+
+      - name: Run
+        run: |
+          ./build/Dots_and_Boxes -s 4 -b
