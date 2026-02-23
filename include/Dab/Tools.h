@@ -35,11 +35,23 @@ namespace dab {
 
 namespace __detail__::tools {
 
+#define STR(x) #x
+#define XSTR(x) STR(x)
+
+static constexpr std::string name() {
+  std::string space = XSTR(__detail__);
+  if (space != "__detail__") {
+    space = "detail@" + space.substr(sizeof("detail") - 1);
+  }
+  return space;
+}
+
 template <class... Args>
 void Log(std::ostream& os, std::format_string<Args...> fmt, Args&&... args) {
   const std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
   std::println(os,
-               R"({:%Y-%m-%dT%H:%M:%S} {})",
+               R"([{}] {:%Y-%m-%dT%H:%M:%S} {})",
+               name(),
                std::chrono::floor<std::chrono::seconds>(now),
                std::format(fmt, std::forward<Args>(args)...));
 }
