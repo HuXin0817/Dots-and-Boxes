@@ -54,6 +54,6 @@ class RobotWapper : public Robot {
   constexpr Derived&& derived() && { return static_cast<Derived&&>(*this); }
 };
 
-Robot* CreateRobot(PlayerType playerType);
+std::unique_ptr<Robot> CreateRobot(PlayerType playerType);
 
 }  // namespace dab::__detail__::robot

@@ -26,18 +26,18 @@ THE SOFTWARE.
 
 namespace dab::__detail__::robot {
 
-Robot* CreateRobot(PlayerType playerType) {
+std::unique_ptr<Robot> CreateRobot(PlayerType playerType) {
   switch (playerType) {
     case PlayerType::GreedyRobot:
-      return new GreedyRobot();
+      return std::make_unique<GreedyRobot>();
     case PlayerType::ImproveGreedyRobot:
-      return new ImproveGreedyRobot();
+      return std::make_unique<ImproveGreedyRobot>();
     case PlayerType::SimulationRobot:
-      return new SimulationRobot();
+      return std::make_unique<SimulationRobot>();
     case PlayerType::MonteCarloRobot:
-      return new MonteCarloRobot();
+      return std::make_unique<MonteCarloRobot>();
     case PlayerType::ParallelSearchRobot:
-      return new ParallelSearchRobot();
+      return std::make_unique<ParallelSearchRobot>();
     case PlayerType::Human:
       break;
     default:
