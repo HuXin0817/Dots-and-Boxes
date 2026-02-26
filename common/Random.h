@@ -24,27 +24,48 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <cstdint>
-#include <limits>
+#include <Dab/BoardSize.h>
+
+#include <chrono>
+#include <random>
+#include <type_traits>
 
 namespace dab::__detail__::common {
 
-constexpr auto SelectIntType() {
-  constexpr int64_t MaxValue = 2 * __BoardSize__ * (__BoardSize__ + 1);
+class Random {
+ public:
+  explicit Random();
 
-  if constexpr (MaxValue <= std::numeric_limits<int8_t>::max()) {
-    return static_cast<int8_t>(0);
-  } else if constexpr (MaxValue <= std::numeric_limits<int16_t>::max()) {
-    return static_cast<int16_t>(0);
-  } else if constexpr (MaxValue <= std::numeric_limits<int32_t>::max()) {
-    return static_cast<int32_t>(0);
+  template <typename T>
+  T Range(T min, T max);
+  template <typename T>
+  const auto& Choice(const T& data);
+
+ private:
+  std::mt19937_64 Rng;
+  std::uniform_int_distribution<Int> Dist;
+};
+
+inline Random::Random() { Rng.seed(std::chrono::steady_clock::now().time_since_epoch().count()); }
+
+template <typename T>
+T Random::Range(T min, T max) {
+  if constexpr (std::is_same_v<T, Int>) {
+    Dist.param(std::uniform_int_distribution<Int>::param_type(min, max));
+    return Dist(Rng);
   } else {
-    return static_cast<int64_t>(0);
+    std::uniform_int_distribution<T> dist(min, max);
+    return dist(Rng);
   }
 }
 
-using Int = decltype(SelectIntType());
-
-static constexpr Int BoardSize = __BoardSize__;
+template <typename T>
+const auto& Random::Choice(const T& data) {
+  Assert(!data.Empty());
+  if (data.Size() == 1) {
+    return data.At(0);
+  }
+  return data.At(Range(0, data.Size() - 1));
+}
 
 }  // namespace dab::__detail__::common

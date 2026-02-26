@@ -27,11 +27,11 @@ THE SOFTWARE.
 #include <Dab/Board.h>
 #include <Dab/PlayerType.h>
 
-#include "../../src/robot/GreedyRobot.h"
-#include "../../src/robot/ImproveGreedyRobot.h"
-#include "../../src/robot/MonteCarloRobot.h"
-#include "../../src/robot/ParallelSearchRobot.h"
-#include "../../src/robot/SimulationRobot.h"
+#include "../../robot/GreedyRobot.h"
+#include "../../robot/ImproveGreedyRobot.h"
+#include "../../robot/MonteCarloRobot.h"
+#include "../../robot/ParallelSearchRobot.h"
+#include "../../robot/SimulationRobot.h"
 
 namespace dab {
 

@@ -24,20 +24,17 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "../../src/common/Array.h"
-#include "../../src/common/Int.h"
-#include "../../src/common/LRUCache.h"
-#include "../../src/common/List.h"
-#include "../../src/common/Queue.h"
-#include "../../src/common/Random.h"
-#include "../../src/common/Span.h"
-#include "../../src/common/Vector.h"
+#include "../../common/Array.h"
+#include "../../common/LRUCache.h"
+#include "../../common/List.h"
+#include "../../common/Queue.h"
+#include "../../common/Random.h"
+#include "../../common/Span.h"
+#include "../../common/Vector.h"
 
 namespace dab {
 
 using __detail__::common::Array;
-using __detail__::common::BoardSize;
-using __detail__::common::Int;
 using __detail__::common::List;
 using __detail__::common::Queue;
 using __detail__::common::Random;

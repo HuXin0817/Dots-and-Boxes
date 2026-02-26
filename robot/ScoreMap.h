@@ -24,48 +24,56 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <chrono>
-#include <random>
-#include <type_traits>
+#include <Dab/Model.h>
 
-#include "Int.h"
+namespace dab::__detail__::robot {
 
-namespace dab::__detail__::common {
-
-class Random {
+class ScoreMap {
  public:
-  explicit Random();
+  ScoreMap() = default;
 
-  template <typename T>
-  T Range(T min, T max);
-  template <typename T>
-  const auto& Choice(const T& data);
+  void Reset();
+  void Add(Edge edge, Int score);
+  void Add(const ScoreMap& other);
+  Span<const Edge> Export(List<Edge, Edge::Max>& edges);
 
  private:
-  std::mt19937_64 Rng;
-  std::uniform_int_distribution<Int> Dist;
+  Array<int, Edge::Max> Time;
+  Array<int, Edge::Max> Score;
 };
 
-inline Random::Random() { Rng.seed(std::chrono::steady_clock::now().time_since_epoch().count()); }
+inline void ScoreMap::Reset() {
+  std::ranges::fill(Time, 0);
+  std::ranges::fill(Score, 0);
+}
 
-template <typename T>
-T Random::Range(T min, T max) {
-  if constexpr (std::is_same_v<T, Int>) {
-    Dist.param(std::uniform_int_distribution<Int>::param_type(min, max));
-    return Dist(Rng);
-  } else {
-    std::uniform_int_distribution<T> dist(min, max);
-    return dist(Rng);
+inline void ScoreMap::Add(Edge edge, Int score) {
+  ++Time.At(edge);
+  Score.At(edge) += score;
+}
+
+inline void ScoreMap::Add(const ScoreMap& other) {
+  for (const Int i : Iota<Edge>()) {
+    Time.At(i) += other.Time.At(i);
+    Score.At(i) += other.Score.At(i);
   }
 }
 
-template <typename T>
-const auto& Random::Choice(const T& data) {
-  Assert(!data.Empty());
-  if (data.Size() == 1) {
-    return data.At(0);
+inline Span<const Edge> ScoreMap::Export(List<Edge, Edge::Max>& edges) {
+  edges.Clear();
+  float maxScore = 0.0;
+  for (const Edge edge : Iota<Edge>()) {
+    if (Time.At(edge) > 0) {
+      if (const float score = static_cast<float>(Score.At(edge)) / static_cast<float>(Time.At(edge));
+          score > maxScore || edges.Empty()) {
+        maxScore = score;
+        edges.ClearAndSet(edge);
+      } else if (score == maxScore) {
+        edges.Append(edge);
+      }
+    }
   }
-  return data.At(Range(0, data.Size() - 1));
+  return {edges.begin(), edges.Size()};
 }
 
-}  // namespace dab::__detail__::common
+}  // namespace dab::__detail__::robot

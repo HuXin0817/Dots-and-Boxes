@@ -22,46 +22,32 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "extern.h"
+#pragma once
 
-#include <Dab/Frontend.h>
-#include <Dab/PlayerType.h>
+#include <cstdint>
+#include <limits>
 
 namespace dab {
 
 namespace __detail__ {
 
-void MockRunningGame(PlayerType player1Type, PlayerType player2Type) {
-  std::unique_ptr<Robot> robot1 = Robot::Create(player1Type);
-  std::unique_ptr<Robot> robot2 = Robot::Create(player2Type);
-  Assert(robot1);
-  Assert(robot2);
+constexpr auto SelectIntType() {
+  constexpr int64_t MaxValue = 2 * __BoardSize__ * (__BoardSize__ + 1);
 
-  Random random;
-  LoggingBoard board;
-  while (board.Gaming()) {
-    if (board.IsPlayer1Turn()) {
-      board.Add(random.Choice(robot1->BestCandidateEdges(board)));
-    } else {
-      board.Add(random.Choice(robot2->BestCandidateEdges(board)));
-    }
+  if constexpr (MaxValue <= std::numeric_limits<int8_t>::max()) {
+    return static_cast<int8_t>(0);
+  } else if constexpr (MaxValue <= std::numeric_limits<int16_t>::max()) {
+    return static_cast<int16_t>(0);
+  } else if constexpr (MaxValue <= std::numeric_limits<int32_t>::max()) {
+    return static_cast<int32_t>(0);
+  } else {
+    return static_cast<int64_t>(0);
   }
 }
 
 }  // namespace __detail__
 
-template <>
-QWidget* CreateMainWindowImpl<BoardSize>(PlayerType player1Type, PlayerType player2Type, bool backgroundMode) {
-  LogInfo(R"({{"BoardSize":{},"Player1Type":"{}","Player2Type":"{}"}})",
-          BoardSize,
-          PlayerTypeOptionStrings[static_cast<int>(player1Type)],
-          PlayerTypeOptionStrings[static_cast<int>(player2Type)]);
-  if (backgroundMode) {
-    __detail__::MockRunningGame(player1Type, player2Type);
-    exit(0);
-  }
-
-  return new MainWindow(player1Type, player2Type);
-}
+using Int = decltype(__detail__::SelectIntType());
+static constexpr Int BoardSize = __BoardSize__;
 
 }  // namespace dab

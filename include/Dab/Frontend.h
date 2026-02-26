@@ -24,10 +24,26 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "../../src/frontend/MainWindow.h"
+#include <Dab/PlayerType.h>
+
+#include <QWidget>
 
 namespace dab {
 
-using __detail__::frontend::MainWindow;
+template <int64_t BoardSize>
+QWidget* CreateMainWindowImpl(PlayerType player1Type, PlayerType player2Type, bool backgroundMode);
+
+template <int64_t BoardSize>
+QWidget* CreateMainWindow(int64_t boardSize, PlayerType player1Type, PlayerType player2Type, bool backgroundMode) {
+  if constexpr (BoardSize == 0) {
+    return nullptr;
+  } else {
+    if (boardSize < BoardSize) {
+      return CreateMainWindow<BoardSize - 1>(boardSize, player1Type, player2Type, backgroundMode);
+    } else {
+      return CreateMainWindowImpl<BoardSize>(player1Type, player2Type, backgroundMode);
+    }
+  }
+}
 
 }  // namespace dab

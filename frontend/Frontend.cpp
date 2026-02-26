@@ -22,28 +22,47 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#pragma once
-
+#include <Dab/Frontend.h>
 #include <Dab/PlayerType.h>
+#include <Dab/Robot.h>
 
-#include <QWidget>
+#include "MainWindow.h"
 
 namespace dab {
 
-template <int64_t BoardSize>
-QWidget* CreateMainWindowImpl(PlayerType player1Type, PlayerType player2Type, bool backgroundMode);
+namespace __detail__::frontend {
 
-template <int64_t BoardSize>
-QWidget* CreateMainWindow(int64_t boardSize, PlayerType player1Type, PlayerType player2Type, bool backgroundMode) {
-  if constexpr (BoardSize == 0) {
-    return nullptr;
-  } else {
-    if (boardSize < BoardSize) {
-      return CreateMainWindow<BoardSize - 1>(boardSize, player1Type, player2Type, backgroundMode);
+void MockRunningGame(PlayerType player1Type, PlayerType player2Type) {
+  std::unique_ptr<Robot> robot1 = Robot::Create(player1Type);
+  std::unique_ptr<Robot> robot2 = Robot::Create(player2Type);
+  Assert(robot1);
+  Assert(robot2);
+
+  Random random;
+  LoggingBoard board;
+  while (board.Gaming()) {
+    if (board.IsPlayer1Turn()) {
+      board.Add(random.Choice(robot1->BestCandidateEdges(board)));
     } else {
-      return CreateMainWindowImpl<BoardSize>(player1Type, player2Type, backgroundMode);
+      board.Add(random.Choice(robot2->BestCandidateEdges(board)));
     }
   }
+}
+
+}  // namespace __detail__::frontend
+
+template <>
+QWidget* CreateMainWindowImpl<BoardSize>(PlayerType player1Type, PlayerType player2Type, bool backgroundMode) {
+  LogInfo(R"({{"BoardSize":{},"Player1Type":"{}","Player2Type":"{}"}})",
+          BoardSize,
+          PlayerTypeOptionStrings[static_cast<int>(player1Type)],
+          PlayerTypeOptionStrings[static_cast<int>(player2Type)]);
+  if (backgroundMode) {
+    __detail__::frontend::MockRunningGame(player1Type, player2Type);
+    exit(0);
+  }
+
+  return new __detail__::frontend::MainWindow(player1Type, player2Type);
 }
 
 }  // namespace dab

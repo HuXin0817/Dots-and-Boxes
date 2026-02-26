@@ -38,8 +38,8 @@ include_directories("${CMAKE_SOURCE_DIR}/include")
 
 set(ExternLibraries)
 foreach(BoardSize RANGE 1 ${MaxBoardSize})
-  add_subdirectory(src "src/detail@${BoardSize}x${BoardSize}")
-  list(APPEND ExternLibraries ${ExternLibrary})
+  add_subdirectory(frontend "frontend/detail@${BoardSize}x${BoardSize}")
+  list(APPEND ExternLibraries ${FrontendLibrary})
 endforeach()
 
 qt_add_executable("${PROJECT_NAME}" main.cpp)

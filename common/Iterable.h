@@ -24,9 +24,8 @@ THE SOFTWARE.
 
 #pragma once
 
+#include <Dab/BoardSize.h>
 #include <Dab/Tools.h>
-
-#include "Int.h"
 
 namespace dab::__detail__::common {
 
