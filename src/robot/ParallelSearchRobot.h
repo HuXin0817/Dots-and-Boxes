@@ -32,7 +32,7 @@ THE SOFTWARE.
 
 namespace dab::__detail__::robot {
 
-class ParallelSearchRobot : public RobotWapper<ParallelSearchRobot> {
+class ParallelSearchRobot {
  public:
   ParallelSearchRobot() = default;
   template <typename Board>

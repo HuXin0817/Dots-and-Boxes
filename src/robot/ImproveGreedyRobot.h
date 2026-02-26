@@ -28,7 +28,7 @@ THE SOFTWARE.
 
 namespace dab::__detail__::robot {
 
-class ImproveGreedyRobot : public RobotWapper<ImproveGreedyRobot> {
+class ImproveGreedyRobot {
  public:
   ImproveGreedyRobot() = default;
 

@@ -30,7 +30,7 @@ THE SOFTWARE.
 
 namespace dab::__detail__::robot {
 
-class MonteCarloRobot : public RobotWapper<MonteCarloRobot> {
+class MonteCarloRobot {
   static constexpr uint32_t SearchTime = static_cast<uint32_t>(Edge::Max) << 6;
 
  public:

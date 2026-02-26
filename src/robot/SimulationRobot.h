@@ -30,7 +30,7 @@ THE SOFTWARE.
 
 namespace dab::__detail__::robot {
 
-class SimulationRobot : public RobotWapper<SimulationRobot> {
+class SimulationRobot {
  public:
   SimulationRobot() = default;
   template <typename Board>

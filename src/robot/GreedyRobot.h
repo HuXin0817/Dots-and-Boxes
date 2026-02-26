@@ -24,11 +24,12 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "Robot.h"
+#include <Dab/Board.h>
+#include <Dab/Model.h>
 
 namespace dab::__detail__::robot {
 
-class GreedyRobot : public RobotWapper<GreedyRobot> {
+class GreedyRobot {
  public:
   GreedyRobot() = default;
 

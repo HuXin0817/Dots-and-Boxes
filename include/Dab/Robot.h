@@ -24,9 +24,65 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "../../src/robot/Robot.h"
+#include <Dab/Board.h>
+#include <Dab/PlayerType.h>
+
+#include "../../src/robot/GreedyRobot.h"
+#include "../../src/robot/ImproveGreedyRobot.h"
+#include "../../src/robot/MonteCarloRobot.h"
+#include "../../src/robot/ParallelSearchRobot.h"
+#include "../../src/robot/SimulationRobot.h"
 
 namespace dab {
+
+namespace __detail__::robot {
+
+class Robot {
+ public:
+  virtual ~Robot() = default;
+
+  virtual Span<const Edge> BestCandidateEdges(const LoggingBoard& board) = 0;
+
+  static std::unique_ptr<Robot> Create(PlayerType playerType);
+};
+
+template <typename Derived>
+class RobotWapper : public Robot, public Derived {
+ public:
+  using Derived::Derived;
+
+  template <typename Board>
+  Span<const Edge> BestCandidateEdges(const Board& board) {
+    return Derived::template BestCandidateEdges<>(board);
+  }
+  Span<const Edge> BestCandidateEdges(const LoggingBoard& board) override { return BestCandidateEdges<>(board); }
+
+  ~RobotWapper() override = default;
+};
+
+inline std::unique_ptr<Robot> Robot::Create(PlayerType playerType) {
+  switch (playerType) {
+    case PlayerType::GreedyRobot:
+      return std::make_unique<RobotWapper<GreedyRobot>>();
+    case PlayerType::ImproveGreedyRobot:
+      return std::make_unique<RobotWapper<ImproveGreedyRobot>>();
+    case PlayerType::SimulationRobot:
+      return std::make_unique<RobotWapper<SimulationRobot>>();
+    case PlayerType::MonteCarloRobot:
+      return std::make_unique<RobotWapper<MonteCarloRobot>>();
+    case PlayerType::ParallelSearchRobot:
+      return std::make_unique<RobotWapper<ParallelSearchRobot>>();
+    case PlayerType::Human:
+      break;
+    default:
+      std::unreachable();
+      break;
+  }
+  std::unreachable();
+  return nullptr;
+}
+
+}  // namespace __detail__::robot
 
 using __detail__::robot::Robot;
 
