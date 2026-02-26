@@ -33,6 +33,12 @@ namespace dab {
 
 namespace __detail__::model {
 
+#if __BoardSize__ < 36
+#define _constexpr constexpr
+#else
+#define _constexpr
+#endif
+
 class IntWapper {
  public:
   constexpr IntWapper() = default;
@@ -144,7 +150,7 @@ constexpr Array<Array<Edge, 4>, Box::Max> CreateNearEdgesMapper() {
 }
 
 constexpr const Array<Edge, 4>& Box::NearEdges() const {
-  static constexpr Array<Array<Edge, 4>, Max> Instance = CreateNearEdgesMapper();
+  static _constexpr Array<Array<Edge, 4>, Max> Instance = CreateNearEdgesMapper();
   return Instance.At(v);
 }
 
@@ -172,7 +178,7 @@ constexpr Array<List<Box, 2>, Edge::Max> CreateNearBoxesMapper() {
 }
 
 constexpr const List<Box, 2>& Edge::NearBoxes() const {
-  static constexpr Array<List<Box, 2>, Max> Instance = CreateNearBoxesMapper();
+  static _constexpr Array<List<Box, 2>, Max> Instance = CreateNearBoxesMapper();
   return Instance.At(v);
 }
 
