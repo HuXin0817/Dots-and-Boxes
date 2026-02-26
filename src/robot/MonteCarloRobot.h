@@ -40,6 +40,7 @@ class MonteCarloRobot : public RobotWapper<MonteCarloRobot> {
   template <typename Board>
   bool CanEarlyExit(const Board& board, Span<const Edge>& result);
   const ScoreMap& GetSearchResult() const { return SearchResult; }
+  List<Edge, Edge::Max>& GetSearchEdges() { return SubRobot.GetSearchEdges(); }
 
  private:
   CachedRobot<SimulationRobot> SubRobot;
@@ -66,7 +67,7 @@ Span<const Edge> MonteCarloRobot::BestCandidateEdges(const Board& board) {
     SearchResult.Add(edge, turn * SimulationBoard.RelativeScore());
   }
 
-  return SearchResult.Export();
+  return SearchResult.Export(GetSearchEdges());
 }
 
 template <typename Board>

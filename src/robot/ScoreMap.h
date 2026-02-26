@@ -35,12 +35,11 @@ class ScoreMap {
   void Reset();
   void Add(Edge edge, Int score);
   void Add(const ScoreMap& other);
-  Span<const Edge> Export();
+  Span<const Edge> Export(List<Edge, Edge::Max>& edges);
 
  private:
   Array<int, Edge::Max> Time;
   Array<int, Edge::Max> Score;
-  List<Edge, Edge::Max> BestEdges;
 };
 
 }  // namespace dab::__detail__::robot

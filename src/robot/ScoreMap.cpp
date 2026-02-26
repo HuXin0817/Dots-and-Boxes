@@ -31,7 +31,6 @@ namespace dab::__detail__::robot {
 void ScoreMap::Reset() {
   std::ranges::fill(Time, 0);
   std::ranges::fill(Score, 0);
-  BestEdges.Clear();
 }
 
 void ScoreMap::Add(Edge edge, Int score) {
@@ -46,20 +45,21 @@ void ScoreMap::Add(const ScoreMap& other) {
   }
 }
 
-Span<const Edge> ScoreMap::Export() {
+Span<const Edge> ScoreMap::Export(List<Edge, Edge::Max>& edges) {
+  edges.Clear();
   float maxScore = 0.0;
   for (const Edge edge : Iota<Edge>()) {
     if (Time.At(edge) > 0) {
       if (const float score = static_cast<float>(Score.At(edge)) / static_cast<float>(Time.At(edge));
-          score > maxScore || BestEdges.Empty()) {
+          score > maxScore || edges.Empty()) {
         maxScore = score;
-        BestEdges.ClearAndSet(edge);
+        edges.ClearAndSet(edge);
       } else if (score == maxScore) {
-        BestEdges.Append(edge);
+        edges.Append(edge);
       }
     }
   }
-  return {BestEdges.begin(), BestEdges.Size()};
+  return {edges.begin(), edges.Size()};
 }
 
 }  // namespace dab::__detail__::robot

@@ -37,23 +37,23 @@ class ParallelSearchRobot : public RobotWapper<ParallelSearchRobot> {
   Span<const Edge> BestCandidateEdges(const Board& board);
 
  private:
-  Array<MonteCarloRobot, 32> SubRobots;
+  Array<MonteCarloRobot, 32> Workers;
   ScoreMap SearchResult;
 };
 
 template <typename Board>
 Span<const Edge> ParallelSearchRobot::BestCandidateEdges(const Board& board) {
-  if (Span<const Edge> edges; SubRobots.Front().CanEarlyExit(board, edges)) {
+  if (Span<const Edge> edges; Workers.Front().CanEarlyExit(board, edges)) {
     return edges;
   }
 
   SearchResult.Reset();
-  tbb::parallel_for_each(SubRobots, [&](MonteCarloRobot& robot) -> void { robot.BestCandidateEdges(board); });
-  for (const MonteCarloRobot& model : SubRobots) {
+  tbb::parallel_for_each(Workers, [&](MonteCarloRobot& robot) -> void { robot.BestCandidateEdges(board); });
+  for (const MonteCarloRobot& model : Workers) {
     SearchResult.Add(model.GetSearchResult());
   }
 
-  return SearchResult.Export();
+  return SearchResult.Export(Workers.Front().GetSearchEdges());
 }
 
 }  // namespace dab::__detail__::robot

@@ -26,12 +26,10 @@ THE SOFTWARE.
 
 #include <Dab/Board.h>
 
-#include "Robot.h"
-
 namespace dab::__detail__::robot {
 
 template <typename SubRobotType>
-class CachedRobot : public RobotWapper<CachedRobot<SubRobotType>> {
+class CachedRobot : public SubRobotType {
  public:
   CachedRobot() = default;
 
@@ -43,7 +41,6 @@ class CachedRobot : public RobotWapper<CachedRobot<SubRobotType>> {
   static inline ThreadSafeLRUCache<HashValueBoard, Vector<Edge>> Map{CacheSize};
 
   HashValueBoard Key;
-  SubRobotType SubRobot;
 };
 
 template <typename SubRobotType>
@@ -54,7 +51,7 @@ Span<const Edge> CachedRobot<SubRobotType>::BestCandidateEdges(const Board& boar
     return {ac->begin(), ac->Size()};
   }
 
-  Span result = SubRobot.BestCandidateEdges(board);
+  Span result = SubRobotType::BestCandidateEdges(board);
   Assert(!result.Empty());
   Map.insert(Key, Vector(result.begin(), result.Size()));
   return result;

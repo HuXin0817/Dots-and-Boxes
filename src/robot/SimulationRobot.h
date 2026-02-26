@@ -35,6 +35,7 @@ class SimulationRobot : public RobotWapper<SimulationRobot> {
   SimulationRobot() = default;
   template <typename Board>
   Span<const Edge> BestCandidateEdges(const Board& board);
+  List<Edge, Edge::Max>& GetSearchEdges() { return SearchEdges; }
 
  private:
   ImproveGreedyRobot SubRobot;
