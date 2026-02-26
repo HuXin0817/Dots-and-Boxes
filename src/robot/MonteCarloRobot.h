@@ -31,7 +31,7 @@ THE SOFTWARE.
 namespace dab::__detail__::robot {
 
 class MonteCarloRobot : public RobotWapper<MonteCarloRobot> {
-  static constexpr int64_t SearchTime = static_cast<int64_t>(Edge::Max) << 6;
+  static constexpr uint32_t SearchTime = static_cast<uint32_t>(Edge::Max) << 6;
 
  public:
   MonteCarloRobot() = default;
@@ -55,7 +55,7 @@ template <typename Board>
 void MonteCarloRobot::SearchCandidateEdges(const Board& board) {
   SearchResult.Reset();
   const Turn turn = board.GetTurn();
-  for (int64_t i = 0; i < SearchTime / board.RemainStep(); i++) {
+  for (uint32_t i = 0; i < SearchTime / board.RemainStep(); i++) {
     SimulationBoard = board;
     const Edge edge = Random.Choice(SubRobot.BestCandidateEdges(SimulationBoard));
     SimulationBoard.Add(edge);
