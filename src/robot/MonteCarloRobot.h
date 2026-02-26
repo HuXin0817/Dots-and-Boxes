@@ -47,20 +47,20 @@ class MonteCarloRobot : public RobotWapper<MonteCarloRobot> {
  private:
   CachedRobot<SimulationRobot> SubRobot;
   RelativeScoreBoard SimulationBoard;
-  Random Random;
   ScoreMap SearchResult;
 };
 
 template <typename Board>
 void MonteCarloRobot::SearchCandidateEdges(const Board& board) {
+  Random random;
   SearchResult.Reset();
   const Turn turn = board.GetTurn();
   for (uint32_t i = 0; i < SearchTime / board.RemainStep(); i++) {
     SimulationBoard = board;
-    const Edge edge = Random.Choice(SubRobot.BestCandidateEdges(SimulationBoard));
+    const Edge edge = random.Choice(SubRobot.BestCandidateEdges(SimulationBoard));
     SimulationBoard.Add(edge);
     while (SimulationBoard.Gaming()) {
-      SimulationBoard.Add(Random.Choice(SubRobot.BestCandidateEdges(SimulationBoard)));
+      SimulationBoard.Add(random.Choice(SubRobot.BestCandidateEdges(SimulationBoard)));
     }
     SearchResult.Add(edge, turn * SimulationBoard.RelativeScore());
   }
