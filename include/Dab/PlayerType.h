@@ -35,22 +35,13 @@ enum class PlayerType {
   ParallelSearchRobot,
 };
 
-static constexpr const char* PlayerTypeOptionInternalStrings[] = {
+static constexpr const char* PlayerTypeOptionStrings[] = {
     "Human",
     "GreedyRobot",
     "ImproveGreedyRobot",
     "SimulationRobot",
     "MonteCarloRobot",
     "ParallelSearchRobot",
-};
-
-static constexpr const char* PlayerTypeOptionStrings[] = {
-    "human",
-    "robot:easy",
-    "robot:medium",
-    "robot:hard",
-    "robot:expert",
-    "robot:master",
 };
 
 static constexpr PlayerType DefaultPlayerType = PlayerType::ParallelSearchRobot;

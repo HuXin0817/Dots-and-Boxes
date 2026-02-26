@@ -54,8 +54,8 @@ template <>
 QWidget* CreateMainWindowImpl<BoardSize>(PlayerType player1Type, PlayerType player2Type, bool backgroundMode) {
   LogInfo(R"({{"BoardSize":{},"Player1Type":"{}","Player2Type":"{}"}})",
           BoardSize,
-          PlayerTypeOptionInternalStrings[static_cast<int>(player1Type)],
-          PlayerTypeOptionInternalStrings[static_cast<int>(player2Type)]);
+          PlayerTypeOptionStrings[static_cast<int>(player1Type)],
+          PlayerTypeOptionStrings[static_cast<int>(player2Type)]);
   if (backgroundMode) {
     __detail__::MockRunningGame(player1Type, player2Type);
     exit(0);
