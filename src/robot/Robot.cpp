@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 namespace dab::__detail__::robot {
 
-std::unique_ptr<Robot> CreateRobot(PlayerType playerType) {
+std::unique_ptr<Robot> Robot::Create(PlayerType playerType) {
   switch (playerType) {
     case PlayerType::GreedyRobot:
       return std::make_unique<GreedyRobot>();

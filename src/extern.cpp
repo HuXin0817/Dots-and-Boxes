@@ -32,8 +32,8 @@ namespace dab {
 namespace __detail__ {
 
 void MockRunningGame(PlayerType player1Type, PlayerType player2Type) {
-  std::unique_ptr<Robot> robot1 = CreateRobot(player1Type);
-  std::unique_ptr<Robot> robot2 = CreateRobot(player2Type);
+  std::unique_ptr<Robot> robot1 = Robot::Create(player1Type);
+  std::unique_ptr<Robot> robot2 = Robot::Create(player2Type);
   Assert(robot1);
   Assert(robot2);
 

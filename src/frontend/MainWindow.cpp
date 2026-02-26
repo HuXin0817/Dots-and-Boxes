@@ -43,8 +43,8 @@ namespace dab::__detail__::frontend {
 
 MainWindow::MainWindow(PlayerType player1Type, PlayerType player2Type, QWidget* parent)
     : BaseCanvas(parent), Player1Type(player1Type), Player2Type(player2Type) {
-  Robot1 = CreateRobot(Player1Type);
-  Robot2 = CreateRobot(Player2Type);
+  Robot1 = Robot::Create(Player1Type);
+  Robot2 = Robot::Create(Player2Type);
 
   resize(WindowSize, WindowSize);
   setMinimumSize(WindowSize, WindowSize);

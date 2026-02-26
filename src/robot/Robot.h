@@ -34,6 +34,8 @@ class Robot {
   virtual ~Robot() = default;
 
   virtual Span<const Edge> BestCandidateEdges(const LoggingBoard& board) = 0;
+
+  static std::unique_ptr<Robot> Create(PlayerType playerType);
 };
 
 template <typename Derived>
@@ -53,7 +55,5 @@ class RobotWapper : public Robot {
   constexpr const Derived& derived() const& { return static_cast<const Derived&>(*this); }
   constexpr Derived&& derived() && { return static_cast<Derived&&>(*this); }
 };
-
-std::unique_ptr<Robot> CreateRobot(PlayerType playerType);
 
 }  // namespace dab::__detail__::robot

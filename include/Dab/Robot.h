@@ -28,7 +28,6 @@ THE SOFTWARE.
 
 namespace dab {
 
-using __detail__::robot::CreateRobot;
 using __detail__::robot::Robot;
 
 }  // namespace dab
