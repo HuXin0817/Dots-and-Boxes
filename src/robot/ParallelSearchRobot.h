@@ -26,6 +26,8 @@ THE SOFTWARE.
 
 #include <tbb/parallel_for_each.h>
 
+#include <cstdint>
+
 #include "MonteCarloRobot.h"
 
 namespace dab::__detail__::robot {
@@ -37,7 +39,7 @@ class ParallelSearchRobot : public RobotWapper<ParallelSearchRobot> {
   Span<const Edge> BestCandidateEdges(const Board& board);
 
  private:
-  Array<MonteCarloRobot, 32> Workers;
+  Array<MonteCarloRobot, std::min(32ll, static_cast<int64_t>(Edge::Max))> Workers;
 };
 
 template <typename Board>
