@@ -25,6 +25,7 @@ THE SOFTWARE.
 #pragma once
 
 #include <Dab/Board.h>
+#include <Dab/Model.h>
 
 #include "ImproveGreedyRobot.h"
 

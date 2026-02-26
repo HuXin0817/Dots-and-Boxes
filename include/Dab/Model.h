@@ -195,12 +195,61 @@ class Turn : public IntWapper {
   static constexpr Int Player2Turn = -Player1Turn;
 };
 
+class ScoreMap {
+ public:
+  ScoreMap() = default;
+
+  void Reset();
+  void Add(Edge edge, Int score);
+  void Add(const ScoreMap& other);
+  Span<const Edge> Export(List<Edge, Edge::Max>& edges);
+
+ private:
+  Array<int, Edge::Max> Time;
+  Array<int, Edge::Max> Score;
+};
+
+inline void ScoreMap::Reset() {
+  std::ranges::fill(Time, 0);
+  std::ranges::fill(Score, 0);
+}
+
+inline void ScoreMap::Add(Edge edge, Int score) {
+  ++Time.At(edge);
+  Score.At(edge) += score;
+}
+
+inline void ScoreMap::Add(const ScoreMap& other) {
+  for (const Int i : Iota<Edge>()) {
+    Time.At(i) += other.Time.At(i);
+    Score.At(i) += other.Score.At(i);
+  }
+}
+
+inline Span<const Edge> ScoreMap::Export(List<Edge, Edge::Max>& edges) {
+  edges.Clear();
+  float maxScore = 0.0;
+  for (const Edge edge : Iota<Edge>()) {
+    if (Time.At(edge) > 0) {
+      if (const float score = static_cast<float>(Score.At(edge)) / static_cast<float>(Time.At(edge));
+          score > maxScore || edges.Empty()) {
+        maxScore = score;
+        edges.ClearAndSet(edge);
+      } else if (score == maxScore) {
+        edges.Append(edge);
+      }
+    }
+  }
+  return {edges.begin(), edges.Size()};
+}
+
 }  // namespace __detail__::model
 
 using __detail__::model::Box;
 using __detail__::model::Dot;
 using __detail__::model::Edge;
 using __detail__::model::Iota;
+using __detail__::model::ScoreMap;
 using __detail__::model::Turn;
 
 }  // namespace dab
