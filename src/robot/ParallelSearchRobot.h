@@ -48,7 +48,7 @@ Span<const Edge> ParallelSearchRobot::BestCandidateEdges(const Board& board) {
   }
 
   SearchResult.Reset();
-  tbb::parallel_for_each(Workers, [&](MonteCarloRobot& robot) -> void { robot.BestCandidateEdges(board); });
+  tbb::parallel_for_each(Workers, [&](MonteCarloRobot& robot) -> void { robot.SearchCandidateEdges(board); });
   for (const MonteCarloRobot& model : Workers) {
     SearchResult.Add(model.GetSearchResult());
   }

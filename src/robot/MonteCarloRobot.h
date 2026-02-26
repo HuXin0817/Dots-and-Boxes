@@ -36,6 +36,8 @@ class MonteCarloRobot : public RobotWapper<MonteCarloRobot> {
  public:
   MonteCarloRobot() = default;
   template <typename Board>
+  void SearchCandidateEdges(const Board& board);
+  template <typename Board>
   Span<const Edge> BestCandidateEdges(const Board& board);
   template <typename Board>
   bool CanEarlyExit(const Board& board, Span<const Edge>& result);
@@ -50,11 +52,7 @@ class MonteCarloRobot : public RobotWapper<MonteCarloRobot> {
 };
 
 template <typename Board>
-Span<const Edge> MonteCarloRobot::BestCandidateEdges(const Board& board) {
-  if (Span<const Edge> edges; CanEarlyExit(board, edges)) {
-    return edges;
-  }
-
+void MonteCarloRobot::SearchCandidateEdges(const Board& board) {
   SearchResult.Reset();
   const Turn turn = board.GetTurn();
   for (int64_t i = 0; i < SearchTime / board.RemainStep(); i++) {
@@ -66,7 +64,14 @@ Span<const Edge> MonteCarloRobot::BestCandidateEdges(const Board& board) {
     }
     SearchResult.Add(edge, turn * SimulationBoard.RelativeScore());
   }
+}
 
+template <typename Board>
+Span<const Edge> MonteCarloRobot::BestCandidateEdges(const Board& board) {
+  if (Span<const Edge> edges; CanEarlyExit(board, edges)) {
+    return edges;
+  }
+  SearchCandidateEdges(board);
   return SearchResult.Export(GetSearchEdges());
 }
 
