@@ -22,7 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include <Dab/Frontend.h>
 #include <Dab/PlayerType.h>
 #include <Dab/Tools.h>
 
@@ -30,6 +29,8 @@ THE SOFTWARE.
 #include <QCommandLineParser>
 #include <cstdlib>
 #include <ranges>
+
+#include "frontend/Frontend.h"
 
 using namespace dab;
 

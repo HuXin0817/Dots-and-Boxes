@@ -82,8 +82,26 @@ inline std::unique_ptr<Robot> Robot::Create(PlayerType playerType) {
   return nullptr;
 }
 
+inline void MockRunningGame(PlayerType player1Type, PlayerType player2Type) {
+  std::unique_ptr<Robot> robot1 = Robot::Create(player1Type);
+  std::unique_ptr<Robot> robot2 = Robot::Create(player2Type);
+  Assert(robot1);
+  Assert(robot2);
+
+  Random random;
+  LoggingBoard board;
+  while (board.Gaming()) {
+    if (board.IsPlayer1Turn()) {
+      board.Add(random.Choice(robot1->BestCandidateEdges(board)));
+    } else {
+      board.Add(random.Choice(robot2->BestCandidateEdges(board)));
+    }
+  }
+}
+
 }  // namespace __detail__::robot
 
+using __detail__::robot::MockRunningGame;
 using __detail__::robot::Robot;
 
 }  // namespace dab

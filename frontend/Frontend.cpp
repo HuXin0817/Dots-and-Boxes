@@ -22,34 +22,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include <Dab/Frontend.h>
+#include "Frontend.h"
+
 #include <Dab/PlayerType.h>
 #include <Dab/Robot.h>
 
 #include "MainWindow.h"
 
 namespace dab {
-
-namespace __detail__::frontend {
-
-void MockRunningGame(PlayerType player1Type, PlayerType player2Type) {
-  std::unique_ptr<Robot> robot1 = Robot::Create(player1Type);
-  std::unique_ptr<Robot> robot2 = Robot::Create(player2Type);
-  Assert(robot1);
-  Assert(robot2);
-
-  Random random;
-  LoggingBoard board;
-  while (board.Gaming()) {
-    if (board.IsPlayer1Turn()) {
-      board.Add(random.Choice(robot1->BestCandidateEdges(board)));
-    } else {
-      board.Add(random.Choice(robot2->BestCandidateEdges(board)));
-    }
-  }
-}
-
-}  // namespace __detail__::frontend
 
 template <>
 QWidget* CreateMainWindowImpl<BoardSize>(PlayerType player1Type, PlayerType player2Type, bool backgroundMode) {
@@ -58,7 +38,7 @@ QWidget* CreateMainWindowImpl<BoardSize>(PlayerType player1Type, PlayerType play
           PlayerTypeOptionStrings[static_cast<int>(player1Type)],
           PlayerTypeOptionStrings[static_cast<int>(player2Type)]);
   if (backgroundMode) {
-    __detail__::frontend::MockRunningGame(player1Type, player2Type);
+    MockRunningGame(player1Type, player2Type);
     exit(0);
   }
 
