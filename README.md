@@ -124,51 +124,42 @@ Dots-and-Boxes/
 ├── include/            # Header files
 │   └── Dab/
 │       ├── Board.h
+│       ├── BoardSize.h
 │       ├── Common.h
 │       ├── Frontend.h
 │       ├── Model.h
 │       ├── PlayerType.h
 │       ├── Robot.h
-│       └── Tools.h
-├── src/                # Source files
-│   ├── common/         # Common utility classes
-│   │   ├── Array.h
-│   │   ├── CMakeLists.txt
-│   │   ├── Int.h
-│   │   ├── Iterable.h
-│   │   ├── LRUCache.h
-│   │   ├── List.h
-│   │   ├── Queue.h
-│   │   ├── Random.h
-│   │   ├── Span.h
-│   │   └── Vector.h
-│   ├── frontend/       # GUI-related files
-│   │   ├── BaseCanvas.cpp
-│   │   ├── BaseCanvas.h
-│   │   ├── BoxCanvas.cpp
-│   │   ├── BoxCanvas.h
-│   │   ├── CMakeLists.txt
-│   │   ├── DotCanvas.cpp
-│   │   ├── DotCanvas.h
-│   │   ├── EdgeCanvas.cpp
-│   │   ├── EdgeCanvas.h
-│   │   ├── MainWindow.cpp
-│   │   └── MainWindow.h
-│   ├── robot/          # AI implementations
-│   │   ├── CMakeLists.txt
-│   │   ├── CachedRobot.h
-│   │   ├── GreedyRobot.h
-│   │   ├── ImproveGreedyRobot.h
-│   │   ├── MonteCarloRobot.h
-│   │   ├── ParallelSearchRobot.h
-│   │   ├── Robot.cpp
-│   │   ├── Robot.h
-│   │   ├── ScoreMap.cpp
-│   │   ├── ScoreMap.h
-│   │   └── SimulationRobot.h
+│       ├── Tools.h
+│       ├── common/         # Common utility classes
+│       │   ├── Array.h
+│       │   ├── Iterable.h
+│       │   ├── LRUCache.h
+│       │   ├── List.h
+│       │   ├── Queue.h
+│       │   ├── Random.h
+│       │   ├── Span.h
+│       │   └── Vector.h
+│       └── robot/          # AI implementations
+│           ├── CachedRobot.h
+│           ├── GreedyRobot.h
+│           ├── ImproveGreedyRobot.h
+│           ├── MonteCarloRobot.h
+│           ├── ParallelSearchRobot.h
+│           └── SimulationRobot.h
+├── frontend/           # GUI-related files
+│   ├── BaseCanvas.cpp
+│   ├── BaseCanvas.h
+│   ├── BoxCanvas.cpp
+│   ├── BoxCanvas.h
 │   ├── CMakeLists.txt
-│   ├── extern.cpp
-│   └── extern.h
+│   ├── DotCanvas.cpp
+│   ├── DotCanvas.h
+│   ├── EdgeCanvas.cpp
+│   ├── EdgeCanvas.h
+│   ├── Frontend.cpp
+│   ├── MainWindow.cpp
+│   └── MainWindow.h
 ├── .clang-format       # Code formatting configuration
 ├── .gitignore          # Git ignore file
 ├── CMakeLists.txt      # Build configuration
