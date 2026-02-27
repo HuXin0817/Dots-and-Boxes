@@ -50,14 +50,9 @@ template <typename Derived>
 class RobotWapper : public Robot, public Derived {
  public:
   using Derived::Derived;
-
-  template <typename Board>
-  Span<const Edge> BestCandidateEdges(const Board& board) {
-    return Derived::template BestCandidateEdges<>(board);
-  }
-  Span<const Edge> BestCandidateEdges(const LoggingBoard& board) override { return BestCandidateEdges<>(board); }
-
   ~RobotWapper() override = default;
+
+  Span<const Edge> BestCandidateEdges(const LoggingBoard& board) override { return Derived::BestCandidateEdges(board); }
 };
 
 inline std::unique_ptr<Robot> Robot::Create(PlayerType playerType) {
