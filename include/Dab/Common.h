@@ -24,13 +24,13 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "../../common/Array.h"
-#include "../../common/LRUCache.h"
-#include "../../common/List.h"
-#include "../../common/Queue.h"
-#include "../../common/Random.h"
-#include "../../common/Span.h"
-#include "../../common/Vector.h"
+#include "common/Array.h"
+#include "common/LRUCache.h"
+#include "common/List.h"
+#include "common/Queue.h"
+#include "common/Random.h"
+#include "common/Span.h"
+#include "common/Vector.h"
 
 namespace dab {
 
