@@ -145,7 +145,7 @@ constexpr Array<Array<Edge, 4>, Box::Max> CreateNearEdgesMapper() {
 }
 
 constexpr const Array<Edge, 4>& Box::NearEdges() const {
-  if constexpr (BoardSize < 36) {
+  if constexpr (BoardSize <= 36) {
     static constexpr Array<Array<Edge, 4>, Max> Instance = CreateNearEdgesMapper();
     return Instance.At(v);
   } else {
@@ -178,7 +178,7 @@ constexpr Array<List<Box, 2>, Edge::Max> CreateNearBoxesMapper() {
 }
 
 constexpr const List<Box, 2>& Edge::NearBoxes() const {
-  if constexpr (BoardSize < 36) {
+  if constexpr (BoardSize <= 36) {
     static constexpr Array<List<Box, 2>, Max> Instance = CreateNearBoxesMapper();
     return Instance.At(v);
   } else {
