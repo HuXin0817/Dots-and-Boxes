@@ -24,6 +24,7 @@ THE SOFTWARE.
 
 #pragma once
 
+#include <Dab/BoardSize.h>
 #include <Dab/Common.h>
 #include <Dab/Tools.h>
 
@@ -32,12 +33,6 @@ THE SOFTWARE.
 namespace dab {
 
 namespace __detail__::model {
-
-#if __BoardSize__ < 36
-#define _constexpr constexpr
-#else
-#define _constexpr
-#endif
 
 class IntWapper {
  public:
@@ -150,8 +145,13 @@ constexpr Array<Array<Edge, 4>, Box::Max> CreateNearEdgesMapper() {
 }
 
 constexpr const Array<Edge, 4>& Box::NearEdges() const {
-  static _constexpr Array<Array<Edge, 4>, Max> Instance = CreateNearEdgesMapper();
-  return Instance.At(v);
+  if constexpr (BoardSize < 36) {
+    static constexpr Array<Array<Edge, 4>, Max> Instance = CreateNearEdgesMapper();
+    return Instance.At(v);
+  } else {
+    static Array<Array<Edge, 4>, Max> Instance = CreateNearEdgesMapper();
+    return Instance.At(v);
+  }
 }
 
 constexpr List<Box, 2> GetNearBoxes(Edge edge) {
@@ -178,8 +178,13 @@ constexpr Array<List<Box, 2>, Edge::Max> CreateNearBoxesMapper() {
 }
 
 constexpr const List<Box, 2>& Edge::NearBoxes() const {
-  static _constexpr Array<List<Box, 2>, Max> Instance = CreateNearBoxesMapper();
-  return Instance.At(v);
+  if constexpr (BoardSize < 36) {
+    static constexpr Array<List<Box, 2>, Max> Instance = CreateNearBoxesMapper();
+    return Instance.At(v);
+  } else {
+    static Array<List<Box, 2>, Max> Instance = CreateNearBoxesMapper();
+    return Instance.At(v);
+  }
 }
 
 class Turn : public IntWapper {
