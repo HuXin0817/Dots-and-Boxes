@@ -42,13 +42,13 @@ class MonteCarloRobot {
   Span<const Edge> BestCandidateEdges(const Board& board);
   template <typename Board>
   bool CanEarlyExit(const Board& board, Span<const Edge>& result);
-  ScoreMap<int32_t>& GetSearchResult() { return SearchResult; }
+  ScoreMap<int64_t>& GetSearchResult() { return SearchResult; }
   List<Edge, Edge::Max>& GetSearchEdges() { return SubRobot.GetSearchEdges(); }
 
  private:
   CachedRobot<SimulationRobot> SubRobot;
   RelativeScoreBoard SimulationBoard;
-  ScoreMap<int32_t> SearchResult;
+  ScoreMap<int64_t> SearchResult;
 };
 
 template <typename Board>
