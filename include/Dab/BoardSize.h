@@ -1,7 +1,7 @@
 /*
 Licensed under the MIT License <http://opensource.org/licenses/MIT>.
 SPDX-License-Identifier: MIT
-Copyright (c) 2025 Xin Hu <202219120810@stu.cdut.edu.cn>
+Copyright (c) 2025 Xin Hu <huxin0817.hx@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

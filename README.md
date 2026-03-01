@@ -191,7 +191,7 @@ All robot strategies use **CachedRobot** for performance optimization, which cac
 
 This project is licensed under the [MIT License](LICENSE).
 
-Copyright (c) 2025 Xin Hu <202219120810@stu.cdut.edu.cn>
+Copyright (c) 2025 Xin Hu <huxin0817.hx@gmail.com>
 
 ## Contributing
 
