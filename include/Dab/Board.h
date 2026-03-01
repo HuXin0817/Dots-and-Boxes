@@ -150,40 +150,40 @@ class BoardImpl : BasicMixin,
   static_assert(Config == FixedConfig(Config));
 
  public:
-  BoardImpl() { Reset(); }
+  constexpr BoardImpl() { Reset(); }
 
-  void Reset();
-  Int Add(Edge edge);
-  bool Contains(Edge edge) const { return EdgeIndexes.At(edge) < Step; }
-  bool NotContains(Edge edge) const { return EdgeIndexes.At(edge) >= Step; }
-  Span<const Edge> EmptyEdges() const { return {Edges.begin() + Step, Edges.end()}; }
-  Span<const Edge> MoveRecord() const { return {Edges.begin(), Step}; }
-  bool Gaming() const { return Step < Edge::Max; }
-  Int RemainStep() const { return Edge::Max - Step; }
-  Int NowStep() const { return Step; }
-  uint32_t Hash() const { return this->HashValue; }
-  uint8_t EdgeCount(Box box) const { return this->Counter.At(box); }
-  uint8_t MaxEdgeCount(Edge edge) const;
-  bool Scoreable(Edge edge) const { return MaxEdgeCount(edge) == 3; }
-  Int RelativeScore() const { return this->Score; }
-  Turn GetTurn() const { return this->Turn; }
-  bool IsPlayer1Turn() const { return this->Turn.IsPlayer1Turn(); }
-  bool IsPlayer2Turn() const { return this->Turn.IsPlayer2Turn(); }
-  Int Player1Score() const { return (this->TotalScore + this->Score) / 2; }
-  Int Player2Score() const { return (this->TotalScore - this->Score) / 2; }
-  Edge FindNotContainsEdgeInBox(Box box) const;
-  Int FindScoreableEdge();
-  Int MaxObtainableScore(Int endScore);
+  constexpr void Reset();
+  constexpr Int Add(Edge edge);
+  constexpr bool Contains(Edge edge) const { return EdgeIndexes.At(edge) < Step; }
+  constexpr bool NotContains(Edge edge) const { return EdgeIndexes.At(edge) >= Step; }
+  constexpr Span<const Edge> EmptyEdges() const { return {Edges.begin() + Step, Edges.end()}; }
+  constexpr Span<const Edge> MoveRecord() const { return {Edges.begin(), Step}; }
+  constexpr bool Gaming() const { return Step < Edge::Max; }
+  constexpr Int RemainStep() const { return Edge::Max - Step; }
+  constexpr Int NowStep() const { return Step; }
+  constexpr uint32_t Hash() const { return this->HashValue; }
+  constexpr uint8_t EdgeCount(Box box) const { return this->Counter.At(box); }
+  constexpr uint8_t MaxEdgeCount(Edge edge) const;
+  constexpr bool Scoreable(Edge edge) const { return MaxEdgeCount(edge) == 3; }
+  constexpr Int RelativeScore() const { return this->Score; }
+  constexpr Turn GetTurn() const { return this->Turn; }
+  constexpr bool IsPlayer1Turn() const { return this->Turn.IsPlayer1Turn(); }
+  constexpr bool IsPlayer2Turn() const { return this->Turn.IsPlayer2Turn(); }
+  constexpr Int Player1Score() const { return (this->TotalScore + this->Score) / 2; }
+  constexpr Int Player2Score() const { return (this->TotalScore - this->Score) / 2; }
+  constexpr Edge FindNotContainsEdgeInBox(Box box) const;
+  constexpr Int FindScoreableEdge();
+  constexpr Int MaxObtainableScore(Int endScore);
 
-  BoardImpl& operator=(const BoardImpl& other) = default;
+  constexpr BoardImpl& operator=(const BoardImpl& other) = default;
   template <typename Other>
-  BoardImpl& operator=(const Other& other);
+  constexpr BoardImpl& operator=(const Other& other);
   template <typename Other>
-  bool operator==(const Other& other) const;
+  constexpr bool operator==(const Other& other) const;
 };
 
 template <int Config>
-void BoardImpl<Config>::Reset() {
+constexpr void BoardImpl<Config>::Reset() {
   Step = 0;
   std::iota(EdgeIndexes.begin(), EdgeIndexes.end(), 0);
   std::iota(Edges.begin(), Edges.end(), 0);
@@ -209,7 +209,7 @@ void BoardImpl<Config>::Reset() {
 }
 
 template <int Config>
-Int BoardImpl<Config>::Add(Edge edge) {
+constexpr Int BoardImpl<Config>::Add(Edge edge) {
   Assert(NotContains(edge));
   const Edge nowEdge = Edges.At(Step);
   const Int edgeIndex = EdgeIndexes.At(edge);
@@ -275,7 +275,7 @@ Int BoardImpl<Config>::Add(Edge edge) {
 }
 
 template <int Config>
-Edge BoardImpl<Config>::FindNotContainsEdgeInBox(Box box) const {
+constexpr Edge BoardImpl<Config>::FindNotContainsEdgeInBox(Box box) const {
   Assert(this->Counter.At(box) == 3);
   for (const Edge edge : box.NearEdges()) {
     if (NotContains(edge)) {
@@ -287,7 +287,7 @@ Edge BoardImpl<Config>::FindNotContainsEdgeInBox(Box box) const {
 }
 
 template <int Config>
-Int BoardImpl<Config>::FindScoreableEdge() {
+constexpr Int BoardImpl<Config>::FindScoreableEdge() {
   for (const Edge edge : EmptyEdges()) {
     if (Scoreable(edge)) {
       this->ScoreableEdges.Append(edge);
@@ -297,7 +297,7 @@ Int BoardImpl<Config>::FindScoreableEdge() {
 }
 
 template <int Config>
-Int BoardImpl<Config>::MaxObtainableScore(Int endScore) {
+constexpr Int BoardImpl<Config>::MaxObtainableScore(Int endScore) {
   Int score = 0;
   while (Gaming() && score < endScore) {
     if (this->ScoreableEdges.Empty()) {
@@ -315,14 +315,14 @@ Int BoardImpl<Config>::MaxObtainableScore(Int endScore) {
 }
 
 template <int Config>
-uint8_t BoardImpl<Config>::MaxEdgeCount(Edge edge) const {
+constexpr uint8_t BoardImpl<Config>::MaxEdgeCount(Edge edge) const {
   const List<Box, 2>& nearBoxes = edge.NearBoxes();
   return std::max(this->Counter.At(nearBoxes.Front()), this->Counter.At(nearBoxes.Back()));
 }
 
 template <int Config>
 template <typename Other>
-BoardImpl<Config>& BoardImpl<Config>::operator=(const Other& other) {
+constexpr BoardImpl<Config>& BoardImpl<Config>::operator=(const Other& other) {
   Step = other.Step;
   Edges = other.Edges;
   EdgeIndexes = other.EdgeIndexes;
@@ -360,7 +360,7 @@ BoardImpl<Config>& BoardImpl<Config>::operator=(const Other& other) {
 
 template <int Config>
 template <typename Other>
-bool BoardImpl<Config>::operator==(const Other& other) const {
+constexpr bool BoardImpl<Config>::operator==(const Other& other) const {
   if constexpr (HasFlag(EnableHashValue) && Other::HasFlag(EnableHashValue)) {
     if (this->HashValue != other.HashValue) {
       return false;
@@ -403,7 +403,7 @@ using namespace dab::__detail__::board;
 template <int Config>
   requires(HasFlag(Config, EnableHashValue))
 struct hash<BoardImpl<Config>> {
-  uint32_t operator()(const BoardImpl<Config>& board) const { return board.Hash(); }
+  constexpr uint32_t operator()(const BoardImpl<Config>& board) const { return board.Hash(); }
 };
 
 }  // namespace std

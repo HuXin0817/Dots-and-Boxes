@@ -206,13 +206,13 @@ class ScoreMap {
   friend class ScoreMap;
 
  public:
-  ScoreMap() = default;
+  constexpr ScoreMap() = default;
 
-  void Reset();
-  void Add(Edge edge, Int score);
+  constexpr void Reset();
+  constexpr void Add(Edge edge, Int score);
   template <typename Other>
-  void Add(const Other& other);
-  Span<const Edge> Export(List<Edge, Edge::Max>& edges);
+  constexpr void Add(const Other& other);
+  constexpr Span<const Edge> Export(List<Edge, Edge::Max>& edges);
 
  private:
   Array<ScoreType, Edge::Max> Time;
@@ -220,20 +220,20 @@ class ScoreMap {
 };
 
 template <typename ScoreType>
-void ScoreMap<ScoreType>::Reset() {
+constexpr void ScoreMap<ScoreType>::Reset() {
   std::ranges::fill(Time, 0);
   std::ranges::fill(Score, 0);
 }
 
 template <typename ScoreType>
-void ScoreMap<ScoreType>::Add(Edge edge, Int score) {
+constexpr void ScoreMap<ScoreType>::Add(Edge edge, Int score) {
   ++Time.At(edge);
   Score.At(edge) += score;
 }
 
 template <typename ScoreType>
 template <typename Other>
-void ScoreMap<ScoreType>::Add(const Other& other) {
+constexpr void ScoreMap<ScoreType>::Add(const Other& other) {
   for (const Int i : Iota<Edge>()) {
     Time.At(i) += other.Time.At(i);
     Score.At(i) += other.Score.At(i);
@@ -241,7 +241,7 @@ void ScoreMap<ScoreType>::Add(const Other& other) {
 }
 
 template <typename ScoreType>
-Span<const Edge> ScoreMap<ScoreType>::Export(List<Edge, Edge::Max>& edges) {
+constexpr Span<const Edge> ScoreMap<ScoreType>::Export(List<Edge, Edge::Max>& edges) {
   edges.Clear();
   float maxScore = 0.0;
   for (const Edge edge : Iota<Edge>()) {
