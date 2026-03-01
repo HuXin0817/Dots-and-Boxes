@@ -24,6 +24,8 @@ THE SOFTWARE.
 
 #pragma once
 
+#include <cstdint>
+
 #include "CachedRobot.h"
 #include "SimulationRobot.h"
 
@@ -40,13 +42,13 @@ class MonteCarloRobot {
   Span<const Edge> BestCandidateEdges(const Board& board);
   template <typename Board>
   bool CanEarlyExit(const Board& board, Span<const Edge>& result);
-  ScoreMap& GetSearchResult() { return SearchResult; }
+  ScoreMap<int32_t>& GetSearchResult() { return SearchResult; }
   List<Edge, Edge::Max>& GetSearchEdges() { return SubRobot.GetSearchEdges(); }
 
  private:
   CachedRobot<SimulationRobot> SubRobot;
   RelativeScoreBoard SimulationBoard;
-  ScoreMap SearchResult;
+  ScoreMap<int32_t> SearchResult;
 };
 
 template <typename Board>

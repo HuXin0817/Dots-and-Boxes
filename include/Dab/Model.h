@@ -200,38 +200,48 @@ class Turn : public IntWapper {
   static constexpr Int Player2Turn = -Player1Turn;
 };
 
+template <typename ScoreType>
 class ScoreMap {
+  template <typename>
+  friend class ScoreMap;
+
  public:
   ScoreMap() = default;
 
   void Reset();
   void Add(Edge edge, Int score);
-  void Add(const ScoreMap& other);
+  template <typename Other>
+  void Add(const Other& other);
   Span<const Edge> Export(List<Edge, Edge::Max>& edges);
 
  private:
-  Array<int, Edge::Max> Time;
-  Array<int, Edge::Max> Score;
+  Array<ScoreType, Edge::Max> Time;
+  Array<ScoreType, Edge::Max> Score;
 };
 
-inline void ScoreMap::Reset() {
+template <typename ScoreType>
+void ScoreMap<ScoreType>::Reset() {
   std::ranges::fill(Time, 0);
   std::ranges::fill(Score, 0);
 }
 
-inline void ScoreMap::Add(Edge edge, Int score) {
+template <typename ScoreType>
+void ScoreMap<ScoreType>::Add(Edge edge, Int score) {
   ++Time.At(edge);
   Score.At(edge) += score;
 }
 
-inline void ScoreMap::Add(const ScoreMap& other) {
+template <typename ScoreType>
+template <typename Other>
+void ScoreMap<ScoreType>::Add(const Other& other) {
   for (const Int i : Iota<Edge>()) {
     Time.At(i) += other.Time.At(i);
     Score.At(i) += other.Score.At(i);
   }
 }
 
-inline Span<const Edge> ScoreMap::Export(List<Edge, Edge::Max>& edges) {
+template <typename ScoreType>
+Span<const Edge> ScoreMap<ScoreType>::Export(List<Edge, Edge::Max>& edges) {
   edges.Clear();
   float maxScore = 0.0;
   for (const Edge edge : Iota<Edge>()) {
