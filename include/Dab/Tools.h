@@ -44,8 +44,8 @@ namespace __detail__::tools {
 template <class... Args>
 void Log(std::ostream& os, std::format_string<Args...> fmt, Args&&... args) {
   static constexpr std::string name = XSTR(__detail__);
-  const std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
-  const std::chrono::system_clock::time_point timestamp = std::chrono::floor<std::chrono::seconds>(now);
+  const auto now = std::chrono::system_clock::now();
+  const auto timestamp = std::chrono::floor<std::chrono::seconds>(now);
   const std::string message = std::format(fmt, std::forward<Args>(args)...);
   std::println(os, R"([{}] {:%Y-%m-%dT%H:%M:%S} {})", name, timestamp, message);
 }
