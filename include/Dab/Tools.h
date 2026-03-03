@@ -25,10 +25,13 @@ THE SOFTWARE.
 #pragma once
 
 #include <chrono>
+#include <cstdlib>
 #include <format>
 #include <iostream>
+#include <mutex>
 #include <ostream>
 #include <print>
+#include <source_location>
 #include <utility>
 
 namespace dab {
@@ -66,16 +69,25 @@ void LogError(std::format_string<Args...> fmt, Args&&... args) {
   Log(std::cerr, R"({{"Error":"{}"}})", std::format(fmt, std::forward<Args>(args)...));
 }
 
+static void AssertHelper(const std::string& expr,
+                         const std::source_location& location = std::source_location::current()) {
+  static std::mutex mu;
+  {
+    std::unique_lock lock(mu);
+    LogError("ASSERT: '{}' in file {}, line {}", expr, location.file_name(), location.line());
+    std::abort();
+  }
+};
+
 #ifdef NDEBUG
 #define Assert(expr) ((void)0)
 #else
 
-#define Assert(expr)                                                           \
-  do {                                                                         \
-    if (!(expr)) {                                                             \
-      LogError("ASSERT: '{}' in file {}, line {}", #expr, __FILE__, __LINE__); \
-      std::abort();                                                            \
-    }                                                                          \
+#define Assert(expr)                          \
+  do {                                        \
+    if (!(expr)) {                            \
+      __detail__::tools::AssertHelper(#expr); \
+    }                                         \
   } while (false)
 
 #endif  // NDEBUG
