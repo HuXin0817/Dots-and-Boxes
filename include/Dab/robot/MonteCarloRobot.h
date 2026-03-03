@@ -101,7 +101,7 @@ template <typename Board>
 void MonteCarloRobot::SearchCandidateEdges(const Board& board) {
   Random random;
   SearchResult.Reset();
-  const Turn turn = board.GetTurn();
+  const Int turn = board.GetTurn();
   for (uint32_t i = 0; i < SearchTime / board.RemainStep(); i++) {
     SimulationBoard = board;
     const Edge edge = random.Choice(SubRobot.BestCandidateEdges(SimulationBoard));

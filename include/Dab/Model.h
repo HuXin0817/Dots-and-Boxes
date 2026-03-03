@@ -182,25 +182,11 @@ constexpr const List<Box, 2>& Edge::NearBoxes() const {
   return Instance.At(v);
 }
 
-class Turn : public IntWapper {
- public:
-  constexpr Turn() { Reset(); }
-  constexpr void Reset() { v = Player1Turn; }
-  constexpr void Add() { v = -v; }
-  constexpr bool IsPlayer1Turn() const { return v == Player1Turn; }
-  constexpr bool IsPlayer2Turn() const { return v == Player2Turn; }
-
- private:
-  static constexpr Int Player1Turn = 1;
-  static constexpr Int Player2Turn = -Player1Turn;
-};
-
 }  // namespace __detail__::model
 
 using __detail__::model::Box;
 using __detail__::model::Dot;
 using __detail__::model::Edge;
 using __detail__::model::Iota;
-using __detail__::model::Turn;
 
 }  // namespace dab

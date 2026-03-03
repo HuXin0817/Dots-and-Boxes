@@ -101,8 +101,11 @@ struct RelativeScoreMixin {};
 
 template <>
 struct RelativeScoreMixin<true> {
+  static constexpr Int Player1Turn = 1;
+  static constexpr Int Player2Turn = -Player1Turn;
+
   Int Score = 0;
-  Turn Turn;
+  Int Turn = Player1Turn;
 };
 
 template <bool>
@@ -186,9 +189,9 @@ class BoardImpl : BasicMixin,
   constexpr uint8_t MaxEdgeCount(Edge edge) const;
   constexpr bool Scoreable(Edge edge) const { return MaxEdgeCount(edge) == 3; }
   constexpr Int RelativeScore() const { return this->Score; }
-  constexpr Turn GetTurn() const { return this->Turn; }
-  constexpr bool IsPlayer1Turn() const { return this->Turn.IsPlayer1Turn(); }
-  constexpr bool IsPlayer2Turn() const { return this->Turn.IsPlayer2Turn(); }
+  constexpr Int GetTurn() const { return this->Turn; }
+  constexpr bool IsPlayer1Turn() const { return this->Turn == this->Player1Turn; }
+  constexpr bool IsPlayer2Turn() const { return this->Turn == this->Player2Turn; }
   constexpr Int Player1Score() const { return (this->TotalScore + this->Score) / 2; }
   constexpr Int Player2Score() const { return (this->TotalScore - this->Score) / 2; }
   constexpr Owner NowOwner() const { return IsPlayer1Turn() ? Owner::Player1 : Owner::Player2; }
@@ -218,7 +221,7 @@ constexpr void BoardImpl<Config>::Reset() {
   }
   if constexpr (HasFlag(EnableRelativeScore)) {
     this->Score = 0;
-    this->Turn.Reset();
+    this->Turn = this->Player1Turn;
   }
   if constexpr (HasFlag(EnableAbsoluteScore)) {
     this->TotalScore = 0;
@@ -271,11 +274,11 @@ constexpr Int BoardImpl<Config>::Add(Edge edge) {
       }
     }
     if constexpr (HasFlag(EnableRelativeScore)) {
-      const Turn turn = this->Turn;
+      const Int turn = this->Turn;
       if (score > 0) {
         this->Score += score * this->Turn;
       } else {
-        this->Turn.Add();
+        this->Turn = -this->Turn;
       }
       if constexpr (HasFlag(EnableAbsoluteScore)) {
         this->TotalScore += score;
@@ -287,7 +290,7 @@ constexpr Int BoardImpl<Config>::Add(Edge edge) {
         const std::string scoreMap = std::format(R"({{"Player1":{},"Player2":{}}})", Player1Score(), Player2Score());
         LogInfo(R"({{"Step":{},"Turn":{},"Move":{},"Score":{},"Time":{}}})",
                 step,
-                turn.IsPlayer1Turn() ? 1 : 2,
+                IsPlayer1Turn() ? 1 : 2,
                 static_cast<Int>(edge),
                 scoreMap,
                 static_cast<double>(time) / 1000.0);
