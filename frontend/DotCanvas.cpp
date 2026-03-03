@@ -26,11 +26,7 @@ THE SOFTWARE.
 
 #include <QPainter>
 
-#include "BaseCanvas.h"
-
 namespace dab::__detail__::frontend {
-
-DotCanvas::DotCanvas(QWidget* parent) : BaseCanvas(parent) { setFixedSize(Width, Width); }
 
 void DotCanvas::paintEvent(QPaintEvent* event) {
   QWidget::paintEvent(event);
