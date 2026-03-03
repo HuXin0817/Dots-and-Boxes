@@ -34,7 +34,7 @@ class DotCanvas : public BaseCanvas {
  public:
   static constexpr int Width = 2 * UnitSize;
 
-  explicit DotCanvas(QWidget* parent) : BaseCanvas(parent) { setFixedSize(Width, Width); }
+  DotCanvas(QWidget* parent) : BaseCanvas(parent) { setFixedSize(Width, Width); }
 
  protected:
   void paintEvent(QPaintEvent* event) override;

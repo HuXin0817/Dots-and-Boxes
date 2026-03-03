@@ -58,9 +58,4 @@ void BaseCanvas::leaveEvent(QEvent* event) {
   update();
 }
 
-Owner StatefulCanvas::GetOwner() const {
-  Assert(OwnerState != nullptr);
-  return *OwnerState;
-}
-
 }  // namespace dab::__detail__::frontend

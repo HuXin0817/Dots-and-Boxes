@@ -28,10 +28,6 @@ THE SOFTWARE.
 
 namespace dab::__detail__::frontend {
 
-BoxCanvas::BoxCanvas(const Owner* owner, QWidget* parent) : StatefulCanvas(owner, parent) {
-  setFixedSize(Width, Width);
-}
-
 void BoxCanvas::paintEvent(QPaintEvent* event) {
   QWidget::paintEvent(event);
 
@@ -46,7 +42,7 @@ QColor BoxCanvas::Color() const {
   static constexpr QColor Player1OccupyColor = QColor(64, 64, 255, 64);
   static constexpr QColor Player2OccupyColor = QColor(255, 64, 64, 64);
 
-  switch (GetOwner()) {
+  switch (GlobalBoard.GetOwner(Value)) {
     case Owner::None:
       return {0, 0, 0, 0};
     case Owner::Player1:

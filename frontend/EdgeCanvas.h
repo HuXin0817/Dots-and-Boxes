@@ -25,28 +25,28 @@ THE SOFTWARE.
 #pragma once
 
 #include <QRunnable>
+#include <functional>
 
 #include "BaseCanvas.h"
 
 namespace dab::__detail__::frontend {
 
-class EdgeCanvas : public StatefulCanvas {
+class EdgeCanvas : public BaseCanvas {
   Q_OBJECT
 
  public:
   static constexpr int Width = UnitSize * 2;
   static constexpr int Height = Width * 5;
 
-  explicit EdgeCanvas(const Owner* owner, bool rotate, QRunnable* callBack, QWidget* parent);
-  void SetHighLight(bool highLight) { HighLight = highLight; }
+  EdgeCanvas(Edge edge, std::function<void(Edge)> callback, QWidget* parent);
 
  protected:
   void mousePressEvent(QMouseEvent* event) override;
   void paintEvent(QPaintEvent* event) override;
 
  private:
-  bool HighLight = true;
-  QRunnable* CallBack;
+  Edge Value;
+  std::function<void(Edge)> Callback;
 
   QColor Color() const;
 };

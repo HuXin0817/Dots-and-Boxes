@@ -29,18 +29,20 @@ THE SOFTWARE.
 
 namespace dab::__detail__::frontend {
 
-class BoxCanvas : public StatefulCanvas {
+class BoxCanvas : public BaseCanvas, public Box {
   Q_OBJECT
 
  public:
   static constexpr int Width = EdgeCanvas::Height - 2 * UnitSize;
 
-  explicit BoxCanvas(const Owner* owner, QWidget* parent);
+  BoxCanvas(Box box, QWidget* parent) : BaseCanvas(parent), Value(box) { setFixedSize(Width, Width); }
 
  protected:
   void paintEvent(QPaintEvent* event) override;
 
  private:
+  Box Value;
+
   QColor Color() const;
 };
 

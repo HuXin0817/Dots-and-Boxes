@@ -195,8 +195,8 @@ class BoardImpl : BasicMixin,
   constexpr Int Player1Score() const { return (this->TotalScore + this->Score) / 2; }
   constexpr Int Player2Score() const { return (this->TotalScore - this->Score) / 2; }
   constexpr Owner NowOwner() const { return IsPlayer1Turn() ? Owner::Player1 : Owner::Player2; }
-  constexpr const Owner* GetOwner(Edge edge) const { return &this->EdgeOwner.At(edge); }
-  constexpr const Owner* GetOwner(Box box) const { return &this->BoxOwner.At(box); }
+  constexpr Owner GetOwner(Edge edge) const { return this->EdgeOwner.At(edge); }
+  constexpr Owner GetOwner(Box box) const { return this->BoxOwner.At(box); }
   constexpr Edge FindNotContainsEdgeInBox(Box box) const;
   constexpr Int FindScoreableEdge();
   constexpr Int MaxObtainableScore(Int endScore);

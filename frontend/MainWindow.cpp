@@ -49,10 +49,11 @@ MainWindow::MainWindow(PlayerType player1Type, PlayerType player2Type, QWidget* 
   resize(WindowSize, WindowSize);
   setMinimumSize(WindowSize, WindowSize);
   for (const Box box : Iota<Box>()) {
-    BoxCanvases.At(box) = new BoxCanvas(Board.GetOwner(box), this);
+    BoxCanvases.At(box) = new BoxCanvas(box, this);
   }
+  auto callback = [this](Edge edge) -> void { SetPlayerMoveEdge(edge); };
   for (const Edge edge : Iota<Edge>()) {
-    EdgeCanvases.At(edge) = new EdgeCanvas(Board.GetOwner(edge), edge.Rotate(), SetPlayerMoveEdgeFunc(edge), this);
+    EdgeCanvases.At(edge) = new EdgeCanvas(edge, callback, this);
   }
   for (QPointer<DotCanvas>& dotCanvas : DotCanvases) {
     dotCanvas = new DotCanvas(this);
@@ -108,41 +109,36 @@ QColor MainWindow::Color() const {
   return ThemeColor(DarkThemeColor, LightThemeColor);
 }
 
-QRunnable* MainWindow::SetPlayerMoveEdgeFunc(Edge edge) {
-  return QRunnable::create([edge, this]() -> void {
-    if (Board.Contains(edge)) {
-      return;
-    }
-    if (PlayerTypeIsRobot(Player1Type) && Board.IsPlayer1Turn()) {
-      return;
-    }
-    if (PlayerTypeIsRobot(Player2Type) && Board.IsPlayer2Turn()) {
-      return;
-    }
-    PlayerMoveEdge = edge;
-  });
+void MainWindow::SetPlayerMoveEdge(Edge edge) {
+  if (GlobalBoard.Contains(edge)) {
+    return;
+  }
+  if (PlayerTypeIsRobot(Player1Type) && GlobalBoard.IsPlayer1Turn()) {
+    return;
+  }
+  if (PlayerTypeIsRobot(Player2Type) && GlobalBoard.IsPlayer2Turn()) {
+    return;
+  }
+  PlayerMoveEdge = edge;
 }
 
 void MainWindow::Run() {
-  Board.Reset();
-  for (const Edge edge : Iota<Edge>()) {
-    EdgeCanvases.At(edge)->SetHighLight(false);
-  }
+  GlobalBoard.Reset();
   Random Random;
-  while (Board.Gaming()) {
-    if (PlayerTypeIsRobot(Player1Type) && Board.IsPlayer1Turn()) {
-      PlayerMoveEdge = Random.Choice(Robot1->BestCandidateEdges(Board));
-    } else if (PlayerTypeIsRobot(Player2Type) && Board.IsPlayer2Turn()) {
-      PlayerMoveEdge = Random.Choice(Robot2->BestCandidateEdges(Board));
+  while (GlobalBoard.Gaming()) {
+    if (PlayerTypeIsRobot(Player1Type) && GlobalBoard.IsPlayer1Turn()) {
+      PlayerMoveEdge = Random.Choice(Robot1->BestCandidateEdges(GlobalBoard));
+    } else if (PlayerTypeIsRobot(Player2Type) && GlobalBoard.IsPlayer2Turn()) {
+      PlayerMoveEdge = Random.Choice(Robot2->BestCandidateEdges(GlobalBoard));
     } else {
       PlayerMoveEdge.Reset();
       while (!PlayerMoveEdge.Valid()) {
         QThread::yieldCurrentThread();
       }
     }
-    Assert(Board.NotContains(PlayerMoveEdge));
+    Assert(GlobalBoard.NotContains(PlayerMoveEdge));
     QMetaObject::invokeMethod(this, &MainWindow::Add, Qt::BlockingQueuedConnection);
-    Assert(Board.Contains(PlayerMoveEdge));
+    Assert(GlobalBoard.Contains(PlayerMoveEdge));
   }
   QMetaObject::invokeMethod(this, &MainWindow::HandleGameOver, Qt::BlockingQueuedConnection);
 }
@@ -150,24 +146,22 @@ void MainWindow::Run() {
 void MainWindow::AsyncRun() { QThreadPool::globalInstance()->start(std::bind(&MainWindow::Run, this)); }
 
 void MainWindow::Add() {
-  if (!Board.MoveRecord().Empty()) {
-    EdgeCanvases.At(Board.MoveRecord().Back())->SetHighLight(false);
-  }
-  EdgeCanvases.At(PlayerMoveEdge)->SetHighLight(true);
   EdgeCanvases.At(PlayerMoveEdge)->raise();
   DotCanvases.At(PlayerMoveEdge.Dot1())->raise();
   DotCanvases.At(PlayerMoveEdge.Dot2())->raise();
-  Board.Add(PlayerMoveEdge);
+  GlobalBoard.Add(PlayerMoveEdge);
   update();
   QApplication::beep();
 }
 
 void MainWindow::HandleGameOver() {
   const QPointer messagebox = new QMessageBox(this);
-  if (Board.RelativeScore() > 0) {
-    messagebox->setText(QString("Blue Team Win! (Score %1:%2)").arg(Board.Player1Score()).arg(Board.Player2Score()));
-  } else if (Board.RelativeScore() < 0) {
-    messagebox->setText(QString("Red Team Win! (Score %1:%2)").arg(Board.Player1Score()).arg(Board.Player2Score()));
+  if (GlobalBoard.RelativeScore() > 0) {
+    messagebox->setText(
+        QString("Blue Team Win! (Score %1:%2)").arg(GlobalBoard.Player1Score()).arg(GlobalBoard.Player2Score()));
+  } else if (GlobalBoard.RelativeScore() < 0) {
+    messagebox->setText(
+        QString("Red Team Win! (Score %1:%2)").arg(GlobalBoard.Player1Score()).arg(GlobalBoard.Player2Score()));
   } else {
     messagebox->setText("Draw!");
   }

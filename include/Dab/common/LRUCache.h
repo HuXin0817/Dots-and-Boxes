@@ -118,7 +118,7 @@ class ThreadSafeLRUCache {
   /**
    * Create a container with a given maximum size
    */
-  explicit ThreadSafeLRUCache(uint32_t maxSize);
+  ThreadSafeLRUCache(uint32_t maxSize);
 
   ThreadSafeLRUCache(const ThreadSafeLRUCache& other) = delete;
   ThreadSafeLRUCache& operator=(const ThreadSafeLRUCache&) = delete;

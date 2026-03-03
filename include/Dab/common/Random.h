@@ -34,7 +34,7 @@ namespace dab::__detail__::common {
 
 class Random {
  public:
-  explicit Random();
+  Random();
 
   template <typename T>
   T Range(T min, T max);

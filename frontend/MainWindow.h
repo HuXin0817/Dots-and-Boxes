@@ -41,7 +41,7 @@ class MainWindow : public BaseCanvas {
   static constexpr int WindowSize = BoardWidth + 2 * BoxCanvas::Width;
 
  public:
-  explicit MainWindow(PlayerType player1Type, PlayerType player2Type, QWidget* parent = nullptr);
+  MainWindow(PlayerType player1Type, PlayerType player2Type, QWidget* parent = nullptr);
 
  protected:
   void paintEvent(QPaintEvent* event) override;
@@ -54,13 +54,12 @@ class MainWindow : public BaseCanvas {
   std::unique_ptr<Robot> Robot1;
   std::unique_ptr<Robot> Robot2;
   Edge PlayerMoveEdge;
-  GameBoard Board;
   Array<QPointer<BoxCanvas>, Box::Max> BoxCanvases;
   Array<QPointer<DotCanvas>, Dot::Max> DotCanvases;
   Array<QPointer<EdgeCanvas>, Edge::Max> EdgeCanvases;
 
   QColor Color() const;
-  QRunnable* SetPlayerMoveEdgeFunc(Edge edge);
+  void SetPlayerMoveEdge(Edge edge);
 
  public Q_SLOTS:
   void Run();

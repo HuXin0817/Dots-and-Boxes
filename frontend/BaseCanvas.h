@@ -36,6 +36,7 @@ class BaseCanvas : public QWidget {
 
  public:
   static constexpr int UnitSize = 6 + 16 / BoardSize;
+  static inline GameBoard GlobalBoard;
 
   using QWidget::QWidget;
 
@@ -48,16 +49,6 @@ class BaseCanvas : public QWidget {
 
  private:
   bool HoverState = false;
-};
-
-class StatefulCanvas : public BaseCanvas {
- public:
-  StatefulCanvas(const Owner* owner, QWidget* parent) : BaseCanvas(parent), OwnerState(owner) {}
-
-  Owner GetOwner() const;
-
- private:
-  const Owner* OwnerState = nullptr;
 };
 
 }  // namespace dab::__detail__::frontend
