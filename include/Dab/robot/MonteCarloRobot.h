@@ -32,6 +32,18 @@ THE SOFTWARE.
 namespace dab::__detail__::robot {
 
 class MonteCarloRobot {
+  struct ScoreMap {
+    ScoreMap() = default;
+
+    void Reset();
+    void Add(Edge edge, Int score);
+    void Add(const ScoreMap& other);
+    Span<const Edge> Export(List<Edge, Edge::Max>& edges);
+
+    Array<int64_t, Edge::Max> Time;
+    Array<int64_t, Edge::Max> Score;
+  };
+
   static constexpr uint32_t SearchTime = static_cast<uint32_t>(Edge::Max) << 6;
 
  public:
@@ -42,14 +54,48 @@ class MonteCarloRobot {
   Span<const Edge> BestCandidateEdges(const Board& board);
   template <typename Board>
   bool CanEarlyExit(const Board& board, Span<const Edge>& result);
-  ScoreMap<int64_t>& GetSearchResult() { return SearchResult; }
+  ScoreMap& GetSearchResult() { return SearchResult; }
   List<Edge, Edge::Max>& GetSearchEdges() { return SubRobot.GetSearchEdges(); }
 
  private:
   CachedRobot<SimulationRobot> SubRobot;
   RelativeScoreBoard SimulationBoard;
-  ScoreMap<int64_t> SearchResult;
+  ScoreMap SearchResult;
 };
+
+inline void MonteCarloRobot::ScoreMap::Reset() {
+  std::ranges::fill(Time, 0);
+  std::ranges::fill(Score, 0);
+}
+
+inline void MonteCarloRobot::ScoreMap::Add(Edge edge, Int score) {
+  ++Time.At(edge);
+  Score.At(edge) += score;
+}
+
+inline void MonteCarloRobot::ScoreMap::Add(const ScoreMap& other) {
+  for (const Int i : Iota<Edge>()) {
+    Time.At(i) += other.Time.At(i);
+    Score.At(i) += other.Score.At(i);
+  }
+}
+
+inline Span<const Edge> MonteCarloRobot::ScoreMap::Export(List<Edge, Edge::Max>& edges) {
+  edges.Clear();
+  float maxScore = 0.0;
+  for (const Edge edge : Iota<Edge>()) {
+    if (Time.At(edge) > 0) {
+      if (const float score = static_cast<float>(Score.At(edge)) / static_cast<float>(Time.At(edge));
+          score > maxScore || edges.Empty()) {
+        maxScore = score;
+        edges.ClearAndSet(edge);
+      } else if (score == maxScore) {
+        edges.Append(edge);
+      }
+    }
+  }
+  return {edges.begin(), edges.Size()};
+}
 
 template <typename Board>
 void MonteCarloRobot::SearchCandidateEdges(const Board& board) {
