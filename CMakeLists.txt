@@ -23,7 +23,11 @@ if(NOT MaxBoardSize)
 endif()
 
 if(NOT DefaultBoardSize)
-  set(DefaultBoardSize 6)
+  if(6 LESS ${MaxBoardSize})
+    set(DefaultBoardSize 6)
+  else()
+    set(DefaultBoardSize ${MaxBoardSize})
+  endif()
 endif()
 
 file(READ VERSION Version)
