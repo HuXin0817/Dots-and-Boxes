@@ -45,7 +45,8 @@ static constexpr int EnableAbsoluteScore = 1 << 2;
 static constexpr int EnableLogging = 1 << 3;
 static constexpr int EnableScoreableCount = 1 << 4;
 static constexpr int EnableHashValue = 1 << 5;
-static constexpr int MaxFlag = 1 << 6;
+static constexpr int EnableOwner = 1 << 6;
+static constexpr int MaxFlag = 1 << 7;
 
 static constexpr bool HasFlag(int config, int flag) { return (config & flag) != 0; }
 
@@ -62,6 +63,9 @@ static constexpr int FixedConfig(int config) {
   }
   if (HasFlag(config, EnableScoreableCount)) {
     fixedConfig |= EnableEdgeCount;
+  }
+  if (HasFlag(config, EnableOwner)) {
+    fixedConfig |= EnableEdgeCount | EnableRelativeScore;
   }
   return fixedConfig;
 }
@@ -136,6 +140,21 @@ inline Array<uint32_t, Edge::Max> HashMixin<true>::HashMapper = []() -> Array<ui
   return result;
 }();
 
+template <bool>
+struct OwnerMixin {};
+
+enum class Owner {
+  None,
+  Player1,
+  Player2,
+};
+
+template <>
+struct OwnerMixin<true> {
+  Array<Owner, Edge::Max> EdgeOwner;
+  Array<Owner, Box::Max> BoxOwner;
+};
+
 template <int Config>
 class BoardImpl : BasicMixin,
                   EdgeCountMixin<HasFlag(Config, EnableEdgeCount)>,
@@ -143,7 +162,8 @@ class BoardImpl : BasicMixin,
                   RelativeScoreMixin<HasFlag(Config, EnableRelativeScore)>,
                   AbsoluteScoreMixin<HasFlag(Config, EnableAbsoluteScore)>,
                   LoggingMixin<HasFlag(Config, EnableLogging)>,
-                  HashMixin<HasFlag(Config, EnableHashValue)> {
+                  HashMixin<HasFlag(Config, EnableHashValue)>,
+                  OwnerMixin<HasFlag(Config, EnableOwner)> {
   template <int>
   friend class BoardImpl;
   static constexpr bool HasFlag(int flag) { return (Config & flag) != 0; }
@@ -171,6 +191,9 @@ class BoardImpl : BasicMixin,
   constexpr bool IsPlayer2Turn() const { return this->Turn.IsPlayer2Turn(); }
   constexpr Int Player1Score() const { return (this->TotalScore + this->Score) / 2; }
   constexpr Int Player2Score() const { return (this->TotalScore - this->Score) / 2; }
+  constexpr Owner NowOwner() const { return IsPlayer1Turn() ? Owner::Player1 : Owner::Player2; }
+  constexpr const Owner* GetOwner(Edge edge) const { return &this->EdgeOwner.At(edge); }
+  constexpr const Owner* GetOwner(Box box) const { return &this->BoxOwner.At(box); }
   constexpr Edge FindNotContainsEdgeInBox(Box box) const;
   constexpr Int FindScoreableEdge();
   constexpr Int MaxObtainableScore(Int endScore);
@@ -206,6 +229,10 @@ constexpr void BoardImpl<Config>::Reset() {
   if constexpr (HasFlag(EnableHashValue)) {
     this->HashValue = 0;
   }
+  if constexpr (HasFlag(EnableOwner)) {
+    std::fill(this->EdgeOwner.begin(), this->EdgeOwner.end(), Owner::None);
+    std::fill(this->BoxOwner.begin(), this->BoxOwner.end(), Owner::None);
+  }
 }
 
 template <int Config>
@@ -223,6 +250,9 @@ constexpr Int BoardImpl<Config>::Add(Edge edge) {
   if constexpr (HasFlag(EnableHashValue)) {
     this->HashValue += this->HashMapper.At(edge);
   }
+  if constexpr (HasFlag(EnableOwner)) {
+    this->EdgeOwner.At(edge) = NowOwner();
+  }
   Int score = 0;
   if constexpr (HasFlag(EnableEdgeCount)) {
     for (const Box box : edge.NearBoxes()) {
@@ -230,6 +260,9 @@ constexpr Int BoardImpl<Config>::Add(Edge edge) {
       Assert(num <= 4);
       if (num == 4) {
         ++score;
+        if constexpr (HasFlag(EnableOwner)) {
+          this->BoxOwner.At(box) = NowOwner();
+        }
       }
       if constexpr (HasFlag(EnableScoreableCount)) {
         if (num == 3) {
@@ -355,6 +388,11 @@ constexpr BoardImpl<Config>& BoardImpl<Config>::operator=(const Other& other) {
     static_assert(Other::HasFlag(EnableHashValue));
     this->HashValue = other.HashValue;
   }
+  if constexpr (HasFlag(EnableOwner)) {
+    static_assert(Other::HasFlag(EnableOwner));
+    this->EdgeOwner = other->EdgeOwner;
+    this->BoxOwner = other->BoxOwner;
+  }
   return *this;
 }
 
@@ -391,7 +429,7 @@ using HashValueBoard = Board<EnableHashValue>;
 using EdgeCountBoard = Board<EnableEdgeCount | EnableHashValue>;
 using RelativeScoreBoard = Board<EnableRelativeScore | EnableHashValue>;
 using AbsoluteScoreBoard = Board<EnableAbsoluteScore | EnableHashValue>;
-using LoggingBoard = Board<EnableLogging | EnableHashValue>;
+using LoggingBoard = Board<EnableLogging | EnableOwner | EnableHashValue>;
 using ScoreableCountBoard = Board<EnableScoreableCount>;
 
 }  // namespace dab
