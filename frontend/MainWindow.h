@@ -54,7 +54,7 @@ class MainWindow : public BaseCanvas {
   std::unique_ptr<Robot> Robot1;
   std::unique_ptr<Robot> Robot2;
   Edge PlayerMoveEdge;
-  LoggingBoard Board;
+  GameBoard Board;
   Array<QPointer<BoxCanvas>, Box::Max> BoxCanvases;
   Array<QPointer<DotCanvas>, Dot::Max> DotCanvases;
   Array<QPointer<EdgeCanvas>, Edge::Max> EdgeCanvases;

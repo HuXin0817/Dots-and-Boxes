@@ -30,7 +30,8 @@ THE SOFTWARE.
 
 namespace dab::__detail__::frontend {
 
-EdgeCanvas::EdgeCanvas(bool rotate, QRunnable* callBack, QWidget* parent) : BaseCanvas(parent), CallBack(callBack) {
+EdgeCanvas::EdgeCanvas(const Owner* owner, bool rotate, QRunnable* callBack, QWidget* parent)
+    : StatefulCanvas(owner, parent), CallBack(callBack) {
   setFixedSize(rotate ? Width : Height, rotate ? Height : Width);
 }
 

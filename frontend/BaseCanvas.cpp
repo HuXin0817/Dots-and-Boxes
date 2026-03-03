@@ -30,6 +30,7 @@ THE SOFTWARE.
 #include <QPainter>
 #include <QStyleHints>
 #include <QWidget>
+#include <cstddef>
 
 namespace dab::__detail__::frontend {
 
@@ -41,19 +42,8 @@ QColor BaseCanvas::ThemeColor(const QColor& DarkThemeColor, const QColor& LightT
       return DarkThemeColor;
     case Qt::ColorScheme::Unknown:
       break;
-    default:
-      break;
   }
-  std::unreachable();
   return {};
-}
-
-void BaseCanvas::SetOwner(Turn turn) {
-  if (turn.IsPlayer1Turn()) {
-    Owner = Owner::Player1;
-  } else {
-    Owner = Owner::Player2;
-  }
 }
 
 void BaseCanvas::enterEvent(QEnterEvent* event) {
@@ -66,6 +56,11 @@ void BaseCanvas::leaveEvent(QEvent* event) {
   QWidget::leaveEvent(event);
   HoverState = false;
   update();
+}
+
+Owner StatefulCanvas::GetOwner() const {
+  Assert(OwnerState != nullptr);
+  return *OwnerState;
 }
 
 }  // namespace dab::__detail__::frontend

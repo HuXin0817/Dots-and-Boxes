@@ -41,7 +41,7 @@ class Robot {
  public:
   virtual ~Robot() = default;
 
-  virtual Span<const Edge> BestCandidateEdges(const LoggingBoard& board) = 0;
+  virtual Span<const Edge> BestCandidateEdges(const GameBoard& board) = 0;
 
   static std::unique_ptr<Robot> Create(PlayerType playerType);
 };
@@ -52,7 +52,7 @@ class RobotWapper : public Robot, public Derived {
   using Derived::Derived;
   ~RobotWapper() override = default;
 
-  Span<const Edge> BestCandidateEdges(const LoggingBoard& board) override { return Derived::BestCandidateEdges(board); }
+  Span<const Edge> BestCandidateEdges(const GameBoard& board) override { return Derived::BestCandidateEdges(board); }
 };
 
 inline std::unique_ptr<Robot> Robot::Create(PlayerType playerType) {
@@ -84,7 +84,7 @@ inline void MockRunningGame(PlayerType player1Type, PlayerType player2Type) {
   Assert(robot2);
 
   Random random;
-  LoggingBoard board;
+  GameBoard board;
   while (board.Gaming()) {
     if (board.IsPlayer1Turn()) {
       board.Add(random.Choice(robot1->BestCandidateEdges(board)));

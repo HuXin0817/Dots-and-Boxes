@@ -24,18 +24,12 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <Dab/Model.h>
+#include <Dab/Board.h>
 
 #include <QApplication>
 #include <QWidget>
 
 namespace dab::__detail__::frontend {
-
-enum class Owner {
-  None,
-  Player1,
-  Player2,
-};
 
 class BaseCanvas : public QWidget {
   Q_OBJECT
@@ -47,17 +41,23 @@ class BaseCanvas : public QWidget {
 
   static QColor ThemeColor(const QColor& DarkThemeColor, const QColor& LightThemeColor);
   bool Hovered() const { return HoverState; }
-  Owner GetOwner() const { return Owner; }
-  void SetOwner(Owner owner) { Owner = owner; }
-  void SetOwner(Turn turn);
 
  protected:
   void enterEvent(QEnterEvent* event) override;
   void leaveEvent(QEvent* event) override;
 
  private:
-  Owner Owner = Owner::None;
   bool HoverState = false;
+};
+
+class StatefulCanvas : public BaseCanvas {
+ public:
+  StatefulCanvas(const Owner* owner, QWidget* parent) : BaseCanvas(parent), OwnerState(owner) {}
+
+  Owner GetOwner() const;
+
+ private:
+  const Owner* OwnerState = nullptr;
 };
 
 }  // namespace dab::__detail__::frontend

@@ -424,12 +424,13 @@ using Board = BoardImpl<FixedConfig(Config)>;
 
 using namespace __detail__::board::config;
 using __detail__::board::Board;
+using __detail__::board::Owner;
 using BasicBoard = Board<0>;
 using HashValueBoard = Board<EnableHashValue>;
 using EdgeCountBoard = Board<EnableEdgeCount | EnableHashValue>;
 using RelativeScoreBoard = Board<EnableRelativeScore | EnableHashValue>;
 using AbsoluteScoreBoard = Board<EnableAbsoluteScore | EnableHashValue>;
-using LoggingBoard = Board<EnableLogging | EnableOwner | EnableHashValue>;
+using GameBoard = Board<EnableLogging | EnableOwner | EnableHashValue>;
 using ScoreableCountBoard = Board<EnableScoreableCount>;
 
 }  // namespace dab

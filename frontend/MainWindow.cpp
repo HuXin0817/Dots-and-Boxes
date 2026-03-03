@@ -48,11 +48,11 @@ MainWindow::MainWindow(PlayerType player1Type, PlayerType player2Type, QWidget* 
 
   resize(WindowSize, WindowSize);
   setMinimumSize(WindowSize, WindowSize);
-  for (QPointer<BoxCanvas>& boxCanvas : BoxCanvases) {
-    boxCanvas = new BoxCanvas(this);
+  for (const Box box : Iota<Box>()) {
+    BoxCanvases.At(box) = new BoxCanvas(Board.GetOwner(box), this);
   }
   for (const Edge edge : Iota<Edge>()) {
-    EdgeCanvases.At(edge) = new EdgeCanvas(edge.Rotate(), SetPlayerMoveEdgeFunc(edge), this);
+    EdgeCanvases.At(edge) = new EdgeCanvas(Board.GetOwner(edge), edge.Rotate(), SetPlayerMoveEdgeFunc(edge), this);
   }
   for (QPointer<DotCanvas>& dotCanvas : DotCanvases) {
     dotCanvas = new DotCanvas(this);
@@ -127,10 +127,6 @@ void MainWindow::Run() {
   Board.Reset();
   for (const Edge edge : Iota<Edge>()) {
     EdgeCanvases.At(edge)->SetHighLight(false);
-    EdgeCanvases.At(edge)->SetOwner(Owner::None);
-  }
-  for (const Box box : Iota<Box>()) {
-    BoxCanvases.At(box)->SetOwner(Owner::None);
   }
   Random Random;
   while (Board.Gaming()) {
@@ -157,16 +153,10 @@ void MainWindow::Add() {
   if (!Board.MoveRecord().Empty()) {
     EdgeCanvases.At(Board.MoveRecord().Back())->SetHighLight(false);
   }
-  EdgeCanvases.At(PlayerMoveEdge)->SetOwner(Board.GetTurn());
   EdgeCanvases.At(PlayerMoveEdge)->SetHighLight(true);
   EdgeCanvases.At(PlayerMoveEdge)->raise();
   DotCanvases.At(PlayerMoveEdge.Dot1())->raise();
   DotCanvases.At(PlayerMoveEdge.Dot2())->raise();
-  for (const Box box : PlayerMoveEdge.NearBoxes()) {
-    if (Board.EdgeCount(box) == 3) {
-      BoxCanvases.At(box)->SetOwner(Board.GetTurn());
-    }
-  }
   Board.Add(PlayerMoveEdge);
   update();
   QApplication::beep();

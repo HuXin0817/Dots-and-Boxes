@@ -29,13 +29,13 @@ THE SOFTWARE.
 
 namespace dab::__detail__::frontend {
 
-class BoxCanvas : public BaseCanvas {
+class BoxCanvas : public StatefulCanvas {
   Q_OBJECT
 
  public:
   static constexpr int Width = EdgeCanvas::Height - 2 * UnitSize;
 
-  explicit BoxCanvas(QWidget* parent);
+  explicit BoxCanvas(const Owner* owner, QWidget* parent);
 
  protected:
   void paintEvent(QPaintEvent* event) override;

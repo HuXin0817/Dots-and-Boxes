@@ -28,7 +28,9 @@ THE SOFTWARE.
 
 namespace dab::__detail__::frontend {
 
-BoxCanvas::BoxCanvas(QWidget* parent) : BaseCanvas(parent) { setFixedSize(Width, Width); }
+BoxCanvas::BoxCanvas(const Owner* owner, QWidget* parent) : StatefulCanvas(owner, parent) {
+  setFixedSize(Width, Width);
+}
 
 void BoxCanvas::paintEvent(QPaintEvent* event) {
   QWidget::paintEvent(event);

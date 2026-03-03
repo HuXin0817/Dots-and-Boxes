@@ -30,14 +30,14 @@ THE SOFTWARE.
 
 namespace dab::__detail__::frontend {
 
-class EdgeCanvas : public BaseCanvas {
+class EdgeCanvas : public StatefulCanvas {
   Q_OBJECT
 
  public:
   static constexpr int Width = UnitSize * 2;
   static constexpr int Height = Width * 5;
 
-  explicit EdgeCanvas(bool rotate, QRunnable* callBack, QWidget* parent);
+  explicit EdgeCanvas(const Owner* owner, bool rotate, QRunnable* callBack, QWidget* parent);
   void SetHighLight(bool highLight) { HighLight = highLight; }
 
  protected:
