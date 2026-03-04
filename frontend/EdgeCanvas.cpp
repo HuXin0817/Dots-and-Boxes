@@ -59,7 +59,7 @@ QColor EdgeCanvas::Color() const {
   static constexpr QColor Player1OccupyColor = QColor(64, 64, 255, 255);
   static constexpr QColor Player2OccupyColor = QColor(255, 64, 64, 255);
 
-  if (GlobalBoard.GetOwner(Value) == Owner::None) {
+  if (GetBoard().GetOwner(Value) == Owner::None) {
     if (Hovered()) {
       return ThemeColor(DarkThemeHoveredColor, LightThemeHoveredColor);
     }
@@ -67,12 +67,12 @@ QColor EdgeCanvas::Color() const {
   }
 
   QColor color;
-  if (GlobalBoard.GetOwner(Value) == Owner::Player1) {
+  if (GetBoard().GetOwner(Value) == Owner::Player1) {
     color = Player1OccupyColor;
-  } else if (GlobalBoard.GetOwner(Value) == Owner::Player2) {
+  } else if (GetBoard().GetOwner(Value) == Owner::Player2) {
     color = Player2OccupyColor;
   }
-  if (GlobalBoard.MoveRecord().Back() == Value) {
+  if (GetBoard().MoveRecord().Back() == Value) {
     color.setAlpha(255);
   } else if (Hovered()) {
     color.setAlpha(144);

@@ -36,12 +36,12 @@ class BaseCanvas : public QWidget {
 
  public:
   static constexpr int UnitSize = 6 + 16 / BoardSize;
-  static inline GameBoard GlobalBoard;
 
   using QWidget::QWidget;
 
   static QColor ThemeColor(const QColor& DarkThemeColor, const QColor& LightThemeColor);
   bool Hovered() const { return HoverState; }
+  const GameBoard& GetBoard() const { return *reinterpret_cast<GameBoard*>(parent()->property("Board").toULongLong()); }
 
  protected:
   void enterEvent(QEnterEvent* event) override;

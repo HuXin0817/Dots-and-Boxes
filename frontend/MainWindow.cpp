@@ -24,6 +24,7 @@ THE SOFTWARE.
 
 #include "MainWindow.h"
 
+#include <Dab/Board.h>
 #include <Dab/Robot.h>
 
 #include <QJsonObject>
@@ -46,6 +47,7 @@ MainWindow::MainWindow(PlayerType player1Type, PlayerType player2Type, QWidget* 
   Robot1 = Robot::Create(Player1Type);
   Robot2 = Robot::Create(Player2Type);
 
+  setProperty("Board", QVariant::fromValue(reinterpret_cast<std::uintptr_t>(&Board)));
   resize(WindowSize, WindowSize);
   setMinimumSize(WindowSize, WindowSize);
   for (const Box box : Iota<Box>()) {
@@ -110,35 +112,35 @@ QColor MainWindow::Color() const {
 }
 
 void MainWindow::SetPlayerMoveEdge(Edge edge) {
-  if (GlobalBoard.Contains(edge)) {
+  if (Board.Contains(edge)) {
     return;
   }
-  if (PlayerTypeIsRobot(Player1Type) && GlobalBoard.IsPlayer1Turn()) {
+  if (PlayerTypeIsRobot(Player1Type) && Board.IsPlayer1Turn()) {
     return;
   }
-  if (PlayerTypeIsRobot(Player2Type) && GlobalBoard.IsPlayer2Turn()) {
+  if (PlayerTypeIsRobot(Player2Type) && Board.IsPlayer2Turn()) {
     return;
   }
   PlayerMoveEdge = edge;
 }
 
 void MainWindow::Run() {
-  GlobalBoard.Reset();
+  Board.Reset();
   Random Random;
-  while (GlobalBoard.Gaming()) {
-    if (PlayerTypeIsRobot(Player1Type) && GlobalBoard.IsPlayer1Turn()) {
-      PlayerMoveEdge = Random.Choice(Robot1->BestCandidateEdges(GlobalBoard));
-    } else if (PlayerTypeIsRobot(Player2Type) && GlobalBoard.IsPlayer2Turn()) {
-      PlayerMoveEdge = Random.Choice(Robot2->BestCandidateEdges(GlobalBoard));
+  while (Board.Gaming()) {
+    if (PlayerTypeIsRobot(Player1Type) && Board.IsPlayer1Turn()) {
+      PlayerMoveEdge = Random.Choice(Robot1->BestCandidateEdges(Board));
+    } else if (PlayerTypeIsRobot(Player2Type) && Board.IsPlayer2Turn()) {
+      PlayerMoveEdge = Random.Choice(Robot2->BestCandidateEdges(Board));
     } else {
       PlayerMoveEdge.Reset();
       while (!PlayerMoveEdge.Valid()) {
         QThread::yieldCurrentThread();
       }
     }
-    Assert(GlobalBoard.NotContains(PlayerMoveEdge));
+    Assert(Board.NotContains(PlayerMoveEdge));
     QMetaObject::invokeMethod(this, &MainWindow::Add, Qt::BlockingQueuedConnection);
-    Assert(GlobalBoard.Contains(PlayerMoveEdge));
+    Assert(Board.Contains(PlayerMoveEdge));
   }
   QMetaObject::invokeMethod(this, &MainWindow::HandleGameOver, Qt::BlockingQueuedConnection);
 }
@@ -149,19 +151,17 @@ void MainWindow::Add() {
   EdgeCanvases.At(PlayerMoveEdge)->raise();
   DotCanvases.At(PlayerMoveEdge.Dot1())->raise();
   DotCanvases.At(PlayerMoveEdge.Dot2())->raise();
-  GlobalBoard.Add(PlayerMoveEdge);
+  Board.Add(PlayerMoveEdge);
   update();
   QApplication::beep();
 }
 
 void MainWindow::HandleGameOver() {
   const QPointer messagebox = new QMessageBox(this);
-  if (GlobalBoard.RelativeScore() > 0) {
-    messagebox->setText(
-        QString("Blue Team Win! (Score %1:%2)").arg(GlobalBoard.Player1Score()).arg(GlobalBoard.Player2Score()));
-  } else if (GlobalBoard.RelativeScore() < 0) {
-    messagebox->setText(
-        QString("Red Team Win! (Score %1:%2)").arg(GlobalBoard.Player1Score()).arg(GlobalBoard.Player2Score()));
+  if (Board.RelativeScore() > 0) {
+    messagebox->setText(QString("Blue Team Win! (Score %1:%2)").arg(Board.Player1Score()).arg(Board.Player2Score()));
+  } else if (Board.RelativeScore() < 0) {
+    messagebox->setText(QString("Red Team Win! (Score %1:%2)").arg(Board.Player1Score()).arg(Board.Player2Score()));
   } else {
     messagebox->setText("Draw!");
   }
