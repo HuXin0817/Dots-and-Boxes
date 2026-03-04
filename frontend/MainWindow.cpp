@@ -126,12 +126,12 @@ void MainWindow::SetPlayerMoveEdge(Edge edge) {
 
 void MainWindow::Run() {
   Board.Reset();
-  Random Random;
+  Random random;
   while (Board.Gaming()) {
     if (PlayerTypeIsRobot(Player1Type) && Board.IsPlayer1Turn()) {
-      PlayerMoveEdge = Random.Choice(Robot1->BestCandidateEdges(Board));
+      PlayerMoveEdge = random.Choice(Robot1->BestCandidateEdges(Board));
     } else if (PlayerTypeIsRobot(Player2Type) && Board.IsPlayer2Turn()) {
-      PlayerMoveEdge = Random.Choice(Robot2->BestCandidateEdges(Board));
+      PlayerMoveEdge = random.Choice(Robot2->BestCandidateEdges(Board));
     } else {
       PlayerMoveEdge.Reset();
       while (!PlayerMoveEdge.Valid()) {

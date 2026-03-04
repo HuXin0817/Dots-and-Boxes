@@ -41,9 +41,9 @@ class BaseCanvas : public QWidget {
 
   static QColor ThemeColor(const QColor& DarkThemeColor, const QColor& LightThemeColor);
   bool Hovered() const { return HoverState; }
-  const GameBoard& GetBoard() const { return *reinterpret_cast<GameBoard*>(parent()->property("Board").toULongLong()); }
 
  protected:
+  const GameBoard& GetBoard() const;
   void enterEvent(QEnterEvent* event) override;
   void leaveEvent(QEvent* event) override;
 

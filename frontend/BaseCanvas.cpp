@@ -32,6 +32,9 @@ THE SOFTWARE.
 #include <QWidget>
 #include <cstddef>
 
+#include "Dab/Board.h"
+#include "Dab/Tools.h"
+
 namespace dab::__detail__::frontend {
 
 QColor BaseCanvas::ThemeColor(const QColor& DarkThemeColor, const QColor& LightThemeColor) {
@@ -44,6 +47,19 @@ QColor BaseCanvas::ThemeColor(const QColor& DarkThemeColor, const QColor& LightT
       break;
   }
   return {};
+}
+
+const GameBoard& BaseCanvas::GetBoard() const {
+  QObject* mainWindow = parent();
+  Assert(mainWindow);
+  QVariant value = mainWindow->property("Board");
+  Assert(value.isValid());
+  bool ok;
+  qulonglong num = value.toULongLong(&ok);
+  Assert(ok);
+  GameBoard* board = reinterpret_cast<GameBoard*>(num);
+  Assert(board != nullptr);
+  return *board;
 }
 
 void BaseCanvas::enterEvent(QEnterEvent* event) {
