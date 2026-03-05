@@ -110,16 +110,16 @@ struct LoggingMixin {
 };
 
 struct HashValueMixin {
-  static Array<uint32_t, Edge::Max> HashMapper;
+  static Array<size_t, Edge::Max> HashMapper;
 
-  uint32_t HashValue;
+  size_t HashValue;
 };
 
-inline Array<uint32_t, Edge::Max> HashValueMixin::HashMapper = []() -> Array<uint32_t, Edge::Max> {
+inline Array<size_t, Edge::Max> HashValueMixin::HashMapper = []() -> Array<size_t, Edge::Max> {
   Random random;
-  Array<uint32_t, Edge::Max> result;
-  for (uint32_t& v : result) {
-    v = random.Range(std::numeric_limits<uint32_t>::min(), std::numeric_limits<uint32_t>::max());
+  Array<size_t, Edge::Max> result;
+  for (size_t& v : result) {
+    v = random.Range(std::numeric_limits<size_t>::min(), std::numeric_limits<size_t>::max());
   }
   return result;
 }();
@@ -161,7 +161,7 @@ class BoardImpl : BasicMixin,
   constexpr bool Gaming() const { return Step < Edge::Max; }
   constexpr Int RemainStep() const { return Edge::Max - Step; }
   constexpr Int NowStep() const { return Step; }
-  constexpr uint32_t Hash() const { return this->HashValue; }
+  constexpr size_t Hash() const { return this->HashValue; }
   constexpr uint8_t EdgeCount(Box box) const { return this->Counter.At(box); }
   constexpr uint8_t MaxEdgeCount(Edge edge) const;
   constexpr bool Scoreable(Edge edge) const { return MaxEdgeCount(edge) == 3; }
@@ -422,7 +422,7 @@ using namespace dab::__detail__::board;
 template <int Config>
   requires(HasFlag(Config, EnableHashValue))
 struct hash<BoardImpl<Config>> {
-  constexpr uint32_t operator()(const BoardImpl<Config>& board) const { return board.Hash(); }
+  constexpr size_t operator()(const BoardImpl<Config>& board) const { return board.Hash(); }
 };
 
 }  // namespace std
