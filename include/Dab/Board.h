@@ -74,33 +74,26 @@ static constexpr int FixedConfig(int config) {
 
 using namespace config;
 
+template <bool, typename>
+struct Mixin {};
+template <typename T>
+struct Mixin<true, T> : public T {};
+
 struct BasicMixin {
   Int Step = 0;
   Array<Edge, Edge::Max> Edges;
   Array<Int, Edge::Max> EdgeIndexes;
 };
 
-template <bool>
-struct EdgeCountMixin {};
-
-template <>
-struct EdgeCountMixin<true> {
+struct EdgeCountMixin {
   Array<uint8_t, Box::Max> Counter;
 };
 
-template <bool>
-struct ScoreableCountingMixin {};
-
-template <>
-struct ScoreableCountingMixin<true> {
+struct ScoreableCountingMixin {
   Queue<Edge, Edge::Max> ScoreableEdges;
 };
 
-template <bool>
-struct RelativeScoreMixin {};
-
-template <>
-struct RelativeScoreMixin<true> {
+struct RelativeScoreMixin {
   static constexpr Int Player1Turn = 1;
   static constexpr Int Player2Turn = -Player1Turn;
 
@@ -108,33 +101,21 @@ struct RelativeScoreMixin<true> {
   Int Turn = Player1Turn;
 };
 
-template <bool>
-struct AbsoluteScoreMixin {};
-
-template <>
-struct AbsoluteScoreMixin<true> {
+struct AbsoluteScoreMixin {
   Int TotalScore;
 };
 
-template <bool>
-struct LoggingMixin {};
-
-template <>
-struct LoggingMixin<true> {
+struct LoggingMixin {
   std::chrono::system_clock::time_point LastUpdateTime;
 };
 
-template <bool>
-struct HashMixin {};
-
-template <>
-struct HashMixin<true> {
+struct HashMixin {
   static Array<uint32_t, Edge::Max> HashMapper;
 
   uint32_t HashValue;
 };
 
-inline Array<uint32_t, Edge::Max> HashMixin<true>::HashMapper = []() -> Array<uint32_t, Edge::Max> {
+inline Array<uint32_t, Edge::Max> HashMixin::HashMapper = []() -> Array<uint32_t, Edge::Max> {
   Random random;
   Array<uint32_t, Edge::Max> result;
   for (uint32_t& v : result) {
@@ -143,30 +124,26 @@ inline Array<uint32_t, Edge::Max> HashMixin<true>::HashMapper = []() -> Array<ui
   return result;
 }();
 
-template <bool>
-struct OwnerMixin {};
-
 enum class Owner {
   None,
   Player1,
   Player2,
 };
 
-template <>
-struct OwnerMixin<true> {
+struct OwnerMixin {
   Array<Owner, Edge::Max> EdgeOwner;
   Array<Owner, Box::Max> BoxOwner;
 };
 
 template <int Config>
 class BoardImpl : BasicMixin,
-                  EdgeCountMixin<HasFlag(Config, EnableEdgeCount)>,
-                  ScoreableCountingMixin<HasFlag(Config, EnableScoreableCount)>,
-                  RelativeScoreMixin<HasFlag(Config, EnableRelativeScore)>,
-                  AbsoluteScoreMixin<HasFlag(Config, EnableAbsoluteScore)>,
-                  LoggingMixin<HasFlag(Config, EnableLogging)>,
-                  HashMixin<HasFlag(Config, EnableHashValue)>,
-                  OwnerMixin<HasFlag(Config, EnableOwner)> {
+                  Mixin<HasFlag(Config, EnableEdgeCount), EdgeCountMixin>,
+                  Mixin<HasFlag(Config, EnableScoreableCount), ScoreableCountingMixin>,
+                  Mixin<HasFlag(Config, EnableRelativeScore), RelativeScoreMixin>,
+                  Mixin<HasFlag(Config, EnableAbsoluteScore), AbsoluteScoreMixin>,
+                  Mixin<HasFlag(Config, EnableLogging), LoggingMixin>,
+                  Mixin<HasFlag(Config, EnableHashValue), HashMixin>,
+                  Mixin<HasFlag(Config, EnableOwner), OwnerMixin> {
   template <int>
   friend class BoardImpl;
   static constexpr bool HasFlag(int flag) { return (Config & flag) != 0; }
