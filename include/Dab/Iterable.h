@@ -119,14 +119,15 @@ class Iterable : Mixin<HasFlag(Config, EnableArray), ArrayMixin<T, ArraySize>>,
   constexpr const T& Back() const { return this->Data[EndIndex() - 1]; }
   constexpr void Append(T ele) { this->Data[this->EndPos++] = ele; }
   constexpr T Pop() { return this->Data[this->FrontPos++]; }
-  constexpr T& At(Int i);
-  constexpr const T& At(Int i) const;
+  constexpr T& At(Int i) { return this->Data[CheckIndex(i)]; }
+  constexpr const T& At(Int i) const { return this->Data[CheckIndex(i)]; }
   constexpr void Clear();
   constexpr void ClearAndSet(T ele);
 
  private:
   constexpr Int FrontIndex() const;
   constexpr Int EndIndex() const;
+  constexpr Int CheckIndex(Int i) const;
 };
 
 template <int Config, typename T, Int ArraySize>
@@ -166,18 +167,6 @@ constexpr void Iterable<Config, T, ArraySize>::operator=(const Iterable& other) 
 }
 
 template <int Config, typename T, Int ArraySize>
-constexpr T& Iterable<Config, T, ArraySize>::At(Int i) {
-  Assert(i >= 0 && i < Size());
-  return this->Data[i + FrontIndex()];
-}
-
-template <int Config, typename T, Int ArraySize>
-constexpr const T& Iterable<Config, T, ArraySize>::At(Int i) const {
-  Assert(i >= 0 && i < Size());
-  return this->Data[i + FrontIndex()];
-}
-
-template <int Config, typename T, Int ArraySize>
 constexpr void Iterable<Config, T, ArraySize>::Clear() {
   if constexpr (HasFlag(EnableEndPointer)) {
     this->EndPos = 0;
@@ -210,12 +199,21 @@ constexpr Int Iterable<Config, T, ArraySize>::FrontIndex() const {
 template <int Config, typename T, Int ArraySize>
 constexpr Int Iterable<Config, T, ArraySize>::EndIndex() const {
   if constexpr (HasFlag(EnableEndPointer)) {
+    if constexpr (HasFlag(EnableArray)) {
+      Assert(this->EndPos <= ArraySize);
+    }
     return this->EndPos;
   } else if constexpr (HasFlag(EnableArray)) {
     return ArraySize;
   } else {
     static_assert(false);
   }
+}
+
+template <int Config, typename T, Int ArraySize>
+constexpr Int Iterable<Config, T, ArraySize>::CheckIndex(Int i) const {
+  Assert(i >= 0 && i < Size());
+  return i;
 }
 
 class Random {
