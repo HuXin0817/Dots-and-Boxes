@@ -42,7 +42,7 @@ namespace config {
 
 static constexpr int EnableArray = 1 << 1;
 static constexpr int EnablePtr = 1 << 2;
-static constexpr int EnableAllocLength = 1 << 3;
+static constexpr int EnableAllocSize = 1 << 3;
 static constexpr int EnableFrontPointer = 1 << 4;
 static constexpr int EnableEndPointer = 1 << 5;
 
@@ -50,11 +50,11 @@ static constexpr bool HasFlag(int config, int flag) { return (config & flag) != 
 
 static constexpr bool CheckConfig(int config, Int arraySize) {
   if (HasFlag(config, EnableArray)) {
-    return arraySize > 0 && !HasFlag(config, EnablePtr) && !HasFlag(config, EnableAllocLength);
+    return arraySize > 0 && !HasFlag(config, EnablePtr) && !HasFlag(config, EnableAllocSize);
   } else if (!HasFlag(config, EnablePtr)) {
     return false;
   }
-  if (HasFlag(config, EnableAllocLength)) {
+  if (HasFlag(config, EnableAllocSize)) {
     return HasFlag(config, EnablePtr);
   }
   if (HasFlag(config, EnableFrontPointer)) {
@@ -88,7 +88,7 @@ struct PtrMixin {
 
 template <int Config, typename T, Int ArraySize = 0>
 class Iterable : Mixin<HasFlag(Config, EnableArray), ArrayMixin<T, ArraySize>>,
-                 Mixin<HasFlag(Config, EnablePtr), PtrMixin<T, HasFlag(Config, EnableAllocLength)>>,
+                 Mixin<HasFlag(Config, EnablePtr), PtrMixin<T, HasFlag(Config, EnableAllocSize)>>,
                  Mixin<HasFlag(Config, EnableFrontPointer), FrontPointerMixin>,
                  Mixin<HasFlag(Config, EnableEndPointer), EndPointerMixin> {
   static constexpr bool HasFlag(int flag) { return (Config & flag) != 0; }
@@ -98,36 +98,40 @@ class Iterable : Mixin<HasFlag(Config, EnableArray), ArrayMixin<T, ArraySize>>,
   constexpr Iterable() = default;
   constexpr Iterable(Int size) { Reset(size); }
   constexpr Iterable(const T* data, Int size) { Reset(data, size); }
-  constexpr Iterable(const T* begin, const T* end) { Reset(begin, end - begin); }
+  constexpr Iterable(const T* begin, const T* end) { Reset(begin, end); }
   constexpr Iterable(const Iterable& other) { operator=(other); }
 
   constexpr void Reset(Int size);
   constexpr void Reset(const T* data, Int size);
+  constexpr void Reset(const T* begin, const T* end) { Reset(begin, end - begin); }
   constexpr void operator=(const Iterable& other);
 
-  constexpr T* begin();
-  constexpr const T* begin() const;
-  constexpr T* end() { return begin() + Size(); }
-  constexpr const T* end() const { return begin() + Size(); }
+  constexpr T* begin() { return &this->Data[FrontIndex()]; }
+  constexpr const T* begin() const { return &this->Data[FrontIndex()]; }
+  constexpr T* end() { return &this->Data[EndIndex()]; }
+  constexpr const T* end() const { return &this->Data[EndIndex()]; }
 
-  constexpr Int Size() const;
-  constexpr bool Empty() const { return Size() == 0; }
-  constexpr Int FrontIndex() const;
+  constexpr Int Size() const { return EndIndex() - FrontIndex(); }
+  constexpr bool Empty() const { return EndIndex() == FrontIndex(); }
+  constexpr T& Front() { return this->Data[FrontIndex()]; }
+  constexpr const T& Front() const { return this->Data[FrontIndex()]; }
+  constexpr T& Back() { return this->Data[EndIndex() - 1]; }
+  constexpr const T& Back() const { return this->Data[EndIndex() - 1]; }
+  constexpr void Append(T ele) { this->Data[this->EndPos++] = ele; }
+  constexpr T Pop() { return this->Data[this->FrontPos++]; }
   constexpr T& At(Int i);
   constexpr const T& At(Int i) const;
-  constexpr T& Front() { return At(0); }
-  constexpr const T& Front() const { return At(0); }
-  constexpr T& Back() { return At(Size() - 1); }
-  constexpr const T& Back() const { return At(Size() - 1); }
-  constexpr void Append(T ele);
-  constexpr T Pop();
   constexpr void Clear();
   constexpr void ClearAndSet(T ele);
+
+ private:
+  constexpr Int FrontIndex() const;
+  constexpr Int EndIndex() const;
 };
 
 template <int Config, typename T, Int ArraySize>
 constexpr void Iterable<Config, T, ArraySize>::Reset(Int size) {
-  if constexpr (HasFlag(EnableAllocLength)) {
+  if constexpr (HasFlag(EnableAllocSize)) {
     this->Data = std::make_unique<T[]>(size);
   }
   if constexpr (HasFlag(EnableFrontPointer)) {
@@ -139,9 +143,8 @@ constexpr void Iterable<Config, T, ArraySize>::Reset(Int size) {
 template <int Config, typename T, Int ArraySize>
 constexpr void Iterable<Config, T, ArraySize>::Reset(const T* data, Int size) {
   Reset(size);
-  if constexpr (HasFlag(EnableAllocLength)) {
-    T* begin = this->Data.get();
-    std::ranges::copy(data, data + size, begin);
+  if constexpr (HasFlag(EnableAllocSize)) {
+    std::ranges::copy(data, data + size, &this->Data[0]);
   } else {
     this->Data = data;
   }
@@ -155,7 +158,7 @@ constexpr void Iterable<Config, T, ArraySize>::operator=(const Iterable& other) 
   if constexpr (HasFlag(EnableFrontPointer)) {
     this->FrontPos = other.FrontPos;
   }
-  if constexpr (!HasFlag(EnableAllocLength)) {
+  if constexpr (!HasFlag(EnableAllocSize)) {
     this->Data = other.Data;
   } else {
     Reset(other.begin(), other.Size());
@@ -163,80 +166,15 @@ constexpr void Iterable<Config, T, ArraySize>::operator=(const Iterable& other) 
 }
 
 template <int Config, typename T, Int ArraySize>
-constexpr Int Iterable<Config, T, ArraySize>::FrontIndex() const {
-  if constexpr (HasFlag(EnableFrontPointer)) {
-    return this->FrontPos;
-  } else {
-    return 0;
-  }
-}
-
-template <int Config, typename T, Int ArraySize>
-constexpr T* Iterable<Config, T, ArraySize>::begin() {
-  if constexpr (HasFlag(EnableArray)) {
-    return this->Data.data() + FrontIndex();
-  } else if constexpr (HasFlag(EnableAllocLength)) {
-    return this->Data.get() + FrontIndex();
-  } else {
-    return this->Data + FrontIndex();
-  }
-}
-
-template <int Config, typename T, Int ArraySize>
-constexpr const T* Iterable<Config, T, ArraySize>::begin() const {
-  if constexpr (HasFlag(EnableArray)) {
-    return this->Data.data() + FrontIndex();
-  } else if constexpr (HasFlag(EnableAllocLength)) {
-    return this->Data.get() + FrontIndex();
-  } else {
-    return this->Data + FrontIndex();
-  }
-}
-
-template <int Config, typename T, Int ArraySize>
-constexpr Int Iterable<Config, T, ArraySize>::Size() const {
-  if constexpr (HasFlag(EnableEndPointer)) {
-    if constexpr (HasFlag(EnableFrontPointer)) {
-      return this->EndPos - this->FrontPos;
-    } else {
-      return this->EndPos;
-    }
-  } else if constexpr (HasFlag(EnableArray)) {
-    return ArraySize;
-  } else {
-    static_assert(false);
-  }
-}
-
-template <int Config, typename T, Int ArraySize>
 constexpr T& Iterable<Config, T, ArraySize>::At(Int i) {
-  if constexpr (Config != EnablePtr) {
-    Assert(i >= 0 && i < Size());
-  }
-  return begin()[i];
+  Assert(i >= 0 && i < Size());
+  return this->Data[i + FrontIndex()];
 }
 
 template <int Config, typename T, Int ArraySize>
 constexpr const T& Iterable<Config, T, ArraySize>::At(Int i) const {
-  if constexpr (Config != EnablePtr) {
-    Assert(i >= 0 && i < Size());
-  }
-  return begin()[i];
-}
-
-template <int Config, typename T, Int ArraySize>
-constexpr void Iterable<Config, T, ArraySize>::Append(T ele) {
-  if constexpr (EnableArray) {
-    Assert(this->EndPos < ArraySize);
-  }
-  this->Data[this->EndPos++] = ele;
-}
-
-template <int Config, typename T, Int ArraySize>
-constexpr T Iterable<Config, T, ArraySize>::Pop() {
-  T ele = this->Data[this->FrontPos++];
-  Assert(this->FrontPos <= this->EndPos);
-  return ele;
+  Assert(i >= 0 && i < Size());
+  return this->Data[i + FrontIndex()];
 }
 
 template <int Config, typename T, Int ArraySize>
@@ -253,11 +191,31 @@ constexpr void Iterable<Config, T, ArraySize>::Clear() {
 
 template <int Config, typename T, Int ArraySize>
 constexpr void Iterable<Config, T, ArraySize>::ClearAndSet(T ele) {
-  this->Front() = ele;
+  this->Data[0] = ele;
   if constexpr (HasFlag(EnableFrontPointer)) {
     this->FrontPos = 0;
   }
   this->EndPos = 1;
+}
+
+template <int Config, typename T, Int ArraySize>
+constexpr Int Iterable<Config, T, ArraySize>::FrontIndex() const {
+  if constexpr (HasFlag(EnableFrontPointer)) {
+    return this->FrontPos;
+  } else {
+    return 0;
+  }
+}
+
+template <int Config, typename T, Int ArraySize>
+constexpr Int Iterable<Config, T, ArraySize>::EndIndex() const {
+  if constexpr (HasFlag(EnableEndPointer)) {
+    return this->EndPos;
+  } else if constexpr (HasFlag(EnableArray)) {
+    return ArraySize;
+  } else {
+    static_assert(false);
+  }
 }
 
 class Random {
@@ -309,7 +267,7 @@ using Queue = Iterable<EnableArray | EnableFrontPointer | EnableEndPointer, T, S
 template <typename T>
 using Span = Iterable<EnablePtr | EnableEndPointer, T>;
 template <typename T>
-using Vector = Iterable<EnablePtr | EnableAllocLength | EnableEndPointer, T>;
+using Vector = Iterable<EnablePtr | EnableAllocSize | EnableEndPointer, T>;
 
 using __detail__::iterable::Random;
 
