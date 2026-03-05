@@ -24,6 +24,8 @@ THE SOFTWARE.
 
 #include "EdgeCanvas.h"
 
+#include <Dab/Board.h>
+
 #include <QPainter>
 
 #include "BaseCanvas.h"
@@ -59,7 +61,8 @@ QColor EdgeCanvas::Color() const {
   static constexpr QColor Player1OccupyColor = QColor(64, 64, 255, 255);
   static constexpr QColor Player2OccupyColor = QColor(255, 64, 64, 255);
 
-  if (GetBoard().GetOwner(Value) == Owner::None) {
+  const GameBoard& board = GetBoard();
+  if (board.GetOwner(Value) == Owner::None) {
     if (Hovered()) {
       return ThemeColor(DarkThemeHoveredColor, LightThemeHoveredColor);
     }
@@ -67,12 +70,12 @@ QColor EdgeCanvas::Color() const {
   }
 
   QColor color;
-  if (GetBoard().GetOwner(Value) == Owner::Player1) {
+  if (board.GetOwner(Value) == Owner::Player1) {
     color = Player1OccupyColor;
-  } else if (GetBoard().GetOwner(Value) == Owner::Player2) {
+  } else if (board.GetOwner(Value) == Owner::Player2) {
     color = Player2OccupyColor;
   }
-  if (GetBoard().MoveRecord().Back() == Value) {
+  if (board.MoveRecord().Back() == Value) {
     color.setAlpha(255);
   } else if (Hovered()) {
     color.setAlpha(144);
