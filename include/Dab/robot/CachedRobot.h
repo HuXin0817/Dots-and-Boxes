@@ -25,6 +25,7 @@ THE SOFTWARE.
 #pragma once
 
 #include <Dab/Board.h>
+#include <Dab/LRUCache.h>
 
 namespace dab::__detail__::robot {
 
@@ -38,7 +39,7 @@ class CachedRobot : public SubRobotType {
 
  private:
   static constexpr uint32_t CacheSize = static_cast<int64_t>(Edge::Max) << 8;
-  static inline ThreadSafeLRUCache<HashValueBoard, Vector<Edge>> Map{CacheSize};
+  static inline tstarling::ThreadSafeLRUCache<HashValueBoard, Vector<Edge>> Map{CacheSize};
 
   HashValueBoard Key;
 };
@@ -47,7 +48,7 @@ template <typename SubRobotType>
 template <typename Board>
 Span<const Edge> CachedRobot<SubRobotType>::BestCandidateEdges(const Board& board) {
   Key = board;
-  if (ThreadSafeLRUCache<HashValueBoard, Vector<Edge>>::ConstAccessor ac; Map.find(ac, Key)) {
+  if (tstarling::ThreadSafeLRUCache<HashValueBoard, Vector<Edge>>::ConstAccessor ac; Map.find(ac, Key)) {
     return {ac->begin(), ac->Size()};
   }
 

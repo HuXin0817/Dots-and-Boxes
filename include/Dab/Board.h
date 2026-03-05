@@ -24,6 +24,7 @@ THE SOFTWARE.
 
 #pragma once
 
+#include <Dab/Iterable.h>
 #include <Dab/Model.h>
 #include <Dab/Tools.h>
 
@@ -73,11 +74,6 @@ static constexpr int FixedConfig(int config) {
 }  // namespace config
 
 using namespace config;
-
-template <bool, typename>
-struct Mixin {};
-template <typename T>
-struct Mixin<true, T> : public T {};
 
 struct BasicMixin {
   Int Step = 0;
@@ -370,8 +366,8 @@ constexpr BoardImpl<Config>& BoardImpl<Config>::operator=(const Other& other) {
   }
   if constexpr (HasFlag(EnableOwner)) {
     static_assert(Other::HasFlag(EnableOwner));
-    this->EdgeOwner = other->EdgeOwner;
-    this->BoxOwner = other->BoxOwner;
+    this->EdgeOwner = other.EdgeOwner;
+    this->BoxOwner = other.BoxOwner;
   }
   return *this;
 }
