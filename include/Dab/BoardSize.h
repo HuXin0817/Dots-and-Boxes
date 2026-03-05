@@ -31,6 +31,10 @@ namespace dab {
 
 namespace __detail__ {
 
+#ifndef __BoardSize__
+#define __BoardSize__ 1
+#endif
+
 constexpr auto SelectIntType() {
   constexpr int64_t MaxValue = 2 * __BoardSize__ * (__BoardSize__ + 1);
 
