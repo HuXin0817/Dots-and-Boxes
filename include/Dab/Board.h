@@ -89,7 +89,7 @@ struct EdgeCountMixin {
   Array<uint8_t, Box::Max> Counter;
 };
 
-struct ScoreableCountingMixin {
+struct ScoreableCountMixin {
   Queue<Edge, Edge::Max> ScoreableEdges;
 };
 
@@ -109,13 +109,13 @@ struct LoggingMixin {
   std::chrono::system_clock::time_point LastUpdateTime;
 };
 
-struct HashMixin {
+struct HashValueMixin {
   static Array<uint32_t, Edge::Max> HashMapper;
 
   uint32_t HashValue;
 };
 
-inline Array<uint32_t, Edge::Max> HashMixin::HashMapper = []() -> Array<uint32_t, Edge::Max> {
+inline Array<uint32_t, Edge::Max> HashValueMixin::HashMapper = []() -> Array<uint32_t, Edge::Max> {
   Random random;
   Array<uint32_t, Edge::Max> result;
   for (uint32_t& v : result) {
@@ -138,11 +138,11 @@ struct OwnerMixin {
 template <int Config>
 class BoardImpl : BasicMixin,
                   Mixin<HasFlag(Config, EnableEdgeCount), EdgeCountMixin>,
-                  Mixin<HasFlag(Config, EnableScoreableCount), ScoreableCountingMixin>,
+                  Mixin<HasFlag(Config, EnableScoreableCount), ScoreableCountMixin>,
                   Mixin<HasFlag(Config, EnableRelativeScore), RelativeScoreMixin>,
                   Mixin<HasFlag(Config, EnableAbsoluteScore), AbsoluteScoreMixin>,
                   Mixin<HasFlag(Config, EnableLogging), LoggingMixin>,
-                  Mixin<HasFlag(Config, EnableHashValue), HashMixin>,
+                  Mixin<HasFlag(Config, EnableHashValue), HashValueMixin>,
                   Mixin<HasFlag(Config, EnableOwner), OwnerMixin> {
   template <int>
   friend class BoardImpl;
