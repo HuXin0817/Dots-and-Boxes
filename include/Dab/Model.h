@@ -29,6 +29,8 @@ THE SOFTWARE.
 
 #include <ranges>
 
+#include "Dab/BoardSize.h"
+
 namespace dab {
 
 namespace __detail__::model {
@@ -88,7 +90,10 @@ class Edge : public IntWapper {
 };
 
 constexpr Edge::Edge(Dot dot1, Dot dot2) {
-  if (dot2 - dot1 == 1) {
+  Assert(dot1 < dot2);
+  Dot dif = dot2 - dot1;
+  Assert(dif == 1 || dif == BoardSize + 1);
+  if (dif == 1) {
     v = 2 * (dot1 - dot1 / (BoardSize + 1)) + 1;
   } else {
     v = 2 * dot1;
