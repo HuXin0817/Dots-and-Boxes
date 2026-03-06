@@ -42,6 +42,8 @@ namespace dab {
 #define STR(x) #x
 #define XSTR(x) STR(x)
 
+namespace __detail__::tools {
+
 template <class... Args>
 void Log(std::ostream& os, std::format_string<Args...> fmt, Args&&... args) {
   static constexpr std::string module = XSTR(__detail__);
@@ -51,27 +53,15 @@ void Log(std::ostream& os, std::format_string<Args...> fmt, Args&&... args) {
   std::println(os, R"([{}] {:%Y-%m-%dT%H:%M:%S} {})", module, timestamp, message);
 }
 
-#define LogInfo(fmt, ...) Log(std::cout, fmt, ##__VA_ARGS__)
+#define LogInfo(fmt, ...) __detail__::tools::Log(std::cout, fmt, ##__VA_ARGS__)
 
-#define LogError(fmt, ...) Log(std::cerr, R"({{"Error":"{}"}})", std::format(fmt, ##__VA_ARGS__))
+#define LogError(fmt, ...) __detail__::tools::Log(std::cerr, R"({{"Error":"{}"}})", std::format(fmt, ##__VA_ARGS__))
 
 #ifdef NDEBUG
 #define LogDebug(fmt, ...) ((void)0)
 #else
-#define LogDebug(fmt, ...) Log(std::cout, fmt, ##__VA_ARGS__)
+#define LogDebug(fmt, ...) __detail__::tools::Log(std::cout, fmt, ##__VA_ARGS__)
 #endif
-
-template <typename T>
-std::string to_string(const T& value) {
-  return static_cast<std::string>(value);
-}
-
-#define K(expr)                 \
-  ([&]() -> std::string {       \
-    std::stringstream ss;       \
-    ss << #expr << "=" << expr; \
-    return ss.str();            \
-  }())
 
 class AssertHelper {
   static inline std::mutex AssertHelperMutex;
@@ -98,16 +88,25 @@ void AssertHelper::Info(const std::source_location& location, const std::string&
   }
 }
 
+}  // namespace __detail__::tools
+
+#define K(expr)                 \
+  ([&]() -> std::string {       \
+    std::stringstream ss;       \
+    ss << #expr << "=" << expr; \
+    return ss.str();            \
+  }())
+
 #ifdef NDEBUG
 #define Assert(expr) ((void)0)
 #else
 
-#define Assert(expr, ...)                                 \
-  do {                                                    \
-    if (!(expr)) {                                        \
-      auto location = std::source_location::current();    \
-      AssertHelper::Info(location, #expr, ##__VA_ARGS__); \
-    }                                                     \
+#define Assert(expr, ...)                                                    \
+  do {                                                                       \
+    if (!(expr)) {                                                           \
+      auto location = std::source_location::current();                       \
+      __detail__::tools::AssertHelper::Info(location, #expr, ##__VA_ARGS__); \
+    }                                                                        \
   } while (false)
 
 #endif  // NDEBUG

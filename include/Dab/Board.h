@@ -31,6 +31,7 @@ THE SOFTWARE.
 #include <algorithm>
 #include <chrono>
 #include <cstdint>
+#include <format>
 #include <functional>
 #include <numeric>
 
@@ -179,6 +180,7 @@ class BoardImpl : BasicMixin,
   constexpr BoardImpl& operator=(const Other& other);
   template <typename Other>
   constexpr bool operator==(const Other& other) const;
+  constexpr operator std::string() const;
 };
 
 template <int Config>
@@ -389,6 +391,17 @@ constexpr bool BoardImpl<Config>::operator==(const Other& other) const {
     }
   }
   return true;
+}
+
+template <int Config>
+constexpr BoardImpl<Config>::operator std::string() const {
+  List<Edge, Edge::Max> moveRecord;
+  for (const Edge edge : Iota<Edge>()) {
+    if (Contains(edge)) {
+      moveRecord.Append(edge);
+    }
+  }
+  return std::format(R"({{"Step":{},"MoveRecord":{}}})", NowStep(), static_cast<std::string>(moveRecord));
 }
 
 static_assert(sizeof(BoardImpl<0>) == sizeof(BasicMixin));

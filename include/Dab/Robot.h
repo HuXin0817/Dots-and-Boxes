@@ -87,15 +87,16 @@ inline void MockRunningGame(PlayerType player1Type, PlayerType player2Type) {
   Random random;
   GameBoard board;
   while (board.Gaming()) {
+    Span<const Edge> candidateEdges;
     if (board.IsPlayer1Turn()) {
-      Span candidateEdges = robot1->BestCandidateEdges(board);
-      LogDebug(R"({{"BestCandidateEdges":{}}})", static_cast<std::string>(candidateEdges));
-      board.Add(random.Choice(candidateEdges));
+      candidateEdges = robot1->BestCandidateEdges(board);
     } else {
-      Span candidateEdges = robot2->BestCandidateEdges(board);
-      LogDebug(R"({{"BestCandidateEdges":{}}})", static_cast<std::string>(candidateEdges));
-      board.Add(random.Choice(candidateEdges));
+      candidateEdges = robot2->BestCandidateEdges(board);
     }
+    LogDebug(R"({{"Board":{},"BestCandidateEdges":{}}})",
+             static_cast<std::string>(board),
+             static_cast<std::string>(candidateEdges));
+    board.Add(random.Choice(candidateEdges));
   }
 }
 
