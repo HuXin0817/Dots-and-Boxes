@@ -32,6 +32,7 @@ THE SOFTWARE.
 #include <ostream>
 #include <print>
 #include <source_location>
+#include <type_traits>
 #include <utility>
 
 namespace dab {
@@ -83,10 +84,8 @@ static void AssertHelper(const std::string& expr,
 
 #endif  // NDEBUG
 
-template <typename>
-class NullMixin {};
 template <bool _Bp, typename T>
-using Mixin = std::conditional_t<_Bp, T, NullMixin<T>>;
+using Mixin = std::conditional_t<_Bp, T, std::type_identity<T>>;
 
 }  // namespace __detail__::tools
 
