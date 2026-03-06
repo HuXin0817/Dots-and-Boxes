@@ -85,6 +85,7 @@ struct EndPointerMixin {
 template <typename T>
 struct PtrMixin {
   std::unique_ptr<T[]> Data = nullptr;
+  Int Length;
 };
 
 template <typename T>
@@ -118,6 +119,7 @@ class Iterable : Mixin<HasFlag(Config, EnableArray), ArrayMixin<T, ArraySize>>,
   constexpr T* end() { return &this->Data[EndIndex()]; }
   constexpr const T* end() const { return &this->Data[EndIndex()]; }
 
+  constexpr Int Cap() const;
   constexpr Int Size() const { return EndIndex() - FrontIndex(); }
   constexpr bool Empty() const { return EndIndex() == FrontIndex(); }
   constexpr T& Front() { return this->Data[FrontIndex()]; }
@@ -140,6 +142,7 @@ class Iterable : Mixin<HasFlag(Config, EnableArray), ArrayMixin<T, ArraySize>>,
 template <int Config, typename T, Int ArraySize>
 constexpr void Iterable<Config, T, ArraySize>::Reset(Int size) {
   if constexpr (HasFlag(EnableAllocSize)) {
+    this->Length = size;
     this->Data = std::make_unique<T[]>(size);
   }
   if constexpr (HasFlag(EnableFrontPointer)) {
@@ -157,6 +160,17 @@ constexpr void Iterable<Config, T, ArraySize>::Reset(const T* data, Int size) {
     std::ranges::copy(data, data + size, begin());
   } else {
     this->Data = data;
+  }
+}
+
+template <int Config, typename T, Int ArraySize>
+constexpr Int Iterable<Config, T, ArraySize>::Cap() const {
+  if constexpr (HasFlag(EnableArray)) {
+    return ArraySize;
+  } else if constexpr (HasFlag(EnableAllocSize)) {
+    return this->Length;
+  } else {
+    static_assert(false);
   }
 }
 
@@ -193,14 +207,12 @@ constexpr Int Iterable<Config, T, ArraySize>::FrontIndex() const {
 template <int Config, typename T, Int ArraySize>
 constexpr Int Iterable<Config, T, ArraySize>::EndIndex() const {
   if constexpr (HasFlag(EnableEndPointer)) {
-    if constexpr (HasFlag(EnableArray)) {
-      Assert(this->EndPos <= ArraySize);
+    if constexpr (!HasFlag(EnableSpan)) {
+      Assert(this->EndPos <= Cap());
     }
     return this->EndPos;
-  } else if constexpr (HasFlag(EnableArray)) {
-    return ArraySize;
   } else {
-    static_assert(false);
+    return Cap();
   }
 }
 
@@ -259,7 +271,7 @@ using Queue = Iterable<EnableArray | EnableFrontPointer | EnableEndPointer, T, S
 template <typename T>
 using Span = Iterable<EnableSpan | EnableEndPointer, T>;
 template <typename T>
-using Vector = Iterable<EnableAllocSize | EnableEndPointer, T>;
+using Vector = Iterable<EnableAllocSize, T>;
 
 using __detail__::iterable::Random;
 
