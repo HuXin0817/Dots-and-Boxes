@@ -84,13 +84,12 @@ static void AssertHelper(const std::string& expr,
 
 #endif  // NDEBUG
 
-template <bool _Bp, typename T>
-using Mixin = std::conditional_t<_Bp, T, std::type_identity<T>>;
-
 }  // namespace __detail__::tools
 
 using __detail__::tools::LogError;
 using __detail__::tools::LogInfo;
-using __detail__::tools::Mixin;
+
+template <bool _Bp, typename T>
+using Mixin = std::conditional_t<_Bp, T, std::type_identity<T>>;
 
 }  // namespace dab
