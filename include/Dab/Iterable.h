@@ -41,7 +41,7 @@ namespace __detail__::iterable {
 namespace config {
 
 static constexpr int EnableArray = 1 << 1;
-static constexpr int EnablePtr = 1 << 2;
+static constexpr int EnableSpan = 1 << 2;
 static constexpr int EnableAllocSize = 1 << 3;
 static constexpr int EnableFrontPointer = 1 << 4;
 static constexpr int EnableEndPointer = 1 << 5;
@@ -56,18 +56,11 @@ static constexpr bool CheckConfig(int config, Int arraySize) {
     ans &= arraySize == 0;
     ans &= !HasFlag(config, EnableArray);
   }
-  if (HasFlag(config, EnableArray)) {
-    ans &= !HasFlag(config, EnablePtr);
-    ans &= !HasFlag(config, EnableAllocSize);
-  } else if (!HasFlag(config, EnablePtr)) {
-    ans &= false;
-  }
-  if (HasFlag(config, EnableAllocSize)) {
-    ans &= HasFlag(config, EnablePtr);
-  }
-  if (HasFlag(config, EnableFrontPointer)) {
-    ans &= HasFlag(config, EnableEndPointer);
-  }
+  int n = 0;
+  n += HasFlag(config, EnableArray);
+  n += HasFlag(config, EnableSpan);
+  n += HasFlag(config, EnableAllocSize);
+  ans &= n == 1;
   return ans;
 }
 
@@ -89,14 +82,20 @@ struct EndPointerMixin {
   Int EndPos = 0;
 };
 
-template <typename T, bool Unique>
+template <typename T>
 struct PtrMixin {
-  std::conditional_t<Unique, std::unique_ptr<T[]>, T*> Data = nullptr;
+  std::unique_ptr<T[]> Data = nullptr;
+};
+
+template <typename T>
+struct SpanMixin {
+  T* Data = nullptr;
 };
 
 template <int Config, typename T, Int ArraySize = 0>
 class Iterable : Mixin<HasFlag(Config, EnableArray), ArrayMixin<T, ArraySize>>,
-                 Mixin<HasFlag(Config, EnablePtr), PtrMixin<T, HasFlag(Config, EnableAllocSize)>>,
+                 Mixin<HasFlag(Config, EnableSpan), SpanMixin<T>>,
+                 Mixin<HasFlag(Config, EnableAllocSize), PtrMixin<T>>,
                  Mixin<HasFlag(Config, EnableFrontPointer), FrontPointerMixin>,
                  Mixin<HasFlag(Config, EnableEndPointer), EndPointerMixin> {
   static constexpr bool HasFlag(int flag) { return (Config & flag) != 0; }
@@ -163,13 +162,11 @@ constexpr void Iterable<Config, T, ArraySize>::Reset(const T* data, Int size) {
 
 template <int Config, typename T, Int ArraySize>
 constexpr void Iterable<Config, T, ArraySize>::Clear() {
+  if constexpr (HasFlag(EnableFrontPointer)) {
+    this->FrontPos = 0;
+  }
   if constexpr (HasFlag(EnableEndPointer)) {
     this->EndPos = 0;
-    if constexpr (HasFlag(EnableFrontPointer)) {
-      this->FrontPos = 0;
-    }
-  } else {
-    static_assert(false);
   }
 }
 
@@ -179,7 +176,9 @@ constexpr void Iterable<Config, T, ArraySize>::ClearAndSet(T ele) {
   if constexpr (HasFlag(EnableFrontPointer)) {
     this->FrontPos = 0;
   }
-  this->EndPos = 1;
+  if constexpr (HasFlag(EnableEndPointer)) {
+    this->EndPos = 1;
+  }
 }
 
 template <int Config, typename T, Int ArraySize>
@@ -258,9 +257,9 @@ using List = Iterable<EnableArray | EnableEndPointer, T, Size>;
 template <typename T, Int Size>
 using Queue = Iterable<EnableArray | EnableFrontPointer | EnableEndPointer, T, Size>;
 template <typename T>
-using Span = Iterable<EnablePtr | EnableEndPointer, T>;
+using Span = Iterable<EnableSpan | EnableEndPointer, T>;
 template <typename T>
-using Vector = Iterable<EnablePtr | EnableAllocSize | EnableEndPointer, T>;
+using Vector = Iterable<EnableAllocSize | EnableEndPointer, T>;
 
 using __detail__::iterable::Random;
 
