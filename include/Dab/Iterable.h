@@ -99,12 +99,12 @@ class Iterable : Mixin<HasFlag(Config, EnableArray), ArrayMixin<T, ArraySize>>,
   constexpr Iterable(Int size) { Reset(size); }
   constexpr Iterable(const T* data, Int size) { Reset(data, size); }
   constexpr Iterable(const T* begin, const T* end) { Reset(begin, end); }
-  constexpr Iterable(const Iterable& other) { operator=(other); }
+  constexpr Iterable(const Iterable& other) { Reset(other.begin(), other.Size()); }
+  constexpr void operator=(const Iterable& other) { Reset(other.begin(), other.Size()); }
 
   constexpr void Reset(Int size);
   constexpr void Reset(const T* data, Int size);
-  constexpr void Reset(const T* begin, const T* end) { Reset(begin, end - begin); }
-  constexpr void operator=(const Iterable& other);
+  constexpr void Reset(const T* begin, const T* end) { Reset(begin, static_cast<Int>(end - begin)); }
 
   constexpr T* begin() { return &this->Data[FrontIndex()]; }
   constexpr const T* begin() const { return &this->Data[FrontIndex()]; }
@@ -138,31 +138,18 @@ constexpr void Iterable<Config, T, ArraySize>::Reset(Int size) {
   if constexpr (HasFlag(EnableFrontPointer)) {
     this->FrontPos = 0;
   }
-  this->EndPos = size;
+  if constexpr (HasFlag(EnableEndPointer)) {
+    this->EndPos = size;
+  }
 }
 
 template <int Config, typename T, Int ArraySize>
 constexpr void Iterable<Config, T, ArraySize>::Reset(const T* data, Int size) {
   Reset(size);
-  if constexpr (HasFlag(EnableAllocSize)) {
-    std::ranges::copy(data, data + size, &this->Data[0]);
+  if constexpr (HasFlag(EnableArray) || HasFlag(EnableAllocSize)) {
+    std::ranges::copy(data, data + size, begin());
   } else {
     this->Data = data;
-  }
-}
-
-template <int Config, typename T, Int ArraySize>
-constexpr void Iterable<Config, T, ArraySize>::operator=(const Iterable& other) {
-  if constexpr (HasFlag(EnableEndPointer)) {
-    this->EndPos = other.EndPos;
-  }
-  if constexpr (HasFlag(EnableFrontPointer)) {
-    this->FrontPos = other.FrontPos;
-  }
-  if constexpr (!HasFlag(EnableAllocSize)) {
-    this->Data = other.Data;
-  } else {
-    Reset(other.begin(), other.Size());
   }
 }
 

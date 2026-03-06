@@ -35,7 +35,7 @@ namespace dab {
 
 namespace __detail__::model {
 
-#if __BoardSize__ <= 36
+#if __BoardSize__ <= 30
 #define _constexpr constexpr
 #else
 #define _constexpr
