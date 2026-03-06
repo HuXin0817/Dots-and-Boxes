@@ -27,6 +27,8 @@ THE SOFTWARE.
 #include <Dab/Board.h>
 #include <Dab/LRUCache.h>
 
+#include "Dab/Tools.h"
+
 namespace dab::__detail__::robot {
 
 template <typename SubRobotType>
@@ -49,6 +51,7 @@ template <typename Board>
 Span<const Edge> CachedRobot<SubRobotType>::BestCandidateEdges(const Board& board) {
   Key = board;
   if (tstarling::ThreadSafeLRUCache<HashValueBoard, Vector<Edge>>::ConstAccessor ac; Map.find(ac, Key)) {
+    Assert(!ac->Empty());
     return {ac->begin(), ac->Size()};
   }
 
