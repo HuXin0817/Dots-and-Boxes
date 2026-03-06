@@ -49,18 +49,26 @@ static constexpr int EnableEndPointer = 1 << 5;
 static constexpr bool HasFlag(int config, int flag) { return (config & flag) != 0; }
 
 static constexpr bool CheckConfig(int config, Int arraySize) {
+  int ans = true;
+  if (arraySize > 0) {
+    ans &= HasFlag(config, EnableArray);
+  } else {
+    ans &= arraySize == 0;
+    ans &= !HasFlag(config, EnableArray);
+  }
   if (HasFlag(config, EnableArray)) {
-    return arraySize > 0 && !HasFlag(config, EnablePtr) && !HasFlag(config, EnableAllocSize);
+    ans &= !HasFlag(config, EnablePtr);
+    ans &= !HasFlag(config, EnableAllocSize);
   } else if (!HasFlag(config, EnablePtr)) {
-    return false;
+    ans &= false;
   }
   if (HasFlag(config, EnableAllocSize)) {
-    return HasFlag(config, EnablePtr);
+    ans &= HasFlag(config, EnablePtr);
   }
   if (HasFlag(config, EnableFrontPointer)) {
-    return HasFlag(config, EnableEndPointer);
+    ans &= HasFlag(config, EnableEndPointer);
   }
-  return true;
+  return ans;
 }
 
 }  // namespace config
