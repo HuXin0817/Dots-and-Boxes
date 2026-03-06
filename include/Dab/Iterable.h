@@ -30,6 +30,7 @@ THE SOFTWARE.
 #include <algorithm>
 #include <array>
 #include <chrono>
+#include <iostream>
 #include <memory>
 #include <random>
 #include <type_traits>
@@ -132,6 +133,7 @@ class Iterable : Mixin<HasFlag(Config, EnableArray), ArrayMixin<T, ArraySize>>,
   constexpr const T& At(Int i) const { return this->Data[CheckIndex(i)]; }
   constexpr void Clear();
   constexpr void ClearAndSet(T ele);
+  constexpr operator std::string() const;
 
  private:
   constexpr Int FrontIndex() const;
@@ -208,7 +210,7 @@ template <int Config, typename T, Int ArraySize>
 constexpr Int Iterable<Config, T, ArraySize>::EndIndex() const {
   if constexpr (HasFlag(EnableEndPointer)) {
     if constexpr (!HasFlag(EnableSpan)) {
-      Assert(this->EndPos <= Cap());
+      Assert(this->EndPos <= Cap(), K(this->EndPos), K(Cap()));
     }
     return this->EndPos;
   } else {
@@ -218,8 +220,27 @@ constexpr Int Iterable<Config, T, ArraySize>::EndIndex() const {
 
 template <int Config, typename T, Int ArraySize>
 constexpr Int Iterable<Config, T, ArraySize>::CheckIndex(Int i) const {
-  Assert(i >= 0 && i < Size());
+  Assert(i >= 0 && i < Size(), K(i), K(Size()));
   return i;
+}
+
+template <int Config, typename T, Int ArraySize>
+constexpr Iterable<Config, T, ArraySize>::operator std::string() const {
+  if (Size() == 0) {
+    return "[]";
+  }
+  std::string str = "[";
+  for (auto ele : *this) {
+    str += std::to_string(ele) + ",";
+  }
+  str.back() = ']';
+  return str;
+}
+
+template <int Config, typename T, Int ArraySize>
+std::ostream& operator<<(std::ostream& os, const Iterable<Config, T, ArraySize>& iterable) {
+  os << static_cast<std::string>(iterable);
+  return os;
 }
 
 class Random {
@@ -251,7 +272,7 @@ T Random::Range(T min, T max) {
 
 template <typename T>
 const auto& Random::Choice(const T& data) {
-  Assert(!data.Empty());
+  Assert(!data.Empty(), K(data.Size()), K(data));
   if (data.Size() == 1) {
     return data.At(0);
   }

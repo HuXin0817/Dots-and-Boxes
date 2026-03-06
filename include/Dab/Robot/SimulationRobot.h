@@ -58,7 +58,7 @@ Span<const Edge> SimulationRobot::BestCandidateEdges(const Board& board) {
     SimulationBoard.Add(emptyEdge);
     while (SimulationBoard.Gaming()) {
       const Edge edge = SubRobot.SearchOne(SimulationBoard);
-      Assert(board.MaxEdgeCount(edge) > 1);
+      Assert(board.MaxEdgeCount(edge) > 1, K(edge), K(board.MaxEdgeCount(edge)));
       SimulationBoard.Add(edge);
     }
     if (const Int score = turn * SimulationBoard.RelativeScore(); score > maxScore) {

@@ -24,16 +24,15 @@ THE SOFTWARE.
 
 #include "BaseCanvas.h"
 
+#include <Dab/Board.h>
 #include <Dab/Model.h>
+#include <Dab/Tools.h>
 
 #include <QApplication>
 #include <QPainter>
 #include <QStyleHints>
 #include <QWidget>
 #include <cstddef>
-
-#include "Dab/Board.h"
-#include "Dab/Tools.h"
 
 namespace dab::__detail__::frontend {
 
@@ -51,14 +50,14 @@ QColor BaseCanvas::ThemeColor(const QColor& DarkThemeColor, const QColor& LightT
 
 const GameBoard& BaseCanvas::GetBoard() const {
   QObject* mainWindow = parent();
-  Assert(mainWindow);
+  Q_ASSERT(mainWindow != nullptr);
   QVariant value = mainWindow->property("Board");
-  Assert(value.isValid());
+  Q_ASSERT(value.isValid());
   bool ok;
   qulonglong num = value.toULongLong(&ok);
-  Assert(ok);
+  Q_ASSERT(ok);
   GameBoard* board = reinterpret_cast<GameBoard*>(num);
-  Assert(board != nullptr);
+  Q_ASSERT(board != nullptr);
   return *board;
 }
 

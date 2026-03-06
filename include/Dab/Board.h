@@ -213,11 +213,11 @@ constexpr void BoardImpl<Config>::Reset() {
 
 template <int Config>
 constexpr Int BoardImpl<Config>::Add(Edge edge) {
-  Assert(NotContains(edge));
+  Assert(NotContains(edge), K(MoveRecord()), K(edge));
   const Edge nowEdge = Edges.At(Step);
   const Int edgeIndex = EdgeIndexes.At(edge);
-  Assert(Edges.At(edgeIndex) == edge);
-  Assert(edgeIndex >= Step);
+  Assert(Edges.At(edgeIndex) == edge, K(Edges), K(edgeIndex), K(edge));
+  Assert(edgeIndex >= Step, K(edgeIndex), K(Step));
   Edges.At(Step) = edge;
   Edges.At(edgeIndex) = nowEdge;
   EdgeIndexes.At(edge) = Step;
@@ -233,7 +233,7 @@ constexpr Int BoardImpl<Config>::Add(Edge edge) {
   if constexpr (HasFlag(EnableEdgeCount)) {
     for (const Box box : edge.NearBoxes()) {
       const uint8_t num = ++this->Counter.At(box);
-      Assert(num <= 4);
+      Assert(num <= 4, K(num), K(this->Counter));
       if (num == 4) {
         ++score;
         if constexpr (HasFlag(EnableOwner)) {
@@ -285,13 +285,13 @@ constexpr Int BoardImpl<Config>::Add(Edge edge) {
 
 template <int Config>
 constexpr Edge BoardImpl<Config>::FindNotContainsEdgeInBox(Box box) const {
-  Assert(this->Counter.At(box) == 3);
+  Assert(this->Counter.At(box) == 3, K(box), K(this->Counter), K(this->Counter.At(box)));
   for (const Edge edge : box.NearEdges()) {
     if (NotContains(edge)) {
       return edge;
     }
   }
-  Assert(false);
+  Assert(false, "unreachable");
   return {};
 }
 
@@ -310,14 +310,14 @@ constexpr Int BoardImpl<Config>::MaxObtainableScore(Int endScore) {
   Int score = 0;
   while (Gaming() && score < endScore) {
     if (this->ScoreableEdges.Empty()) {
-      Assert(FindScoreableEdge() == 0);
+      Assert(FindScoreableEdge() == 0, K(FindScoreableEdge()));
       break;
     }
     const Edge edge = this->ScoreableEdges.Pop();
     if (Contains(edge)) {
       continue;
     }
-    Assert(Scoreable(edge));
+    Assert(Scoreable(edge), K(edge), K(MaxEdgeCount(edge)));
     score += Add(edge);
   }
   return score;

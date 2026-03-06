@@ -53,7 +53,7 @@ Span<const Edge> CachedRobot<SubRobotType>::BestCandidateEdges(const Board& boar
   }
 
   Span result = SubRobotType::BestCandidateEdges(board);
-  Assert(!result.Empty());
+  Assert(!result.Empty(), K(result));
   Map.insert(Key, Vector(result.begin(), result.Size()));
   return result;
 }

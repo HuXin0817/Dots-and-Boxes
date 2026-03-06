@@ -27,6 +27,8 @@ THE SOFTWARE.
 #include <Dab/Board.h>
 #include <Dab/PlayerType.h>
 
+#include <cstddef>
+
 #include "Robot/GreedyRobot.h"
 #include "Robot/ImproveGreedyRobot.h"
 #include "Robot/MonteCarloRobot.h"
@@ -70,26 +72,29 @@ inline std::unique_ptr<Robot> Robot::Create(PlayerType playerType) {
     case PlayerType::Human:
       break;
     default:
-      std::unreachable();
+      Assert(false, "unreachable");
       break;
   }
-  std::unreachable();
   return nullptr;
 }
 
 inline void MockRunningGame(PlayerType player1Type, PlayerType player2Type) {
   std::unique_ptr<Robot> robot1 = Robot::Create(player1Type);
   std::unique_ptr<Robot> robot2 = Robot::Create(player2Type);
-  Assert(robot1);
-  Assert(robot2);
+  Assert(robot1 != nullptr);
+  Assert(robot2 != nullptr);
 
   Random random;
   GameBoard board;
   while (board.Gaming()) {
     if (board.IsPlayer1Turn()) {
-      board.Add(random.Choice(robot1->BestCandidateEdges(board)));
+      Span candidateEdges = robot1->BestCandidateEdges(board);
+      LogDebug(R"({{"BestCandidateEdges":{}}})", static_cast<std::string>(candidateEdges));
+      board.Add(random.Choice(candidateEdges));
     } else {
-      board.Add(random.Choice(robot2->BestCandidateEdges(board)));
+      Span candidateEdges = robot2->BestCandidateEdges(board);
+      LogDebug(R"({{"BestCandidateEdges":{}}})", static_cast<std::string>(candidateEdges));
+      board.Add(random.Choice(candidateEdges));
     }
   }
 }

@@ -26,6 +26,7 @@ THE SOFTWARE.
 
 #include <Dab/Board.h>
 #include <Dab/Robot.h>
+#include <Dab/Tools.h>
 
 #include <QJsonObject>
 #include <QMessageBox>
@@ -129,18 +130,22 @@ void MainWindow::Run() {
   Random random;
   while (Board.Gaming()) {
     if (PlayerTypeIsRobot(Player1Type) && Board.IsPlayer1Turn()) {
-      PlayerMoveEdge = random.Choice(Robot1->BestCandidateEdges(Board));
+      Span candidateEdges = Robot1->BestCandidateEdges(Board);
+      LogDebug(R"({{"BestCandidateEdges":{}}})", static_cast<std::string>(candidateEdges));
+      PlayerMoveEdge = random.Choice(candidateEdges);
     } else if (PlayerTypeIsRobot(Player2Type) && Board.IsPlayer2Turn()) {
-      PlayerMoveEdge = random.Choice(Robot2->BestCandidateEdges(Board));
+      Span candidateEdges = Robot2->BestCandidateEdges(Board);
+      LogDebug(R"({{"BestCandidateEdges":{}}})", static_cast<std::string>(candidateEdges));
+      PlayerMoveEdge = random.Choice(candidateEdges);
     } else {
       PlayerMoveEdge.Reset();
       while (!PlayerMoveEdge.Valid()) {
         QThread::yieldCurrentThread();
       }
     }
-    Assert(Board.NotContains(PlayerMoveEdge));
+    Q_ASSERT(Board.NotContains(PlayerMoveEdge));
     QMetaObject::invokeMethod(this, &MainWindow::Add, Qt::BlockingQueuedConnection);
-    Assert(Board.Contains(PlayerMoveEdge));
+    Q_ASSERT(Board.Contains(PlayerMoveEdge));
   }
   QMetaObject::invokeMethod(this, &MainWindow::HandleGameOver, Qt::BlockingQueuedConnection);
 }

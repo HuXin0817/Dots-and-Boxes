@@ -24,12 +24,11 @@ THE SOFTWARE.
 
 #pragma once
 
+#include <Dab/BoardSize.h>
 #include <Dab/Iterable.h>
 #include <Dab/Tools.h>
 
 #include <ranges>
-
-#include "Dab/BoardSize.h"
 
 namespace dab {
 
@@ -90,19 +89,19 @@ class Edge : public IntWapper {
 };
 
 constexpr Edge::Edge(Dot dot1, Dot dot2) {
-  Assert(dot1 < dot2);
+  Assert(dot1 < dot2, K(dot1), K(dot2));
   Dot dif = dot2 - dot1;
-  Assert(dif == 1 || dif == BoardSize + 1);
+  Assert(dif == 1 || dif == BoardSize + 1, K(dot1), K(dot2), K(dif), K(BoardSize + 1));
   if (dif == 1) {
     v = 2 * (dot1 - dot1 / (BoardSize + 1)) + 1;
   } else {
     v = 2 * dot1;
   }
-  Assert(Dot1() == dot1 && Dot2() == dot2);
+  Assert(Dot1() == dot1 && Dot2() == dot2, K(Dot1()), K(dot1), K(Dot2()), K(dot2));
 }
 
 constexpr Dot Edge::Dot1() const {
-  Assert(Valid());
+  Assert(Valid(), K(v));
   Int dot = v >> 1;
   if (v & 1) {
     dot += dot / BoardSize;
@@ -111,7 +110,7 @@ constexpr Dot Edge::Dot1() const {
 }
 
 constexpr Dot Edge::Dot2() const {
-  Assert(Valid());
+  Assert(Valid(), K(v));
   Int dot = v >> 1;
   if (v & 1) {
     dot += dot / BoardSize + 1;
@@ -122,7 +121,7 @@ constexpr Dot Edge::Dot2() const {
 }
 
 constexpr bool Edge::Rotate() const {
-  Assert(Valid());
+  Assert(Valid(), K(v));
   return v & 1;
 }
 
