@@ -83,10 +83,10 @@ static void AssertHelper(const std::string& expr,
 
 #endif  // NDEBUG
 
-template <bool, typename>
-struct Mixin {};
-template <typename T>
-struct Mixin<true, T> : public T {};
+template <typename>
+class NullMixin {};
+template <bool _Bp, typename T>
+using Mixin = std::conditional_t<_Bp, T, NullMixin<T>>;
 
 }  // namespace __detail__::tools
 
