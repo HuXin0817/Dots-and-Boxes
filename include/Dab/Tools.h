@@ -42,12 +42,6 @@ namespace dab {
 #define STR(x) #x
 #define XSTR(x) STR(x)
 
-#ifdef NDEBUG
-static constexpr bool DebugMode = false;
-#else
-static constexpr bool DebugMode = true;
-#endif
-
 static constexpr std::string_view ColorReset = "\033[0m";
 static constexpr std::string_view ColorInfo = "\033[32m";   // Green
 static constexpr std::string_view ColorDebug = "\033[34m";  // Blue

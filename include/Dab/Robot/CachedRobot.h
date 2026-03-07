@@ -58,25 +58,25 @@ class CachedRobot : public SubRobotType {
 };
 
 template <typename SubRobotType>
-int CachedRobot<SubRobotType>::doRecord = []() {
-  if constexpr (DebugMode) {
-    std::thread([&]() {
-      while (true) {
-        std::this_thread::sleep_for(std::chrono::seconds(5));
-        if (TotalNumber.load() > 0) {
-          uint64_t size = Map.size();
-          uint64_t cached = CachedNumber.load();
-          uint64_t total = TotalNumber.load();
-          double percentage = 100.0 * cached / total;
-          LogDebug(R"({{"CachedRobot":{{"Size":{},"CachedNumber":{},"TotalNumber":{},"CacheHitRate":{:.2f}%}}}})",
-                   size,
-                   cached,
-                   total,
-                   percentage);
-        }
+int CachedRobot<SubRobotType>::doRecord = []() -> int {
+#ifndef NDEBUG
+  std::thread([&]() {
+    while (true) {
+      std::this_thread::sleep_for(std::chrono::seconds(5));
+      if (TotalNumber.load() > 0) {
+        uint64_t size = Map.size();
+        uint64_t cached = CachedNumber.load();
+        uint64_t total = TotalNumber.load();
+        double percentage = 100.0 * cached / total;
+        LogDebug(R"({{"CachedRobot":{{"Size":{},"Cached":{},"Total":{},"Rate":{:.2f}%}}}})",
+                 size,
+                 cached,
+                 total,
+                 percentage);
       }
-    }).detach();
-  }
+    }
+  }).detach();
+#endif
   return 0;
 }();
 
@@ -84,13 +84,13 @@ template <typename SubRobotType>
 template <typename Board>
 Span<const Edge> CachedRobot<SubRobotType>::BestCandidateEdges(const Board& board) {
   Key = board;
-  if constexpr (DebugMode) {
-    TotalNumber.fetch_add(1);
-  }
+#ifndef NDEBUG
+  TotalNumber.fetch_add(1);
+#endif
   if (Cache::ConstAccessor ac; Map.find(ac, Key)) {
-    if constexpr (DebugMode) {
-      CachedNumber.fetch_add(1);
-    }
+#ifndef NDEBUG
+    CachedNumber.fetch_add(1);
+#endif
     Assert(!ac->Empty());
     return {ac->begin(), ac->Size()};
   }
