@@ -24,8 +24,8 @@ THE SOFTWARE.
 
 #pragma once
 
+#include <chrono>
 #include <cstdint>
-#include <thread>
 
 #include "CachedRobot.h"
 #include "Dab/Tools.h"
@@ -49,7 +49,8 @@ class MonteCarloRobot {
   static constexpr uint32_t SearchTime = static_cast<uint32_t>(Edge::Max) << 8;
 
  public:
-  MonteCarloRobot() = default;
+  MonteCarloRobot(Int id = 0) : Id(id) {}
+  void SetId(Int id) { Id = id; }
   template <typename Board>
   void SearchCandidateEdges(const Board& board);
   template <typename Board>
@@ -60,6 +61,7 @@ class MonteCarloRobot {
   List<Edge, Edge::Max>& GetSearchEdges() { return SubRobot.GetSearchEdges(); }
 
  private:
+  Int Id;
   CachedRobot<SimulationRobot> SubRobot;
   RelativeScoreBoard SimulationBoard;
   ScoreMap SearchResult;
@@ -104,7 +106,7 @@ void MonteCarloRobot::SearchCandidateEdges(const Board& board) {
   Random random;
   SearchResult.Reset();
   const Int turn = board.GetTurn();
-  uint32_t last = 0;
+  auto lastTime = std::chrono::system_clock::now();
   for (uint32_t i = 0; i < SearchTime / board.RemainStep(); i++) {
     SimulationBoard = board;
     const Edge edge = random.Choice(SubRobot.BestCandidateEdges(SimulationBoard));
@@ -114,19 +116,19 @@ void MonteCarloRobot::SearchCandidateEdges(const Board& board) {
     }
     SearchResult.Add(edge, turn * SimulationBoard.RelativeScore());
     if constexpr (DebugMode) {
-      int now = i * board.RemainStep() / 1000;
-      if (now > last) {
-        LogDebug(R"({{"MonteCarloRobot":{{"ThreadId":{},"Schedule":"{}/{}","CandidateEdges":{}}}}})",
-                 std::this_thread::get_id(),
+      auto nowTime = std::chrono::system_clock::now();
+      if (nowTime - lastTime >= std::chrono::seconds(5)) {
+        LogDebug(R"({{"MonteCarloRobot":{{"Id":{},"Schedule":"{}/{}","CandidateEdges":{}}}}})",
+                 Id,
                  i * board.RemainStep(),
                  SearchTime,
                  static_cast<std::string>(SearchResult.Export(GetSearchEdges())));
-        last = now;
+        lastTime = nowTime;
       }
     }
   }
-  LogDebug(R"({{"MonteCarloRobot":{{"ThreadId":{},"Schedule":"done","CandidateEdges":{}}}}})",
-           std::this_thread::get_id(),
+  LogDebug(R"({{"MonteCarloRobot":{{"Id":{},"Schedule":"done","CandidateEdges":{}}}}})",
+           Id,
            static_cast<std::string>(SearchResult.Export(GetSearchEdges())));
 }
 
