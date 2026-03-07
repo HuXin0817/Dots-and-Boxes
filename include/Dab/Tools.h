@@ -55,17 +55,7 @@ class LogHelper {
 
  public:
   template <class... Args>
-  static void Log(std::ostream& os, std::string_view color, std::format_string<Args...> fmt, Args&&... args) {
-    static constexpr std::string module = XSTR(__detail__);
-    const auto now = std::chrono::system_clock::now();
-    const auto timestamp = std::chrono::floor<std::chrono::seconds>(now);
-    const std::string message = std::format(fmt, std::forward<Args>(args)...);
-    std::unique_lock lock(LogMutex);
-    os << color;
-    std::println(os, "[{}] {:%Y-%m-%dT%H:%M:%S} {}", module, timestamp, message);
-    os << ColorReset;
-    os.flush();
-  }
+  static void Log(std::ostream& os, std::string_view color, std::format_string<Args...> fmt, Args&&... args);
 
 #define LogInfo(fmt, ...) __detail__::tools::LogHelper::Log(std::cout, ColorInfo, fmt, ##__VA_ARGS__)
 
@@ -77,6 +67,19 @@ class LogHelper {
 #define LogDebug(fmt, ...) __detail__::tools::LogHelper::Log(std::cout, ColorDebug, fmt, ##__VA_ARGS__)
 #endif
 };
+
+template <class... Args>
+void LogHelper::Log(std::ostream& os, std::string_view color, std::format_string<Args...> fmt, Args&&... args) {
+  static constexpr std::string module = XSTR(__detail__);
+  const auto now = std::chrono::system_clock::now();
+  const auto timestamp = std::chrono::floor<std::chrono::seconds>(now);
+  const std::string message = std::format(fmt, std::forward<Args>(args)...);
+  std::unique_lock lock(LogMutex);
+  os << color;
+  std::println(os, "[{}] {:%Y-%m-%dT%H:%M:%S} {}", module, timestamp, message);
+  os << ColorReset;
+  os.flush();
+}
 
 class AssertHelper {
   static inline std::mutex AssertHelperMutex;

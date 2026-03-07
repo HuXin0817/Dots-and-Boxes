@@ -235,7 +235,7 @@ constexpr Int BoardImpl<Config>::Add(Edge edge) {
   if constexpr (HasFlag(EnableEdgeCount)) {
     for (const Box box : edge.NearBoxes()) {
       const uint8_t num = ++this->Counter.At(box);
-      Assert(num <= 4, K(num), K(this->Counter));
+      Assert(0 <= num && num <= 4, K(num), K(this->Counter));
       if (num == 4) {
         ++score;
         if constexpr (HasFlag(EnableOwner)) {
@@ -260,7 +260,7 @@ constexpr Int BoardImpl<Config>::Add(Edge edge) {
       }
       if constexpr (HasFlag(EnableLogging)) {
         const Int step = NowStep();
-        const std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
+        const auto now = std::chrono::system_clock::now();
         const int64_t time = std::chrono::duration_cast<std::chrono::milliseconds>(now - this->LastUpdateTime).count();
         const std::string scoreMap = std::format(R"({{"Player1":{},"Player2":{}}})", Player1Score(), Player2Score());
         LogInfo(R"({{"Step":{},"Turn":{},"Move":{},"Score":{},"Time":{}}})",

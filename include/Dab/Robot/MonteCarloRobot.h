@@ -118,7 +118,7 @@ void MonteCarloRobot::SearchCandidateEdges(const Board& board) {
     }
     SearchResult.Add(edge, turn * SimulationBoard.RelativeScore());
 #ifndef NDEBUG
-    auto nowTime = std::chrono::system_clock::now();
+    const auto nowTime = std::chrono::system_clock::now();
     if (nowTime - lastTime >= std::chrono::seconds(5)) {
       LogDebug(R"({{"MonteCarloRobot":{{"Id":{},"Schedule":"{}/{}","CandidateEdges":{}}}}})",
                Id,

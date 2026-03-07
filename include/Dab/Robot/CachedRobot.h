@@ -64,10 +64,10 @@ int CachedRobot<SubRobotType>::doRecord = []() -> int {
     while (true) {
       std::this_thread::sleep_for(std::chrono::seconds(5));
       if (TotalNumber.load() > 0) {
-        uint64_t size = Map.size();
-        uint64_t cached = CachedNumber.load();
-        uint64_t total = TotalNumber.load();
-        double percentage = 100.0 * cached / total;
+        const uint64_t size = Map.size();
+        const uint64_t cached = CachedNumber.load();
+        const uint64_t total = TotalNumber.load();
+        const double percentage = 100.0 * cached / total;
         LogDebug(R"({{"CachedRobot":{{"Size":{},"Cached":{},"Total":{},"Rate":{:.2f}%}}}})",
                  size,
                  cached,
