@@ -64,6 +64,7 @@ class LogHelper {
     os << color;
     std::println(os, "[{}] {:%Y-%m-%dT%H:%M:%S} {}", module, timestamp, message);
     os << ColorReset;
+    os.flush();
   }
 
 #define LogInfo(fmt, ...) __detail__::tools::LogHelper::Log(std::cout, ColorInfo, fmt, ##__VA_ARGS__)
