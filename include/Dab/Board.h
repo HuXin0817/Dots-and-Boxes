@@ -401,7 +401,7 @@ constexpr BoardImpl<Config>::operator std::string() const {
       moveRecord.Append(edge);
     }
   }
-  return std::format(R"({{"Step":{},"MoveRecord":{}}})", NowStep(), static_cast<std::string>(moveRecord));
+  return std::format(R"({{"Step":{},"MoveRecord":{}}})", NowStep(), ToString(moveRecord));
 }
 
 static_assert(sizeof(BoardImpl<0>) == sizeof(BasicMixin));

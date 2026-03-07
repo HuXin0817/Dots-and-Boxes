@@ -231,16 +231,10 @@ constexpr Iterable<Config, T, ArraySize>::operator std::string() const {
   }
   std::string str = "[";
   for (auto ele : *this) {
-    str += std::to_string(ele) + ",";
+    str += ToString(ele) + ",";
   }
   str.back() = ']';
   return str;
-}
-
-template <int Config, typename T, Int ArraySize>
-std::ostream& operator<<(std::ostream& os, const Iterable<Config, T, ArraySize>& iterable) {
-  os << static_cast<std::string>(iterable);
-  return os;
 }
 
 class Random {

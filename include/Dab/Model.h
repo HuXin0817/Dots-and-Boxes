@@ -28,7 +28,9 @@ THE SOFTWARE.
 #include <Dab/Iterable.h>
 #include <Dab/Tools.h>
 
+#include <mutex>
 #include <ranges>
+#include <string>
 
 namespace dab {
 
@@ -46,6 +48,7 @@ class IntWapper {
   constexpr IntWapper(Int v) : v(v) {}
   constexpr operator Int() { return v; }
   constexpr operator Int() const { return v; }
+  constexpr operator std::string() const { return std::to_string(v); }
 
  protected:
   Int v = 0;
@@ -155,6 +158,10 @@ constexpr Array<Array<Edge, 4>, Box::Max> CreateNearEdgesMapper() {
 
 constexpr const Array<Edge, 4>& Box::NearEdges() const {
   static _constexpr Array<Array<Edge, 4>, Max> Instance = CreateNearEdgesMapper();
+#ifndef NDEBUG
+  static std::once_flag once;
+  std::call_once(once, [&]() { LogDebug(R"("NearEdgesMapper":{})", ToString(Instance)); });
+#endif
   return Instance.At(v);
 }
 
@@ -183,6 +190,10 @@ constexpr Array<List<Box, 2>, Edge::Max> CreateNearBoxesMapper() {
 
 constexpr const List<Box, 2>& Edge::NearBoxes() const {
   static _constexpr Array<List<Box, 2>, Max> Instance = CreateNearBoxesMapper();
+#ifndef NDEBUG
+  static std::once_flag once;
+  std::call_once(once, [&]() { LogDebug(R"("NearBoxesMapper":{})", ToString(Instance)); });
+#endif
   return Instance.At(v);
 }
 

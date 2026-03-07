@@ -131,15 +131,11 @@ void MainWindow::Run() {
   while (Board.Gaming()) {
     if (PlayerTypeIsRobot(Player1Type) && Board.IsPlayer1Turn()) {
       Span candidateEdges = Robot1->BestCandidateEdges(Board);
-      LogDebug(R"({{"Board":{},"BestCandidateEdges":{}}})",
-               static_cast<std::string>(Board),
-               static_cast<std::string>(candidateEdges));
+      LogDebug(R"({{"Board":{},"BestCandidateEdges":{}}})", ToString(Board), ToString(candidateEdges));
       PlayerMoveEdge = random.Choice(candidateEdges);
     } else if (PlayerTypeIsRobot(Player2Type) && Board.IsPlayer2Turn()) {
       Span candidateEdges = Robot2->BestCandidateEdges(Board);
-      LogDebug(R"({{"Board":{},"BestCandidateEdges":{}}})",
-               static_cast<std::string>(Board),
-               static_cast<std::string>(candidateEdges));
+      LogDebug(R"({{"Board":{},"BestCandidateEdges":{}}})", ToString(Board), ToString(candidateEdges));
       PlayerMoveEdge = random.Choice(candidateEdges);
     } else {
       PlayerMoveEdge.Reset();

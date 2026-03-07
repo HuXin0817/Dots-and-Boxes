@@ -124,7 +124,7 @@ void MonteCarloRobot::SearchCandidateEdges(const Board& board) {
                Id,
                i * board.RemainStep(),
                SearchTime,
-               static_cast<std::string>(SearchResult.Export(GetSearchEdges())));
+               ToString(SearchResult.Export(GetSearchEdges())));
       lastTime = nowTime;
     }
 #endif
@@ -132,7 +132,7 @@ void MonteCarloRobot::SearchCandidateEdges(const Board& board) {
 #ifndef NDEBUG
   LogDebug(R"({{"MonteCarloRobot":{{"Id":{},"Schedule":"done","CandidateEdges":{}}}}})",
            Id,
-           static_cast<std::string>(SearchResult.Export(GetSearchEdges())));
+           ToString(SearchResult.Export(GetSearchEdges())));
 #endif
 }
 

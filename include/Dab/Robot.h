@@ -93,9 +93,7 @@ inline void MockRunningGame(PlayerType player1Type, PlayerType player2Type) {
     } else {
       candidateEdges = robot2->BestCandidateEdges(board);
     }
-    LogDebug(R"({{"Board":{},"BestCandidateEdges":{}}})",
-             static_cast<std::string>(board),
-             static_cast<std::string>(candidateEdges));
+    LogDebug(R"({{"Board":{},"BestCandidateEdges":{}}})", ToString(board), ToString(candidateEdges));
     board.Add(random.Choice(candidateEdges));
   }
 }

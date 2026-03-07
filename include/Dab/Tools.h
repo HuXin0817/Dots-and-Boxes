@@ -104,11 +104,20 @@ void AssertHelper::Info(const std::source_location& location, const std::string&
 
 }  // namespace __detail__::tools
 
-#define K(expr)                 \
-  ([&]() -> std::string {       \
-    std::stringstream ss;       \
-    ss << #expr << "=" << expr; \
-    return ss.str();            \
+template <typename T>
+std::string ToString(T value) {
+  if constexpr (std::is_arithmetic_v<T>) {
+    return std::to_string(value);
+  } else {
+    return static_cast<std::string>(value);
+  }
+}
+
+#define K(expr)                           \
+  ([&]() -> std::string {                 \
+    std::stringstream ss;                 \
+    ss << #expr << "=" << ToString(expr); \
+    return ss.str();                      \
   }())
 
 #ifdef NDEBUG
