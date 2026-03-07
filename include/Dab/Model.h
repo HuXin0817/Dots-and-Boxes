@@ -160,7 +160,7 @@ constexpr const Array<Edge, 4>& Box::NearEdges() const {
   static _constexpr Array<Array<Edge, 4>, Max> Instance = CreateNearEdgesMapper();
 #ifndef NDEBUG
   static std::once_flag once;
-  std::call_once(once, [&]() { LogDebug(R"("NearEdgesMapper":{})", ToString(Instance)); });
+  std::call_once(once, [&]() { LogDebug(R"({{"NearEdgesMapper":{}}})", ToString(Instance)); });
 #endif
   return Instance.At(v);
 }
@@ -192,7 +192,7 @@ constexpr const List<Box, 2>& Edge::NearBoxes() const {
   static _constexpr Array<List<Box, 2>, Max> Instance = CreateNearBoxesMapper();
 #ifndef NDEBUG
   static std::once_flag once;
-  std::call_once(once, [&]() { LogDebug(R"("NearBoxesMapper":{})", ToString(Instance)); });
+  std::call_once(once, [&]() { LogDebug(R"({{"NearBoxesMapper":{}}})", ToString(Instance)); });
 #endif
   return Instance.At(v);
 }
