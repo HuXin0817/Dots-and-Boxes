@@ -30,7 +30,6 @@ THE SOFTWARE.
 #include <algorithm>
 #include <array>
 #include <chrono>
-#include <iostream>
 #include <memory>
 #include <random>
 #include <type_traits>

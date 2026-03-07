@@ -113,12 +113,7 @@ std::string ToString(T value) {
   }
 }
 
-#define K(expr)                           \
-  ([&]() -> std::string {                 \
-    std::stringstream ss;                 \
-    ss << #expr << "=" << ToString(expr); \
-    return ss.str();                      \
-  }())
+#define K(expr) (std::format("{}={}", #expr, ToString(expr)))
 
 #ifdef NDEBUG
 #define Assert(expr, ...) ((void)0)
