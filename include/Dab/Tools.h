@@ -118,7 +118,7 @@ void AssertHelper::Info(const std::source_location& location, const std::string&
   }())
 
 #ifdef NDEBUG
-#define Assert(expr) ((void)0)
+#define Assert(expr, ...) ((void)0)
 #else
 
 #define Assert(expr, ...)                                                    \
