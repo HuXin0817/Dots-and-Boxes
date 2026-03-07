@@ -28,3 +28,12 @@ jobs:
       - name: Run
         run: |
           ./build/Dots_and_Boxes -s 5 -b
+
+      - name: Build Release
+        run: |
+          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release
+          cmake --build build -j $(nproc)
+
+      - name: Run Release
+        run: |
+          ./build/Dots_and_Boxes -s 5 -b
