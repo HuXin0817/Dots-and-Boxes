@@ -48,25 +48,32 @@ static constexpr bool DebugMode = false;
 static constexpr bool DebugMode = true;
 #endif
 
+static constexpr std::string_view ColorReset = "\033[0m";
+static constexpr std::string_view ColorInfo = "\033[32m";   // Green
+static constexpr std::string_view ColorDebug = "\033[34m";  // Blue
+static constexpr std::string_view ColorError = "\033[31m";  // Red
+
 namespace __detail__::tools {
 
 template <class... Args>
-void Log(std::ostream& os, std::format_string<Args...> fmt, Args&&... args) {
+void Log(std::ostream& os, std::string_view color, std::format_string<Args...> fmt, Args&&... args) {
   static constexpr std::string module = XSTR(__detail__);
   const auto now = std::chrono::system_clock::now();
   const auto timestamp = std::chrono::floor<std::chrono::seconds>(now);
   const std::string message = std::format(fmt, std::forward<Args>(args)...);
-  std::println(os, R"([{}] {:%Y-%m-%dT%H:%M:%S} {})", module, timestamp, message);
+  os << color;
+  std::println(os, "[{}] {:%Y-%m-%dT%H:%M:%S} {}", module, timestamp, message);
+  os << ColorReset;
 }
 
-#define LogInfo(fmt, ...) __detail__::tools::Log(std::cout, fmt, ##__VA_ARGS__)
+#define LogInfo(fmt, ...) __detail__::tools::Log(std::cout, ColorInfo, fmt, ##__VA_ARGS__)
 
-#define LogError(fmt, ...) __detail__::tools::Log(std::cerr, R"({{"Error":"{}"}})", std::format(fmt, ##__VA_ARGS__))
+#define LogError(fmt, ...) __detail__::tools::Log(std::cerr, ColorError, fmt, ##__VA_ARGS__)
 
 #ifdef NDEBUG
 #define LogDebug(fmt, ...) ((void)0)
 #else
-#define LogDebug(fmt, ...) __detail__::tools::Log(std::cout, fmt, ##__VA_ARGS__)
+#define LogDebug(fmt, ...) __detail__::tools::Log(std::cout, ColorDebug, fmt, ##__VA_ARGS__)
 #endif
 
 class AssertHelper {
