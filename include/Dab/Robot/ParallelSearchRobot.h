@@ -33,13 +33,15 @@ THE SOFTWARE.
 namespace dab::__detail__::robot {
 
 class ParallelSearchRobot {
+  static constexpr uint64_t WorkersNumber = std::min(static_cast<uint64_t>(NUM_CPUS), static_cast<uint64_t>(Edge::Max));
+
  public:
   ParallelSearchRobot() = default;
   template <typename Board>
   Span<const Edge> BestCandidateEdges(const Board& board);
 
  private:
-  Array<MonteCarloRobot, std::min(32ll, static_cast<int64_t>(Edge::Max))> Workers;
+  Array<MonteCarloRobot, WorkersNumber> Workers;
 };
 
 template <typename Board>

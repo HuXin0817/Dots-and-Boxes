@@ -55,26 +55,33 @@ static constexpr std::string_view ColorError = "\033[31m";  // Red
 
 namespace __detail__::tools {
 
-template <class... Args>
-void Log(std::ostream& os, std::string_view color, std::format_string<Args...> fmt, Args&&... args) {
-  static constexpr std::string module = XSTR(__detail__);
-  const auto now = std::chrono::system_clock::now();
-  const auto timestamp = std::chrono::floor<std::chrono::seconds>(now);
-  const std::string message = std::format(fmt, std::forward<Args>(args)...);
-  os << color;
-  std::println(os, "[{}] {:%Y-%m-%dT%H:%M:%S} {}", module, timestamp, message);
-  os << ColorReset;
-}
+class LogHelper {
+ private:
+  static inline std::mutex LogMutex;
 
-#define LogInfo(fmt, ...) __detail__::tools::Log(std::cout, ColorInfo, fmt, ##__VA_ARGS__)
+ public:
+  template <class... Args>
+  static void Log(std::ostream& os, std::string_view color, std::format_string<Args...> fmt, Args&&... args) {
+    static constexpr std::string module = XSTR(__detail__);
+    const auto now = std::chrono::system_clock::now();
+    const auto timestamp = std::chrono::floor<std::chrono::seconds>(now);
+    const std::string message = std::format(fmt, std::forward<Args>(args)...);
+    std::unique_lock lock(LogMutex);
+    os << color;
+    std::println(os, "[{}] {:%Y-%m-%dT%H:%M:%S} {}", module, timestamp, message);
+    os << ColorReset;
+  }
 
-#define LogError(fmt, ...) __detail__::tools::Log(std::cerr, ColorError, fmt, ##__VA_ARGS__)
+#define LogInfo(fmt, ...) __detail__::tools::LogHelper::Log(std::cout, ColorInfo, fmt, ##__VA_ARGS__)
+
+#define LogError(fmt, ...) __detail__::tools::LogHelper::Log(std::cerr, ColorError, fmt, ##__VA_ARGS__)
 
 #ifdef NDEBUG
 #define LogDebug(fmt, ...) ((void)0)
 #else
-#define LogDebug(fmt, ...) __detail__::tools::Log(std::cout, ColorDebug, fmt, ##__VA_ARGS__)
+#define LogDebug(fmt, ...) __detail__::tools::LogHelper::Log(std::cout, ColorDebug, fmt, ##__VA_ARGS__)
 #endif
+};
 
 class AssertHelper {
   static inline std::mutex AssertHelperMutex;

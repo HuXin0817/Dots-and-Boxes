@@ -46,7 +46,7 @@ class MonteCarloRobot {
     Array<int64_t, Edge::Max> Score;
   };
 
-  static constexpr uint32_t SearchTime = static_cast<uint32_t>(Edge::Max) << 6;
+  static constexpr uint32_t SearchTime = static_cast<uint32_t>(Edge::Max) << 8;
 
  public:
   MonteCarloRobot() = default;
@@ -114,7 +114,7 @@ void MonteCarloRobot::SearchCandidateEdges(const Board& board) {
     }
     SearchResult.Add(edge, turn * SimulationBoard.RelativeScore());
     if constexpr (DebugMode) {
-      int now = i * board.RemainStep() / (Edge::Max << 4);
+      int now = i * board.RemainStep() / 1000;
       if (now > last) {
         LogDebug(R"({{"MonteCarloRobot":{{"ThreadId":{},"Schedule":"{}/{}","CandidateEdges":{}}}}})",
                  std::this_thread::get_id(),

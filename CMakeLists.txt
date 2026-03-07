@@ -34,6 +34,11 @@ file(READ VERSION Version)
 message(STATUS "Version: ${Version}")
 message(STATUS "MaxBoardSize: ${MaxBoardSize}")
 message(STATUS "DefaultBoardSize: ${DefaultBoardSize}")
+message(STATUS "CPU Number: ${NUM_CPUS}")
+
+include(ProcessorCount)
+ProcessorCount(NUM_CPUS IGNORE_ERRORS)
+add_compile_definitions(NUM_CPUS=${NUM_CPUS} __Version__="${Version}")
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 find_package(TBB REQUIRED)
@@ -48,7 +53,6 @@ endforeach()
 
 qt_add_executable("${PROJECT_NAME}" main.cpp)
 target_compile_definitions("${PROJECT_NAME}" PRIVATE
-  __Version__="${Version}"
   __MaxBoardSize__=${MaxBoardSize}
   __DefaultBoardSize__=${DefaultBoardSize}
 )
