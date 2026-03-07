@@ -25,8 +25,10 @@ THE SOFTWARE.
 #pragma once
 
 #include <cstdint>
+#include <thread>
 
 #include "CachedRobot.h"
+#include "Dab/Tools.h"
 #include "SimulationRobot.h"
 
 namespace dab::__detail__::robot {
@@ -102,6 +104,7 @@ void MonteCarloRobot::SearchCandidateEdges(const Board& board) {
   Random random;
   SearchResult.Reset();
   const Int turn = board.GetTurn();
+  uint32_t last = 0;
   for (uint32_t i = 0; i < SearchTime / board.RemainStep(); i++) {
     SimulationBoard = board;
     const Edge edge = random.Choice(SubRobot.BestCandidateEdges(SimulationBoard));
@@ -110,7 +113,21 @@ void MonteCarloRobot::SearchCandidateEdges(const Board& board) {
       SimulationBoard.Add(random.Choice(SubRobot.BestCandidateEdges(SimulationBoard)));
     }
     SearchResult.Add(edge, turn * SimulationBoard.RelativeScore());
+    if constexpr (DebugMode) {
+      int now = i * board.RemainStep() / (Edge::Max << 4);
+      if (now > last) {
+        LogDebug(R"({{"MonteCarloRobot":{{"ThreadId":{},"Schedule":"{}/{}","CandidateEdges":{}}}}})",
+                 std::this_thread::get_id(),
+                 i * board.RemainStep(),
+                 SearchTime,
+                 static_cast<std::string>(SearchResult.Export(GetSearchEdges())));
+        last = now;
+      }
+    }
   }
+  LogDebug(R"({{"MonteCarloRobot":{{"ThreadId":{},"Schedule":"done","CandidateEdges":{}}}}})",
+           std::this_thread::get_id(),
+           static_cast<std::string>(SearchResult.Export(GetSearchEdges())));
 }
 
 template <typename Board>
