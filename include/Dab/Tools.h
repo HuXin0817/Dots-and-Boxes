@@ -42,6 +42,12 @@ namespace dab {
 #define STR(x) #x
 #define XSTR(x) STR(x)
 
+#ifdef NDEBUG
+static constexpr bool DebugMode = false;
+#else
+static constexpr bool DebugMode = true;
+#endif
+
 namespace __detail__::tools {
 
 template <class... Args>

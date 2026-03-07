@@ -27,6 +27,11 @@ THE SOFTWARE.
 #include <Dab/Board.h>
 #include <Dab/LRUCache.h>
 
+#include <atomic>
+#include <cstddef>
+#include <cstdint>
+#include <thread>
+
 #include "Dab/Tools.h"
 
 namespace dab::__detail__::robot {
@@ -34,23 +39,58 @@ namespace dab::__detail__::robot {
 template <typename SubRobotType>
 class CachedRobot : public SubRobotType {
  public:
-  CachedRobot() = default;
+  CachedRobot() { (void)doRecord; }
 
   template <typename Board>
   Span<const Edge> BestCandidateEdges(const Board& board);
 
  private:
-  static constexpr uint32_t CacheSize = static_cast<int64_t>(Edge::Max) << 8;
-  static inline tstarling::ThreadSafeLRUCache<HashValueBoard, Vector<Edge>> Map{CacheSize};
+  using Cache = tstarling::ThreadSafeLRUCache<HashValueBoard, Vector<Edge>>;
+  static constexpr size_t CacheSize = static_cast<int64_t>(Edge::Max) << 10;
+  static inline Cache Map{CacheSize};
+
+  static inline std::atomic<uint64_t> CachedNumber = 0;
+  static inline std::atomic<uint64_t> TotalNumber = 0;
+
+  static int doRecord;
 
   HashValueBoard Key;
 };
 
 template <typename SubRobotType>
+int CachedRobot<SubRobotType>::doRecord = []() {
+  if constexpr (DebugMode) {
+    std::thread([&]() {
+      while (true) {
+        std::this_thread::sleep_for(std::chrono::seconds(5));
+        if (TotalNumber.load() > 0) {
+          uint64_t size = Map.size();
+          uint64_t cached = CachedNumber.load();
+          uint64_t total = TotalNumber.load();
+          double percentage = 100.0 * cached / total;
+          LogDebug(R"({{"CachedRobot":{{"Size":{},"CachedNumber":{},"TotalNumber":{},"CacheHitRate":{:.2f}%}}}})",
+                   size,
+                   cached,
+                   total,
+                   percentage);
+        }
+      }
+    }).detach();
+  }
+  return 0;
+}();
+
+template <typename SubRobotType>
 template <typename Board>
 Span<const Edge> CachedRobot<SubRobotType>::BestCandidateEdges(const Board& board) {
   Key = board;
-  if (tstarling::ThreadSafeLRUCache<HashValueBoard, Vector<Edge>>::ConstAccessor ac; Map.find(ac, Key)) {
+  if constexpr (DebugMode) {
+    TotalNumber.fetch_add(1);
+  }
+  if (Cache::ConstAccessor ac; Map.find(ac, Key)) {
+    if constexpr (DebugMode) {
+      CachedNumber.fetch_add(1);
+    }
     Assert(!ac->Empty());
     return {ac->begin(), ac->Size()};
   }
