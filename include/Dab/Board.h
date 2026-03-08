@@ -30,10 +30,12 @@ THE SOFTWARE.
 
 #include <algorithm>
 #include <chrono>
+#include <cstddef>
 #include <cstdint>
 #include <format>
 #include <functional>
 #include <numeric>
+#include <unordered_set>
 
 namespace dab {
 
@@ -115,8 +117,14 @@ struct HashValueMixin {
 inline Array<size_t, Edge::Max> HashValueMixin::HashMapper = []() -> Array<size_t, Edge::Max> {
   Random random;
   Array<size_t, Edge::Max> result;
+  std::unordered_set<size_t> visited;
   for (size_t& v : result) {
-    v = random.Range(std::numeric_limits<size_t>::min(), std::numeric_limits<size_t>::max());
+    size_t n = random.Range(std::numeric_limits<size_t>::min(), std::numeric_limits<size_t>::max());
+    while (visited.contains(n)) {
+      n = random.Range(std::numeric_limits<size_t>::min(), std::numeric_limits<size_t>::max());
+    }
+    visited.insert(n);
+    v = n;
   }
   return result;
 }();

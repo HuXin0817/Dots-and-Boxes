@@ -36,7 +36,7 @@ namespace dab {
 
 namespace __detail__::model {
 
-#if __BoardSize__ <= 30
+#if __BoardSize__ <= 20
 #define _constexpr constexpr
 #else
 #define _constexpr
@@ -59,10 +59,14 @@ class Square : public IntWapper {
  public:
   static constexpr Int Max = Length * Length;
 
-  using IntWapper::IntWapper;
-  constexpr Square(Int x, Int y) : IntWapper(x * Length + y) {}
+  constexpr Square() = default;
+  constexpr Square(Int v) : IntWapper(v) { Check(); }
+  constexpr Square(Int x, Int y) : IntWapper(x * Length + y) { Check(); }
   constexpr Int X() const { return v / Length; }
   constexpr Int Y() const { return v % Length; }
+
+ private:
+  constexpr void Check() const { Assert(0 <= v && v < Max, K(v), K(Max)); }
 };
 
 using Dot = Square<BoardSize + 1>;
@@ -80,8 +84,8 @@ class Edge : public IntWapper {
   static constexpr Int Max = 2 * BoardSize * (BoardSize + 1);
   static constexpr Int Invalid = -1;
 
-  using IntWapper::IntWapper;
-  constexpr Edge() { Reset(); }
+  constexpr Edge() : IntWapper(Invalid) {}
+  constexpr Edge(Int v) : IntWapper(v) { Check(); }
   constexpr Edge(Dot dot1, Dot dot2);
   constexpr void Reset() { v = Invalid; }
   constexpr Dot Dot1() const;
@@ -89,6 +93,9 @@ class Edge : public IntWapper {
   constexpr bool Rotate() const;
   constexpr bool Valid() const { return v != Invalid; }
   constexpr const List<Box, 2>& NearBoxes() const;
+
+ private:
+  constexpr void Check() const { Assert(Invalid <= v && v < Max, K(v), K(Max)); }
 };
 
 constexpr Edge::Edge(Dot dot1, Dot dot2) {
