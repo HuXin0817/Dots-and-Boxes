@@ -60,7 +60,7 @@ static constexpr std::string_view ColorInfo = "\033[32m";   // Green
 static constexpr std::string_view ColorDebug = "\033[34m";  // Blue
 static constexpr std::string_view ColorError = "\033[31m";  // Red
 
-inline void Log(std::ostream& os, std::string_view color, nlohmann::json message) {
+inline void Log(std::ostream& os, std::string_view color, nlohmann::ordered_json message) {
   static constexpr std::string module = XSTR(__detail__);
   const auto now = std::chrono::system_clock::now();
   const auto timestamp = std::chrono::floor<std::chrono::seconds>(now);
@@ -69,8 +69,8 @@ inline void Log(std::ostream& os, std::string_view color, nlohmann::json message
   os.flush();
 }
 
-inline void LogInfo(nlohmann::json message) { Log(std::cout, ColorInfo, message); }
-inline void LogDebug(nlohmann::json message) { Log(std::cout, ColorDebug, message); }
+inline void LogInfo(nlohmann::ordered_json message) { Log(std::cout, ColorInfo, message); }
+inline void LogDebug(nlohmann::ordered_json message) { Log(std::cout, ColorDebug, message); }
 
 template <class... Args>
 inline void LogError(std::format_string<Args...> fmt, Args&&... args) {
@@ -98,7 +98,7 @@ using __detail__::tools::LogDebug;
 using __detail__::tools::LogError;
 using __detail__::tools::LogInfo;
 
-#define K(expr) (std::format("{}={}", #expr, nlohmann::json(expr).dump()))
+#define K(expr) (std::format("{}={}", #expr, nlohmann::ordered_json(expr).dump()))
 
 #ifdef NDEBUG
 #define Assert(expr, ...) ((void)0)

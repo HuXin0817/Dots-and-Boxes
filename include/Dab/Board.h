@@ -188,7 +188,7 @@ class BoardImpl : BasicMixin,
   constexpr BoardImpl& operator=(const Other& other);
   template <typename Other>
   constexpr bool operator==(const Other& other) const;
-  constexpr operator nlohmann::json() const;
+  constexpr operator nlohmann::ordered_json() const;
 };
 
 template <int Config>
@@ -402,7 +402,7 @@ constexpr bool BoardImpl<Config>::operator==(const Other& other) const {
 }
 
 template <int Config>
-constexpr BoardImpl<Config>::operator nlohmann::json() const {
+constexpr BoardImpl<Config>::operator nlohmann::ordered_json() const {
   List<Edge, Edge::Max> moveRecord;
   for (const Edge edge : Iota<Edge>()) {
     if (Contains(edge)) {

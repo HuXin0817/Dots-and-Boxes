@@ -49,7 +49,7 @@ class IntWapper {
   constexpr IntWapper(Int v) : v(v) {}
   constexpr operator Int() { return v; }
   constexpr operator Int() const { return v; }
-  constexpr operator nlohmann::json() const { return v; }
+  constexpr operator nlohmann::ordered_json() const { return v; }
 
  protected:
   Int v = 0;
