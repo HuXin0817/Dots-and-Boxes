@@ -73,7 +73,7 @@ int CachedRobot<SubRobotType>::doRecord = []() -> int {
                   {"Size", Map.size()},
                   {"Cached", cached},
                   {"Total", total},
-                  {"Rate", std::format("{}%", percentage)},
+                  {"Rate", std::format("{:.2f}%", percentage)},
               },
           }});
         }
