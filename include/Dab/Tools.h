@@ -119,7 +119,7 @@ void AssertHelper::Info(const std::source_location& location, const std::string&
 
 }  // namespace __detail__::tools
 
-#define K(expr) (Format("{}={}", #expr, expr))
+#define K(expr) (Format("{}={}", #expr, ToString(expr)))
 
 #ifdef NDEBUG
 #define Assert(expr, ...) ((void)0)

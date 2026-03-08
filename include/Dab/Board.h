@@ -189,6 +189,7 @@ class BoardImpl : BasicMixin,
   constexpr BoardImpl& operator=(const Other& other);
   template <typename Other>
   constexpr bool operator==(const Other& other) const;
+  constexpr operator nlohmann::json() const;
 };
 
 template <int Config>
@@ -401,6 +402,17 @@ constexpr bool BoardImpl<Config>::operator==(const Other& other) const {
   return true;
 }
 
+template <int Config>
+constexpr BoardImpl<Config>::operator nlohmann::json() const {
+  List<Edge, Edge::Max> moveRecord;
+  for (const Edge edge : Iota<Edge>()) {
+    if (Contains(edge)) {
+      moveRecord.Append(edge);
+    }
+  }
+  return {{"Step", NowStep()}, {"MoveRecord", moveRecord}};
+}
+
 static_assert(sizeof(BoardImpl<0>) == sizeof(BasicMixin));
 
 template <int Config>
@@ -432,20 +444,3 @@ struct hash<BoardImpl<Config>> {
 };
 
 }  // namespace std
-
-namespace nlohmann {
-
-using namespace dab;
-
-template <int Config>
-void to_json(json& json, const __detail__::board::BoardImpl<Config>& data) {
-  List<Edge, Edge::Max> moveRecord;
-  for (const Edge edge : Iota<Edge>()) {
-    if (data.Contains(edge)) {
-      moveRecord.Append(edge);
-    }
-  }
-  json = {{"Step", data.NowStep()}, {"MoveRecord", moveRecord}};
-}
-
-}  // namespace nlohmann

@@ -30,7 +30,8 @@ THE SOFTWARE.
 
 #include <mutex>
 #include <ranges>
-#include <string>
+
+#include "Dab/Json.h"
 
 namespace dab {
 
@@ -48,7 +49,7 @@ class IntWapper {
   constexpr IntWapper(Int v) : v(v) {}
   constexpr operator Int() { return v; }
   constexpr operator Int() const { return v; }
-  constexpr operator std::string() const { return std::to_string(v); }
+  constexpr operator nlohmann::json() const { return v; }
 
  protected:
   Int v = 0;
