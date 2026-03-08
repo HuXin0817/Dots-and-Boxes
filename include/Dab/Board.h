@@ -270,7 +270,7 @@ constexpr Int BoardImpl<Config>::Add(Edge edge) {
         const Int step = NowStep();
         const auto now = std::chrono::system_clock::now();
         const int64_t time = std::chrono::duration_cast<std::chrono::milliseconds>(now - this->LastUpdateTime).count();
-        const std::string scoreMap = std::format(R"({{"Player1":{},"Player2":{}}})", Player1Score(), Player2Score());
+        const std::string scoreMap = Format(R"({{"Player1":{},"Player2":{}}})", Player1Score(), Player2Score());
         LogInfo(R"({{"Step":{},"Turn":{},"Move":{},"Score":{},"Time":{}}})",
                 step,
                 IsPlayer1Turn() ? 1 : 2,
@@ -409,7 +409,7 @@ constexpr BoardImpl<Config>::operator std::string() const {
       moveRecord.Append(edge);
     }
   }
-  return std::format(R"({{"Step":{},"MoveRecord":{}}})", NowStep(), ToString(moveRecord));
+  return Format(R"({{"Step":{},"MoveRecord":{}}})", NowStep(), moveRecord);
 }
 
 static_assert(sizeof(BoardImpl<0>) == sizeof(BasicMixin));

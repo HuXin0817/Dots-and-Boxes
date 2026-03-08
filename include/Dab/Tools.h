@@ -39,6 +39,12 @@ THE SOFTWARE.
 
 namespace dab {
 
+#ifdef NDEBUG
+static constexpr bool DebugMode = false;
+#else
+static constexpr bool DebugMode = true;
+#endif  // NDEBUG
+
 #define STR(x) #x
 #define XSTR(x) STR(x)
 
@@ -46,6 +52,25 @@ static constexpr std::string_view ColorReset = "\033[0m";
 static constexpr std::string_view ColorInfo = "\033[32m";   // Green
 static constexpr std::string_view ColorDebug = "\033[34m";  // Blue
 static constexpr std::string_view ColorError = "\033[31m";  // Red
+
+template <typename T>
+constexpr std::string ToString(T value) {
+  if constexpr (std::is_arithmetic_v<T>) {
+    if constexpr (std::is_floating_point_v<T>) {
+      return std::format("{:.2f}", value);
+    } else {
+      return std::to_string(value);
+    }
+  } else {
+    return static_cast<std::string>(value);
+  }
+}
+
+template <class... Args>
+constexpr std::string Format(std::string_view fmt, Args&&... args) {
+  const auto format_args = [&] { return std::make_tuple(ToString(std::forward<Args>(args))...); }();
+  return std::apply([&](auto&&... args) { return std::vformat(fmt, std::make_format_args(args...)); }, format_args);
+}
 
 namespace __detail__::tools {
 
@@ -55,29 +80,23 @@ class LogHelper {
 
  public:
   template <class... Args>
-  static void Log(std::ostream& os, std::string_view color, std::format_string<Args...> fmt, Args&&... args);
+  static void Log(std::ostream& os, std::string_view color, std::string_view fmt, Args&&... args);
 
 #define LogInfo(fmt, ...) __detail__::tools::LogHelper::Log(std::cout, ColorInfo, fmt, ##__VA_ARGS__)
 
 #define LogError(fmt, ...) __detail__::tools::LogHelper::Log(std::cerr, ColorError, fmt, ##__VA_ARGS__)
 
-#ifdef NDEBUG
-#define LogDebug(fmt, ...) ((void)0)
-#else
 #define LogDebug(fmt, ...) __detail__::tools::LogHelper::Log(std::cout, ColorDebug, fmt, ##__VA_ARGS__)
-#endif
 };
 
 template <class... Args>
-void LogHelper::Log(std::ostream& os, std::string_view color, std::format_string<Args...> fmt, Args&&... args) {
+void LogHelper::Log(std::ostream& os, std::string_view color, std::string_view fmt, Args&&... args) {
   static constexpr std::string module = XSTR(__detail__);
   const auto now = std::chrono::system_clock::now();
   const auto timestamp = std::chrono::floor<std::chrono::seconds>(now);
-  const std::string message = std::format(fmt, std::forward<Args>(args)...);
+  const std::string message = Format(fmt, std::forward<Args>(args)...);
   std::unique_lock lock(LogMutex);
-  os << color;
-  std::println(os, "[{}] {:%Y-%m-%dT%H:%M:%S} {}", module, timestamp, message);
-  os << ColorReset;
+  std::println(os, "{}[{}] {:%Y-%m-%dT%H:%M:%S} {}{}", color, module, timestamp, message, ColorReset);
   os.flush();
 }
 
@@ -106,21 +125,11 @@ void AssertHelper::Info(const std::source_location& location, const std::string&
 
 }  // namespace __detail__::tools
 
-template <typename T>
-std::string ToString(T value) {
-  if constexpr (std::is_arithmetic_v<T>) {
-    return std::to_string(value);
-  } else {
-    return static_cast<std::string>(value);
-  }
-}
-
-#define K(expr) (std::format("{}={}", #expr, ToString(expr)))
+#define K(expr) (Format("{}={}", #expr, expr))
 
 #ifdef NDEBUG
 #define Assert(expr, ...) ((void)0)
 #else
-
 #define Assert(expr, ...)                                                    \
   do {                                                                       \
     if (!(expr)) {                                                           \
@@ -128,7 +137,6 @@ std::string ToString(T value) {
       __detail__::tools::AssertHelper::Info(location, #expr, ##__VA_ARGS__); \
     }                                                                        \
   } while (false)
-
 #endif  // NDEBUG
 
 template <bool _Bp, typename T>

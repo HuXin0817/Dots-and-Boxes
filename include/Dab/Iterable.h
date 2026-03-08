@@ -230,7 +230,7 @@ constexpr Iterable<Config, T, ArraySize>::operator std::string() const {
   }
   std::string str = "[";
   for (auto ele : *this) {
-    str += ToString(ele) + ",";
+    str += Format("{},", ele);
   }
   str.back() = ']';
   return str;

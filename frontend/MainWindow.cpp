@@ -48,7 +48,7 @@ MainWindow::MainWindow(PlayerType player1Type, PlayerType player2Type, QWidget* 
   Robot1 = Robot::Create(Player1Type);
   Robot2 = Robot::Create(Player2Type);
 
-  setProperty("Board", QVariant::fromValue(reinterpret_cast<std::uintptr_t>(&Board)));
+  setProperty("Board", QVariant::fromValue(reinterpret_cast<uintptr_t>(&Board)));
   resize(WindowSize, WindowSize);
   setMinimumSize(WindowSize, WindowSize);
   for (const Box box : Iota<Box>()) {
@@ -131,11 +131,11 @@ void MainWindow::Run() {
   while (Board.Gaming()) {
     if (PlayerTypeIsRobot(Player1Type) && Board.IsPlayer1Turn()) {
       Span candidateEdges = Robot1->BestCandidateEdges(Board);
-      LogDebug(R"({{"Board":{},"BestCandidateEdges":{}}})", ToString(Board), ToString(candidateEdges));
+      LogDebug(R"({{"Board":{},"BestCandidateEdges":{}}})", Board, candidateEdges);
       PlayerMoveEdge = random.Choice(candidateEdges);
     } else if (PlayerTypeIsRobot(Player2Type) && Board.IsPlayer2Turn()) {
       Span candidateEdges = Robot2->BestCandidateEdges(Board);
-      LogDebug(R"({{"Board":{},"BestCandidateEdges":{}}})", ToString(Board), ToString(candidateEdges));
+      LogDebug(R"({{"Board":{},"BestCandidateEdges":{}}})", Board, candidateEdges);
       PlayerMoveEdge = random.Choice(candidateEdges);
     } else {
       PlayerMoveEdge.Reset();
