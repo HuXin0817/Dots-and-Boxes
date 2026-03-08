@@ -33,7 +33,6 @@ THE SOFTWARE.
 #include <chrono>
 #include <cstddef>
 #include <cstdint>
-#include <format>
 #include <functional>
 #include <numeric>
 #include <unordered_set>
