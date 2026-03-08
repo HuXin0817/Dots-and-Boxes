@@ -271,20 +271,20 @@ constexpr Int BoardImpl<Config>::Add(Edge edge) {
         const Int step = NowStep();
         const auto now = std::chrono::system_clock::now();
         const int64_t time = std::chrono::duration_cast<std::chrono::milliseconds>(now - this->LastUpdateTime).count();
-        const std::string scoreMap = Format(R"({{"Player1":{},"Player2":{}}})", Player1Score(), Player2Score());
-        LogInfo(R"({{"Step":{},"Turn":{},"Move":{},"Score":{},"Time":{}}})",
-                step,
-                IsPlayer1Turn() ? 1 : 2,
-                static_cast<Int>(edge),
-                scoreMap,
-                static_cast<double>(time) / 1000.0);
+        LogInfo({
+            {"Step", step},
+            {"Turn", IsPlayer1Turn() ? 1 : 2},
+            {"Move", static_cast<Int>(edge)},
+            {"Score", {{"Player1", Player1Score()}, {"Player2", Player2Score()}}},
+            {"Time", static_cast<double>(time) / 1000.0},
+        });
         if (!Gaming()) {
           if (RelativeScore() > 0) {
-            LogInfo(R"({{"Winner":"Player1","Score":{}}})", scoreMap);
+            LogInfo({{"Winner", "Player1"}, {"Score", {{"Player1", Player1Score()}, {"Player2", Player2Score()}}}});
           } else if (RelativeScore() < 0) {
-            LogInfo(R"({{"Winner":"Player2","Score":{}}})", scoreMap);
+            LogInfo({{"Winner", "Player2"}, {"Score", {{"Player1", Player1Score()}, {"Player2", Player2Score()}}}});
           } else {
-            LogInfo(R"({{"Winner":"Draw"}})");
+            LogInfo({{"Winner", "Draw"}});
           }
         }
         this->LastUpdateTime = now;

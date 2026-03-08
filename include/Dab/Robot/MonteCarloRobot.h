@@ -118,19 +118,25 @@ void MonteCarloRobot::SearchCandidateEdges(const Board& board) {
     if constexpr (DebugMode) {
       const auto nowTime = std::chrono::system_clock::now();
       if (nowTime - lastTime >= std::chrono::seconds(5)) {
-        LogDebug(R"({{"MonteCarloRobot":{{"Id":{},"Schedule":"{}/{}","CandidateEdges":{}}}}})",
-                 Id,
-                 i * board.RemainStep(),
-                 SearchTime,
-                 SearchResult.Export(GetSearchEdges()));
+        LogDebug({{"MonteCarloRobot",
+                   {{"Id", Id},
+                    {"Schedule", std::format("{}/{}", i * board.RemainStep(), SearchTime)},
+                    {"CandidateEdges", SearchResult.Export(GetSearchEdges())}}}});
         lastTime = nowTime;
       }
     }
   }
   if constexpr (DebugMode) {
-    LogDebug(R"({{"MonteCarloRobot":{{"Id":{},"Schedule":"done","CandidateEdges":{}}}}})",
-             Id,
-             SearchResult.Export(GetSearchEdges()));
+    LogDebug({
+        {
+            "MonteCarloRobot",
+            {
+                {"Id", Id},
+                {"Schedule", "done"},
+                {"CandidateEdges", SearchResult.Export(GetSearchEdges())},
+            },
+        },
+    });
   }
 }
 

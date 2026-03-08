@@ -33,10 +33,11 @@ namespace dab {
 
 template <>
 QWidget* CreateMainWindowImpl<BoardSize>(PlayerType player1Type, PlayerType player2Type, bool backgroundMode) {
-  LogInfo(R"({{"BoardSize":{},"Player1Type":"{}","Player2Type":"{}"}})",
-          BoardSize,
-          PlayerTypeOptionStrings[static_cast<int>(player1Type)],
-          PlayerTypeOptionStrings[static_cast<int>(player2Type)]);
+  LogInfo({
+      {"BoardSize", BoardSize},
+      {"Player1Type", PlayerTypeOptionStrings[static_cast<int>(player1Type)]},
+      {"Player2Type", PlayerTypeOptionStrings[static_cast<int>(player2Type)]},
+  });
   if (backgroundMode) {
     MockRunningGame(player1Type, player2Type);
     exit(0);

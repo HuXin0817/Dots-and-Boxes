@@ -50,7 +50,7 @@ QCommandLineOption CreateBoardSizeOption() {
 }
 
 QCommandLineOption CreatePlayerTypeOption(int playerid) {
-  const QByteArray playerTypeEnv = qgetenv(Format("PLAYER{}", playerid).c_str());
+  const QByteArray playerTypeEnv = qgetenv(std::format("PLAYER{}", playerid).c_str());
   QString defaultPlayerType = "robot";
   if (!playerTypeEnv.isEmpty()) {
     defaultPlayerType = playerTypeEnv;

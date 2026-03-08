@@ -50,60 +50,35 @@ static constexpr bool DebugMode = true;
 #define STR(x) #x
 #define XSTR(x) STR(x)
 
+static std::mutex LogMutex;
+static std::mutex AssertHelperMutex;
+
+namespace __detail__::tools {
+
 static constexpr std::string_view ColorReset = "\033[0m";
 static constexpr std::string_view ColorInfo = "\033[32m";   // Green
 static constexpr std::string_view ColorDebug = "\033[34m";  // Blue
 static constexpr std::string_view ColorError = "\033[31m";  // Red
 
-template <typename T>
-constexpr std::string ToString(T value) {
-  return nlohmann::json(value).dump();
-}
-
-template <class... Args>
-constexpr std::string Format(std::string_view fmt, Args&&... args) {
-  const auto format_args = [&] { return std::make_tuple(ToString(std::forward<Args>(args))...); }();
-  return std::apply([&](auto&&... args) { return std::vformat(fmt, std::make_format_args(args...)); }, format_args);
-}
-
-namespace __detail__::tools {
-
-class LogHelper {
- private:
-  static inline std::mutex LogMutex;
-
- public:
-  template <class... Args>
-  static void Log(std::ostream& os, std::string_view color, std::string_view fmt, Args&&... args);
-
-#define LogInfo(fmt, ...) __detail__::tools::LogHelper::Log(std::cout, ColorInfo, fmt, ##__VA_ARGS__)
-
-#define LogError(fmt, ...) __detail__::tools::LogHelper::Log(std::cerr, ColorError, fmt, ##__VA_ARGS__)
-
-#define LogDebug(fmt, ...) __detail__::tools::LogHelper::Log(std::cout, ColorDebug, fmt, ##__VA_ARGS__)
-};
-
-template <class... Args>
-void LogHelper::Log(std::ostream& os, std::string_view color, std::string_view fmt, Args&&... args) {
+inline void Log(std::ostream& os, std::string_view color, nlohmann::json message) {
   static constexpr std::string module = XSTR(__detail__);
   const auto now = std::chrono::system_clock::now();
   const auto timestamp = std::chrono::floor<std::chrono::seconds>(now);
-  const std::string message = Format(fmt, std::forward<Args>(args)...);
   std::unique_lock lock(LogMutex);
-  std::println(os, "{}[{}] {:%Y-%m-%dT%H:%M:%S} {}{}", color, module, timestamp, message, ColorReset);
+  std::println(os, "{}[{}] {:%Y-%m-%dT%H:%M:%S} {}{}", color, module, timestamp, message.dump(), ColorReset);
   os.flush();
 }
 
-class AssertHelper {
-  static inline std::mutex AssertHelperMutex;
-
- public:
-  template <class... Args>
-  static inline void Info(const std::source_location& location, const std::string& expr, Args&&... details);
-};
+inline void LogInfo(nlohmann::json message) { Log(std::cout, ColorInfo, message); }
+inline void LogDebug(nlohmann::json message) { Log(std::cout, ColorDebug, message); }
 
 template <class... Args>
-void AssertHelper::Info(const std::source_location& location, const std::string& expr, Args&&... details) {
+inline void LogError(std::format_string<Args...> fmt, Args&&... args) {
+  Log(std::cout, ColorDebug, {"Error", std::format(fmt, std::forward<Args>(args)...)});
+}
+
+template <class... Args>
+void AssertHelper(const std::source_location& location, const std::string& expr, Args&&... details) {
   static constexpr std::size_t details_size = sizeof...(details);
   std::unique_lock lock(AssertHelperMutex);
   std::ostringstream oss;
@@ -119,17 +94,21 @@ void AssertHelper::Info(const std::source_location& location, const std::string&
 
 }  // namespace __detail__::tools
 
-#define K(expr) (Format("{}={}", #expr, ToString(expr)))
+using __detail__::tools::LogDebug;
+using __detail__::tools::LogError;
+using __detail__::tools::LogInfo;
+
+#define K(expr) (std::format("{}={}", #expr, nlohmann::json(expr).dump()))
 
 #ifdef NDEBUG
 #define Assert(expr, ...) ((void)0)
 #else
-#define Assert(expr, ...)                                                    \
-  do {                                                                       \
-    if (!(expr)) {                                                           \
-      const auto location = std::source_location::current();                 \
-      __detail__::tools::AssertHelper::Info(location, #expr, ##__VA_ARGS__); \
-    }                                                                        \
+#define Assert(expr, ...)                                              \
+  do {                                                                 \
+    if (!(expr)) {                                                     \
+      const auto location = std::source_location::current();           \
+      __detail__::tools::AssertHelper(location, #expr, ##__VA_ARGS__); \
+    }                                                                  \
   } while (false)
 #endif  // NDEBUG
 

@@ -67,11 +67,15 @@ int CachedRobot<SubRobotType>::doRecord = []() -> int {
         if (total > 0) {
           const uint64_t cached = CachedNumber.load();
           const double percentage = 100.0 * cached / total;
-          LogDebug(R"({{"CachedRobot":{{"Size":{},"Cached":{},"Total":{},"Rate":"{}%"}}}})",
-                   Map.size(),
-                   cached,
-                   total,
-                   percentage);
+          LogDebug({{
+              "CachedRobot",
+              {
+                  {"Size", Map.size()},
+                  {"Cached", cached},
+                  {"Total", total},
+                  {"Rate", std::format("{}%", percentage)},
+              },
+          }});
         }
       }
     }).detach();
