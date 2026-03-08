@@ -92,18 +92,16 @@ class AssertHelper {
 template <class... Args>
 void AssertHelper::Info(const std::source_location& location, const std::string& expr, Args&&... details) {
   static constexpr std::size_t details_size = sizeof...(details);
-  {
-    std::unique_lock lock(AssertHelperMutex);
-    std::ostringstream oss;
-    if constexpr (details_size > 0) {
-      std::size_t index = 0;
-      ((oss << (index++ ? "," : "") << details), ...);
-      LogError("ASSERT: '{}' in file {}, line {}. Detail: {}", expr, location.file_name(), location.line(), oss.str());
-    } else {
-      LogError("ASSERT: '{}' in file {}, line {}.", expr, location.file_name(), location.line());
-    }
-    std::abort();
+  std::unique_lock lock(AssertHelperMutex);
+  std::ostringstream oss;
+  if constexpr (details_size > 0) {
+    std::size_t index = 0;
+    ((oss << (index++ ? "," : "") << details), ...);
+    LogError("ASSERT: '{}' in file {}, line {}. Detail: {}", expr, location.file_name(), location.line(), oss.str());
+  } else {
+    LogError("ASSERT: '{}' in file {}, line {}.", expr, location.file_name(), location.line());
   }
+  std::abort();
 }
 
 }  // namespace __detail__::tools
@@ -126,7 +124,7 @@ std::string ToString(T value) {
 #define Assert(expr, ...)                                                    \
   do {                                                                       \
     if (!(expr)) {                                                           \
-      auto location = std::source_location::current();                       \
+      const auto location = std::source_location::current();                 \
       __detail__::tools::AssertHelper::Info(location, #expr, ##__VA_ARGS__); \
     }                                                                        \
   } while (false)
