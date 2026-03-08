@@ -37,6 +37,8 @@ THE SOFTWARE.
 #include <type_traits>
 #include <utility>
 
+#include "Dab/Json.h"
+
 namespace dab {
 
 #ifdef NDEBUG
@@ -55,15 +57,7 @@ static constexpr std::string_view ColorError = "\033[31m";  // Red
 
 template <typename T>
 constexpr std::string ToString(T value) {
-  if constexpr (std::is_arithmetic_v<T>) {
-    if constexpr (std::is_floating_point_v<T>) {
-      return std::format("{:.2f}", value);
-    } else {
-      return std::to_string(value);
-    }
-  } else {
-    return static_cast<std::string>(value);
-  }
+  return nlohmann::json(value).dump();
 }
 
 template <class... Args>

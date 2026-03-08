@@ -34,6 +34,8 @@ THE SOFTWARE.
 #include <random>
 #include <type_traits>
 
+#include "Dab/Json.h"
+
 namespace dab {
 
 namespace __detail__::iterable {
@@ -132,7 +134,6 @@ class Iterable : Mixin<HasFlag(Config, EnableArray), ArrayMixin<T, ArraySize>>,
   constexpr const T& At(Int i) const { return this->Data[CheckIndex(i)]; }
   constexpr void Clear();
   constexpr void ClearAndSet(T ele);
-  constexpr operator std::string() const;
 
  private:
   constexpr Int FrontIndex() const;
@@ -223,19 +224,6 @@ constexpr Int Iterable<Config, T, ArraySize>::CheckIndex(Int i) const {
   return i;
 }
 
-template <int Config, typename T, Int ArraySize>
-constexpr Iterable<Config, T, ArraySize>::operator std::string() const {
-  if (Size() == 0) {
-    return "[]";
-  }
-  std::string str = "[";
-  for (auto ele : *this) {
-    str += Format("{},", ele);
-  }
-  str.back() = ']';
-  return str;
-}
-
 class Random {
  public:
   Random();
@@ -290,3 +278,16 @@ using Vector = Iterable<EnableAllocSize, T>;
 using __detail__::iterable::Random;
 
 }  // namespace dab
+
+namespace nlohmann {
+
+using namespace dab;
+
+template <int Config, typename T, Int ArraySize>
+void to_json(nlohmann::json& json, const Iterable<Config, T, ArraySize>& data) {
+  for (const T& ele : data) {
+    json.emplace_back(ele);
+  }
+}
+
+}  // namespace nlohmann
