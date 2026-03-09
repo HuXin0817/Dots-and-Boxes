@@ -70,7 +70,12 @@ inline void Log(std::ostream& os, std::string_view color, nlohmann::ordered_json
 }
 
 inline void LogInfo(nlohmann::ordered_json message) { Log(std::cout, ColorInfo, message); }
-inline void LogDebug(nlohmann::ordered_json message) { Log(std::cout, ColorDebug, message); }
+
+inline void LogDebug(nlohmann::ordered_json message) {
+  if constexpr (DebugMode) {
+    Log(std::cerr, ColorDebug, message);
+  }
+}
 
 template <class... Args>
 inline void LogError(std::format_string<Args...> fmt, Args&&... args) {
