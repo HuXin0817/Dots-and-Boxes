@@ -37,6 +37,12 @@ namespace dab::__detail__::robot {
 
 template <typename SubRobotType>
 class CachedRobot : public SubRobotType {
+  struct Metrics {
+    std::atomic<uint64_t> CachedNumber = 0;
+    std::atomic<uint64_t> TotalNumber = 0;
+  };
+  static inline Metrics g_Metrics;
+
  public:
   CachedRobot() { (void)doRecord; }
 
@@ -47,9 +53,6 @@ class CachedRobot : public SubRobotType {
   using Cache = tstarling::ThreadSafeLRUCache<HashValueBoard, Vector<Edge>>;
   static constexpr size_t CacheSize = static_cast<size_t>(Edge::Max) << 10;
   static inline Cache Map{CacheSize};
-
-  static inline std::atomic<uint64_t> CachedNumber = 0;
-  static inline std::atomic<uint64_t> TotalNumber = 0;
 
   static int doRecord;
 
@@ -62,9 +65,9 @@ int CachedRobot<SubRobotType>::doRecord = []() -> int {
     std::thread([&]() {
       while (true) {
         std::this_thread::sleep_for(std::chrono::seconds(5));
-        const uint64_t total = TotalNumber.load();
+        const uint64_t total = g_Metrics.TotalNumber.load();
         if (total > 0) {
-          const uint64_t cached = CachedNumber.load();
+          const uint64_t cached = g_Metrics.CachedNumber.load();
           const double percentage = 100.0 * cached / total;
           LogDebug({{
               "CachedRobot",
@@ -87,11 +90,11 @@ template <typename Board>
 Span<const Edge> CachedRobot<SubRobotType>::BestCandidateEdges(const Board& board) {
   Key = board;
   if constexpr (DebugMode) {
-    TotalNumber.fetch_add(1);
+    g_Metrics.TotalNumber.fetch_add(1);
   }
   if (Cache::ConstAccessor ac; Map.find(ac, Key)) {
     if constexpr (DebugMode) {
-      CachedNumber.fetch_add(1);
+      g_Metrics.CachedNumber.fetch_add(1);
     }
     Assert(!ac->Empty());
     return {ac->begin(), ac->Size()};
