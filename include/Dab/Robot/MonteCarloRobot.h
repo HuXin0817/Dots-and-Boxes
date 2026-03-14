@@ -47,7 +47,7 @@ class MonteCarloRobot {
     Array<int64_t, Edge::Max> Score;
   };
 
-  static constexpr uint32_t SearchTime = static_cast<uint32_t>(Edge::Max) << 8;
+  static constexpr uint64_t SearchTime = static_cast<uint64_t>(Edge::Max) << 8;
 
  public:
   MonteCarloRobot(Int id = 0) : Id(id) {}
@@ -108,7 +108,7 @@ void MonteCarloRobot::SearchCandidateEdges(const Board& board) {
   SearchResult.Reset();
   const Int turn = board.GetTurn();
   auto lastTime = std::chrono::system_clock::now();
-  for (uint32_t i = 0; i < SearchTime / board.RemainStep(); i++) {
+  for (uint64_t i = 0; i < SearchTime / board.RemainStep(); i++) {
     SimulationBoard = board;
     const Edge edge = random.Choice(SubRobot.BestCandidateEdges(SimulationBoard));
     SimulationBoard.Add(edge);

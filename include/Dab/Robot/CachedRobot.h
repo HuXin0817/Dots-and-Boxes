@@ -45,7 +45,7 @@ class CachedRobot : public SubRobotType {
 
  private:
   using Cache = tstarling::ThreadSafeLRUCache<HashValueBoard, Vector<Edge>>;
-  static constexpr size_t CacheSize = static_cast<int64_t>(Edge::Max) << 10;
+  static constexpr size_t CacheSize = static_cast<size_t>(Edge::Max) << 10;
   static inline Cache Map{CacheSize};
 
   static inline std::atomic<uint64_t> CachedNumber = 0;
