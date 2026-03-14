@@ -278,16 +278,3 @@ using Vector = Iterable<EnableAllocSize, T>;
 using __detail__::iterable::Random;
 
 }  // namespace dab
-
-namespace nlohmann {
-
-using namespace dab;
-
-template <int Config, typename T, Int ArraySize>
-void to_json(nlohmann::json& json, const Iterable<Config, T, ArraySize>& data) {
-  for (const T& ele : data) {
-    json.emplace_back(ele);
-  }
-}
-
-}  // namespace nlohmann
