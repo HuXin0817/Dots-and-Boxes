@@ -26,12 +26,11 @@ THE SOFTWARE.
 
 #include <Dab/BoardSize.h>
 #include <Dab/Iterable.h>
+#include <Dab/Json.h>
 #include <Dab/Tools.h>
 
 #include <mutex>
 #include <ranges>
-
-#include "Dab/Json.h"
 
 namespace dab {
 

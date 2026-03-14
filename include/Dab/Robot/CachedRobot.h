@@ -26,13 +26,12 @@ THE SOFTWARE.
 
 #include <Dab/Board.h>
 #include <Dab/LRUCache.h>
+#include <Dab/Tools.h>
 
 #include <atomic>
 #include <cstddef>
 #include <cstdint>
 #include <thread>
-
-#include "Dab/Tools.h"
 
 namespace dab::__detail__::robot {
 

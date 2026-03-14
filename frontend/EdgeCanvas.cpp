@@ -25,6 +25,7 @@ THE SOFTWARE.
 #include "EdgeCanvas.h"
 
 #include <Dab/Board.h>
+#include <Dab/Tools.h>
 
 #include <QPainter>
 

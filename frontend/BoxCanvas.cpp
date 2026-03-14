@@ -51,7 +51,6 @@ QColor BoxCanvas::Color() const {
       return Player2OccupyColor;
   }
 
-  std::unreachable();
   return {};
 }
 

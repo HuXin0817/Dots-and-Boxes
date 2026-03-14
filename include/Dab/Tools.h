@@ -24,6 +24,8 @@ THE SOFTWARE.
 
 #pragma once
 
+#include <Dab/Json.h>
+
 #include <chrono>
 #include <cstdlib>
 #include <format>
@@ -36,8 +38,6 @@ THE SOFTWARE.
 #include <string>
 #include <type_traits>
 #include <utility>
-
-#include "Dab/Json.h"
 
 namespace dab {
 

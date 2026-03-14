@@ -52,7 +52,7 @@ Span<const Edge> GreedyRobot::BestCandidateEdges(const Board& board) {
   ScoreableIndex = 0;
   EnemyUnscoreableIndex = Edge::Max;
 
-  Span<const Edge> emptyEdges = board.EmptyEdges();
+  const Span<const Edge> emptyEdges = board.EmptyEdges();
   for (const Edge edge : emptyEdges) {
     if (const uint8_t maxCount = board.MaxEdgeCount(edge); maxCount == 3) {
       Edges.At(ScoreableIndex++) = edge;
