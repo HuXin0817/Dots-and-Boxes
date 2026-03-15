@@ -42,6 +42,7 @@ class CachedRobot : public SubRobotType {
     std::atomic<uint64_t> TotalNumber = 0;
   };
   static inline Metrics g_Metrics;
+  static int doRecord;
 
  public:
   CachedRobot() { (void)doRecord; }
@@ -53,8 +54,6 @@ class CachedRobot : public SubRobotType {
   using Cache = tstarling::ThreadSafeLRUCache<HashValueBoard, Vector<Edge>>;
   static constexpr size_t CacheSize = static_cast<size_t>(Edge::Max) << 10;
   static inline Cache Map{CacheSize};
-
-  static int doRecord;
 
   HashValueBoard Key;
 };

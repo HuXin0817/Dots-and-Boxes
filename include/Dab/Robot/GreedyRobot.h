@@ -35,16 +35,17 @@ class GreedyRobot {
 
   bool EnemyUnscoreable() const { return EnemyUnscoreableIndex < Edge::Max; }
   bool Scoreable() const { return ScoreableIndex > 0; }
-  Array<Edge, Edge::Max>& GetEdgeBuffer() { return Edges; }
   template <typename Board>
   Span<const Edge> BestCandidateEdges(const Board& board);
   template <typename Board>
   Edge SearchOne(const Board& board);
 
+ protected:
+  Array<Edge, Edge::Max> Edges;
+
  private:
   Int EnemyUnscoreableIndex = 0;
   Int ScoreableIndex = 0;
-  Array<Edge, Edge::Max> Edges;
 };
 
 template <typename Board>

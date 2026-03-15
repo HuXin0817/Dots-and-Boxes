@@ -28,31 +28,28 @@ THE SOFTWARE.
 
 namespace dab::__detail__::robot {
 
-class ImproveGreedyRobot {
+class ImproveGreedyRobot : public GreedyRobot {
  public:
   ImproveGreedyRobot() = default;
 
-  bool EnemyUnscoreable() const { return SubRobot.EnemyUnscoreable(); }
-  bool Scoreable() const { return SubRobot.Scoreable(); }
   template <typename Board>
   Span<const Edge> BestCandidateEdges(const Board& board);
   template <typename Board>
   Edge SearchOne(const Board& board);
 
  private:
-  GreedyRobot SubRobot;
   ScoreableCountBoard SimulationBoardBackup;
   ScoreableCountBoard SimulationBoard;
 };
 
 template <typename Board>
 Span<const Edge> ImproveGreedyRobot::BestCandidateEdges(const Board& board) {
-  if (const Span<const Edge> edges = SubRobot.BestCandidateEdges(board); EnemyUnscoreable() || Scoreable()) {
+  if (const Span<const Edge> edges = GreedyRobot::BestCandidateEdges(board); EnemyUnscoreable() || Scoreable()) {
     return edges;
   }
 
   Int minScore = Box::Max + 1;
-  Array<Edge, Edge::Max>& candidateEdges = SubRobot.GetEdgeBuffer();
+  Array<Edge, Edge::Max>& candidateEdges = GreedyRobot::Edges;
   Int candidateEdgesSize = 0;
 
   SimulationBoardBackup = board;
@@ -73,7 +70,7 @@ Span<const Edge> ImproveGreedyRobot::BestCandidateEdges(const Board& board) {
 
 template <typename Board>
 Edge ImproveGreedyRobot::SearchOne(const Board& board) {
-  Edge result = SubRobot.SearchOne(board);
+  Edge result = GreedyRobot::SearchOne(board);
   if (result.Valid()) {
     return result;
   }
