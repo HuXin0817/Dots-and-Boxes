@@ -25,7 +25,7 @@ THE SOFTWARE.
 #pragma once
 
 #include <Dab/Board.h>
-#include <Dab/LRUCache.h>
+#include <thread-safe-lru/lru-cache.h>
 #include <Dab/Tools.h>
 
 #include <atomic>

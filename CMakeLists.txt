@@ -43,6 +43,8 @@ add_compile_definitions(NUM_CPUS=${NUM_CPUS} __Version__="${Version}")
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 find_package(TBB REQUIRED)
 
+add_subdirectory(deps)
+
 include_directories("${CMAKE_SOURCE_DIR}/include")
 
 set(ExternLibraries)

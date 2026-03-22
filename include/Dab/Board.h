@@ -25,7 +25,7 @@ THE SOFTWARE.
 #pragma once
 
 #include <Dab/Iterable.h>
-#include <Dab/Json.h>
+#include <nlohmann/json.hpp>
 #include <Dab/Model.h>
 #include <Dab/Tools.h>
 
