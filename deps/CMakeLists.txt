@@ -3,4 +3,5 @@ set(TBB_EXAMPLES OFF CACHE BOOL "Disable TBB examples" FORCE)
 
 add_subdirectory(tbb)
 add_subdirectory(json)
-add_subdirectory(lru)
+
+include_directories("${CMAKE_SOURCE_DIR}/deps/lru")
