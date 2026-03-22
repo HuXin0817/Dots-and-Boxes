@@ -41,7 +41,6 @@ ProcessorCount(NUM_CPUS IGNORE_ERRORS)
 add_compile_definitions(NUM_CPUS=${NUM_CPUS} __Version__="${Version}")
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
-find_package(TBB REQUIRED)
 
 add_subdirectory(deps)
 
@@ -58,4 +57,10 @@ target_compile_definitions("${PROJECT_NAME}" PRIVATE
   __MaxBoardSize__=${MaxBoardSize}
   __DefaultBoardSize__=${DefaultBoardSize}
 )
-target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets ${ExternLibraries})
+target_link_libraries(${PROJECT_NAME} PRIVATE 
+  nlohmann_json::nlohmann_json
+  Qt6::Core
+  Qt6::Gui
+  Qt6::Widgets
+  ${ExternLibraries}
+)

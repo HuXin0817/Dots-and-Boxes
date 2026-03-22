@@ -4,3 +4,6 @@
 [submodule "deps/lru"]
 	path = deps/lru
 	url = https://github.com/tstarling/thread-safe-lru.git
+[submodule "deps/tbb"]
+	path = deps/tbb
+	url = https://github.com/uxlfoundation/oneTBB.git

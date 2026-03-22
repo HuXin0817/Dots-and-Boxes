@@ -18,7 +18,7 @@ jobs:
       - name: Install requirements
         run: |
           brew update
-          brew install coreutils qt@6 tbb llvm
+          brew install coreutils qt@6 llvm
 
       - name: Build
         run: |
