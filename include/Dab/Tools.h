@@ -24,13 +24,12 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <nlohmann/json.hpp>
-
 #include <chrono>
 #include <cstdlib>
 #include <format>
 #include <iostream>
 #include <mutex>
+#include <nlohmann/json.hpp>
 #include <ostream>
 #include <print>
 #include <source_location>

@@ -25,7 +25,6 @@ THE SOFTWARE.
 #pragma once
 
 #include <Dab/Iterable.h>
-#include <nlohmann/json.hpp>
 #include <Dab/Model.h>
 #include <Dab/Tools.h>
 
@@ -34,6 +33,7 @@ THE SOFTWARE.
 #include <cstddef>
 #include <cstdint>
 #include <functional>
+#include <nlohmann/json.hpp>
 #include <numeric>
 #include <unordered_set>
 
