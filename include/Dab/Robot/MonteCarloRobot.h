@@ -120,9 +120,8 @@ void MonteCarloRobot::SearchCandidateEdges(const Board& board) {
       const auto nowTime = std::chrono::system_clock::now();
       if (nowTime - lastTime >= std::chrono::seconds(5)) {
         LogDebug({{
-            "MonteCarloRobot",
+            std::format("MonteCarloRobot[{}]", Id),
             {
-                {"Id", Id},
                 {"Schedule", std::format("{}/{}", i * board.RemainStep(), SearchTime)},
                 {"CandidateEdges", SearchResult.Export(GetSearchEdges())},
             },
