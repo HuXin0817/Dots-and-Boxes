@@ -22,8 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
+#include <Dab/Logging.h>
 #include <Dab/PlayerType.h>
-#include <Dab/Tools.h>
 
 #include <QApplication>
 #include <QCommandLineParser>
@@ -106,6 +106,12 @@ int64_t ParseBoardSize(const QString& arg) {
 }
 
 int main(int argc, char* argv[]) {
+  if constexpr (DebugMode) {
+    spdlog::set_level(spdlog::level::debug);
+  } else {
+    spdlog::set_level(spdlog::level::info);
+  }
+
   QApplication application(argc, argv);
   application.setApplicationName("Dots and Boxes");
   application.setApplicationVersion(__Version__);

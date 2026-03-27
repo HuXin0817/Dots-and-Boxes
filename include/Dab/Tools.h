@@ -26,14 +26,10 @@ THE SOFTWARE.
 
 #include <spdlog/spdlog.h>
 
-#include <chrono>
 #include <cstdlib>
 #include <format>
-#include <iostream>
 #include <mutex>
 #include <nlohmann/json.hpp>
-#include <ostream>
-#include <print>
 #include <source_location>
 #include <sstream>
 #include <string>
@@ -51,11 +47,6 @@ static constexpr bool DebugMode = true;
 #define STR(x) #x
 #define XSTR(x) STR(x)
 
-static std::mutex LogMutex;
-static std::mutex AssertHelperMutex;
-
-namespace __detail__::tools {
-
 inline void LogInfo(nlohmann::ordered_json message) { spdlog::info(message.dump()); }
 
 inline void LogDebug(nlohmann::ordered_json message) { spdlog::debug(message.dump()); }
@@ -64,6 +55,8 @@ template <class... Args>
 inline void LogError(std::format_string<Args...> fmt, Args&&... args) {
   spdlog::error(nlohmann::ordered_json{{"Error", std::format(fmt, std::forward<Args>(args)...)}}.dump());
 }
+
+static std::mutex AssertHelperMutex;
 
 template <class... Args>
 void AssertHelper(const std::source_location& location, const std::string& expr, Args&&... details) {
@@ -80,23 +73,16 @@ void AssertHelper(const std::source_location& location, const std::string& expr,
   std::abort();
 }
 
-}  // namespace __detail__::tools
-
-using __detail__::tools::LogDebug;
-using __detail__::tools::LogError;
-using __detail__::tools::LogInfo;
-
 #define K(expr) (std::format("{}={}", #expr, nlohmann::ordered_json(expr).dump()))
 
 #ifdef NDEBUG
 #define Assert(expr, ...) ((void)0)
 #else
-#define Assert(expr, ...)                                              \
-  do {                                                                 \
-    if (!(expr)) {                                                     \
-      const auto location = std::source_location::current();           \
-      __detail__::tools::AssertHelper(location, #expr, ##__VA_ARGS__); \
-    }                                                                  \
+#define Assert(expr, ...)                                                  \
+  do {                                                                     \
+    if (!(expr)) {                                                         \
+      AssertHelper(std::source_location::current(), #expr, ##__VA_ARGS__); \
+    }                                                                      \
   } while (false)
 #endif  // NDEBUG
 
