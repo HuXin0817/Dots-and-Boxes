@@ -22,8 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include <Dab/Logging.h>
 #include <Dab/PlayerType.h>
+#include <Dab/Tools.h>
 
 #include <QApplication>
 #include <QCommandLineParser>
