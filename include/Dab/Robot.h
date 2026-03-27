@@ -81,8 +81,8 @@ inline std::unique_ptr<Robot> Robot::Create(PlayerType playerType) {
 inline void MockRunningGame(PlayerType player1Type, PlayerType player2Type) {
   std::unique_ptr<Robot> robot1 = Robot::Create(player1Type);
   std::unique_ptr<Robot> robot2 = Robot::Create(player2Type);
-  Assert(robot1 != nullptr);
-  Assert(robot2 != nullptr);
+  Assert(robot1 != nullptr, K(player1Type));
+  Assert(robot2 != nullptr, K(player1Type));
 
   Random random;
   GameBoard board;

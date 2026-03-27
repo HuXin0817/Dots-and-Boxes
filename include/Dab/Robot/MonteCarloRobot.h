@@ -122,7 +122,7 @@ void MonteCarloRobot::SearchCandidateEdges(const Board& board) {
         LogDebug({{
             std::format("MonteCarloRobot[{}]", Id),
             {
-                {"Schedule", std::format("{}/{}", i * board.RemainStep(), SearchTime)},
+                {"Schedule", static_cast<double>(i * board.RemainStep()) / SearchTime},
                 {"CandidateEdges", SearchResult.Export(GetSearchEdges())},
             },
         }});
@@ -132,10 +132,9 @@ void MonteCarloRobot::SearchCandidateEdges(const Board& board) {
   }
   if constexpr (DebugMode) {
     LogDebug({{
-        "MonteCarloRobot",
+        std::format("MonteCarloRobot[{}]", Id),
         {
-            {"Id", Id},
-            {"Schedule", "done"},
+            {"Schedule", 1.0},
             {"CandidateEdges", SearchResult.Export(GetSearchEdges())},
         },
     }});
