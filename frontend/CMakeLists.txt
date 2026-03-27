@@ -21,5 +21,6 @@ target_link_libraries(${FrontendLibrary} PRIVATE
   Qt6::Core
   Qt6::Gui
   Qt6::Widgets
+  spdlog::spdlog
 )
 set(FrontendLibrary ${FrontendLibrary} PARENT_SCOPE)

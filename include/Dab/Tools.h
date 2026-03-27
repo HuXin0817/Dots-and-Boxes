@@ -24,6 +24,8 @@ THE SOFTWARE.
 
 #pragma once
 
+#include <spdlog/spdlog.h>
+
 #include <chrono>
 #include <cstdlib>
 #include <format>
@@ -54,31 +56,13 @@ static std::mutex AssertHelperMutex;
 
 namespace __detail__::tools {
 
-static constexpr std::string_view ColorReset = "\033[0m";
-static constexpr std::string_view ColorInfo = "\033[32m";   // Green
-static constexpr std::string_view ColorDebug = "\033[34m";  // Blue
-static constexpr std::string_view ColorError = "\033[31m";  // Red
+inline void LogInfo(nlohmann::ordered_json message) { spdlog::info(message.dump()); }
 
-inline void Log(std::ostream& os, std::string_view color, nlohmann::ordered_json message) {
-  static constexpr std::string module = XSTR(__detail__);
-  const auto now = std::chrono::system_clock::now();
-  const auto timestamp = std::chrono::floor<std::chrono::seconds>(now);
-  std::unique_lock lock(LogMutex);
-  std::println(os, "{}[{}] {:%Y-%m-%dT%H:%M:%S} {}{}", color, module, timestamp, message.dump(), ColorReset);
-  os.flush();
-}
-
-inline void LogInfo(nlohmann::ordered_json message) { Log(std::cout, ColorInfo, message); }
-
-inline void LogDebug(nlohmann::ordered_json message) {
-  if constexpr (DebugMode) {
-    Log(std::cerr, ColorDebug, message);
-  }
-}
+inline void LogDebug(nlohmann::ordered_json message) { spdlog::debug(message.dump()); }
 
 template <class... Args>
 inline void LogError(std::format_string<Args...> fmt, Args&&... args) {
-  Log(std::cout, ColorDebug, {"Error", std::format(fmt, std::forward<Args>(args)...)});
+  spdlog::error(nlohmann::ordered_json{{"Error", std::format(fmt, std::forward<Args>(args)...)}}.dump());
 }
 
 template <class... Args>

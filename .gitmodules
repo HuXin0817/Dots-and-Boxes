@@ -10,3 +10,7 @@
 	path = deps/tbb
 	url = https://github.com/uxlfoundation/oneTBB.git
 	ignore = dirty
+[submodule "deps/spdlog"]
+	path = deps/spdlog
+	url = https://github.com/gabime/spdlog.git
+	ignore = dirty
