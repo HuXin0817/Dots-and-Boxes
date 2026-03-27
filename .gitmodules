@@ -1,9 +1,12 @@
 [submodule "deps/json"]
 	path = deps/json
 	url = https://github.com/nlohmann/json.git
+	ignore = dirty
 [submodule "deps/lru"]
 	path = deps/lru
 	url = https://github.com/tstarling/thread-safe-lru.git
+	ignore = dirty
 [submodule "deps/tbb"]
 	path = deps/tbb
 	url = https://github.com/uxlfoundation/oneTBB.git
+	ignore = dirty
