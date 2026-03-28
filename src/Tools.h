@@ -48,13 +48,14 @@ static constexpr bool DebugMode = true;
 #define STR(x) #x
 #define XSTR(x) STR(x)
 
-inline void LogInfo(nlohmann::ordered_json message) { spdlog::info(message.dump()); }
+inline void LogInfo(const nlohmann::ordered_json& message) { spdlog::info(message.dump()); }
 
-inline void LogDebug(nlohmann::ordered_json message) { spdlog::debug(message.dump()); }
+inline void LogDebug(const nlohmann::ordered_json& message) { spdlog::debug(message.dump()); }
 
 template <class... Args>
-inline void LogError(std::format_string<Args...> fmt, Args&&... args) {
-  spdlog::error(nlohmann::ordered_json{{"Error", std::format(fmt, std::forward<Args>(args)...)}}.dump());
+void LogError(std::format_string<Args...> fmt, Args&&... args) {
+  const std::string message = std::format(fmt, std::forward<Args>(args)...);
+  spdlog::error(nlohmann::ordered_json{{"Error", message}}.dump());
 }
 
 static std::mutex AssertHelperMutex;
@@ -87,8 +88,8 @@ void AssertHelper(const std::source_location& location, const std::string& expr,
   } while (false)
 #endif  // NDEBUG
 
-template <bool _Bp, typename T>
-using Mixin = std::conditional_t<_Bp, T, std::type_identity<T>>;
+template <bool Bp, typename T>
+using Mixin = std::conditional_t<Bp, T, std::type_identity<T>>;
 
 class Random {
  public:

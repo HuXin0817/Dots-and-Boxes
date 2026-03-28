@@ -35,7 +35,7 @@ namespace dab::__detail__::robot {
 
 class MonteCarloRobot {
   struct ScoreMap {
-    ScoreMap() = default;
+    ScoreMap() { Reset(); }
 
     void Reset();
     void Add(Edge edge, Int score);

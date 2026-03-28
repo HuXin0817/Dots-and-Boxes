@@ -28,7 +28,6 @@ THE SOFTWARE.
 #include <QPainter>
 #include <QStyleHints>
 #include <QWidget>
-#include <cstddef>
 
 #include "Board.h"
 

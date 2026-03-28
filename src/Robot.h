@@ -24,8 +24,6 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <cstddef>
-
 #include "Board.h"
 #include "PlayerType.h"
 #include "Robot/GreedyRobot.h"

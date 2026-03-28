@@ -25,6 +25,7 @@ THE SOFTWARE.
 #pragma once
 
 #include "GreedyRobot.h"
+#include "BoardSize.h"
 
 namespace dab::__detail__::robot {
 
@@ -49,7 +50,7 @@ Span<const Edge> ImproveGreedyRobot::BestCandidateEdges(const Board& board) {
   }
 
   Int minScore = Box::Max + 1;
-  Array<Edge, Edge::Max>& candidateEdges = GreedyRobot::Edges;
+  Array<Edge, Edge::Max>& candidateEdges = Edges;
   Int candidateEdgesSize = 0;
 
   SimulationBoardBackup = board;
