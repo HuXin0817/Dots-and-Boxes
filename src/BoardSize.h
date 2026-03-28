@@ -27,6 +27,8 @@ THE SOFTWARE.
 #include <cstdint>
 #include <limits>
 
+#include "Tools.h"
+
 namespace dab {
 
 namespace __detail__ {
@@ -47,7 +49,10 @@ constexpr auto SelectIntType() {
 
 using Int = decltype(__detail__::SelectIntType());
 
-constexpr Int operator""_bs(unsigned long long val) { return static_cast<Int>(val); }
+constexpr Int operator""_bs(unsigned long long val) {
+  Assert(val <= std::numeric_limits<Int>::max());
+  return static_cast<Int>(val);
+}
 
 }  // namespace __detail__
 

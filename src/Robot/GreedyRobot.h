@@ -24,7 +24,6 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "../Board.h"
 #include "../Model.h"
 
 namespace dab::__detail__::robot {

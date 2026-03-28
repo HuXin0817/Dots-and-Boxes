@@ -30,7 +30,6 @@ THE SOFTWARE.
 #include <QPointer>
 #include <QPushButton>
 #include <QThreadPool>
-#include <QTime>
 
 #include "../src/Robot.h"
 #include "BaseCanvas.h"
@@ -147,7 +146,9 @@ void MainWindow::Run() {
   QMetaObject::invokeMethod(this, &MainWindow::HandleGameOver, Qt::BlockingQueuedConnection);
 }
 
-void MainWindow::AsyncRun() { QThreadPool::globalInstance()->start(std::bind(&MainWindow::Run, this)); }
+void MainWindow::AsyncRun() {
+  QThreadPool::globalInstance()->start([this]() -> void { Run(); });
+}
 
 void MainWindow::Add() {
   EdgeCanvases.At(PlayerMoveEdge)->raise();

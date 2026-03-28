@@ -27,8 +27,8 @@ THE SOFTWARE.
 #include <cstdlib>
 #include <ranges>
 
-#include "PlayerType.h"
-#include "Tools.h"
+#include "src/PlayerType.h"
+#include "src/Tools.h"
 #include "frontend/Frontend.h"
 
 using namespace dab;

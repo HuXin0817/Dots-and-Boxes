@@ -64,8 +64,7 @@ int CachedRobot<SubRobotType>::doRecord = []() -> int {
     std::thread([&]() -> void {
       while (true) {
         std::this_thread::sleep_for(std::chrono::seconds(5));
-        const uint64_t total = g_Metrics.TotalNumber.load();
-        if (total > 0) {
+        if (const uint64_t total = g_Metrics.TotalNumber.load(); total > 0) {
           const uint64_t cached = g_Metrics.CachedNumber.load();
           const double percentage = 100.0 * cached / total;
           LogDebug({{

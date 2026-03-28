@@ -34,6 +34,11 @@ THE SOFTWARE.
 
 namespace dab {
 
+template <typename T>
+constexpr auto Iota() {
+  return std::views::iota(static_cast<decltype(T::Max)>(0), T::Max);
+}
+
 namespace __detail__::model {
 
 #if __BoardSize__ <= 20
@@ -46,9 +51,7 @@ class IntWapper {
  public:
   constexpr IntWapper() = default;
   constexpr IntWapper(Int v) : v(v) {}
-  constexpr operator Int() { return v; }
   constexpr operator Int() const { return v; }
-  constexpr operator nlohmann::ordered_json() { return v; }
   constexpr operator nlohmann::ordered_json() const { return v; }
 
  protected:
@@ -136,11 +139,6 @@ constexpr bool Edge::Rotate() const {
   return v & 1_bs;
 }
 
-template <typename T>
-constexpr auto Iota() {
-  return std::views::iota(0_bs, T::Max);
-}
-
 constexpr Array<Edge, 4> GetNearEdges(Box box) {
   Array<Edge, 4> NearEdges;
   const Int x = box.X();
@@ -222,6 +220,5 @@ constexpr const List<Box, 2_bs>& Edge::NearBoxes() const {
 using __detail__::model::Box;
 using __detail__::model::Dot;
 using __detail__::model::Edge;
-using __detail__::model::Iota;
 
 }  // namespace dab

@@ -48,12 +48,12 @@ QColor BaseCanvas::ThemeColor(const QColor& DarkThemeColor, const QColor& LightT
 const GameBoard& BaseCanvas::GetBoard() const {
   QObject* mainWindow = parent();
   Q_ASSERT(mainWindow != nullptr);
-  QVariant value = mainWindow->property("Board");
+  const QVariant value = mainWindow->property("Board");
   Q_ASSERT(value.isValid());
   bool ok;
-  qulonglong num = value.toULongLong(&ok);
+  const qulonglong num = value.toULongLong(&ok);
   Q_ASSERT(ok);
-  GameBoard* board = reinterpret_cast<GameBoard*>(num);
+  const GameBoard* board = reinterpret_cast<GameBoard*>(num);
   Q_ASSERT(board != nullptr);
   return *board;
 }

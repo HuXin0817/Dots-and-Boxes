@@ -142,7 +142,7 @@ constexpr void Iterable<Config, T, ArraySize>::Reset(Int size) {
     this->Data = std::make_unique<T[]>(size);
   }
   if constexpr (HasFlag(EnableFrontPointer)) {
-    this->FrontPos = 0;
+    this->FrontPos = 0_bs;
   }
   if constexpr (HasFlag(EnableEndPointer)) {
     this->EndPos = size;
@@ -233,5 +233,35 @@ template <typename T>
 using Span = Iterable<EnableSpan | EnableEndPointer, T>;
 template <typename T>
 using Vector = Iterable<EnableAllocSize, T>;
+
+class Random {
+ public:
+  Random();
+
+  template <typename T>
+  T Range(T min, T max);
+  template <typename Iterable>
+  const auto& Choice(const Iterable& data);
+
+ private:
+  std::mt19937_64 Rng;
+};
+
+inline Random::Random() { Rng.seed(std::chrono::steady_clock::now().time_since_epoch().count()); }
+
+template <typename T>
+T Random::Range(T min, T max) {
+  std::uniform_int_distribution<T> dist(min, max);
+  return dist(Rng);
+}
+
+template <typename Iterable>
+const auto& Random::Choice(const Iterable& data) {
+  Assert(!data.Empty());
+  if (data.Size() == 1) {
+    return data.At(0);
+  }
+  return data.At(Range(0, data.Size() - 1));
+}
 
 }  // namespace dab

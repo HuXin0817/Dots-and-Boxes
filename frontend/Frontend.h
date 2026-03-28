@@ -40,9 +40,8 @@ QWidget* CreateMainWindow(int64_t boardSize, PlayerType player1Type, PlayerType 
   } else {
     if (boardSize < BoardSize) {
       return CreateMainWindow<BoardSize - 1>(boardSize, player1Type, player2Type, backgroundMode);
-    } else {
-      return CreateMainWindowImpl<BoardSize>(player1Type, player2Type, backgroundMode);
     }
+    return CreateMainWindowImpl<BoardSize>(player1Type, player2Type, backgroundMode);
   }
 }
 

@@ -24,7 +24,6 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <QRunnable>
 #include <functional>
 
 #include "BaseCanvas.h"
