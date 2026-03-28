@@ -24,10 +24,6 @@ THE SOFTWARE.
 
 #include "MainWindow.h"
 
-#include <Dab/Board.h>
-#include <Dab/Robot.h>
-#include <Dab/Tools.h>
-
 #include <QJsonObject>
 #include <QMessageBox>
 #include <QPainter>
@@ -40,6 +36,7 @@ THE SOFTWARE.
 #include "BoxCanvas.h"
 #include "DotCanvas.h"
 #include "EdgeCanvas.h"
+#include "Robot.h"
 
 namespace dab::__detail__::frontend {
 

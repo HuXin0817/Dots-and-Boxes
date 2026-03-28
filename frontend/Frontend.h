@@ -24,9 +24,9 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <Dab/PlayerType.h>
-
 #include <QWidget>
+
+#include "PlayerType.h"
 
 namespace dab {
 

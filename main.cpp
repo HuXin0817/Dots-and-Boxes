@@ -22,14 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include <Dab/PlayerType.h>
-#include <Dab/Tools.h>
-
 #include <QApplication>
 #include <QCommandLineParser>
 #include <cstdlib>
 #include <ranges>
 
+#include "PlayerType.h"
+#include "Tools.h"
 #include "frontend/Frontend.h"
 
 using namespace dab;

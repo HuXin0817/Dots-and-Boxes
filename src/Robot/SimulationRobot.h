@@ -24,10 +24,9 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <Dab/Board.h>
-#include <Dab/Model.h>
-
+#include "Board.h"
 #include "ImproveGreedyRobot.h"
+#include "Model.h"
 
 namespace dab::__detail__::robot {
 

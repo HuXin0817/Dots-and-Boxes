@@ -24,15 +24,13 @@ THE SOFTWARE.
 
 #include "BaseCanvas.h"
 
-#include <Dab/Board.h>
-#include <Dab/Model.h>
-#include <Dab/Tools.h>
-
 #include <QApplication>
 #include <QPainter>
 #include <QStyleHints>
 #include <QWidget>
 #include <cstddef>
+
+#include "Board.h"
 
 namespace dab::__detail__::frontend {
 

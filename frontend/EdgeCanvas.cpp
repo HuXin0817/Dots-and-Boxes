@@ -24,12 +24,10 @@ THE SOFTWARE.
 
 #include "EdgeCanvas.h"
 
-#include <Dab/Board.h>
-#include <Dab/Tools.h>
-
 #include <QPainter>
 
 #include "BaseCanvas.h"
+#include "Board.h"
 
 namespace dab::__detail__::frontend {
 

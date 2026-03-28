@@ -24,10 +24,10 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <Dab/Board.h>
-
 #include <QApplication>
 #include <QWidget>
+
+#include "Board.h"
 
 namespace dab::__detail__::frontend {
 
