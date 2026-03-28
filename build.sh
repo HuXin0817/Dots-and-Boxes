@@ -1,5 +1,6 @@
-CMAKE_BUILD_TYPE=${1:-Debug}
+#!/bin/bash
 
 git submodule update --init --recursive
-cmake -B build -S . -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE
+cmake -B build -S . -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DCMAKE_BUILD_TYPE=${1:-Debug}
+ln -s build/compile_commands.json compile_commands.json
 cmake --build build -j $(nproc)

@@ -26,10 +26,6 @@ THE SOFTWARE.
 
 #include <algorithm>
 #include <array>
-#include <chrono>
-#include <memory>
-#include <random>
-#include <type_traits>
 
 #include "BoardSize.h"
 #include "Tools.h"
@@ -222,42 +218,6 @@ constexpr Int Iterable<Config, T, ArraySize>::CheckIndex(Int i) const {
   return i;
 }
 
-class Random {
- public:
-  Random();
-
-  template <typename T>
-  T Range(T min, T max);
-  template <typename T>
-  const auto& Choice(const T& data);
-
- private:
-  std::mt19937_64 Rng;
-  std::uniform_int_distribution<Int> Dist;
-};
-
-inline Random::Random() { Rng.seed(std::chrono::steady_clock::now().time_since_epoch().count()); }
-
-template <typename T>
-T Random::Range(T min, T max) {
-  if constexpr (std::is_same_v<T, Int>) {
-    Dist.param(std::uniform_int_distribution<Int>::param_type(min, max));
-    return Dist(Rng);
-  } else {
-    std::uniform_int_distribution<T> dist(min, max);
-    return dist(Rng);
-  }
-}
-
-template <typename T>
-const auto& Random::Choice(const T& data) {
-  Assert(!data.Empty(), K(data.Size()), K(data));
-  if (data.Size() == 1) {
-    return data.At(0);
-  }
-  return data.At(Range(0, data.Size() - 1));
-}
-
 }  // namespace __detail__::iterable
 
 using namespace __detail__::iterable::config;
@@ -272,7 +232,5 @@ template <typename T>
 using Span = Iterable<EnableSpan | EnableEndPointer, T>;
 template <typename T>
 using Vector = Iterable<EnableAllocSize, T>;
-
-using __detail__::iterable::Random;
 
 }  // namespace dab

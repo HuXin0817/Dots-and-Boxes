@@ -26,15 +26,16 @@ THE SOFTWARE.
 
 #include <spdlog/spdlog.h>
 
+#include <chrono>
 #include <cstdlib>
 #include <format>
 #include <mutex>
 #include <nlohmann/json.hpp>
+#include <random>
 #include <source_location>
 #include <sstream>
 #include <string>
 #include <type_traits>
-#include <utility>
 
 namespace dab {
 
@@ -88,5 +89,35 @@ void AssertHelper(const std::source_location& location, const std::string& expr,
 
 template <bool _Bp, typename T>
 using Mixin = std::conditional_t<_Bp, T, std::type_identity<T>>;
+
+class Random {
+ public:
+  Random();
+
+  template <typename T>
+  T Range(T min, T max);
+  template <typename T>
+  const auto& Choice(const T& data);
+
+ private:
+  std::mt19937_64 Rng;
+};
+
+inline Random::Random() { Rng.seed(std::chrono::steady_clock::now().time_since_epoch().count()); }
+
+template <typename T>
+T Random::Range(T min, T max) {
+  std::uniform_int_distribution<T> dist(min, max);
+  return dist(Rng);
+}
+
+template <typename T>
+const auto& Random::Choice(const T& data) {
+  Assert(!data.Empty());
+  if (data.Size() == 1) {
+    return data.At(0);
+  }
+  return data.At(Range(0, data.Size() - 1));
+}
 
 }  // namespace dab
