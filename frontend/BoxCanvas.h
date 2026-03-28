@@ -29,8 +29,9 @@ THE SOFTWARE.
 
 namespace dab::__detail__::frontend {
 
-class BoxCanvas : public BaseCanvas, public Box {
+class BoxCanvas : public BaseCanvas {
   Q_OBJECT
+  Q_DISABLE_COPY(BoxCanvas)
 
  public:
   static constexpr int Width = EdgeCanvas::Height - 2 * UnitSize;

@@ -35,6 +35,7 @@ namespace dab::__detail__::frontend {
 
 class MainWindow : public BaseCanvas {
   Q_OBJECT
+  Q_DISABLE_COPY(MainWindow)
 
   static constexpr int BoardWidth = BoardSize * EdgeCanvas::Height;
   static constexpr int WindowSize = BoardWidth + 2 * BoxCanvas::Width;

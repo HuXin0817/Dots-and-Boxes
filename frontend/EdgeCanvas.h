@@ -33,6 +33,7 @@ namespace dab::__detail__::frontend {
 
 class EdgeCanvas : public BaseCanvas {
   Q_OBJECT
+  Q_DISABLE_COPY(EdgeCanvas)
 
  public:
   static constexpr int Width = UnitSize * 2;

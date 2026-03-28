@@ -33,6 +33,7 @@ namespace dab::__detail__::frontend {
 
 class BaseCanvas : public QWidget {
   Q_OBJECT
+  Q_DISABLE_COPY(BaseCanvas)
 
  public:
   static constexpr int UnitSize = 6 + 16 / BoardSize;

@@ -30,6 +30,7 @@ namespace dab::__detail__::frontend {
 
 class DotCanvas : public BaseCanvas {
   Q_OBJECT
+  Q_DISABLE_COPY(DotCanvas)
 
  public:
   static constexpr int Width = 2 * UnitSize;
