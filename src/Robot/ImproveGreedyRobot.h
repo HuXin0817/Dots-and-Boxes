@@ -24,8 +24,8 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "GreedyRobot.h"
 #include "BoardSize.h"
+#include "GreedyRobot.h"
 
 namespace dab::__detail__::robot {
 
@@ -49,9 +49,9 @@ Span<const Edge> ImproveGreedyRobot::BestCandidateEdges(const Board& board) {
     return edges;
   }
 
-  Int minScore = Box::Max + 1;
+  Int minScore = Box::Max + 1_bs;
   Array<Edge, Edge::Max>& candidateEdges = Edges;
-  Int candidateEdgesSize = 0;
+  Int candidateEdgesSize = 0_bs;
 
   SimulationBoardBackup = board;
   for (const Edge edge : board.EmptyEdges()) {
@@ -59,8 +59,8 @@ Span<const Edge> ImproveGreedyRobot::BestCandidateEdges(const Board& board) {
     SimulationBoard.Add(edge);
     if (const Int score = SimulationBoard.MaxObtainableScore(minScore); score < minScore) {
       minScore = score;
-      candidateEdgesSize = 1;
-      candidateEdges.At(0) = edge;
+      candidateEdgesSize = 1_bs;
+      candidateEdges.At(0_bs) = edge;
     } else if (score == minScore) {
       candidateEdges.At(candidateEdgesSize++) = edge;
     }
@@ -76,7 +76,7 @@ Edge ImproveGreedyRobot::SearchOne(const Board& board) {
     return result;
   }
 
-  Int minScore = Box::Max + 1;
+  Int minScore = Box::Max + 1_bs;
   SimulationBoardBackup = board;
   for (const Edge edge : board.EmptyEdges()) {
     SimulationBoard = SimulationBoardBackup;

@@ -56,7 +56,7 @@ target_compile_definitions("${PROJECT_NAME}" PRIVATE
   __MaxBoardSize__=${MaxBoardSize}
   __DefaultBoardSize__=${DefaultBoardSize}
 )
-target_link_libraries(${PROJECT_NAME} PRIVATE 
+target_link_libraries(${PROJECT_NAME} PRIVATE
   nlohmann_json::nlohmann_json
   Qt6::Core
   Qt6::Gui

@@ -64,8 +64,8 @@ template <class... Args>
 void AssertHelper(const std::source_location& location, const std::string& expr, Args&&... details) {
   static constexpr std::size_t details_size = sizeof...(details);
   std::unique_lock lock(AssertHelperMutex);
-  std::ostringstream oss;
   if constexpr (details_size > 0) {
+    std::ostringstream oss;
     std::size_t index = 0;
     ((oss << (index++ ? "," : "") << details), ...);
     LogError("ASSERT: '{}' in file {}, line {}. Detail: {}", expr, location.file_name(), location.line(), oss.str());

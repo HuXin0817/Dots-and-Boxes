@@ -44,13 +44,13 @@ class GreedyRobot {
   Array<Edge, Edge::Max> Edges;
 
  private:
-  Int EnemyUnscoreableIndex = 0;
-  Int ScoreableIndex = 0;
+  Int EnemyUnscoreableIndex = 0_bs;
+  Int ScoreableIndex = 0_bs;
 };
 
 template <typename Board>
 Span<const Edge> GreedyRobot::BestCandidateEdges(const Board& board) {
-  ScoreableIndex = 0;
+  ScoreableIndex = 0_bs;
   EnemyUnscoreableIndex = Edge::Max;
 
   const Span<const Edge> emptyEdges = board.EmptyEdges();

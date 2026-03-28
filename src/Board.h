@@ -119,12 +119,11 @@ inline Array<size_t, Edge::Max> HashValueMixin::HashMapper = []() -> Array<size_
   Array<size_t, Edge::Max> result;
   std::unordered_set<size_t> visited;
   for (size_t& v : result) {
-    size_t n = random.Range(std::numeric_limits<size_t>::min(), std::numeric_limits<size_t>::max());
-    while (visited.contains(n)) {
-      n = random.Range(std::numeric_limits<size_t>::min(), std::numeric_limits<size_t>::max());
+    v = random.Range(static_cast<size_t>(1), std::numeric_limits<size_t>::max());
+    while (visited.contains(v)) {
+      v = random.Range(static_cast<size_t>(1), std::numeric_limits<size_t>::max());
     }
-    visited.insert(n);
-    v = n;
+    visited.insert(v);
   }
   return result;
 }();

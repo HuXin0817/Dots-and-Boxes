@@ -49,8 +49,8 @@ class MonteCarloRobot {
   static constexpr uint64_t SearchTime = static_cast<uint64_t>(Edge::Max) << 8;
 
  public:
-  MonteCarloRobot(Int id = 0) : Id(id) {}
-  void SetId(Int id) { Id = id; }
+  MonteCarloRobot(int id = 0) : Id(id) {}
+  void SetId(int id) { Id = id; }
   template <typename Board>
   void SearchCandidateEdges(const Board& board);
   template <typename Board>
@@ -61,7 +61,7 @@ class MonteCarloRobot {
   List<Edge, Edge::Max>& GetSearchEdges() { return SubRobot.GetSearchEdges(); }
 
  private:
-  Int Id;
+  int Id;
   CachedRobot<SimulationRobot> SubRobot;
   RelativeScoreBoard SimulationBoard;
   ScoreMap SearchResult;
@@ -116,8 +116,7 @@ void MonteCarloRobot::SearchCandidateEdges(const Board& board) {
     }
     SearchResult.Add(edge, turn * SimulationBoard.RelativeScore());
     if constexpr (DebugMode) {
-      const auto nowTime = std::chrono::system_clock::now();
-      if (nowTime - lastTime >= std::chrono::seconds(5)) {
+      if (const auto nowTime = std::chrono::system_clock::now(); nowTime - lastTime >= std::chrono::seconds(5)) {
         LogDebug({{
             std::format("MonteCarloRobot[{}]", Id),
             {
@@ -152,7 +151,7 @@ Span<const Edge> MonteCarloRobot::BestCandidateEdges(const Board& board) {
 template <typename Board>
 bool MonteCarloRobot::CanEarlyExit(const Board& board, Span<const Edge>& result) {
   result = SubRobot.BestCandidateEdges(board);
-  return result.Size() == 1;
+  return result.Size() == 1_bs;
 }
 
 }  // namespace dab::__detail__::robot

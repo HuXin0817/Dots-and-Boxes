@@ -62,7 +62,7 @@ class CachedRobot : public SubRobotType {
 template <typename SubRobotType>
 int CachedRobot<SubRobotType>::doRecord = []() -> int {
   if constexpr (DebugMode) {
-    std::thread([&]() {
+    std::thread([&]() -> void {
       while (true) {
         std::this_thread::sleep_for(std::chrono::seconds(5));
         const uint64_t total = g_Metrics.TotalNumber.load();

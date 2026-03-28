@@ -32,22 +32,26 @@ namespace dab {
 namespace __detail__ {
 
 constexpr auto SelectIntType() {
-  constexpr int64_t MaxValue = 2 * __BoardSize__ * (__BoardSize__ + 1);
+  constexpr int64_t MaxValue = 2ll * __BoardSize__ * (__BoardSize__ + 1ll);
 
   if constexpr (MaxValue <= std::numeric_limits<int8_t>::max()) {
-    return static_cast<int8_t>(0);
+    return int8_t{};
   } else if constexpr (MaxValue <= std::numeric_limits<int16_t>::max()) {
-    return static_cast<int16_t>(0);
+    return int16_t{};
   } else if constexpr (MaxValue <= std::numeric_limits<int32_t>::max()) {
-    return static_cast<int32_t>(0);
+    return int32_t{};
   } else {
-    return static_cast<int64_t>(0);
+    return int64_t{};
   }
 }
 
+using Int = decltype(__detail__::SelectIntType());
+
+constexpr Int operator""_bs(unsigned long long val) { return static_cast<Int>(val); }
+
 }  // namespace __detail__
 
-using Int = decltype(__detail__::SelectIntType());
+using __detail__::Int;
 static constexpr Int BoardSize = __BoardSize__;
 
 }  // namespace dab
