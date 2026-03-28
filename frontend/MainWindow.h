@@ -26,10 +26,10 @@ THE SOFTWARE.
 
 #include <QPointer>
 
+#include "../src/Robot.h"
 #include "BoxCanvas.h"
 #include "DotCanvas.h"
 #include "EdgeCanvas.h"
-#include "Robot.h"
 
 namespace dab::__detail__::frontend {
 

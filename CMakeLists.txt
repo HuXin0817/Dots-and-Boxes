@@ -43,8 +43,6 @@ find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 
 add_subdirectory(deps)
 
-include_directories("${CMAKE_SOURCE_DIR}/src")
-
 set(ExternLibraries)
 foreach(BoardSize RANGE 1 ${MaxBoardSize})
   add_subdirectory(frontend "frontend/detail@${BoardSize}x${BoardSize}")

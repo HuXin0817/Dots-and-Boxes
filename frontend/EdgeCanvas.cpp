@@ -26,8 +26,8 @@ THE SOFTWARE.
 
 #include <QPainter>
 
+#include "../src/Board.h"
 #include "BaseCanvas.h"
-#include "Board.h"
 
 namespace dab::__detail__::frontend {
 

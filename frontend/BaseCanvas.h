@@ -27,7 +27,7 @@ THE SOFTWARE.
 #include <QApplication>
 #include <QWidget>
 
-#include "Board.h"
+#include "../src/Board.h"
 
 namespace dab::__detail__::frontend {
 

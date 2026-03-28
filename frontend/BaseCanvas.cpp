@@ -29,7 +29,7 @@ THE SOFTWARE.
 #include <QStyleHints>
 #include <QWidget>
 
-#include "Board.h"
+#include "../src/Board.h"
 
 namespace dab::__detail__::frontend {
 

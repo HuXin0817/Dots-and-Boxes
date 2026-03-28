@@ -29,7 +29,6 @@ THE SOFTWARE.
 
 #include "CachedRobot.h"
 #include "SimulationRobot.h"
-#include "Tools.h"
 
 namespace dab::__detail__::robot {
 

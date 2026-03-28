@@ -31,8 +31,7 @@ THE SOFTWARE.
 #include <cstdint>
 #include <thread>
 
-#include "Board.h"
-#include "Tools.h"
+#include "../Board.h"
 
 namespace dab::__detail__::robot {
 

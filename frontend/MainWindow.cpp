@@ -32,11 +32,11 @@ THE SOFTWARE.
 #include <QThreadPool>
 #include <QTime>
 
+#include "../src/Robot.h"
 #include "BaseCanvas.h"
 #include "BoxCanvas.h"
 #include "DotCanvas.h"
 #include "EdgeCanvas.h"
-#include "Robot.h"
 
 namespace dab::__detail__::frontend {
 

@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 #include <QWidget>
 
-#include "PlayerType.h"
+#include "../src/PlayerType.h"
 
 namespace dab {
 
