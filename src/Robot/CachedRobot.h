@@ -37,11 +37,8 @@ namespace dab::__detail__::robot {
 
 template <typename SubRobotType>
 class CachedRobot : public SubRobotType {
-  struct Metrics {
-    std::atomic<uint64_t> CachedNumber = 0;
-    std::atomic<uint64_t> TotalNumber = 0;
-  };
-  static inline Metrics g_Metrics;
+  static inline std::atomic<uint64_t> CachedNumber = 0;
+  static inline std::atomic<uint64_t> TotalNumber = 0;
   static int doRecord;
 
  public:
@@ -64,8 +61,8 @@ int CachedRobot<SubRobotType>::doRecord = []() -> int {
     std::thread([&]() -> void {
       while (true) {
         std::this_thread::sleep_for(std::chrono::seconds(5));
-        if (const uint64_t total = g_Metrics.TotalNumber.load(); total > 0) {
-          const uint64_t cached = g_Metrics.CachedNumber.load();
+        if (const uint64_t total = TotalNumber.load(); total > 0) {
+          const uint64_t cached = CachedNumber.load();
           const double percentage = 100.0 * cached / total;
           LogDebug({{
               "CachedRobot",
@@ -88,11 +85,11 @@ template <typename Board>
 Span<const Edge> CachedRobot<SubRobotType>::BestCandidateEdges(const Board& board) {
   Key = board;
   if constexpr (DebugMode) {
-    g_Metrics.TotalNumber.fetch_add(1);
+    TotalNumber.fetch_add(1);
   }
   if (Cache::ConstAccessor ac; Map.find(ac, Key)) {
     if constexpr (DebugMode) {
-      g_Metrics.CachedNumber.fetch_add(1);
+      CachedNumber.fetch_add(1);
     }
     Assert(!ac->Empty());
     return {ac->begin(), ac->Size()};
