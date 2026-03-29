@@ -18,7 +18,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
 if(NOT MaxBoardSize)
-  set(MaxBoardSize 36)
+  set(MaxBoardSize 16)
 endif()
 
 if(NOT DefaultBoardSize)

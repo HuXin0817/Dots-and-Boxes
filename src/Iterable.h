@@ -26,6 +26,8 @@ THE SOFTWARE.
 
 #include <algorithm>
 #include <array>
+#include <chrono>
+#include <random>
 
 #include "BoardSize.h"
 #include "Tools.h"

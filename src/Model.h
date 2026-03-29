@@ -41,7 +41,7 @@ constexpr auto Iota() {
 
 namespace __detail__::model {
 
-#if __BoardSize__ <= 20
+#if __BoardSize__ <= 16
 #define _constexpr constexpr
 #else
 #define _constexpr
