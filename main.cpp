@@ -119,7 +119,6 @@ int main(int argc, char* argv[]) {
   const QCommandLineOption boardSizeOption = CreateBoardSizeOption();
   const QCommandLineOption player1Option = CreatePlayerTypeOption(1);
   const QCommandLineOption player2Option = CreatePlayerTypeOption(2);
-  const QCommandLineOption backgroundModeOption(QStringList() << "b" << "background", "Running in background mode.");
 
   QCommandLineParser parser;
   parser.addHelpOption();
@@ -127,15 +126,13 @@ int main(int argc, char* argv[]) {
   parser.addOption(boardSizeOption);
   parser.addOption(player1Option);
   parser.addOption(player2Option);
-  parser.addOption(backgroundModeOption);
   parser.process(application);
 
   const int64_t boardSize = ParseBoardSize(parser.value(boardSizeOption));
   const PlayerType player1Type = ParsePlayerType(parser.value(player1Option));
   const PlayerType player2Type = ParsePlayerType(parser.value(player2Option));
-  const bool backgroundMode = parser.isSet(backgroundModeOption);
 
-  QWidget* mainWindow = CreateMainWindow<MaxBoardSize>(boardSize, player1Type, player2Type, backgroundMode);
+  QWidget* mainWindow = CreateMainWindow<MaxBoardSize>(boardSize, player1Type, player2Type);
   mainWindow->show();
   const int code = application.exec();
   if (code != 0) {

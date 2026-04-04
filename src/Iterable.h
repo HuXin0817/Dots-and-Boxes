@@ -106,11 +106,20 @@ class Iterable : Mixin<HasFlag(Config, EnableArray), ArrayMixin<T, ArraySize>>,
   constexpr Iterable(const T* data, Int size) { Reset(data, size); }
   constexpr Iterable(const T* begin, const T* end) { Reset(begin, end); }
   constexpr Iterable(const Iterable& other) { Reset(other.begin(), other.Size()); }
-  constexpr void operator=(const Iterable& other) { Reset(other.begin(), other.Size()); }
+  constexpr Iterable& operator=(const Iterable& other) { return Reset(other.begin(), other.Size()); }
 
-  constexpr void Reset(Int size);
-  constexpr void Reset(const T* data, Int size);
-  constexpr void Reset(const T* begin, const T* end) { Reset(begin, static_cast<Int>(end - begin)); }
+  template <typename Other>
+  constexpr Iterable(const Other& other) {
+    Reset(other.begin(), other.Size());
+  }
+  template <typename Other>
+  constexpr Iterable& operator=(const Other& other) {
+    return Reset(other.begin(), other.Size());
+  }
+
+  constexpr Iterable& Reset(Int size);
+  constexpr Iterable& Reset(const T* data, Int size);
+  constexpr Iterable& Reset(const T* begin, const T* end) { return Reset(begin, static_cast<Int>(end - begin)); }
 
   constexpr T* begin() { return &this->Data[FrontIndex()]; }
   constexpr const T* begin() const { return &this->Data[FrontIndex()]; }
@@ -138,7 +147,7 @@ class Iterable : Mixin<HasFlag(Config, EnableArray), ArrayMixin<T, ArraySize>>,
 };
 
 template <int Config, typename T, Int ArraySize>
-constexpr void Iterable<Config, T, ArraySize>::Reset(Int size) {
+constexpr Iterable<Config, T, ArraySize>& Iterable<Config, T, ArraySize>::Reset(Int size) {
   if constexpr (HasFlag(EnableAllocSize)) {
     this->Length = size;
     this->Data = std::make_unique<T[]>(size);
@@ -149,16 +158,18 @@ constexpr void Iterable<Config, T, ArraySize>::Reset(Int size) {
   if constexpr (HasFlag(EnableEndPointer)) {
     this->EndPos = size;
   }
+  return *this;
 }
 
 template <int Config, typename T, Int ArraySize>
-constexpr void Iterable<Config, T, ArraySize>::Reset(const T* data, Int size) {
+constexpr Iterable<Config, T, ArraySize>& Iterable<Config, T, ArraySize>::Reset(const T* data, Int size) {
   Reset(size);
   if constexpr (HasFlag(EnableArray) || HasFlag(EnableAllocSize)) {
     std::ranges::copy(data, data + size, begin());
   } else {
     this->Data = data;
   }
+  return *this;
 }
 
 template <int Config, typename T, Int ArraySize>

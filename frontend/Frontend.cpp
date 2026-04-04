@@ -31,17 +31,12 @@ THE SOFTWARE.
 namespace dab {
 
 template <>
-QWidget* CreateMainWindowImpl<BoardSize>(PlayerType player1Type, PlayerType player2Type, bool backgroundMode) {
+QWidget* CreateMainWindowImpl<BoardSize>(PlayerType player1Type, PlayerType player2Type) {
   LogInfo({
       {"BoardSize", BoardSize},
       {"Player1Type", PlayerTypeOptionStrings[static_cast<int>(player1Type)]},
       {"Player2Type", PlayerTypeOptionStrings[static_cast<int>(player2Type)]},
   });
-  if (backgroundMode) {
-    MockRunningGame(player1Type, player2Type);
-    exit(0);
-  }
-
   return new __detail__::frontend::MainWindow(player1Type, player2Type);
 }
 

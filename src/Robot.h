@@ -75,31 +75,8 @@ inline std::unique_ptr<Robot> Robot::Create(PlayerType playerType) {
   return nullptr;
 }
 
-inline std::unique_ptr<GameBoard> MockRunningGame(PlayerType player1Type, PlayerType player2Type) {
-  std::unique_ptr<Robot> robot1 = Robot::Create(player1Type);
-  std::unique_ptr<Robot> robot2 = Robot::Create(player2Type);
-  Assert(robot1 != nullptr, K(player1Type));
-  Assert(robot2 != nullptr, K(player2Type));
-
-  Random random;
-  std::unique_ptr<GameBoard> board = std::make_unique<GameBoard>();
-  while (board->Gaming()) {
-    Span<const Edge> candidateEdges;
-    if (board->IsPlayer1Turn()) {
-      candidateEdges = robot1->BestCandidateEdges(*board);
-    } else {
-      candidateEdges = robot2->BestCandidateEdges(*board);
-    }
-    LogDebug({{"Board", *board}, {"BestCandidateEdges", candidateEdges}});
-    board->Add(random.Choice(candidateEdges));
-  }
-
-  return board;
-}
-
 }  // namespace __detail__::robot
 
-using __detail__::robot::MockRunningGame;
 using __detail__::robot::Robot;
 
 }  // namespace dab

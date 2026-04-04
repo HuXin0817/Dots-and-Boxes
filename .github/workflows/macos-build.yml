@@ -26,4 +26,4 @@ jobs:
 
       - name: Run
         run: |
-          ./build/Dots_and_Boxes -s 5 -b
+          ./build/Dots_and_Boxes -s 5

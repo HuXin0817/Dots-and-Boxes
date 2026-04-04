@@ -31,17 +31,17 @@ THE SOFTWARE.
 namespace dab {
 
 template <int64_t BoardSize>
-QWidget* CreateMainWindowImpl(PlayerType player1Type, PlayerType player2Type, bool backgroundMode);
+QWidget* CreateMainWindowImpl(PlayerType player1Type, PlayerType player2Type);
 
 template <int64_t BoardSize>
-QWidget* CreateMainWindow(int64_t boardSize, PlayerType player1Type, PlayerType player2Type, bool backgroundMode) {
+QWidget* CreateMainWindow(int64_t boardSize, PlayerType player1Type, PlayerType player2Type) {
   if constexpr (BoardSize == 0) {
     return nullptr;
   } else {
     if (boardSize < BoardSize) {
-      return CreateMainWindow<BoardSize - 1>(boardSize, player1Type, player2Type, backgroundMode);
+      return CreateMainWindow<BoardSize - 1>(boardSize, player1Type, player2Type);
     }
-    return CreateMainWindowImpl<BoardSize>(player1Type, player2Type, backgroundMode);
+    return CreateMainWindowImpl<BoardSize>(player1Type, player2Type);
   }
 }
 

@@ -151,6 +151,7 @@ constexpr Array<Edge, 4> GetNearEdges(Box box) {
   NearEdges.At(1) = Edge(topLeft, bottomLeft);
   NearEdges.At(2) = Edge(bottomLeft, bottomRight);
   NearEdges.At(3) = Edge(topRight, bottomRight);
+  std::ranges::sort(NearEdges);
   return NearEdges;
 }
 

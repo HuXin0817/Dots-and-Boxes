@@ -415,13 +415,9 @@ constexpr bool BoardImpl<Config>::operator==(const Other& other) const {
 
 template <int Config>
 constexpr BoardImpl<Config>::operator nlohmann::ordered_json() const {
-  List<Edge, Edge::Max> moveRecord;
-  for (const Edge edge : Iota<Edge>()) {
-    if (Contains(edge)) {
-      moveRecord.Append(edge);
-    }
-  }
-  return {{"Step", NowStep()}, {"MoveRecord", moveRecord}};
+  List<Edge, Edge::Max> moveRecord(MoveRecord());
+  std::ranges::sort(moveRecord);
+  return moveRecord;
 }
 
 static_assert(sizeof(BoardImpl<0>) == sizeof(BasicMixin));
