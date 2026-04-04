@@ -79,7 +79,7 @@ static constexpr int FixedConfig(int config) {
 using namespace config;
 
 struct BasicMixin {
-  Int Step = 0_bs;
+  Int Step = 0;
   Array<Edge, Edge::Max> Edges;
   Array<Int, Edge::Max> EdgeIndexes;
 };
@@ -93,10 +93,10 @@ struct ScoreableCountMixin {
 };
 
 struct RelativeScoreMixin {
-  static constexpr Int Player1Turn = 1_bs;
+  static constexpr Int Player1Turn = 1;
   static constexpr Int Player2Turn = -Player1Turn;
 
-  Int Score = 0_bs;
+  Int Score = 0;
   Int Turn = Player1Turn;
 };
 
@@ -175,8 +175,8 @@ class BoardImpl : BasicMixin,
   constexpr Int GetTurn() const { return this->Turn; }
   constexpr bool IsPlayer1Turn() const { return this->Turn == this->Player1Turn; }
   constexpr bool IsPlayer2Turn() const { return this->Turn == this->Player2Turn; }
-  constexpr Int Player1Score() const { return (this->TotalScore + this->Score) / 2_bs; }
-  constexpr Int Player2Score() const { return (this->TotalScore - this->Score) / 2_bs; }
+  constexpr Int Player1Score() const { return (this->TotalScore + this->Score) / 2; }
+  constexpr Int Player2Score() const { return (this->TotalScore - this->Score) / 2; }
   constexpr double Player1MovingTimeSecond() const { return this->Player1MovingTime / 1000.0; }
   constexpr double Player2MovingTimeSecond() const { return this->Player2MovingTime / 1000.0; }
   constexpr Owner NowOwner() const { return IsPlayer1Turn() ? Owner::Player1 : Owner::Player2; }
@@ -196,9 +196,9 @@ class BoardImpl : BasicMixin,
 
 template <int Config>
 constexpr void BoardImpl<Config>::Reset() {
-  Step = 0_bs;
-  std::iota(EdgeIndexes.begin(), EdgeIndexes.end(), 0_bs);
-  std::iota(Edges.begin(), Edges.end(), 0_bs);
+  Step = 0;
+  std::iota(EdgeIndexes.begin(), EdgeIndexes.end(), 0);
+  std::iota(Edges.begin(), Edges.end(), 0);
   if constexpr (HasFlag(EnableEdgeCount)) {
     std::ranges::fill(this->Counter, 0);
   }
@@ -206,11 +206,11 @@ constexpr void BoardImpl<Config>::Reset() {
     this->ScoreableEdges.Clear();
   }
   if constexpr (HasFlag(EnableRelativeScore)) {
-    this->Score = 0_bs;
+    this->Score = 0;
     this->Turn = this->Player1Turn;
   }
   if constexpr (HasFlag(EnableAbsoluteScore)) {
-    this->TotalScore = 0_bs;
+    this->TotalScore = 0;
   }
   if constexpr (HasFlag(EnableLogging)) {
     this->LastUpdateTime = std::chrono::system_clock::now();
@@ -244,7 +244,7 @@ constexpr Int BoardImpl<Config>::Add(Edge edge) {
   if constexpr (HasFlag(EnableOwner)) {
     this->EdgeOwner.At(edge) = NowOwner();
   }
-  Int score = 0_bs;
+  Int score = 0;
   if constexpr (HasFlag(EnableEdgeCount)) {
     for (const Box box : edge.NearBoxes()) {
       const uint8_t num = ++this->Counter.At(box);
@@ -263,7 +263,7 @@ constexpr Int BoardImpl<Config>::Add(Edge edge) {
     }
     if constexpr (HasFlag(EnableRelativeScore)) {
       const Int turn = this->Turn;
-      if (score > 0_bs) {
+      if (score > 0) {
         this->Score += score * this->Turn;
       } else {
         this->Turn = -this->Turn;
@@ -282,13 +282,13 @@ constexpr Int BoardImpl<Config>::Add(Edge edge) {
         }
         LogInfo({
             {"Step", step},
-            {"Turn", turn == this->Player1Turn ? 1_bs : 2_bs},
+            {"Turn", turn == this->Player1Turn ? 1 : 2},
             {"Move", static_cast<Int>(edge)},
             {"Score", {{"Player1", Player1Score()}, {"Player2", Player2Score()}}},
             {"Time", static_cast<double>(time) / 1000.0},
         });
         if (!Gaming()) {
-          if (RelativeScore() > 0_bs) {
+          if (RelativeScore() > 0) {
             LogInfo({{"Winner", "Player1"}, {"Score", {{"Player1", Player1Score()}, {"Player2", Player2Score()}}}});
           } else if (RelativeScore() < 0) {
             LogInfo({{"Winner", "Player2"}, {"Score", {{"Player1", Player1Score()}, {"Player2", Player2Score()}}}});
@@ -327,10 +327,10 @@ constexpr Int BoardImpl<Config>::FindScoreableEdge() {
 
 template <int Config>
 constexpr Int BoardImpl<Config>::MaxObtainableScore(Int endScore) {
-  Int score = 0_bs;
+  Int score = 0;
   while (Gaming() && score < endScore) {
     if (this->ScoreableEdges.Empty()) {
-      Assert(FindScoreableEdge() == 0_bs, K(FindScoreableEdge()));
+      Assert(FindScoreableEdge() == 0, K(FindScoreableEdge()));
       break;
     }
     const Edge edge = this->ScoreableEdges.Pop();
@@ -345,7 +345,7 @@ constexpr Int BoardImpl<Config>::MaxObtainableScore(Int endScore) {
 
 template <int Config>
 constexpr uint8_t BoardImpl<Config>::MaxEdgeCount(Edge edge) const {
-  const List<Box, 2_bs>& nearBoxes = edge.NearBoxes();
+  const List<Box, 2>& nearBoxes = edge.NearBoxes();
   return std::max(this->Counter.At(nearBoxes.Front()), this->Counter.At(nearBoxes.Back()));
 }
 

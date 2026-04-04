@@ -150,7 +150,7 @@ Span<const Edge> MonteCarloRobot::BestCandidateEdges(const Board& board) {
 template <typename Board>
 bool MonteCarloRobot::CanEarlyExit(const Board& board, Span<const Edge>& result) {
   result = SubRobot.BestCandidateEdges(board);
-  return result.Size() == 1_bs;
+  return result.Size() == 1;
 }
 
 }  // namespace dab::__detail__::robot

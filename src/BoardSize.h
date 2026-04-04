@@ -34,7 +34,7 @@ namespace dab {
 namespace __detail__ {
 
 constexpr auto SelectIntType() {
-  constexpr int64_t MaxValue = 2ll * __BoardSize__ * (__BoardSize__ + 1ll);
+  constexpr int64_t MaxValue = 2 * __BoardSize__ * (__BoardSize__ + 1);
 
   if constexpr (MaxValue <= std::numeric_limits<int8_t>::max()) {
     return int8_t{};
@@ -48,11 +48,6 @@ constexpr auto SelectIntType() {
 }
 
 using Int = decltype(__detail__::SelectIntType());
-
-constexpr Int operator""_bs(unsigned long long val) {
-  Assert(val <= std::numeric_limits<Int>::max());
-  return static_cast<Int>(val);
-}
 
 }  // namespace __detail__
 
