@@ -26,14 +26,12 @@ THE SOFTWARE.
 
 #include <tbb/parallel_for_each.h>
 
-#include <cstdint>
-
 #include "MonteCarloRobot.h"
 
 namespace dab::__detail__::robot {
 
 class ParallelSearchRobot {
-  static constexpr uint64_t WorkersNumber = std::min(static_cast<uint64_t>(NUM_CPUS), static_cast<uint64_t>(Edge::Max));
+  static constexpr int WorkersNumber = std::min<int>(NUM_CPUS, Edge::Max);
 
  public:
   ParallelSearchRobot();
@@ -45,8 +43,8 @@ class ParallelSearchRobot {
 };
 
 inline ParallelSearchRobot::ParallelSearchRobot() {
-  for (Int i = 0; i < WorkersNumber; i++) {
-    Workers.At(i).SetId(i);
+  for (int i = 0; i < WorkersNumber; i++) {
+    Workers.At(static_cast<Int>(i)).SetId(i);
   }
 }
 
