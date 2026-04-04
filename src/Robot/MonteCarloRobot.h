@@ -48,7 +48,7 @@ class MonteCarloRobot {
   static constexpr uint64_t SearchTime = static_cast<uint64_t>(Edge::Max) << 8;
 
  public:
-  MonteCarloRobot(int id = 0) : Id(id) {}
+  MonteCarloRobot() = default;
   void SetId(int id) { Id = id; }
   template <typename Board>
   void SearchCandidateEdges(const Board& board);
@@ -60,7 +60,7 @@ class MonteCarloRobot {
   List<Edge, Edge::Max>& GetSearchEdges() { return SubRobot.GetSearchEdges(); }
 
  private:
-  int Id;
+  int Id = 0;
   CachedRobot<SimulationRobot> SubRobot;
   RelativeScoreBoard SimulationBoard;
   ScoreMap SearchResult;
