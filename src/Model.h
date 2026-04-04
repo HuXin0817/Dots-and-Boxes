@@ -64,7 +64,7 @@ class Square : public IntWapper {
   static constexpr Int Max = Length * Length;
 
   using IntWapper::IntWapper;
-  constexpr Square(Int x, Int y) : IntWapper(x * Length + y) { Assert(x < Max && y < Max, K(x), K(y), K(v)); }
+  constexpr Square(Int x, Int y) : IntWapper(x * Length + y) { Assert(x < Max && y < Max, K(x), K(y)); }
   constexpr Int X() const { return v / Length; }
   constexpr Int Y() const { return v % Length; }
 };
@@ -95,9 +95,7 @@ class Edge : public IntWapper {
 
 constexpr Edge::Edge(Dot dot1, Dot dot2) {
   Assert(dot1 < dot2, K(dot1), K(dot2));
-  Dot dif = dot2 - dot1;
-  Assert(dif == 1 || dif == BoardSize + 1, K(dot1), K(dot2), K(dif), K(BoardSize + 1));
-  if (dif == 1) {
+  if (dot2 - dot1 == 1) {
     v = 2 * (dot1 - dot1 / (BoardSize + 1)) + 1;
   } else {
     v = 2 * dot1;
