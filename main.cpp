@@ -28,7 +28,7 @@ THE SOFTWARE.
 #include <ranges>
 
 #include "frontend/Frontend.h"
-#include "src/Tools.h"
+#include "src/Logging.h"
 
 using namespace dab;
 

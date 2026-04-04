@@ -28,9 +28,9 @@ THE SOFTWARE.
 #include <nlohmann/json.hpp>
 #include <ranges>
 
-#include "BoardSize.h"
+#include "Common.h"
 #include "Iterable.h"
-#include "Tools.h"
+#include "Logging.h"
 
 namespace dab {
 

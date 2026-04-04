@@ -34,8 +34,8 @@ THE SOFTWARE.
 #include <unordered_set>
 
 #include "Iterable.h"
+#include "Logging.h"
 #include "Model.h"
-#include "Tools.h"
 
 namespace dab {
 

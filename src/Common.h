@@ -26,6 +26,7 @@ THE SOFTWARE.
 
 #include <cstdint>
 #include <limits>
+#include <type_traits>
 
 namespace dab {
 
@@ -51,5 +52,8 @@ using Int = decltype(__detail__::SelectIntType());
 
 using __detail__::Int;
 static constexpr Int BoardSize = __BoardSize__;
+
+template <bool Bp, typename T>
+using Mixin = std::conditional_t<Bp, T, std::type_identity<T>>;
 
 }  // namespace dab

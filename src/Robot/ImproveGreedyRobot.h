@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 #pragma once
 
-#include "../BoardSize.h"
+#include "../Common.h"
 #include "GreedyRobot.h"
 
 namespace dab::__detail__::robot {

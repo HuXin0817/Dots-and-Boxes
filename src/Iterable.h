@@ -29,8 +29,8 @@ THE SOFTWARE.
 #include <chrono>
 #include <random>
 
-#include "BoardSize.h"
-#include "Tools.h"
+#include "Common.h"
+#include "Logging.h"
 
 namespace dab {
 

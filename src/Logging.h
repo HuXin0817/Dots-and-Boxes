@@ -32,7 +32,6 @@ THE SOFTWARE.
 #include <source_location>
 #include <sstream>
 #include <string>
-#include <type_traits>
 
 namespace dab {
 
@@ -71,8 +70,5 @@ void AssertHelper(const std::source_location& location, const std::string& expr,
     }                                                                      \
   } while (false)
 #endif  // NDEBUG
-
-template <bool Bp, typename T>
-using Mixin = std::conditional_t<Bp, T, std::type_identity<T>>;
 
 }  // namespace dab
