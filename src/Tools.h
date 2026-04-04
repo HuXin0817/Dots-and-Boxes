@@ -36,32 +36,19 @@ THE SOFTWARE.
 
 namespace dab {
 
-#ifdef NDEBUG
-static constexpr bool DebugMode = false;
-#else
-static constexpr bool DebugMode = true;
-#endif  // NDEBUG
-
 #define STR(x) #x
 #define XSTR(x) STR(x)
 
 inline void LogInfo(const nlohmann::ordered_json& message) { spdlog::info(message.dump()); }
 
-inline void LogDebug(const nlohmann::ordered_json& message) { spdlog::debug(message.dump()); }
-
 template <class... Args>
 void LogError(std::format_string<Args...> fmt, Args&&... args) {
-  const std::string message = std::format(fmt, std::forward<Args>(args)...);
-  spdlog::error(nlohmann::ordered_json{{"Error", message}}.dump());
+  spdlog::error(nlohmann::ordered_json{{"Error", std::format(fmt, std::forward<Args>(args)...)}}.dump());
 }
-
-static std::mutex AssertHelperMutex;
 
 template <class... Args>
 void AssertHelper(const std::source_location& location, const std::string& expr, Args&&... details) {
-  static constexpr size_t details_size = sizeof...(details);
-  std::unique_lock lock(AssertHelperMutex);
-  if constexpr (details_size > 0) {
+  if constexpr (sizeof...(details) > 0) {
     std::ostringstream oss;
     size_t index = 0;
     ((oss << (index++ ? "," : "") << details), ...);

@@ -27,8 +27,6 @@ THE SOFTWARE.
 #include <cstdint>
 #include <limits>
 
-#include "Tools.h"
-
 namespace dab {
 
 namespace __detail__ {
