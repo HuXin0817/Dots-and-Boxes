@@ -63,14 +63,10 @@ class Square : public IntWapper {
  public:
   static constexpr Int Max = Length * Length;
 
-  constexpr Square() = default;
-  constexpr Square(Int v) : IntWapper(v) { Check(); }
-  constexpr Square(Int x, Int y) : IntWapper(x * Length + y) { Check(); }
+  using IntWapper::IntWapper;
+  constexpr Square(Int x, Int y) : IntWapper(x * Length + y) { Assert(x < Max && y < Max, K(x), K(y), K(v)); }
   constexpr Int X() const { return v / Length; }
   constexpr Int Y() const { return v % Length; }
-
- private:
-  constexpr void Check() const { Assert(0 <= v && v < Max, K(v), K(Max)); }
 };
 
 using Dot = Square<BoardSize + 1>;
@@ -88,18 +84,13 @@ class Edge : public IntWapper {
   static constexpr Int Max = 2 * BoardSize * (BoardSize + 1);
   static constexpr Int Invalid = -1;
 
-  constexpr Edge() : IntWapper(Invalid) {}
-  constexpr Edge(Int v) : IntWapper(v) { Check(); }
+  using IntWapper::IntWapper;
   constexpr Edge(Dot dot1, Dot dot2);
-  constexpr void Reset() { v = Invalid; }
   constexpr Dot Dot1() const;
   constexpr Dot Dot2() const;
-  constexpr bool Rotate() const;
+  constexpr bool Rotate() const { return v & 1; }
   constexpr bool Valid() const { return v != Invalid; }
   constexpr const List<Box, 2>& NearBoxes() const;
-
- private:
-  constexpr void Check() const { Assert(Invalid <= v && v < Max, K(v), K(Max)); }
 };
 
 constexpr Edge::Edge(Dot dot1, Dot dot2) {
@@ -115,7 +106,6 @@ constexpr Edge::Edge(Dot dot1, Dot dot2) {
 }
 
 constexpr Dot Edge::Dot1() const {
-  Assert(Valid(), K(v));
   Int dot = v >> 1;
   if (v & 1) {
     dot += dot / BoardSize;
@@ -124,7 +114,6 @@ constexpr Dot Edge::Dot1() const {
 }
 
 constexpr Dot Edge::Dot2() const {
-  Assert(Valid(), K(v));
   Int dot = v >> 1;
   if (v & 1) {
     dot += dot / BoardSize + 1;
@@ -134,23 +123,18 @@ constexpr Dot Edge::Dot2() const {
   return dot;
 }
 
-constexpr bool Edge::Rotate() const {
-  Assert(Valid(), K(v));
-  return v & 1;
-}
-
 constexpr Array<Edge, 4> GetNearEdges(Box box) {
-  Array<Edge, 4> NearEdges;
+  List<Edge, 4> NearEdges;
   const Int x = box.X();
   const Int y = box.Y();
   const Dot topLeft(x, y);
   const Dot topRight(x + 1, y);
   const Dot bottomLeft(x, y + 1);
   const Dot bottomRight(x + 1, y + 1);
-  NearEdges.At(0) = Edge(topLeft, topRight);
-  NearEdges.At(1) = Edge(topLeft, bottomLeft);
-  NearEdges.At(2) = Edge(bottomLeft, bottomRight);
-  NearEdges.At(3) = Edge(topRight, bottomRight);
+  NearEdges.Append({topLeft, topRight});
+  NearEdges.Append({topLeft, bottomLeft});
+  NearEdges.Append({bottomLeft, bottomRight});
+  NearEdges.Append({topRight, bottomRight});
   std::ranges::sort(NearEdges);
   return NearEdges;
 }
@@ -183,12 +167,12 @@ constexpr List<Box, 2> GetNearBoxes(Edge edge) {
   Int x = edge.Dot2().X() - 1;
   Int y = edge.Dot2().Y() - 1;
   if (x >= 0 && y >= 0) {
-    result.Append(Box(x, y));
+    result.Append({x, y});
   }
   x = edge.Dot1().X();
   y = edge.Dot1().Y();
   if (x < BoardSize && y < BoardSize) {
-    result.Append(Box(x, y));
+    result.Append({x, y});
   }
   return result;
 }

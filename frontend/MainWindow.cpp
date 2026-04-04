@@ -134,7 +134,7 @@ void MainWindow::Run() {
       LogDebug({{"Board", Board}, {"BestCandidateEdges", candidateEdges}});
       PlayerMoveEdge = random.Choice(candidateEdges);
     } else {
-      PlayerMoveEdge.Reset();
+      PlayerMoveEdge = Edge::Invalid;
       while (!PlayerMoveEdge.Valid()) {
         QThread::yieldCurrentThread();
       }

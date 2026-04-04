@@ -111,19 +111,19 @@ struct LoggingMixin {
 };
 
 struct HashValueMixin {
-  static Array<size_t, Edge::Max> HashMapper;
+  static Array<uint64_t, Edge::Max> HashMapper;
 
-  size_t HashValue;
+  uint64_t HashValue;
 };
 
-inline Array<size_t, Edge::Max> HashValueMixin::HashMapper = []() -> Array<size_t, Edge::Max> {
+inline Array<uint64_t, Edge::Max> HashValueMixin::HashMapper = []() -> Array<uint64_t, Edge::Max> {
   Random random;
-  Array<size_t, Edge::Max> result;
-  std::unordered_set<size_t> visited;
-  for (size_t& v : result) {
-    v = random.Range(static_cast<size_t>(1), std::numeric_limits<size_t>::max());
+  Array<uint64_t, Edge::Max> result;
+  std::unordered_set<uint64_t> visited;
+  for (uint64_t& v : result) {
+    v = random.Range(static_cast<uint64_t>(1), std::numeric_limits<uint64_t>::max());
     while (visited.contains(v)) {
-      v = random.Range(static_cast<size_t>(1), std::numeric_limits<size_t>::max());
+      v = random.Range(static_cast<uint64_t>(1), std::numeric_limits<uint64_t>::max());
     }
     visited.insert(v);
   }
@@ -167,7 +167,7 @@ class BoardImpl : BasicMixin,
   constexpr bool Gaming() const { return Step < Edge::Max; }
   constexpr Int RemainStep() const { return Edge::Max - Step; }
   constexpr Int NowStep() const { return Step; }
-  constexpr size_t Hash() const { return this->HashValue; }
+  constexpr uint64_t Hash() const { return this->HashValue; }
   constexpr uint8_t EdgeCount(Box box) const { return this->Counter.At(box); }
   constexpr uint8_t MaxEdgeCount(Edge edge) const;
   constexpr bool Scoreable(Edge edge) const { return MaxEdgeCount(edge) == 3; }
@@ -311,8 +311,7 @@ constexpr Edge BoardImpl<Config>::FindNotContainsEdgeInBox(Box box) const {
       return edge;
     }
   }
-  Assert(false, "unreachable");
-  return {};
+  std::unreachable();
 }
 
 template <int Config>
@@ -447,7 +446,7 @@ using namespace dab::__detail__::board;
 template <int Config>
   requires(HasFlag(Config, EnableHashValue))
 struct hash<BoardImpl<Config>> {
-  constexpr size_t operator()(const BoardImpl<Config>& board) const { return board.Hash(); }
+  constexpr uint64_t operator()(const BoardImpl<Config>& board) const { return board.Hash(); }
 };
 
 }  // namespace std
