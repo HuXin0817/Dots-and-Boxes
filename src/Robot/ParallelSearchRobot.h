@@ -34,19 +34,13 @@ class ParallelSearchRobot {
   static constexpr int WorkersNumber = std::min<int>(NUM_CPUS, Edge::Max);
 
  public:
-  ParallelSearchRobot();
+  ParallelSearchRobot() = default;
   template <typename Board>
   Span<const Edge> BestCandidateEdges(const Board& board);
 
  private:
   Array<MonteCarloRobot, WorkersNumber> Workers;
 };
-
-inline ParallelSearchRobot::ParallelSearchRobot() {
-  for (int i = 0; i < WorkersNumber; i++) {
-    Workers.At(static_cast<Int>(i)).SetId(i);
-  }
-}
 
 template <typename Board>
 Span<const Edge> ParallelSearchRobot::BestCandidateEdges(const Board& board) {

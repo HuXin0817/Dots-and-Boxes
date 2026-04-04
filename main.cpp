@@ -28,7 +28,6 @@ THE SOFTWARE.
 #include <ranges>
 
 #include "frontend/Frontend.h"
-#include "src/PlayerType.h"
 #include "src/Tools.h"
 
 using namespace dab;
@@ -105,12 +104,6 @@ int64_t ParseBoardSize(const QString& arg) {
 }
 
 int main(int argc, char* argv[]) {
-  if constexpr (DebugMode) {
-    spdlog::set_level(spdlog::level::debug);
-  } else {
-    spdlog::set_level(spdlog::level::info);
-  }
-
   QApplication application(argc, argv);
   application.setApplicationName("Dots and Boxes");
   application.setApplicationVersion(__Version__);

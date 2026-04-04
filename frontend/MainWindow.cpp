@@ -125,14 +125,11 @@ void MainWindow::Run() {
   Board.Reset();
   Random random;
   while (Board.Gaming()) {
-    nlohmann::ordered_json message;
     if (PlayerTypeIsRobot(Player1Type) && Board.IsPlayer1Turn()) {
       Span candidateEdges = Robot1->BestCandidateEdges(Board);
-      message["BestCandidateEdges"] = candidateEdges;
       PlayerMoveEdge = random.Choice(candidateEdges);
     } else if (PlayerTypeIsRobot(Player2Type) && Board.IsPlayer2Turn()) {
       Span candidateEdges = Robot2->BestCandidateEdges(Board);
-      message["BestCandidateEdges"] = candidateEdges;
       PlayerMoveEdge = random.Choice(candidateEdges);
     } else {
       PlayerMoveEdge = Edge::Invalid;
@@ -143,8 +140,6 @@ void MainWindow::Run() {
     Q_ASSERT(Board.NotContains(PlayerMoveEdge));
     QMetaObject::invokeMethod(this, &MainWindow::Add, Qt::BlockingQueuedConnection);
     Q_ASSERT(Board.Contains(PlayerMoveEdge));
-    message["Board"] = Board;
-    LogDebug(message);
   }
   QMetaObject::invokeMethod(this, &MainWindow::HandleGameOver, Qt::BlockingQueuedConnection);
 }

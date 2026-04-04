@@ -41,12 +41,6 @@ constexpr auto Iota() {
 
 namespace __detail__::model {
 
-#if __BoardSize__ <= 16
-#define _constexpr constexpr
-#else
-#define _constexpr
-#endif
-
 class IntWapper {
  public:
   constexpr IntWapper() = default;
@@ -146,17 +140,7 @@ constexpr Array<Array<Edge, 4>, Box::Max> CreateNearEdgesMapper() {
 }
 
 constexpr const Array<Edge, 4>& Box::NearEdges() const {
-  static _constexpr Array<Array<Edge, 4>, Max> Instance = CreateNearEdgesMapper();
-  if constexpr (DebugMode) {
-    static std::once_flag once;
-    std::call_once(once, [&]() -> void {
-      nlohmann::ordered_json NearEdgesMapper;
-      for (const Box box : Iota<Box>()) {
-        NearEdgesMapper[std::to_string(static_cast<int64_t>(box))] = Instance.At(box);
-      }
-      LogDebug({{"NearEdgesMapper", NearEdgesMapper}});
-    });
-  }
+  static constexpr Array<Array<Edge, 4>, Max> Instance = CreateNearEdgesMapper();
   return Instance.At(v);
 }
 
@@ -184,17 +168,7 @@ constexpr Array<List<Box, 2>, Edge::Max> CreateNearBoxesMapper() {
 }
 
 constexpr const List<Box, 2>& Edge::NearBoxes() const {
-  static _constexpr Array<List<Box, 2>, Max> Instance = CreateNearBoxesMapper();
-  if constexpr (DebugMode) {
-    static std::once_flag once;
-    std::call_once(once, [&]() -> void {
-      nlohmann::ordered_json NearBoxesMapper;
-      for (const Edge edge : Iota<Edge>()) {
-        NearBoxesMapper[std::to_string(static_cast<int64_t>(edge))] = Instance.At(edge);
-      }
-      LogDebug({{"NearBoxesMapper", NearBoxesMapper}});
-    });
-  }
+  static constexpr Array<List<Box, 2>, Max> Instance = CreateNearBoxesMapper();
   return Instance.At(v);
 }
 

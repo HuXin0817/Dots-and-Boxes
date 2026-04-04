@@ -26,23 +26,14 @@ THE SOFTWARE.
 
 #include <thread-safe-lru/lru-cache.h>
 
-#include <atomic>
-#include <cstddef>
-#include <cstdint>
-#include <thread>
-
 #include "../Board.h"
 
 namespace dab::__detail__::robot {
 
 template <typename SubRobotType>
 class CachedRobot : public SubRobotType {
-  static inline std::atomic<uint64_t> CachedNumber = 0;
-  static inline std::atomic<uint64_t> TotalNumber = 0;
-  static int doRecord;
-
  public:
-  CachedRobot() { (void)doRecord; }
+  CachedRobot() = default;
 
   template <typename Board>
   Span<const Edge> BestCandidateEdges(const Board& board);
@@ -56,41 +47,10 @@ class CachedRobot : public SubRobotType {
 };
 
 template <typename SubRobotType>
-int CachedRobot<SubRobotType>::doRecord = []() -> int {
-  if constexpr (DebugMode) {
-    std::thread([&]() -> void {
-      while (true) {
-        std::this_thread::sleep_for(std::chrono::seconds(5));
-        if (const uint64_t total = TotalNumber.load(); total > 0) {
-          const uint64_t cached = CachedNumber.load();
-          const double percentage = 100.0 * cached / total;
-          LogDebug({{
-              "CachedRobot",
-              {
-                  {"Size", Map.size()},
-                  {"Cached", cached},
-                  {"Total", total},
-                  {"Rate", std::format("{:.2f}%", percentage)},
-              },
-          }});
-        }
-      }
-    }).detach();
-  }
-  return 0;
-}();
-
-template <typename SubRobotType>
 template <typename Board>
 Span<const Edge> CachedRobot<SubRobotType>::BestCandidateEdges(const Board& board) {
   Key = board;
-  if constexpr (DebugMode) {
-    TotalNumber.fetch_add(1);
-  }
   if (Cache::ConstAccessor ac; Map.find(ac, Key)) {
-    if constexpr (DebugMode) {
-      CachedNumber.fetch_add(1);
-    }
     Assert(!ac->Empty());
     return {ac->begin(), ac->Size()};
   }
