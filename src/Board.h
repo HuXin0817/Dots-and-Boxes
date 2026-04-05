@@ -40,8 +40,6 @@ namespace dab::__detail__ {
 
 namespace board {
 
-namespace config {
-
 static constexpr int EnableEdgeCount = 1 << 0;
 static constexpr int EnableRelativeScore = 1 << 1;
 static constexpr int EnableAbsoluteScore = 1 << 2;
@@ -70,10 +68,6 @@ static constexpr int FixedConfig(int config) {
   }
   return fixedConfig;
 }
-
-}  // namespace config
-
-using namespace config;
 
 struct BasicMixin {
   Int Step = 0;
@@ -423,16 +417,14 @@ using Board = BoardImpl<FixedConfig(Config)>;
 
 }  // namespace board
 
-using namespace __detail__::board::config;
-using __detail__::board::Board;
-using __detail__::board::Owner;
-using BasicBoard = Board<0>;
-using HashValueBoard = Board<EnableHashValue>;
-using EdgeCountBoard = Board<EnableEdgeCount | EnableHashValue>;
-using RelativeScoreBoard = Board<EnableRelativeScore | EnableHashValue>;
-using AbsoluteScoreBoard = Board<EnableAbsoluteScore | EnableHashValue>;
-using GameBoard = Board<EnableLogging | EnableOwner | EnableHashValue>;
-using ScoreableCountBoard = Board<EnableScoreableCount>;
+using board::Owner;
+using BasicBoard = board::Board<0>;
+using HashValueBoard = board::Board<board::EnableHashValue>;
+using EdgeCountBoard = board::Board<board::EnableEdgeCount | board::EnableHashValue>;
+using RelativeScoreBoard = board::Board<board::EnableRelativeScore | board::EnableHashValue>;
+using AbsoluteScoreBoard = board::Board<board::EnableAbsoluteScore | board::EnableHashValue>;
+using GameBoard = board::Board<board::EnableLogging | board::EnableOwner | board::EnableHashValue>;
+using ScoreableCountBoard = board::Board<board::EnableScoreableCount>;
 
 }  // namespace dab::__detail__
 

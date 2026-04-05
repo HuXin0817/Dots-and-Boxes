@@ -75,6 +75,6 @@ inline std::unique_ptr<Robot> Robot::Create(PlayerType playerType) {
 
 }  // namespace robot
 
-using __detail__::robot::Robot;
+using robot::Robot;
 
 }  // namespace dab::__detail__

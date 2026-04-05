@@ -38,8 +38,6 @@ namespace __detail__ {
 
 namespace iterable {
 
-namespace config {
-
 static constexpr int EnableArray = 1 << 1;
 static constexpr int EnableSpan = 1 << 2;
 static constexpr int EnableAllocSize = 1 << 3;
@@ -61,10 +59,6 @@ static constexpr bool CheckConfig(int config, Int arraySize) {
   ans &= n == 1;
   return ans;
 }
-
-}  // namespace config
-
-using namespace config;
 
 template <typename T, Int Size>
 struct ArrayMixin {
@@ -234,18 +228,17 @@ constexpr Int Iterable<Config, T, ArraySize>::CheckIndex(Int i) const {
 
 }  // namespace iterable
 
-using namespace __detail__::iterable::config;
-using __detail__::iterable::Iterable;
 template <typename T, Int Size>
-using Array = Iterable<EnableArray, T, Size>;
+using Array = iterable::Iterable<iterable::EnableArray, T, Size>;
 template <typename T, Int Size>
-using List = Iterable<EnableArray | EnableEndPointer, T, Size>;
+using List = iterable::Iterable<iterable::EnableArray | iterable::EnableEndPointer, T, Size>;
 template <typename T, Int Size>
-using Queue = Iterable<EnableArray | EnableFrontPointer | EnableEndPointer, T, Size>;
+using Queue =
+    iterable::Iterable<iterable::EnableArray | iterable::EnableFrontPointer | iterable::EnableEndPointer, T, Size>;
 template <typename T>
-using Span = Iterable<EnableSpan | EnableEndPointer, T>;
+using Span = iterable::Iterable<iterable::EnableSpan | iterable::EnableEndPointer, T>;
 template <typename T>
-using Vector = Iterable<EnableAllocSize, T>;
+using Vector = iterable::Iterable<iterable::EnableAllocSize, T>;
 
 }  // namespace __detail__
 
