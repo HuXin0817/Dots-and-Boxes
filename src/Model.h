@@ -42,10 +42,10 @@ namespace __detail__ {
 
 namespace model {
 
-class IntWapper {
+class IntWrapper {
  public:
-  constexpr IntWapper() = default;
-  constexpr IntWapper(Int v) : v(v) {}
+  constexpr IntWrapper() = default;
+  constexpr IntWrapper(Int v) : v(v) {}
   constexpr operator Int() const { return v; }
   constexpr operator nlohmann::ordered_json() const { return v; }
 
@@ -54,12 +54,12 @@ class IntWapper {
 };
 
 template <Int Length>
-class Square : public IntWapper {
+class Square : public IntWrapper {
  public:
   static constexpr Int Max = Length * Length;
 
-  using IntWapper::IntWapper;
-  constexpr Square(Int x, Int y) : IntWapper(x * Length + y) { Assert(x < Max && y < Max, K(x), K(y)); }
+  using IntWrapper::IntWrapper;
+  constexpr Square(Int x, Int y) : IntWrapper(x * Length + y) { Assert(x < Max && y < Max, K(x), K(y)); }
   constexpr Int X() const { return v / Length; }
   constexpr Int Y() const { return v % Length; }
 };
@@ -77,12 +77,12 @@ class Box : public Square<BoardSize> {
   constexpr Array<Edge, 4> GetNearEdges() const;
 };
 
-class Edge : public IntWapper {
+class Edge : public IntWrapper {
  public:
   static constexpr Int Max = 2 * BoardSize * (BoardSize + 1);
   static constexpr Int Invalid = -1;
 
-  using IntWapper::IntWapper;
+  using IntWrapper::IntWrapper;
   constexpr Edge(Dot dot1, Dot dot2);
   constexpr Dot Dot1() const;
   constexpr Dot Dot2() const;

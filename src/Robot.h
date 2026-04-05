@@ -46,10 +46,10 @@ class Robot {
 };
 
 template <typename Derived>
-class RobotWapper : public Robot, public Derived {
+class RobotWrapper : public Robot, public Derived {
  public:
   using Derived::Derived;
-  ~RobotWapper() override = default;
+  ~RobotWrapper() override = default;
 
   Span<const Edge> BestCandidateEdges(const GameBoard& board) override { return Derived::BestCandidateEdges(board); }
 };
@@ -57,15 +57,15 @@ class RobotWapper : public Robot, public Derived {
 inline std::unique_ptr<Robot> Robot::Create(PlayerType playerType) {
   switch (playerType) {
     case PlayerType::GreedyRobot:
-      return std::make_unique<RobotWapper<GreedyRobot>>();
+      return std::make_unique<RobotWrapper<GreedyRobot>>();
     case PlayerType::ImproveGreedyRobot:
-      return std::make_unique<RobotWapper<ImproveGreedyRobot>>();
+      return std::make_unique<RobotWrapper<ImproveGreedyRobot>>();
     case PlayerType::SimulationRobot:
-      return std::make_unique<RobotWapper<SimulationRobot>>();
+      return std::make_unique<RobotWrapper<SimulationRobot>>();
     case PlayerType::MonteCarloRobot:
-      return std::make_unique<RobotWapper<MonteCarloRobot>>();
+      return std::make_unique<RobotWrapper<MonteCarloRobot>>();
     case PlayerType::ParallelSearchRobot:
-      return std::make_unique<RobotWapper<ParallelSearchRobot>>();
+      return std::make_unique<RobotWrapper<ParallelSearchRobot>>();
     case PlayerType::Human:
       return nullptr;
     default:
