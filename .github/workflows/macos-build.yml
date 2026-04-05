@@ -3,8 +3,18 @@ name: macOS Build
 on:
   push:
     branches: [main]
+    paths:
+      - "**/*.cpp"
+      - "**/*.h"
+      - "**/CMakeLists.txt"
+      - "build.sh"
   pull_request:
     branches: [main]
+    paths:
+      - "**/*.cpp"
+      - "**/*.h"
+      - "**/CMakeLists.txt"
+      - "build.sh"
   workflow_dispatch:
 
 jobs:
