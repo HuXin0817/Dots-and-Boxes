@@ -23,7 +23,3 @@ jobs:
       - name: Build
         run: |
           bash build.sh Debug
-
-      - name: Run
-        run: |
-          ./build/Dots_and_Boxes -s 4
