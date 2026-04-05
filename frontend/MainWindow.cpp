@@ -133,13 +133,11 @@ void MainWindow::Run() {
       PlayerMoveEdge = random.Choice(candidateEdges);
     } else {
       PlayerMoveEdge = Edge::Invalid;
-      while (!PlayerMoveEdge.Valid()) {
+      while (PlayerMoveEdge == Edge::Invalid) {
         QThread::yieldCurrentThread();
       }
     }
-    Q_ASSERT(Board.NotContains(PlayerMoveEdge));
     QMetaObject::invokeMethod(this, &MainWindow::Add, Qt::BlockingQueuedConnection);
-    Q_ASSERT(Board.Contains(PlayerMoveEdge));
   }
   QMetaObject::invokeMethod(this, &MainWindow::HandleGameOver, Qt::BlockingQueuedConnection);
 }

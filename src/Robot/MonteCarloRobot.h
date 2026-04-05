@@ -24,9 +24,6 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <chrono>
-#include <cstdint>
-
 #include "CachedRobot.h"
 #include "SimulationRobot.h"
 
@@ -95,7 +92,7 @@ inline Span<const Edge> MonteCarloRobot::ScoreMap::Export(List<Edge, Edge::Max>&
       }
     }
   }
-  return {edges.begin(), edges.Size()};
+  return edges;
 }
 
 template <typename Board>

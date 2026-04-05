@@ -46,11 +46,9 @@ constexpr auto SelectIntType() {
   }
 }
 
-using Int = decltype(__detail__::SelectIntType());
-
 }  // namespace __detail__
 
-using __detail__::Int;
+using Int = decltype(__detail__::SelectIntType());
 static constexpr Int BoardSize = __BoardSize__;
 
 template <bool Bp, typename T>

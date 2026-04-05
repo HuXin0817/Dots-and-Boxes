@@ -39,6 +39,7 @@ class ImproveGreedyRobot : public GreedyRobot {
   Edge SearchOne(const Board& board);
 
  private:
+  Int CandidateEdgesSize = 0;
   ScoreableCountBoard SimulationBoardBackup;
   ScoreableCountBoard SimulationBoard;
 };
@@ -50,29 +51,28 @@ Span<const Edge> ImproveGreedyRobot::BestCandidateEdges(const Board& board) {
   }
 
   Int minScore = Box::Max + 1;
-  Array<Edge, Edge::Max>& candidateEdges = Edges;
-  Int candidateEdgesSize = 0;
 
+  CandidateEdgesSize = 0;
   SimulationBoardBackup = board;
   for (const Edge edge : board.EmptyEdges()) {
     SimulationBoard = SimulationBoardBackup;
     SimulationBoard.Add(edge);
     if (const Int score = SimulationBoard.MaxObtainableScore(minScore); score < minScore) {
       minScore = score;
-      candidateEdgesSize = 1;
-      candidateEdges.At(0) = edge;
+      CandidateEdgesSize = 1;
+      Edges.At(0) = edge;
     } else if (score == minScore) {
-      candidateEdges.At(candidateEdgesSize++) = edge;
+      Edges.At(CandidateEdgesSize++) = edge;
     }
   }
 
-  return {candidateEdges.begin(), candidateEdgesSize};
+  return {Edges.begin(), CandidateEdgesSize};
 }
 
 template <typename Board>
 Edge ImproveGreedyRobot::SearchOne(const Board& board) {
   Edge result = GreedyRobot::SearchOne(board);
-  if (result.Valid()) {
+  if (result != Edge::Invalid) {
     return result;
   }
 

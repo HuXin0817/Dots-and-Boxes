@@ -67,12 +67,10 @@ inline std::unique_ptr<Robot> Robot::Create(PlayerType playerType) {
     case PlayerType::ParallelSearchRobot:
       return std::make_unique<RobotWapper<ParallelSearchRobot>>();
     case PlayerType::Human:
-      break;
+      return nullptr;
     default:
-      Assert(false, "unreachable");
-      break;
+      std::unreachable();
   }
-  return nullptr;
 }
 
 }  // namespace __detail__::robot

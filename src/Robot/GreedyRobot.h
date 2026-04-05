@@ -69,7 +69,7 @@ Span<const Edge> GreedyRobot::BestCandidateEdges(const Board& board) {
     return {Edges.begin() + EnemyUnscoreableIndex, Edges.end()};
   }
 
-  return {emptyEdges.begin(), emptyEdges.end()};
+  return emptyEdges;
 }
 
 template <typename Board>

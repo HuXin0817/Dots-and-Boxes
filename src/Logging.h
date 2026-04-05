@@ -27,7 +27,6 @@ THE SOFTWARE.
 #include <spdlog/spdlog.h>
 
 #include <format>
-#include <mutex>
 #include <nlohmann/json.hpp>
 #include <source_location>
 #include <sstream>

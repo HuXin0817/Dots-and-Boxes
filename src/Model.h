@@ -24,7 +24,6 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <mutex>
 #include <nlohmann/json.hpp>
 #include <ranges>
 
@@ -71,6 +70,9 @@ class Box : public Square<BoardSize> {
  public:
   using Square::Square;
   constexpr const Array<Edge, 4>& NearEdges() const;
+
+ private:
+  constexpr Array<Edge, 4> GetNearEdges() const;
 };
 
 class Edge : public IntWapper {
@@ -83,8 +85,10 @@ class Edge : public IntWapper {
   constexpr Dot Dot1() const;
   constexpr Dot Dot2() const;
   constexpr bool Rotate() const { return v & 1; }
-  constexpr bool Valid() const { return v != Invalid; }
   constexpr const List<Box, 2>& NearBoxes() const;
+
+ private:
+  constexpr List<Box, 2> GetNearBoxes() const;
 };
 
 constexpr Edge::Edge(Dot dot1, Dot dot2) {
@@ -115,10 +119,10 @@ constexpr Dot Edge::Dot2() const {
   return dot;
 }
 
-constexpr Array<Edge, 4> GetNearEdges(Box box) {
+constexpr Array<Edge, 4> Box::GetNearEdges() const {
   List<Edge, 4> NearEdges;
-  const Int x = box.X();
-  const Int y = box.Y();
+  const Int x = X();
+  const Int y = Y();
   const Dot topLeft(x, y);
   const Dot topRight(x + 1, y);
   const Dot bottomLeft(x, y + 1);
@@ -131,44 +135,40 @@ constexpr Array<Edge, 4> GetNearEdges(Box box) {
   return NearEdges;
 }
 
-constexpr Array<Array<Edge, 4>, Box::Max> CreateNearEdgesMapper() {
-  Array<Array<Edge, 4>, Box::Max> BoxNearEdges;
-  for (const Box box : Iota<Box>()) {
-    BoxNearEdges.At(box) = GetNearEdges(box);
-  }
-  return BoxNearEdges;
-}
-
 constexpr const Array<Edge, 4>& Box::NearEdges() const {
-  static constexpr Array<Array<Edge, 4>, Max> Instance = CreateNearEdgesMapper();
+  static constexpr Array<Array<Edge, 4>, Max> Instance = []() -> Array<Array<Edge, 4>, Max> {
+    Array<Array<Edge, 4>, Max> Mapper;
+    for (const Box box : Iota<Box>()) {
+      Mapper.At(box) = box.GetNearEdges();
+    }
+    return Mapper;
+  }();
   return Instance.At(v);
 }
 
-constexpr List<Box, 2> GetNearBoxes(Edge edge) {
+constexpr List<Box, 2> Edge::GetNearBoxes() const {
   List<Box, 2> result;
-  Int x = edge.Dot2().X() - 1;
-  Int y = edge.Dot2().Y() - 1;
+  Int x = Dot2().X() - 1;
+  Int y = Dot2().Y() - 1;
   if (x >= 0 && y >= 0) {
     result.Append({x, y});
   }
-  x = edge.Dot1().X();
-  y = edge.Dot1().Y();
+  x = Dot1().X();
+  y = Dot1().Y();
   if (x < BoardSize && y < BoardSize) {
     result.Append({x, y});
   }
   return result;
 }
 
-constexpr Array<List<Box, 2>, Edge::Max> CreateNearBoxesMapper() {
-  Array<List<Box, 2>, Edge::Max> EdgeNearBoxes;
-  for (const Edge edge : Iota<Edge>()) {
-    EdgeNearBoxes.At(edge) = GetNearBoxes(edge);
-  }
-  return EdgeNearBoxes;
-}
-
 constexpr const List<Box, 2>& Edge::NearBoxes() const {
-  static constexpr Array<List<Box, 2>, Max> Instance = CreateNearBoxesMapper();
+  static constexpr Array<List<Box, 2>, Max> Instance = []() -> Array<List<Box, 2>, Max> {
+    Array<List<Box, 2>, Max> Mapper;
+    for (const Edge edge : Iota<Edge>()) {
+      Mapper.At(edge) = edge.GetNearBoxes();
+    }
+    return Mapper;
+  }();
   return Instance.At(v);
 }
 
