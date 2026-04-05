@@ -14,7 +14,6 @@ A sophisticated implementation of the classic Dots and Boxes game with multiple 
 - Configurable game settings
 - Score tracking and display
 - Visual representation of the game board
-- Background mode for automated gameplay
 - LRU cache optimization for AI move evaluation
 
 ## Requirements
@@ -23,6 +22,8 @@ A sophisticated implementation of the classic Dots and Boxes game with multiple 
 - Qt6 (Core, Gui, Widgets)
 - CMake 3.16 or higher
 - Intel TBB (Threading Building Blocks) for parallel processing
+- nlohmann_json for JSON parsing
+- spdlog for logging
 
 ## Build Instructions
 
@@ -64,12 +65,11 @@ The project can be built on other platforms with Qt6 support. Follow similar ste
 
 The game supports the following command line arguments:
 
-| Option          | Short | Long           | Description            | Default |
-| --------------- | ----- | -------------- | ---------------------- | ------- |
-| Board Size      | `-s`  | `--boardsize`  | Set board size (1-36)  | 6       |
-| Player 1 Type   | `-p1` | `--player1`    | Set type of player 1   | robot   |
-| Player 2 Type   | `-p2` | `--player2`    | Set type of player 2   | robot   |
-| Background Mode | `-b`  | `--background` | Run in background mode | false   |
+| Option        | Short | Long          | Description           | Default |
+| ------------- | ----- | ------------- | --------------------- | ------- |
+| Board Size    | `-s`  | `--boardsize` | Set board size (1-16) | 6       |
+| Player 1 Type | `-p1` | `--player1`   | Set type of player 1  | robot   |
+| Player 2 Type | `-p2` | `--player2`   | Set type of player 2  | robot   |
 
 ### Environment Variables
 
@@ -77,7 +77,7 @@ The following environment variables can be used to set default values:
 
 | Variable     | Description               |
 | ------------ | ------------------------- |
-| `BOARD_SIZE` | Default board size (1-36) |
+| `BOARD_SIZE` | Default board size (1-16) |
 | `PLAYER1`    | Default type for player 1 |
 | `PLAYER2`    | Default type for player 2 |
 
@@ -85,15 +85,15 @@ Environment variables take precedence over command line defaults but can be over
 
 #### Player Type Values
 
-| Value          | Description                  |
-| -------------- | ---------------------------- |
-| `human`        | Human player                 |
-| `robot:easy`   | GreedyRobot                  |
-| `robot:medium` | ImproveGreedyRobot           |
-| `robot:hard`   | SimulationRobot              |
-| `robot:expert` | MonteCarloRobot              |
-| `robot:master` | ParallelSearchRobot          |
-| `robot`        | Equivalent to `robot:master` |
+| Value                 | Description                         |
+| --------------------- | ----------------------------------- |
+| `human`               | Human player                        |
+| `GreedyRobot`         | Basic robot with simple strategy    |
+| `ImproveGreedyRobot`  | Improved greedy strategy            |
+| `SimulationRobot`     | Simulation-based strategy           |
+| `MonteCarloRobot`     | Monte Carlo simulation strategy     |
+| `ParallelSearchRobot` | Parallel search strategy            |
+| `robot`               | Equivalent to `ParallelSearchRobot` |
 
 #### Example Usage
 
@@ -104,14 +104,11 @@ Environment variables take precedence over command line defaults but can be over
 # Start with a 10x10 board
 ./Dots_and_Boxes --boardsize 10
 
-# Start with human player 1 and expert robot player 2
-./Dots_and_Boxes --player1 human --player2 robot:expert
+# Start with human player 1 and MonteCarloRobot player 2
+./Dots_and_Boxes --player1 human --player2 MonteCarloRobot
 
 # Start with medium board size and both players as robots
-./Dots_and_Boxes -s 8 -p1 robot:medium -p2 robot:hard
-
-# Start in background mode
-./Dots_and_Boxes --background
+./Dots_and_Boxes -s 8 -p1 ImproveGreedyRobot -p2 SimulationRobot
 ```
 
 ## Project Structure
@@ -121,32 +118,9 @@ Dots-and-Boxes/
 ├── .github/            # GitHub workflows
 │   └── workflows/
 │       └── macos-build.yml
-├── include/            # Header files
-│   └── Dab/
-│       ├── Board.h
-│       ├── BoardSize.h
-│       ├── Common.h
-│       ├── Frontend.h
-│       ├── Model.h
-│       ├── PlayerType.h
-│       ├── Robot.h
-│       ├── Tools.h
-│       ├── common/         # Common utility classes
-│       │   ├── Array.h
-│       │   ├── Iterable.h
-│       │   ├── LRUCache.h
-│       │   ├── List.h
-│       │   ├── Queue.h
-│       │   ├── Random.h
-│       │   ├── Span.h
-│       │   └── Vector.h
-│       └── robot/          # AI implementations
-│           ├── CachedRobot.h
-│           ├── GreedyRobot.h
-│           ├── ImproveGreedyRobot.h
-│           ├── MonteCarloRobot.h
-│           ├── ParallelSearchRobot.h
-│           └── SimulationRobot.h
+├── deps/               # External dependencies
+│   ├── .gitignore
+│   ├── CMakeLists.txt
 ├── frontend/           # GUI-related files
 │   ├── BaseCanvas.cpp
 │   ├── BaseCanvas.h
@@ -158,15 +132,34 @@ Dots-and-Boxes/
 │   ├── EdgeCanvas.cpp
 │   ├── EdgeCanvas.h
 │   ├── Frontend.cpp
+│   ├── Frontend.h
 │   ├── MainWindow.cpp
 │   └── MainWindow.h
+├── src/                # Source files
+│   ├── Robot/          # AI implementations
+│   │   ├── CachedRobot.h
+│   │   ├── GreedyRobot.h
+│   │   ├── ImproveGreedyRobot.h
+│   │   ├── MonteCarloRobot.h
+│   │   ├── ParallelSearchRobot.h
+│   │   └── SimulationRobot.h
+│   ├── Board.h
+│   ├── Common.h
+│   ├── Iterable.h
+│   ├── Logging.h
+│   ├── Model.h
+│   ├── PlayerType.h
+│   └── Robot.h
 ├── .clang-format       # Code formatting configuration
 ├── .gitignore          # Git ignore file
+├── .gitmodules         # Git submodules configuration
 ├── CMakeLists.txt      # Build configuration
 ├── LICENSE             # License file
 ├── README.md           # This file
 ├── VERSION             # Version information
+├── build.sh            # Build script
 ├── demo.png            # Game demo screenshot
+├── format.sh           # Code formatting script
 └── main.cpp            # Entry point
 ```
 
@@ -186,6 +179,8 @@ All robot strategies use **CachedRobot** for performance optimization, which cac
 - **GUI Framework**: Qt6
 - **Parallel Processing**: Intel TBB (Threading Building Blocks)
 - **Build System**: CMake
+- **JSON Library**: nlohmann_json
+- **Logging Library**: spdlog
 
 ## License
 
