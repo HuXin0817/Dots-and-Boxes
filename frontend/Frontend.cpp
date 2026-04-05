@@ -25,7 +25,6 @@ THE SOFTWARE.
 #include "Frontend.h"
 
 #include "../src/PlayerType.h"
-#include "../src/Robot.h"
 #include "MainWindow.h"
 
 namespace dab {
