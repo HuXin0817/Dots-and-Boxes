@@ -34,9 +34,6 @@ THE SOFTWARE.
 
 namespace dab {
 
-#define STR(x) #x
-#define XSTR(x) STR(x)
-
 inline void LogInfo(const nlohmann::ordered_json& message) { spdlog::info(message.dump()); }
 
 template <class... Args>

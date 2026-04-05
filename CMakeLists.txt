@@ -42,6 +42,7 @@ add_compile_definitions(NUM_CPUS=${NUM_CPUS} __Version__="${Version}")
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 
 add_subdirectory(deps)
+include_directories("${CMAKE_SOURCE_DIR}/deps/lru")
 
 set(ExternLibraries)
 foreach(BoardSize RANGE 1 ${MaxBoardSize})
