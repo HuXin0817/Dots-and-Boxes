@@ -38,7 +38,9 @@ constexpr auto Iota() {
   return std::views::iota(static_cast<decltype(T::Max)>(0), T::Max);
 }
 
-namespace __detail__::model {
+namespace __detail__ {
+
+namespace model {
 
 class IntWapper {
  public:
@@ -172,10 +174,12 @@ constexpr const List<Box, 2>& Edge::NearBoxes() const {
   return Instance.At(v);
 }
 
-}  // namespace __detail__::model
+}  // namespace model
 
 using __detail__::model::Box;
 using __detail__::model::Dot;
 using __detail__::model::Edge;
+
+}  // namespace __detail__
 
 }  // namespace dab

@@ -34,7 +34,9 @@ THE SOFTWARE.
 
 namespace dab {
 
-namespace __detail__::iterable {
+namespace __detail__ {
+
+namespace iterable {
 
 namespace config {
 
@@ -43,8 +45,6 @@ static constexpr int EnableSpan = 1 << 2;
 static constexpr int EnableAllocSize = 1 << 3;
 static constexpr int EnableFrontPointer = 1 << 4;
 static constexpr int EnableEndPointer = 1 << 5;
-
-static constexpr bool HasFlag(int config, int flag) { return (config & flag) != 0; }
 
 static constexpr bool CheckConfig(int config, Int arraySize) {
   int ans = true;
@@ -232,7 +232,7 @@ constexpr Int Iterable<Config, T, ArraySize>::CheckIndex(Int i) const {
   return i;
 }
 
-}  // namespace __detail__::iterable
+}  // namespace iterable
 
 using namespace __detail__::iterable::config;
 using __detail__::iterable::Iterable;
@@ -246,6 +246,8 @@ template <typename T>
 using Span = Iterable<EnableSpan | EnableEndPointer, T>;
 template <typename T>
 using Vector = Iterable<EnableAllocSize, T>;
+
+}  // namespace __detail__
 
 class Random {
  public:

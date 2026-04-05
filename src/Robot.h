@@ -32,9 +32,9 @@ THE SOFTWARE.
 #include "Robot/ParallelSearchRobot.h"
 #include "Robot/SimulationRobot.h"
 
-namespace dab {
+namespace dab::__detail__ {
 
-namespace __detail__::robot {
+namespace robot {
 
 class Robot {
  public:
@@ -73,8 +73,8 @@ inline std::unique_ptr<Robot> Robot::Create(PlayerType playerType) {
   }
 }
 
-}  // namespace __detail__::robot
+}  // namespace robot
 
 using __detail__::robot::Robot;
 
-}  // namespace dab
+}  // namespace dab::__detail__

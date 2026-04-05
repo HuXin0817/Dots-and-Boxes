@@ -30,6 +30,8 @@ THE SOFTWARE.
 
 namespace dab {
 
+using namespace __detail__;
+
 template <>
 QWidget* CreateMainWindowImpl<BoardSize>(PlayerType player1Type, PlayerType player2Type) {
   LogInfo({

@@ -36,9 +36,9 @@ THE SOFTWARE.
 #include "Logging.h"
 #include "Model.h"
 
-namespace dab {
+namespace dab::__detail__ {
 
-namespace __detail__::board {
+namespace board {
 
 namespace config {
 
@@ -50,8 +50,6 @@ static constexpr int EnableScoreableCount = 1 << 4;
 static constexpr int EnableHashValue = 1 << 5;
 static constexpr int EnableOwner = 1 << 6;
 static constexpr int MaxFlag = 1 << 7;
-
-static constexpr bool HasFlag(int config, int flag) { return (config & flag) != 0; }
 
 static constexpr int FixedConfig(int config) {
   int fixedConfig = config % MaxFlag;
@@ -423,7 +421,7 @@ static_assert(sizeof(BoardImpl<0>) == sizeof(BasicMixin));
 template <int Config>
 using Board = BoardImpl<FixedConfig(Config)>;
 
-}  // namespace __detail__::board
+}  // namespace board
 
 using namespace __detail__::board::config;
 using __detail__::board::Board;
@@ -436,14 +434,14 @@ using AbsoluteScoreBoard = Board<EnableAbsoluteScore | EnableHashValue>;
 using GameBoard = Board<EnableLogging | EnableOwner | EnableHashValue>;
 using ScoreableCountBoard = Board<EnableScoreableCount>;
 
-}  // namespace dab
+}  // namespace dab::__detail__
 
 namespace std {
 
 using namespace dab::__detail__::board;
 
 template <int Config>
-  requires(HasFlag(Config, EnableHashValue))
+  requires(dab::HasFlag(Config, EnableHashValue))
 struct hash<BoardImpl<Config>> {
   constexpr uint64_t operator()(const BoardImpl<Config>& board) const { return board.Hash(); }
 };

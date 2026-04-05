@@ -54,12 +54,14 @@ constexpr auto SelectIntType() {
   }
 }
 
-}  // namespace __detail__
-
 using Int = decltype(__detail__::SelectIntType());
 static constexpr Int BoardSize = __BoardSize__;
 
+}  // namespace __detail__
+
 template <bool Bp, typename T>
 using Mixin = std::conditional_t<Bp, T, std::type_identity<T>>;
+
+static constexpr bool HasFlag(int config, int flag) { return (config & flag) != 0; }
 
 }  // namespace dab
