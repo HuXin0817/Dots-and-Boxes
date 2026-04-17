@@ -30,14 +30,15 @@ if(NOT DefaultBoardSize)
 endif()
 
 file(READ VERSION Version)
-message(STATUS "Version: ${Version}")
-message(STATUS "MaxBoardSize: ${MaxBoardSize}")
-message(STATUS "DefaultBoardSize: ${DefaultBoardSize}")
-message(STATUS "CPU Number: ${NUM_CPUS}")
 
 include(ProcessorCount)
 ProcessorCount(NUM_CPUS IGNORE_ERRORS)
 add_compile_definitions(NUM_CPUS=${NUM_CPUS} __Version__="${Version}")
+
+message(STATUS "Version: ${Version}")
+message(STATUS "MaxBoardSize: ${MaxBoardSize}")
+message(STATUS "DefaultBoardSize: ${DefaultBoardSize}")
+message(STATUS "CPU Number: ${NUM_CPUS}")
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 
