@@ -45,7 +45,7 @@ template <class... Args>
 void AssertHelper(const std::source_location& location, const std::string& expr, Args&&... details) {
   if constexpr (sizeof...(details) > 0) {
     std::ostringstream oss;
-    size_t index = 0;
+    std::size_t index = 0;
     ((oss << (index++ ? "," : "") << details), ...);
     LogError("ASSERT: '{}' in file {}, line {}. Detail: {}", expr, location.file_name(), location.line(), oss.str());
   } else {

@@ -32,8 +32,8 @@ THE SOFTWARE.
 
 using namespace dab;
 
-static constexpr int64_t DefaultBoardSize = __DefaultBoardSize__;
-static constexpr int64_t MaxBoardSize = __MaxBoardSize__;
+static constexpr std::int64_t DefaultBoardSize = __DefaultBoardSize__;
+static constexpr std::int64_t MaxBoardSize = __MaxBoardSize__;
 static_assert(DefaultBoardSize <= MaxBoardSize);
 
 QCommandLineOption CreateBoardSizeOption() {
@@ -84,7 +84,7 @@ PlayerType ParsePlayerType(const QString& arg) {
   if (arg.compare("robot", Qt::CaseInsensitive) == 0) {
     return DefaultPlayerType;
   }
-  for (const size_t i : std::views::iota(0ull, std::size(PlayerTypeOptionStrings))) {
+  for (const std::size_t i : std::views::iota(0ull, std::size(PlayerTypeOptionStrings))) {
     if (arg.compare(PlayerTypeOptionStrings[i], Qt::CaseInsensitive) == 0) {
       return static_cast<PlayerType>(i);
     }
@@ -95,7 +95,7 @@ PlayerType ParsePlayerType(const QString& arg) {
 
 int64_t ParseBoardSize(const QString& arg) {
   bool ok = false;
-  const int64_t boardSize = arg.toLongLong(&ok);
+  const std::int64_t boardSize = arg.toLongLong(&ok);
   if (!ok || boardSize < 1 || boardSize > MaxBoardSize) {
     LogError("Invalid board size '{}'. Must be between 1 and {}.", arg.toLocal8Bit().constData(), MaxBoardSize);
     exit(EXIT_FAILURE);
@@ -121,7 +121,7 @@ int main(int argc, char* argv[]) {
   parser.addOption(player2Option);
   parser.process(application);
 
-  const int64_t boardSize = ParseBoardSize(parser.value(boardSizeOption));
+  const std::int64_t boardSize = ParseBoardSize(parser.value(boardSizeOption));
   const PlayerType player1Type = ParsePlayerType(parser.value(player1Option));
   const PlayerType player2Type = ParsePlayerType(parser.value(player2Option));
 

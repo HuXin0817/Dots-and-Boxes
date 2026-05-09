@@ -76,7 +76,7 @@ struct BasicMixin {
 };
 
 struct EdgeCountMixin {
-  Array<uint8_t, Box::Max> Counter;
+  Array<std::uint8_t, Box::Max> Counter;
 };
 
 struct ScoreableCountMixin {
@@ -97,24 +97,27 @@ struct AbsoluteScoreMixin {
 
 struct LoggingMixin {
   std::chrono::system_clock::time_point LastUpdateTime;
-  int64_t Player1MovingTime = 0;
-  int64_t Player2MovingTime = 0;
+  std::int64_t Player1MovingTime = 0;
+  std::int64_t Player2MovingTime = 0;
 };
 
 struct HashValueMixin {
-  static Array<uint64_t, Edge::Max> HashMapper;
+  static Array<std::uint64_t, Edge::Max> HashMapper;
 
-  uint64_t HashValue;
+  std::uint64_t HashValue;
 };
 
-inline Array<uint64_t, Edge::Max> HashValueMixin::HashMapper = []() -> Array<uint64_t, Edge::Max> {
+inline Array<std::uint64_t, Edge::Max> HashValueMixin::HashMapper = []() -> Array<std::uint64_t, Edge::Max> {
   Random random;
-  Array<uint64_t, Edge::Max> result;
-  std::unordered_set<uint64_t> visited;
-  for (uint64_t& v : result) {
-    v = random.Range(static_cast<uint64_t>(1), std::numeric_limits<uint64_t>::max());
+  Array<std::uint64_t, Edge::Max> result;
+  std::unordered_set<std::uint64_t> visited;
+  auto randv = [&]() -> std::uint64_t {
+    return random.Range(static_cast<std::uint64_t>(1), std::numeric_limits<std::uint64_t>::max());
+  };
+  for (std::uint64_t& v : result) {
+    v = randv();
     while (visited.contains(v)) {
-      v = random.Range(static_cast<uint64_t>(1), std::numeric_limits<uint64_t>::max());
+      v = randv();
     }
     visited.insert(v);
   }
@@ -158,9 +161,9 @@ class BoardImpl : BasicMixin,
   constexpr bool Gaming() const { return Step < Edge::Max; }
   constexpr Int RemainStep() const { return Edge::Max - Step; }
   constexpr Int NowStep() const { return Step; }
-  constexpr uint64_t Hash() const { return this->HashValue; }
-  constexpr uint8_t EdgeCount(Box box) const { return this->Counter.At(box); }
-  constexpr uint8_t MaxEdgeCount(Edge edge) const;
+  constexpr std::uint64_t Hash() const { return this->HashValue; }
+  constexpr std::uint8_t EdgeCount(Box box) const { return this->Counter.At(box); }
+  constexpr std::uint8_t MaxEdgeCount(Edge edge) const;
   constexpr bool Scoreable(Edge edge) const { return MaxEdgeCount(edge) == 3; }
   constexpr Int RelativeScore() const { return this->Score; }
   constexpr Int GetTurn() const { return this->Turn; }
@@ -238,7 +241,7 @@ constexpr Int BoardImpl<Config>::Add(Edge edge) {
   Int score = 0;
   if constexpr (HasFlag(EnableEdgeCount)) {
     for (const Box box : edge.NearBoxes()) {
-      const uint8_t num = ++this->Counter.At(box);
+      const std::uint8_t num = ++this->Counter.At(box);
       Assert(num <= 4, K(num), K(this->Counter));
       if (num == 4) {
         ++score;
@@ -265,7 +268,8 @@ constexpr Int BoardImpl<Config>::Add(Edge edge) {
       if constexpr (HasFlag(EnableLogging)) {
         const Int step = NowStep();
         const auto now = std::chrono::system_clock::now();
-        const int64_t time = std::chrono::duration_cast<std::chrono::milliseconds>(now - this->LastUpdateTime).count();
+        const std::int64_t time =
+            std::chrono::duration_cast<std::chrono::milliseconds>(now - this->LastUpdateTime).count();
         if (turn == this->Player1Turn) {
           this->Player1MovingTime += time;
         } else {
@@ -334,7 +338,7 @@ constexpr Int BoardImpl<Config>::MaxObtainableScore(Int endScore) {
 }
 
 template <int Config>
-constexpr uint8_t BoardImpl<Config>::MaxEdgeCount(Edge edge) const {
+constexpr std::uint8_t BoardImpl<Config>::MaxEdgeCount(Edge edge) const {
   const List<Box, 2>& nearBoxes = edge.NearBoxes();
   return std::max(this->Counter.At(nearBoxes.Front()), this->Counter.At(nearBoxes.Back()));
 }
@@ -435,7 +439,7 @@ using namespace dab::__detail__::board;
 template <int Config>
   requires(dab::HasFlag(Config, EnableHashValue))
 struct hash<BoardImpl<Config>> {
-  constexpr uint64_t operator()(const BoardImpl<Config>& board) const { return board.Hash(); }
+  constexpr std::uint64_t operator()(const BoardImpl<Config>& board) const { return board.Hash(); }
 };
 
 }  // namespace std

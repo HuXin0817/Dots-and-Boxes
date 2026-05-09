@@ -42,7 +42,7 @@ class MonteCarloRobot {
     Array<int64_t, Edge::Max> Score;
   };
 
-  static constexpr uint64_t SearchTime = static_cast<uint64_t>(Edge::Max) << 8;
+  static constexpr std::uint64_t SearchTime = static_cast<std::uint64_t>(Edge::Max) << 8;
 
  public:
   MonteCarloRobot() = default;
@@ -100,7 +100,7 @@ void MonteCarloRobot::SearchCandidateEdges(const Board& board) {
   Random random;
   SearchResult.Reset();
   const Int turn = board.GetTurn();
-  for (uint64_t i = 0; i < SearchTime / board.RemainStep(); i++) {
+  for (std::uint64_t i = 0; i < SearchTime / board.RemainStep(); i++) {
     SimulationBoard = board;
     const Edge edge = random.Choice(SubRobot.BestCandidateEdges(SimulationBoard));
     SimulationBoard.Add(edge);

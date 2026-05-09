@@ -41,16 +41,16 @@ namespace dab {
 namespace __detail__ {
 
 constexpr auto SelectIntType() {
-  constexpr int64_t MaxValue = 2 * __BoardSize__ * (__BoardSize__ + 1);
+  constexpr std::int64_t MaxValue = 2 * __BoardSize__ * (__BoardSize__ + 1);
 
-  if constexpr (MaxValue <= std::numeric_limits<int8_t>::max()) {
-    return int8_t{};
-  } else if constexpr (MaxValue <= std::numeric_limits<int16_t>::max()) {
-    return int16_t{};
-  } else if constexpr (MaxValue <= std::numeric_limits<int32_t>::max()) {
-    return int32_t{};
+  if constexpr (MaxValue <= std::numeric_limits<std::int8_t>::max()) {
+    return std::int8_t{};
+  } else if constexpr (MaxValue <= std::numeric_limits<std::int16_t>::max()) {
+    return std::int16_t{};
+  } else if constexpr (MaxValue <= std::numeric_limits<std::int32_t>::max()) {
+    return std::int32_t{};
   } else {
-    return int64_t{};
+    return std::int64_t{};
   }
 }
 

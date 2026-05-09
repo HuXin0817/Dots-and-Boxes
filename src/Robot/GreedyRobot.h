@@ -54,7 +54,7 @@ Span<const Edge> GreedyRobot::BestCandidateEdges(const Board& board) {
 
   const Span<const Edge> emptyEdges = board.EmptyEdges();
   for (const Edge edge : emptyEdges) {
-    if (const uint8_t maxCount = board.MaxEdgeCount(edge); maxCount == 3) {
+    if (const std::uint8_t maxCount = board.MaxEdgeCount(edge); maxCount == 3) {
       Edges.At(ScoreableIndex++) = edge;
     } else if (maxCount < 2) {
       Edges.At(--EnemyUnscoreableIndex) = edge;
@@ -76,7 +76,7 @@ template <typename Board>
 Edge GreedyRobot::SearchOne(const Board& board) {
   Edge result = Edge::Invalid;
   for (const Edge edge : board.EmptyEdges()) {
-    if (const uint8_t maxCount = board.MaxEdgeCount(edge); maxCount == 3) {
+    if (const std::uint8_t maxCount = board.MaxEdgeCount(edge); maxCount == 3) {
       return edge;
     } else if (maxCount < 2) {
       result = edge;
