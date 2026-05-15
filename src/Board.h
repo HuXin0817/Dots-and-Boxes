@@ -34,7 +34,7 @@ THE SOFTWARE.
 #include "Iterable.h"
 #include "Model.h"
 
-namespace dab::detail {
+namespace dab::__detail__ {
 
 namespace board {
 
@@ -370,11 +370,11 @@ using AbsoluteScoreBoard = board::Board<board::EnableAbsoluteScore | board::Enab
 using GameBoard = board::Board<board::EnableAbsoluteScore | board::EnableOwner | board::EnableHashValue>;
 using ScoreableCountBoard = board::Board<board::EnableScoreableCount>;
 
-}  // namespace dab::detail
+}  // namespace dab::__detail__
 
 namespace std {
 
-using namespace dab::detail::board;
+using namespace dab::__detail__::board;
 
 template <int Config>
   requires(dab::HasFlag(Config, EnableHashValue))

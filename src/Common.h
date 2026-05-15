@@ -33,12 +33,12 @@ THE SOFTWARE.
 #else
 #define CAT(x, y) x##y
 #define JOIN(x, y) CAT(x, y)
-#define detail JOIN(JOIN(JOIN(detail, __BoardSize__), x), __BoardSize__)
+#define __detail__ JOIN(JOIN(JOIN(__detail__, __BoardSize__), x), __BoardSize__)
 #endif
 
 namespace dab {
 
-namespace detail {
+namespace __detail__ {
 
 constexpr auto SelectIntType() {
   constexpr std::int64_t MaxValue = 2 * __BoardSize__ * (__BoardSize__ + 1);
@@ -54,10 +54,10 @@ constexpr auto SelectIntType() {
   }
 }
 
-using Int = decltype(detail::SelectIntType());
+using Int = decltype(__detail__::SelectIntType());
 static constexpr Int BoardSize = __BoardSize__;
 
-}  // namespace detail
+}  // namespace __detail__
 
 template <bool Bp, typename T>
 using Mixin = std::conditional_t<Bp, T, std::type_identity<T>>;

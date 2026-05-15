@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 #include <QPainter>
 
-namespace dab::detail::frontend {
+namespace dab::__detail__::frontend {
 
 void DotCanvas::paintEvent(QPaintEvent* event) {
   QWidget::paintEvent(event);
@@ -48,4 +48,4 @@ QColor DotCanvas::Color() const {
   return ThemeColor(DarkThemeColor, LightThemeColor);
 }
 
-}  // namespace dab::detail::frontend
+}  // namespace dab::__detail__::frontend

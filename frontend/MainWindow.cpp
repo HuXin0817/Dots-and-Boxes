@@ -37,7 +37,7 @@ THE SOFTWARE.
 #include "DotCanvas.h"
 #include "EdgeCanvas.h"
 
-namespace dab::detail::frontend {
+namespace dab::__detail__::frontend {
 
 MainWindow::MainWindow(PlayerType player1Type, PlayerType player2Type, QWidget* parent)
     : BaseCanvas(parent), Player1Type(player1Type), Player2Type(player2Type) {
@@ -173,4 +173,4 @@ void MainWindow::HandleGameOver() {
   messagebox->exec();
 }
 
-}  // namespace dab::detail::frontend
+}  // namespace dab::__detail__::frontend

@@ -37,7 +37,7 @@ static constexpr auto Iota() {
   return std::views::iota(static_cast<decltype(T::Max)>(0), T::Max);
 }
 
-namespace detail {
+namespace __detail__ {
 
 namespace model {
 
@@ -178,6 +178,6 @@ using model::Box;
 using model::Dot;
 using model::Edge;
 
-}  // namespace detail
+}  // namespace __detail__
 
 }  // namespace dab

@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 #include "../Model.h"
 
-namespace dab::detail::robot {
+namespace dab::__detail__::robot {
 
 class GreedyRobot {
  public:
@@ -84,4 +84,4 @@ Edge GreedyRobot::SearchOne(const Board& board) {
   return result;
 }
 
-}  // namespace dab::detail::robot
+}  // namespace dab::__detail__::robot

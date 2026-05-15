@@ -27,7 +27,7 @@ THE SOFTWARE.
 #include "../Board.h"
 #include "ImproveGreedyRobot.h"
 
-namespace dab::detail::robot {
+namespace dab::__detail__::robot {
 
 class SimulationRobot {
  public:
@@ -70,4 +70,4 @@ Span<const Edge> SimulationRobot::BestCandidateEdges(const Board& board) {
   return SearchEdges;
 }
 
-}  // namespace dab::detail::robot
+}  // namespace dab::__detail__::robot

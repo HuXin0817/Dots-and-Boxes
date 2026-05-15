@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 #include <QPainter>
 
-namespace dab::detail::frontend {
+namespace dab::__detail__::frontend {
 
 void BoxCanvas::paintEvent(QPaintEvent* event) {
   QWidget::paintEvent(event);
@@ -54,4 +54,4 @@ QColor BoxCanvas::Color() const {
   return {};
 }
 
-}  // namespace dab::detail::frontend
+}  // namespace dab::__detail__::frontend

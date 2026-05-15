@@ -31,7 +31,7 @@ THE SOFTWARE.
 
 #include "../src/Board.h"
 
-namespace dab::detail::frontend {
+namespace dab::__detail__::frontend {
 
 QColor BaseCanvas::ThemeColor(const QColor& DarkThemeColor, const QColor& LightThemeColor) {
   switch (QApplication::styleHints()->colorScheme()) {
@@ -70,4 +70,4 @@ void BaseCanvas::leaveEvent(QEvent* event) {
   update();
 }
 
-}  // namespace dab::detail::frontend
+}  // namespace dab::__detail__::frontend

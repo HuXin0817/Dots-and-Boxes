@@ -33,7 +33,7 @@ THE SOFTWARE.
 
 namespace dab {
 
-namespace detail {
+namespace __detail__ {
 
 namespace iterable {
 
@@ -239,7 +239,7 @@ using Span = iterable::Iterable<iterable::EnableSpan | iterable::EnableEndPointe
 template <typename T>
 using Vector = iterable::Iterable<iterable::EnableAllocSize, T>;
 
-}  // namespace detail
+}  // namespace __detail__
 
 class Random {
  public:

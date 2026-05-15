@@ -28,7 +28,7 @@ THE SOFTWARE.
 
 #include "MonteCarloRobot.h"
 
-namespace dab::detail::robot {
+namespace dab::__detail__::robot {
 
 class ParallelSearchRobot {
   static constexpr int WorkersNumber = std::min<int>(NUM_CPUS, Edge::Max);
@@ -57,4 +57,4 @@ Span<const Edge> ParallelSearchRobot::BestCandidateEdges(const Board& board) {
   return front.GetSearchResult().Export(front.GetSearchEdges());
 }
 
-}  // namespace dab::detail::robot
+}  // namespace dab::__detail__::robot
