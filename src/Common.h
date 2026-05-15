@@ -4,13 +4,9 @@
 #include <limits>
 #include <type_traits>
 
-#ifndef __BoardSize__
-#error "MACRO '__BoardSize__' UNDEFINED"
-#else
 #define CAT(x, y) x##y
 #define JOIN(x, y) CAT(x, y)
 #define __detail__ JOIN(JOIN(JOIN(__detail__, __BoardSize__), x), __BoardSize__)
-#endif
 
 namespace dab {
 
