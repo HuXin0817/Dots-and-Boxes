@@ -30,11 +30,10 @@ THE SOFTWARE.
 #include <random>
 
 #include "Common.h"
-#include "Logging.h"
 
 namespace dab {
 
-namespace __detail__ {
+namespace detail {
 
 namespace iterable {
 
@@ -212,7 +211,7 @@ template <int Config, typename T, Int ArraySize>
 constexpr Int Iterable<Config, T, ArraySize>::EndIndex() const {
   if constexpr (HasFlag(EnableEndPointer)) {
     if constexpr (!HasFlag(EnableSpan)) {
-      Assert(this->EndPos <= Cap(), K(this->EndPos), K(Cap()));
+      assert(this->EndPos <= Cap());
     }
     return this->EndPos;
   } else {
@@ -222,7 +221,7 @@ constexpr Int Iterable<Config, T, ArraySize>::EndIndex() const {
 
 template <int Config, typename T, Int ArraySize>
 constexpr Int Iterable<Config, T, ArraySize>::CheckIndex(Int i) const {
-  Assert(i >= 0 && i < Size(), K(i), K(Size()));
+  assert(i >= 0 && i < Size());
   return i;
 }
 
@@ -240,7 +239,7 @@ using Span = iterable::Iterable<iterable::EnableSpan | iterable::EnableEndPointe
 template <typename T>
 using Vector = iterable::Iterable<iterable::EnableAllocSize, T>;
 
-}  // namespace __detail__
+}  // namespace detail
 
 class Random {
  public:
@@ -265,7 +264,7 @@ T Random::Range(T min, T max) {
 
 template <typename Iterable>
 const auto& Random::Choice(const Iterable& data) {
-  Assert(!data.Empty());
+  assert(!data.Empty());
   if (data.Size() == 1) {
     return data.At(0);
   }

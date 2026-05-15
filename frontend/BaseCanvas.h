@@ -29,7 +29,7 @@ THE SOFTWARE.
 
 #include "../src/Board.h"
 
-namespace dab::__detail__::frontend {
+namespace dab::detail::frontend {
 
 class BaseCanvas : public QWidget {
   Q_OBJECT
@@ -52,4 +52,4 @@ class BaseCanvas : public QWidget {
   bool HoverState = false;
 };
 
-}  // namespace dab::__detail__::frontend
+}  // namespace dab::detail::frontend

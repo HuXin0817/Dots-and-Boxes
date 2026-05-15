@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 #include "../Model.h"
 
-namespace dab::__detail__::robot {
+namespace dab::detail::robot {
 
 class GreedyRobot {
  public:
@@ -60,8 +60,7 @@ Span<const Edge> GreedyRobot::BestCandidateEdges(const Board& board) {
       Edges.At(--EnemyUnscoreableIndex) = edge;
     }
   }
-  Assert(ScoreableIndex <= EnemyUnscoreableIndex, K(ScoreableIndex), K(EnemyUnscoreableIndex));
-
+  assert(ScoreableIndex <= EnemyUnscoreableIndex);
   if (Scoreable()) {
     return {Edges.begin(), ScoreableIndex};
   }
@@ -85,4 +84,4 @@ Edge GreedyRobot::SearchOne(const Board& board) {
   return result;
 }
 
-}  // namespace dab::__detail__::robot
+}  // namespace dab::detail::robot

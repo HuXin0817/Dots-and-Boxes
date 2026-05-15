@@ -31,7 +31,7 @@ THE SOFTWARE.
 #include "DotCanvas.h"
 #include "EdgeCanvas.h"
 
-namespace dab::__detail__::frontend {
+namespace dab::detail::frontend {
 
 class MainWindow : public BaseCanvas {
   Q_OBJECT
@@ -69,4 +69,4 @@ class MainWindow : public BaseCanvas {
   void HandleGameOver();
 };
 
-}  // namespace dab::__detail__::frontend
+}  // namespace dab::detail::frontend

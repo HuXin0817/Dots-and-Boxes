@@ -25,10 +25,10 @@ THE SOFTWARE.
 #include <QApplication>
 #include <QCommandLineParser>
 #include <cstdlib>
+#include <print>
 #include <ranges>
 
 #include "frontend/Frontend.h"
-#include "src/Logging.h"
 
 using namespace dab;
 
@@ -89,7 +89,7 @@ PlayerType ParsePlayerType(const QString& arg) {
       return static_cast<PlayerType>(i);
     }
   }
-  LogError("Invalid player type '{}'.", arg.toLocal8Bit().constData());
+  std::println(stderr, "Invalid player type '{}'.", arg.toLocal8Bit().constData());
   exit(EXIT_FAILURE);
 }
 
@@ -97,7 +97,8 @@ int64_t ParseBoardSize(const QString& arg) {
   bool ok = false;
   const std::int64_t boardSize = arg.toLongLong(&ok);
   if (!ok || boardSize < 1 || boardSize > MaxBoardSize) {
-    LogError("Invalid board size '{}'. Must be between 1 and {}.", arg.toLocal8Bit().constData(), MaxBoardSize);
+    std::println(
+        stderr, "Invalid board size '{}'. Must be between 1 and {}.", arg.toLocal8Bit().constData(), MaxBoardSize);
     exit(EXIT_FAILURE);
   }
   return boardSize;
@@ -129,7 +130,7 @@ int main(int argc, char* argv[]) {
   mainWindow->show();
   const int code = application.exec();
   if (code != 0) {
-    LogError("Exit code {}.", code);
+    std::println(stderr, "Exit code {}.", code);
   }
   return code;
 }

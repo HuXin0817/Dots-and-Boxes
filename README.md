@@ -22,8 +22,6 @@ A sophisticated implementation of the classic Dots and Boxes game with multiple 
 - Qt6 (Core, Gui, Widgets)
 - CMake 3.16 or higher
 - Intel TBB (Threading Building Blocks) for parallel processing
-- nlohmann_json for JSON parsing
-- spdlog for logging
 
 ## Build Instructions
 

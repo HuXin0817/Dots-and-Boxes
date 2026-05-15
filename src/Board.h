@@ -28,23 +28,20 @@ THE SOFTWARE.
 #include <chrono>
 #include <cstdint>
 #include <functional>
-#include <nlohmann/json.hpp>
 #include <numeric>
 #include <unordered_set>
 
 #include "Iterable.h"
-#include "Logging.h"
 #include "Model.h"
 
-namespace dab::__detail__ {
+namespace dab::detail {
 
 namespace board {
 
 static constexpr int EnableEdgeCount = 1 << 0;
 static constexpr int EnableRelativeScore = 1 << 1;
 static constexpr int EnableAbsoluteScore = 1 << 2;
-static constexpr int EnableLogging = 1 << 3;
-static constexpr int EnableScoreableCount = 1 << 4;
+static constexpr int EnableScoreableCount = 1 << 3;
 static constexpr int EnableHashValue = 1 << 5;
 static constexpr int EnableOwner = 1 << 6;
 static constexpr int MaxFlag = 1 << 7;
@@ -56,9 +53,6 @@ static constexpr int FixedConfig(int config) {
   }
   if (HasFlag(config, EnableAbsoluteScore)) {
     fixedConfig |= EnableEdgeCount | EnableRelativeScore;
-  }
-  if (HasFlag(config, EnableLogging)) {
-    fixedConfig |= EnableEdgeCount | EnableRelativeScore | EnableAbsoluteScore;
   }
   if (HasFlag(config, EnableScoreableCount)) {
     fixedConfig |= EnableEdgeCount;
@@ -93,12 +87,6 @@ struct RelativeScoreMixin {
 
 struct AbsoluteScoreMixin {
   Int TotalScore;
-};
-
-struct LoggingMixin {
-  std::chrono::system_clock::time_point LastUpdateTime;
-  std::int64_t Player1MovingTime = 0;
-  std::int64_t Player2MovingTime = 0;
 };
 
 struct HashValueMixin {
@@ -141,7 +129,6 @@ class BoardImpl : BasicMixin,
                   Mixin<HasFlag(Config, EnableScoreableCount), ScoreableCountMixin>,
                   Mixin<HasFlag(Config, EnableRelativeScore), RelativeScoreMixin>,
                   Mixin<HasFlag(Config, EnableAbsoluteScore), AbsoluteScoreMixin>,
-                  Mixin<HasFlag(Config, EnableLogging), LoggingMixin>,
                   Mixin<HasFlag(Config, EnableHashValue), HashValueMixin>,
                   Mixin<HasFlag(Config, EnableOwner), OwnerMixin> {
   template <int>
@@ -185,7 +172,6 @@ class BoardImpl : BasicMixin,
   constexpr BoardImpl& operator=(const Other& other);
   template <typename Other>
   constexpr bool operator==(const Other& other) const;
-  constexpr operator nlohmann::ordered_json() const;
 };
 
 template <int Config>
@@ -206,11 +192,6 @@ constexpr void BoardImpl<Config>::Reset() {
   if constexpr (HasFlag(EnableAbsoluteScore)) {
     this->TotalScore = 0;
   }
-  if constexpr (HasFlag(EnableLogging)) {
-    this->LastUpdateTime = std::chrono::system_clock::now();
-    this->Player1MovingTime = 0;
-    this->Player2MovingTime = 0;
-  }
   if constexpr (HasFlag(EnableHashValue)) {
     this->HashValue = 0;
   }
@@ -222,11 +203,11 @@ constexpr void BoardImpl<Config>::Reset() {
 
 template <int Config>
 constexpr Int BoardImpl<Config>::Add(Edge edge) {
-  Assert(NotContains(edge), K(MoveRecord()), K(edge));
+  assert(NotContains(edge));
   const Edge nowEdge = Edges.At(Step);
   const Int edgeIndex = EdgeIndexes.At(edge);
-  Assert(Edges.At(edgeIndex) == edge, K(Edges), K(edgeIndex), K(edge));
-  Assert(edgeIndex >= Step, K(edgeIndex), K(Step));
+  assert(Edges.At(edgeIndex) == edge);
+  assert(edgeIndex >= Step);
   Edges.At(Step) = edge;
   Edges.At(edgeIndex) = nowEdge;
   EdgeIndexes.At(edge) = Step;
@@ -242,7 +223,7 @@ constexpr Int BoardImpl<Config>::Add(Edge edge) {
   if constexpr (HasFlag(EnableEdgeCount)) {
     for (const Box box : edge.NearBoxes()) {
       const std::uint8_t num = ++this->Counter.At(box);
-      Assert(num <= 4, K(num), K(this->Counter));
+      assert(num <= 4);
       if (num == 4) {
         ++score;
         if constexpr (HasFlag(EnableOwner)) {
@@ -265,34 +246,6 @@ constexpr Int BoardImpl<Config>::Add(Edge edge) {
       if constexpr (HasFlag(EnableAbsoluteScore)) {
         this->TotalScore += score;
       }
-      if constexpr (HasFlag(EnableLogging)) {
-        const Int step = NowStep();
-        const auto now = std::chrono::system_clock::now();
-        const std::int64_t time =
-            std::chrono::duration_cast<std::chrono::milliseconds>(now - this->LastUpdateTime).count();
-        if (turn == this->Player1Turn) {
-          this->Player1MovingTime += time;
-        } else {
-          this->Player2MovingTime += time;
-        }
-        LogInfo({
-            {"Step", step},
-            {"Turn", turn == this->Player1Turn ? 1 : 2},
-            {"Move", static_cast<Int>(edge)},
-            {"Score", {{"Player1", Player1Score()}, {"Player2", Player2Score()}}},
-            {"Time", static_cast<double>(time) / 1000.0},
-        });
-        if (!Gaming()) {
-          if (RelativeScore() > 0) {
-            LogInfo({{"Winner", "Player1"}, {"Score", {{"Player1", Player1Score()}, {"Player2", Player2Score()}}}});
-          } else if (RelativeScore() < 0) {
-            LogInfo({{"Winner", "Player2"}, {"Score", {{"Player1", Player1Score()}, {"Player2", Player2Score()}}}});
-          } else {
-            LogInfo({{"Winner", "Draw"}});
-          }
-        }
-        this->LastUpdateTime = now;
-      }
     }
   }
   return score;
@@ -300,7 +253,7 @@ constexpr Int BoardImpl<Config>::Add(Edge edge) {
 
 template <int Config>
 constexpr Edge BoardImpl<Config>::FindNotContainsEdgeInBox(Box box) const {
-  Assert(this->Counter.At(box) == 3, K(box), K(this->Counter), K(this->Counter.At(box)));
+  assert(this->Counter.At(box) == 3);
   for (const Edge edge : box.NearEdges()) {
     if (NotContains(edge)) {
       return edge;
@@ -324,14 +277,14 @@ constexpr Int BoardImpl<Config>::MaxObtainableScore(Int endScore) {
   Int score = 0;
   while (Gaming() && score < endScore) {
     if (this->ScoreableEdges.Empty()) {
-      Assert(FindScoreableEdge() == 0, K(FindScoreableEdge()));
+      assert(FindScoreableEdge() == 0);
       break;
     }
     const Edge edge = this->ScoreableEdges.Pop();
     if (Contains(edge)) {
       continue;
     }
-    Assert(Scoreable(edge), K(edge), K(MaxEdgeCount(edge)));
+    assert(Scoreable(edge));
     score += Add(edge);
   }
   return score;
@@ -370,12 +323,6 @@ constexpr BoardImpl<Config>& BoardImpl<Config>::operator=(const Other& other) {
     static_assert(Other::HasFlag(EnableAbsoluteScore));
     this->TotalScore = other.TotalScore;
   }
-  if constexpr (HasFlag(EnableLogging)) {
-    static_assert(Other::HasFlag(EnableLogging));
-    this->LastUpdateTime = other.LastUpdateTime;
-    this->Player1MovingTime = other.Player1MovingTime;
-    this->Player2MovingTime = other.Player2MovingTime;
-  }
   if constexpr (HasFlag(EnableHashValue)) {
     static_assert(Other::HasFlag(EnableHashValue));
     this->HashValue = other.HashValue;
@@ -407,13 +354,6 @@ constexpr bool BoardImpl<Config>::operator==(const Other& other) const {
   return true;
 }
 
-template <int Config>
-constexpr BoardImpl<Config>::operator nlohmann::ordered_json() const {
-  List<Edge, Edge::Max> moveRecord(MoveRecord());
-  std::ranges::sort(moveRecord);
-  return moveRecord;
-}
-
 static_assert(sizeof(BoardImpl<0>) == sizeof(BasicMixin));
 
 template <int Config>
@@ -427,14 +367,14 @@ using HashValueBoard = board::Board<board::EnableHashValue>;
 using EdgeCountBoard = board::Board<board::EnableEdgeCount | board::EnableHashValue>;
 using RelativeScoreBoard = board::Board<board::EnableRelativeScore | board::EnableHashValue>;
 using AbsoluteScoreBoard = board::Board<board::EnableAbsoluteScore | board::EnableHashValue>;
-using GameBoard = board::Board<board::EnableLogging | board::EnableOwner | board::EnableHashValue>;
+using GameBoard = board::Board<board::EnableAbsoluteScore | board::EnableOwner | board::EnableHashValue>;
 using ScoreableCountBoard = board::Board<board::EnableScoreableCount>;
 
-}  // namespace dab::__detail__
+}  // namespace dab::detail
 
 namespace std {
 
-using namespace dab::__detail__::board;
+using namespace dab::detail::board;
 
 template <int Config>
   requires(dab::HasFlag(Config, EnableHashValue))

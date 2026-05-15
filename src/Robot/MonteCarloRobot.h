@@ -27,7 +27,7 @@ THE SOFTWARE.
 #include "CachedRobot.h"
 #include "SimulationRobot.h"
 
-namespace dab::__detail__::robot {
+namespace dab::detail::robot {
 
 class MonteCarloRobot {
   struct ScoreMap {
@@ -126,4 +126,4 @@ bool MonteCarloRobot::CanEarlyExit(const Board& board, Span<const Edge>& result)
   return result.Size() == 1;
 }
 
-}  // namespace dab::__detail__::robot
+}  // namespace dab::detail::robot

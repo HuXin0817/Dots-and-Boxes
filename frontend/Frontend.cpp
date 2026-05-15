@@ -29,16 +29,11 @@ THE SOFTWARE.
 
 namespace dab {
 
-using namespace __detail__;
+using namespace detail;
 
 template <>
 QWidget* CreateMainWindowImpl<BoardSize>(PlayerType player1Type, PlayerType player2Type) {
-  LogInfo({
-      {"BoardSize", BoardSize},
-      {"Player1Type", PlayerTypeOptionStrings[static_cast<int>(player1Type)]},
-      {"Player2Type", PlayerTypeOptionStrings[static_cast<int>(player2Type)]},
-  });
-  return new __detail__::frontend::MainWindow(player1Type, player2Type);
+  return new detail::frontend::MainWindow(player1Type, player2Type);
 }
 
 }  // namespace dab

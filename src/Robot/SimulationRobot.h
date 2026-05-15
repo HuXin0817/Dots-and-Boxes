@@ -27,7 +27,7 @@ THE SOFTWARE.
 #include "../Board.h"
 #include "ImproveGreedyRobot.h"
 
-namespace dab::__detail__::robot {
+namespace dab::detail::robot {
 
 class SimulationRobot {
  public:
@@ -56,7 +56,7 @@ Span<const Edge> SimulationRobot::BestCandidateEdges(const Board& board) {
     SimulationBoard.Add(emptyEdge);
     while (SimulationBoard.Gaming()) {
       const Edge edge = SubRobot.SearchOne(SimulationBoard);
-      Assert(board.MaxEdgeCount(edge) > 1, K(edge), K(board.MaxEdgeCount(edge)));
+      assert(board.MaxEdgeCount(edge) > 1);
       SimulationBoard.Add(edge);
     }
     if (const Int score = turn * SimulationBoard.RelativeScore(); score > maxScore) {
@@ -70,4 +70,4 @@ Span<const Edge> SimulationRobot::BestCandidateEdges(const Board& board) {
   return SearchEdges;
 }
 
-}  // namespace dab::__detail__::robot
+}  // namespace dab::detail::robot

@@ -24,12 +24,11 @@ THE SOFTWARE.
 
 #pragma once
 
-#include <nlohmann/json.hpp>
+#include <cassert>
 #include <ranges>
 
 #include "Common.h"
 #include "Iterable.h"
-#include "Logging.h"
 
 namespace dab {
 
@@ -38,7 +37,7 @@ static constexpr auto Iota() {
   return std::views::iota(static_cast<decltype(T::Max)>(0), T::Max);
 }
 
-namespace __detail__ {
+namespace detail {
 
 namespace model {
 
@@ -47,7 +46,6 @@ class IntWrapper {
   constexpr IntWrapper() = default;
   constexpr IntWrapper(Int v) : v(v) {}
   constexpr operator Int() const { return v; }
-  constexpr operator nlohmann::ordered_json() const { return v; }
 
  protected:
   Int v = 0;
@@ -59,7 +57,7 @@ class Square : public IntWrapper {
   static constexpr Int Max = Length * Length;
 
   using IntWrapper::IntWrapper;
-  constexpr Square(Int x, Int y) : IntWrapper(x * Length + y) { Assert(x < Max && y < Max, K(x), K(y)); }
+  constexpr Square(Int x, Int y) : IntWrapper(x * Length + y) { assert(x < Max && y < Max); }
   constexpr Int X() const { return v / Length; }
   constexpr Int Y() const { return v % Length; }
 };
@@ -94,13 +92,13 @@ class Edge : public IntWrapper {
 };
 
 constexpr Edge::Edge(Dot dot1, Dot dot2) {
-  Assert(dot1 < dot2, K(dot1), K(dot2));
+  assert(dot1 < dot2);
   if (dot2 - dot1 == 1) {
     v = 2 * (dot1 - dot1 / (BoardSize + 1)) + 1;
   } else {
     v = 2 * dot1;
   }
-  Assert(Dot1() == dot1 && Dot2() == dot2, K(Dot1()), K(dot1), K(Dot2()), K(dot2));
+  assert(Dot1() == dot1 && Dot2() == dot2);
 }
 
 constexpr Dot Edge::Dot1() const {
@@ -180,6 +178,6 @@ using model::Box;
 using model::Dot;
 using model::Edge;
 
-}  // namespace __detail__
+}  // namespace detail
 
 }  // namespace dab

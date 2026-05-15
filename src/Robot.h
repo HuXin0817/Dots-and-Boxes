@@ -32,7 +32,7 @@ THE SOFTWARE.
 #include "Robot/ParallelSearchRobot.h"
 #include "Robot/SimulationRobot.h"
 
-namespace dab::__detail__ {
+namespace dab::detail {
 
 namespace robot {
 
@@ -77,4 +77,4 @@ inline std::unique_ptr<Robot> Robot::Create(PlayerType playerType) {
 
 using robot::Robot;
 
-}  // namespace dab::__detail__
+}  // namespace dab::detail

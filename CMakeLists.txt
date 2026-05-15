@@ -42,7 +42,7 @@ message(STATUS "CPU Number: ${NUM_CPUS}")
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 
-add_subdirectory(deps)
+add_subdirectory(deps/tbb)
 include_directories("${CMAKE_SOURCE_DIR}/deps/lru")
 
 set(ExternLibraries)
@@ -57,10 +57,8 @@ target_compile_definitions("${PROJECT_NAME}" PRIVATE
   __DefaultBoardSize__=${DefaultBoardSize}
 )
 target_link_libraries(${PROJECT_NAME} PRIVATE
-  nlohmann_json::nlohmann_json
   Qt6::Core
   Qt6::Gui
   Qt6::Widgets
-  spdlog::spdlog
   ${ExternLibraries}
 )

@@ -28,7 +28,7 @@ THE SOFTWARE.
 
 #include "../Board.h"
 
-namespace dab::__detail__::robot {
+namespace dab::detail::robot {
 
 template <typename SubRobotType>
 class CachedRobot : public SubRobotType {
@@ -54,9 +54,9 @@ Span<const Edge> CachedRobot<SubRobotType>::BestCandidateEdges(const Board& boar
   }
 
   const Span result = SubRobotType::BestCandidateEdges(board);
-  Assert(!result.Empty(), K(result));
+  assert(!result.Empty());
   Cache.insert(Key, result);
   return result;
 }
 
-}  // namespace dab::__detail__::robot
+}  // namespace dab::detail::robot
