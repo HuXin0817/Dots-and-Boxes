@@ -27,20 +27,20 @@ static constexpr Int Player2Turn = -Player1Turn;
 static constexpr bool HasFlag(int config, int flag) { return (config & flag) != 0; }
 
 static constexpr int FixedConfig(int config) {
-  int fixedConfig = config % MaxFlag;
+  config %= MaxFlag;
   if (HasFlag(config, EnableRelativeScore)) {
-    fixedConfig |= EnableEdgeCount;
+    config |= EnableEdgeCount;
   }
   if (HasFlag(config, EnableAbsoluteScore)) {
-    fixedConfig |= EnableEdgeCount | EnableRelativeScore;
+    config |= EnableEdgeCount | EnableRelativeScore;
   }
   if (HasFlag(config, EnableScoreableCount)) {
-    fixedConfig |= EnableEdgeCount;
+    config |= EnableEdgeCount;
   }
   if (HasFlag(config, EnableOwner)) {
-    fixedConfig |= EnableEdgeCount | EnableRelativeScore;
+    config |= EnableEdgeCount | EnableRelativeScore;
   }
-  return fixedConfig;
+  return config;
 }
 
 template <bool Bp, typename T>
@@ -233,12 +233,7 @@ constexpr Int BoardImpl<Config>::Add(Edge edge) {
 template <int Config>
 constexpr Edge BoardImpl<Config>::FindNotContainsEdgeInBox(Box box) const {
   assert(this->Counter.At(box) == 3);
-  for (const Edge edge : box.NearEdges()) {
-    if (NotContains(edge)) {
-      return edge;
-    }
-  }
-  std::unreachable();
+  return *std::ranges::find_if(box.NearEdges(), [&](Edge edge) -> bool { return NotContains(edge); });
 }
 
 template <int Config>
@@ -325,12 +320,7 @@ constexpr bool BoardImpl<Config>::operator==(const Other& other) const {
   if (Step != other.Step) {
     return false;
   }
-  for (const Edge edge : EmptyEdges()) {
-    if (other.Contains(edge)) {
-      return false;
-    }
-  }
-  return true;
+  return std::ranges::all_of(EmptyEdges(), [&](Edge edge) { return !other.Contains(edge); });
 }
 
 static_assert(sizeof(BoardImpl<0>) == sizeof(BasicMixin));
