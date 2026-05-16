@@ -21,6 +21,9 @@ static constexpr int EnableHashValue = 1 << 5;
 static constexpr int EnableOwner = 1 << 6;
 static constexpr int MaxFlag = 1 << 7;
 
+static constexpr Int Player1Turn = 1;
+static constexpr Int Player2Turn = -Player1Turn;
+
 static constexpr bool HasFlag(int config, int flag) { return (config & flag) != 0; }
 
 static constexpr int FixedConfig(int config) {
@@ -58,9 +61,6 @@ struct ScoreableCountMixin {
 };
 
 struct RelativeScoreMixin {
-  static constexpr Int Player1Turn = 1;
-  static constexpr Int Player2Turn = -Player1Turn;
-
   Int Score = 0;
   Int Turn = Player1Turn;
 };
@@ -134,8 +134,8 @@ class BoardImpl : BasicMixin,
   constexpr bool Scoreable(Edge edge) const { return MaxEdgeCount(edge) == 3; }
   constexpr Int RelativeScore() const { return this->Score; }
   constexpr Int GetTurn() const { return this->Turn; }
-  constexpr bool IsPlayer1Turn() const { return this->Turn == this->Player1Turn; }
-  constexpr bool IsPlayer2Turn() const { return this->Turn == this->Player2Turn; }
+  constexpr bool IsPlayer1Turn() const { return this->Turn == Player1Turn; }
+  constexpr bool IsPlayer2Turn() const { return this->Turn == Player2Turn; }
   constexpr Int Player1Score() const { return (this->TotalScore + this->Score) / 2; }
   constexpr Int Player2Score() const { return (this->TotalScore - this->Score) / 2; }
   constexpr double Player1MovingTimeSecond() const { return this->Player1MovingTime / 1000.0; }
@@ -167,7 +167,7 @@ constexpr void BoardImpl<Config>::Reset() {
   }
   if constexpr (HasFlag(EnableRelativeScore)) {
     this->Score = 0;
-    this->Turn = this->Player1Turn;
+    this->Turn = Player1Turn;
   }
   if constexpr (HasFlag(EnableAbsoluteScore)) {
     this->TotalScore = 0;

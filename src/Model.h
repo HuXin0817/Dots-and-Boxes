@@ -96,30 +96,30 @@ constexpr Dot Edge::Dot2() const {
 }
 
 constexpr Array<Edge, 4> Box::GetNearEdges() const {
-  List<Edge, 4> NearEdges;
+  List<Edge, 4> nearEdges;
   const Int x = X();
   const Int y = Y();
   const Dot topLeft(x, y);
   const Dot topRight(x + 1, y);
   const Dot bottomLeft(x, y + 1);
   const Dot bottomRight(x + 1, y + 1);
-  NearEdges.Append({topLeft, topRight});
-  NearEdges.Append({topLeft, bottomLeft});
-  NearEdges.Append({bottomLeft, bottomRight});
-  NearEdges.Append({topRight, bottomRight});
-  std::ranges::sort(NearEdges);
-  return NearEdges;
+  nearEdges.Append({topLeft, topRight});
+  nearEdges.Append({topLeft, bottomLeft});
+  nearEdges.Append({bottomLeft, bottomRight});
+  nearEdges.Append({topRight, bottomRight});
+  std::ranges::sort(nearEdges);
+  return nearEdges;
 }
 
 constexpr const Array<Edge, 4>& Box::NearEdges() const {
-  static constexpr Array<Array<Edge, 4>, Max> Instance = []() -> Array<Array<Edge, 4>, Max> {
-    Array<Array<Edge, 4>, Max> Mapper;
+  static constexpr Array<Array<Edge, 4>, Max> mapper = []() -> Array<Array<Edge, 4>, Max> {
+    Array<Array<Edge, 4>, Max> mapper;
     for (const Box box : Iota<Box>()) {
-      Mapper.At(box) = box.GetNearEdges();
+      mapper.At(box) = box.GetNearEdges();
     }
-    return Mapper;
+    return mapper;
   }();
-  return Instance.At(v);
+  return mapper.At(v);
 }
 
 constexpr List<Box, 2> Edge::GetNearBoxes() const {
@@ -138,14 +138,14 @@ constexpr List<Box, 2> Edge::GetNearBoxes() const {
 }
 
 constexpr const List<Box, 2>& Edge::NearBoxes() const {
-  static constexpr Array<List<Box, 2>, Max> Instance = []() -> Array<List<Box, 2>, Max> {
-    Array<List<Box, 2>, Max> Mapper;
+  static constexpr Array<List<Box, 2>, Max> mapper = []() -> Array<List<Box, 2>, Max> {
+    Array<List<Box, 2>, Max> mapper;
     for (const Edge edge : Iota<Edge>()) {
-      Mapper.At(edge) = edge.GetNearBoxes();
+      mapper.At(edge) = edge.GetNearBoxes();
     }
-    return Mapper;
+    return mapper;
   }();
-  return Instance.At(v);
+  return mapper.At(v);
 }
 
 }  // namespace model
