@@ -112,14 +112,14 @@ constexpr Array<Edge, 4> Box::GetNearEdges() const {
 }
 
 constexpr const Array<Edge, 4>& Box::NearEdges() const {
-  static constexpr Array<Array<Edge, 4>, Max> mapper = []() -> Array<Array<Edge, 4>, Max> {
+  static constexpr Array<Array<Edge, 4>, Max> Mapper = []() -> Array<Array<Edge, 4>, Max> {
     Array<Array<Edge, 4>, Max> mapper;
     for (const Box box : Iota<Box>()) {
       mapper.At(box) = box.GetNearEdges();
     }
     return mapper;
   }();
-  return mapper.At(Value);
+  return Mapper.At(Value);
 }
 
 constexpr List<Box, 2> Edge::GetNearBoxes() const {
@@ -138,14 +138,14 @@ constexpr List<Box, 2> Edge::GetNearBoxes() const {
 }
 
 constexpr const List<Box, 2>& Edge::NearBoxes() const {
-  static constexpr Array<List<Box, 2>, Max> mapper = []() -> Array<List<Box, 2>, Max> {
+  static constexpr Array<List<Box, 2>, Max> Mapper = []() -> Array<List<Box, 2>, Max> {
     Array<List<Box, 2>, Max> mapper;
     for (const Edge edge : Iota<Edge>()) {
       mapper.At(edge) = edge.GetNearBoxes();
     }
     return mapper;
   }();
-  return mapper.At(Value);
+  return Mapper.At(Value);
 }
 
 }  // namespace model

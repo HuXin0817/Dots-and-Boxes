@@ -325,7 +325,7 @@ constexpr bool BoardImpl<Config>::operator==(const Other& other) const {
   if (Step != other.Step) {
     return false;
   }
-  for (const Edge& edge : EmptyEdges()) {
+  for (const Edge edge : EmptyEdges()) {
     if (other.Contains(edge)) {
       return false;
     }

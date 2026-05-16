@@ -22,7 +22,7 @@ static constexpr int EnableEndPointer = 1 << 5;
 static constexpr bool HasFlag(int config, int flag) { return (config & flag) != 0; }
 
 static constexpr bool CheckConfig(int config, Int arraySize) {
-  int ans = true;
+  bool ans = true;
   if (arraySize > 0) {
     ans &= HasFlag(config, EnableArray);
   } else {

@@ -10,15 +10,24 @@
 namespace dab::__detail__::frontend {
 
 QColor BaseCanvas::ThemeColor(const QColor& DarkThemeColor, const QColor& LightThemeColor) {
+  QColor color = LightThemeColor;
   switch (QApplication::styleHints()->colorScheme()) {
-    case Qt::ColorScheme::Light:
-      return LightThemeColor;
-    case Qt::ColorScheme::Dark:
-      return DarkThemeColor;
-    case Qt::ColorScheme::Unknown:
+    case Qt::ColorScheme::Unknown: {
       break;
+    }
+    case Qt::ColorScheme::Light: {
+      color = LightThemeColor;
+      break;
+    }
+    case Qt::ColorScheme::Dark: {
+      color = DarkThemeColor;
+      break;
+    }
+    default: {
+      break;
+    }
   }
-  return {};
+  return color;
 }
 
 const GameBoard& BaseCanvas::GetBoard() const {
@@ -26,8 +35,8 @@ const GameBoard& BaseCanvas::GetBoard() const {
   Q_ASSERT(mainWindow != nullptr);
   const QVariant value = mainWindow->property("Board");
   Q_ASSERT(value.isValid());
-  bool ok;
-  const qulonglong num = value.toULongLong(&ok);
+  bool ok = false;
+  const std::size_t num = value.toULongLong(&ok);
   Q_ASSERT(ok);
   const GameBoard* board = reinterpret_cast<GameBoard*>(num);
   Q_ASSERT(board != nullptr);
