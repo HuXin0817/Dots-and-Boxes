@@ -21,6 +21,8 @@ static constexpr int EnableHashValue = 1 << 5;
 static constexpr int EnableOwner = 1 << 6;
 static constexpr int MaxFlag = 1 << 7;
 
+static constexpr bool HasFlag(int config, int flag) { return (config & flag) != 0; }
+
 static constexpr int FixedConfig(int config) {
   int fixedConfig = config % MaxFlag;
   if (HasFlag(config, EnableRelativeScore)) {
@@ -37,6 +39,9 @@ static constexpr int FixedConfig(int config) {
   }
   return fixedConfig;
 }
+
+template <bool Bp, typename T>
+using Mixin = std::conditional_t<Bp, T, std::type_identity<T>>;
 
 struct BasicMixin {
   Int Step = 0;
@@ -352,7 +357,7 @@ namespace std {
 using namespace dab::__detail__::board;
 
 template <int Config>
-  requires(dab::HasFlag(Config, EnableHashValue))
+  requires(HasFlag(Config, EnableHashValue))
 struct hash<BoardImpl<Config>> {
   constexpr std::uint64_t operator()(const BoardImpl<Config>& board) const { return board.Hash(); }
 };

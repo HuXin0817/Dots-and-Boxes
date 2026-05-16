@@ -29,7 +29,7 @@ Span<const Edge> CachedRobot<SubRobotType>::BestCandidateEdges(const Board& boar
     return *ac;
   }
 
-  const Span result = SubRobotType::BestCandidateEdges(board);
+  const Span<const Edge> result = SubRobotType::BestCandidateEdges(board);
   assert(!result.Empty());
   Cache.insert(Key, result);
   return result;

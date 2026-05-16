@@ -19,6 +19,8 @@ static constexpr int EnableAllocSize = 1 << 3;
 static constexpr int EnableFrontPointer = 1 << 4;
 static constexpr int EnableEndPointer = 1 << 5;
 
+static constexpr bool HasFlag(int config, int flag) { return (config & flag) != 0; }
+
 static constexpr bool CheckConfig(int config, Int arraySize) {
   int ans = true;
   if (arraySize > 0) {
@@ -34,6 +36,9 @@ static constexpr bool CheckConfig(int config, Int arraySize) {
   ans &= n == 1;
   return ans;
 }
+
+template <bool Bp, typename T>
+using Mixin = std::conditional_t<Bp, T, std::type_identity<T>>;
 
 template <typename T, Int Size>
 struct ArrayMixin {
@@ -241,9 +246,6 @@ T Random::Range(T min, T max) {
 template <typename Iterable>
 const auto& Random::Choice(const Iterable& data) {
   assert(!data.Empty());
-  if (data.Size() == 1) {
-    return data.At(0);
-  }
   return data.At(Range(0, data.Size() - 1));
 }
 

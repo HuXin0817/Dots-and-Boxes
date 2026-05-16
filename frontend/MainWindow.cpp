@@ -102,10 +102,10 @@ void MainWindow::Run() {
   Random random;
   while (Board.Gaming()) {
     if (PlayerTypeIsRobot(Player1Type) && Board.IsPlayer1Turn()) {
-      Span candidateEdges = Robot1->BestCandidateEdges(Board);
+      Span<const Edge> candidateEdges = Robot1->BestCandidateEdges(Board);
       PlayerMoveEdge = random.Choice(candidateEdges);
     } else if (PlayerTypeIsRobot(Player2Type) && Board.IsPlayer2Turn()) {
-      Span candidateEdges = Robot2->BestCandidateEdges(Board);
+      Span<const Edge> candidateEdges = Robot2->BestCandidateEdges(Board);
       PlayerMoveEdge = random.Choice(candidateEdges);
     } else {
       PlayerMoveEdge = Edge::Invalid;
