@@ -217,7 +217,6 @@ constexpr Int BoardImpl<Config>::Add(Edge edge) {
       }
     }
     if constexpr (HasFlag(EnableRelativeScore)) {
-      const Int turn = this->Turn;
       if (score > 0) {
         this->Score += score * this->Turn;
       } else {

@@ -20,11 +20,11 @@ namespace model {
 class IntWrapper {
  public:
   constexpr IntWrapper() = default;
-  constexpr IntWrapper(Int v) : v(v) {}
-  constexpr operator Int() const { return v; }
+  constexpr IntWrapper(Int value) : Value(value) {}
+  constexpr operator Int() const { return Value; }
 
  protected:
-  Int v = 0;
+  Int Value = 0;
 };
 
 template <Int Length>
@@ -34,8 +34,8 @@ class Square : public IntWrapper {
 
   using IntWrapper::IntWrapper;
   constexpr Square(Int x, Int y) : IntWrapper(x * Length + y) { assert(x < Max && y < Max); }
-  constexpr Int X() const { return v / Length; }
-  constexpr Int Y() const { return v % Length; }
+  constexpr Int X() const { return Value / Length; }
+  constexpr Int Y() const { return Value % Length; }
 };
 
 using Dot = Square<BoardSize + 1>;
@@ -60,7 +60,7 @@ class Edge : public IntWrapper {
   constexpr Edge(Dot dot1, Dot dot2);
   constexpr Dot Dot1() const;
   constexpr Dot Dot2() const;
-  constexpr bool Rotate() const { return v & 1; }
+  constexpr bool Rotate() const { return Value & 1; }
   constexpr const List<Box, 2>& NearBoxes() const;
 
  private:
@@ -70,24 +70,24 @@ class Edge : public IntWrapper {
 constexpr Edge::Edge(Dot dot1, Dot dot2) {
   assert(dot1 < dot2);
   if (dot2 - dot1 == 1) {
-    v = 2 * (dot1 - dot1 / (BoardSize + 1)) + 1;
+    Value = 2 * (dot1 - dot1 / (BoardSize + 1)) + 1;
   } else {
-    v = 2 * dot1;
+    Value = 2 * dot1;
   }
   assert(Dot1() == dot1 && Dot2() == dot2);
 }
 
 constexpr Dot Edge::Dot1() const {
-  Int dot = v >> 1;
-  if (v & 1) {
+  Int dot = Value >> 1;
+  if (Value & 1) {
     dot += dot / BoardSize;
   }
   return dot;
 }
 
 constexpr Dot Edge::Dot2() const {
-  Int dot = v >> 1;
-  if (v & 1) {
+  Int dot = Value >> 1;
+  if (Value & 1) {
     dot += dot / BoardSize + 1;
   } else {
     dot += BoardSize + 1;
@@ -119,7 +119,7 @@ constexpr const Array<Edge, 4>& Box::NearEdges() const {
     }
     return mapper;
   }();
-  return mapper.At(v);
+  return mapper.At(Value);
 }
 
 constexpr List<Box, 2> Edge::GetNearBoxes() const {
@@ -145,7 +145,7 @@ constexpr const List<Box, 2>& Edge::NearBoxes() const {
     }
     return mapper;
   }();
-  return mapper.At(v);
+  return mapper.At(Value);
 }
 
 }  // namespace model
