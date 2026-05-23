@@ -10,9 +10,12 @@ class BoxCanvas : public BaseCanvas {
   Q_DISABLE_COPY(BoxCanvas)
 
  public:
-  static constexpr int Width = EdgeCanvas::Height - 2 * UnitSize;
+  static int Width() { return EdgeCanvas::Height() - 2 * UnitSize; }
 
-  BoxCanvas(Box box, QWidget* parent) : BaseCanvas(parent), Value(box) { setFixedSize(Width, Width); }
+  BoxCanvas(Box box, QWidget* parent) : BaseCanvas(parent), Value(box) { Resize(); }
+
+ public Q_SLOTS:
+  void Resize() { setFixedSize(Width(), Width()); }
 
  protected:
   void paintEvent(QPaintEvent* event) override;

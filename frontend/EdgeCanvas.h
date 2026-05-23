@@ -11,10 +11,13 @@ class EdgeCanvas : public BaseCanvas {
   Q_DISABLE_COPY(EdgeCanvas)
 
  public:
-  static constexpr int Width = UnitSize * 2;
-  static constexpr int Height = Width * 5;
+  static int Width() { return UnitSize * 2; }
+  static int Height() { return Width() * 5; }
 
   EdgeCanvas(Edge edge, std::function<void(Edge)> callback, QWidget* parent);
+
+ public Q_SLOTS:
+  void Resize() { setFixedSize(Value.Rotate() ? Width() : Height(), Value.Rotate() ? Height() : Width()); }
 
  protected:
   void mousePressEvent(QMouseEvent* event) override;

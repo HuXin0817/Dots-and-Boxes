@@ -5,6 +5,7 @@
 #include <QPainter>
 #include <QPointer>
 #include <QPushButton>
+#include <QShortcut>
 #include <QThreadPool>
 #include <chrono>
 #include <print>
@@ -22,19 +23,40 @@ MainWindow::MainWindow(PlayerType player1Type, PlayerType player2Type, QWidget* 
   Robot1 = Robot::Create(Player1Type);
   Robot2 = Robot::Create(Player2Type);
 
-  setProperty("Board", QVariant::fromValue(reinterpret_cast<uintptr_t>(&Board)));
-  resize(WindowSize, WindowSize);
-  setMinimumSize(WindowSize, WindowSize);
+  setProperty("Board", QVariant::fromValue(reinterpret_cast<std::uintptr_t>(&Board)));
   for (const Box box : Iota<Box>()) {
     BoxCanvases.At(box) = new BoxCanvas(box, this);
   }
-  auto callback = [this](Edge edge) -> void { SetPlayerMoveEdge(edge); };
+  std::function<void(Edge)> callback = [this](Edge edge) -> void { SetPlayerMoveEdge(edge); };
   for (const Edge edge : Iota<Edge>()) {
     EdgeCanvases.At(edge) = new EdgeCanvas(edge, callback, this);
   }
   for (QPointer<DotCanvas>& dotCanvas : DotCanvases) {
     dotCanvas = new DotCanvas(this);
   }
+  Resize();
+
+  QShortcut* scZoomOut = new QShortcut(QKeySequence::ZoomOut, this);
+  connect(scZoomOut, &QShortcut::activated, this, [&]() {
+    UnitSize = std::min<int>(UnitSize - 1, static_cast<double>(UnitSize) * 0.9);
+    if (UnitSize == 0) {
+      UnitSize = 1;
+      QApplication::beep();
+    }
+    Resize();
+  });
+
+  QShortcut* scZoomIn = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Equal), this);
+  connect(scZoomIn, &QShortcut::activated, this, [&]() {
+    UnitSize = std::max<int>(UnitSize + 1, static_cast<double>(UnitSize) * 1.1);
+    Resize();
+  });
+
+  QShortcut* scRefresh = new QShortcut(QKeySequence::Refresh, this);
+  connect(scRefresh, &QShortcut::activated, this, [&]() {
+    UnitSize = DefaultUnitSize;
+    Resize();
+  });
 }
 
 void MainWindow::paintEvent(QPaintEvent* event) {
@@ -45,33 +67,8 @@ void MainWindow::paintEvent(QPaintEvent* event) {
 }
 
 void MainWindow::resizeEvent(QResizeEvent* event) {
-  QWidget::resizeEvent(event);
-
-  const int x0 = (width() - BoardWidth) / 2 - UnitSize;
-  const int y0 = (height() - BoardWidth) / 2 - UnitSize;
-
-  for (const Box box : Iota<Box>()) {
-    const int x = x0 + box.X() * EdgeCanvas::Height + 2 * UnitSize;
-    const int y = y0 + box.Y() * EdgeCanvas::Height + 2 * UnitSize;
-    BoxCanvases.At(box)->move(x, y);
-  }
-
-  for (const Edge edge : Iota<Edge>()) {
-    int x = x0 + edge.Dot1().X() * EdgeCanvas::Height;
-    int y = y0 + edge.Dot1().Y() * EdgeCanvas::Height;
-    if (edge.Rotate()) {
-      y += UnitSize;
-    } else {
-      x += UnitSize;
-    }
-    EdgeCanvases.At(edge)->move(x, y);
-  }
-
-  for (const Dot dot : Iota<Dot>()) {
-    const int x = x0 + dot.X() * EdgeCanvas::Height;
-    const int y = y0 + dot.Y() * EdgeCanvas::Height;
-    DotCanvases.At(dot)->move(x, y);
-  }
+  BaseCanvas::resizeEvent(event);
+  Move();
 }
 
 void MainWindow::showEvent(QShowEvent* event) {
@@ -141,6 +138,56 @@ void MainWindow::Add() {
                Board.Player2Score());
   update();
   QApplication::beep();
+}
+
+void MainWindow::Resize() {
+  for (const Box box : Iota<Box>()) {
+    BoxCanvases.At(box)->Resize();
+  }
+
+  for (const Edge edge : Iota<Edge>()) {
+    EdgeCanvases.At(edge)->Resize();
+  }
+
+  for (const Dot dot : Iota<Dot>()) {
+    DotCanvases.At(dot)->Resize();
+  }
+
+  if ((windowState() & Qt::WindowFullScreen) == 0) {
+    QSize size(WindowSize(), WindowSize());
+    setMinimumSize(size);
+    resize(size);
+  }
+
+  Move();
+}
+
+void MainWindow::Move() {
+  const int x0 = (width() - BoardWidth()) / 2 - UnitSize;
+  const int y0 = (height() - BoardWidth()) / 2 - UnitSize;
+
+  for (const Box box : Iota<Box>()) {
+    const int x = x0 + box.X() * EdgeCanvas::Height() + 2 * UnitSize;
+    const int y = y0 + box.Y() * EdgeCanvas::Height() + 2 * UnitSize;
+    BoxCanvases.At(box)->move(x, y);
+  }
+
+  for (const Edge edge : Iota<Edge>()) {
+    int x = x0 + edge.Dot1().X() * EdgeCanvas::Height();
+    int y = y0 + edge.Dot1().Y() * EdgeCanvas::Height();
+    if (edge.Rotate()) {
+      y += UnitSize;
+    } else {
+      x += UnitSize;
+    }
+    EdgeCanvases.At(edge)->move(x, y);
+  }
+
+  for (const Dot dot : Iota<Dot>()) {
+    const int x = x0 + dot.X() * EdgeCanvas::Height();
+    const int y = y0 + dot.Y() * EdgeCanvas::Height();
+    DotCanvases.At(dot)->move(x, y);
+  }
 }
 
 void MainWindow::HandleGameOver() {

@@ -9,9 +9,12 @@ class DotCanvas : public BaseCanvas {
   Q_DISABLE_COPY(DotCanvas)
 
  public:
-  static constexpr int Width = 2 * UnitSize;
+  static int Width() { return 2 * UnitSize; }
 
-  DotCanvas(QWidget* parent) : BaseCanvas(parent) { setFixedSize(Width, Width); }
+  DotCanvas(QWidget* parent) : BaseCanvas(parent) { Resize(); }
+
+ public Q_SLOTS:
+  void Resize() { setFixedSize(Width(), Width()); }
 
  protected:
   void paintEvent(QPaintEvent* event) override;

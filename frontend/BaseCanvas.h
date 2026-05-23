@@ -12,8 +12,6 @@ class BaseCanvas : public QWidget {
   Q_DISABLE_COPY(BaseCanvas)
 
  public:
-  static constexpr int UnitSize = 6 + 16 / BoardSize;
-
   using QWidget::QWidget;
 
   static QColor ThemeColor(const QColor& darkThemeColor, const QColor& lightThemeColor);
@@ -23,6 +21,9 @@ class BaseCanvas : public QWidget {
   const GameBoard& GetBoard() const;
   void enterEvent(QEnterEvent* event) override;
   void leaveEvent(QEvent* event) override;
+
+  static constexpr int DefaultUnitSize = 6 + 16 / BoardSize;
+  static inline int UnitSize = DefaultUnitSize;
 
  private:
   bool HoverState = false;

@@ -13,11 +13,19 @@ class MainWindow : public BaseCanvas {
   Q_OBJECT
   Q_DISABLE_COPY(MainWindow)
 
-  static constexpr int BoardWidth = BoardSize * EdgeCanvas::Height;
-  static constexpr int WindowSize = BoardWidth + 2 * BoxCanvas::Width;
+  static int BoardWidth() { return BoardSize * EdgeCanvas::Height(); }
+  static int WindowSize() { return BoardWidth() + 2 * BoxCanvas::Width(); }
 
  public:
   MainWindow(PlayerType player1Type, PlayerType player2Type, QWidget* parent = nullptr);
+
+ public Q_SLOTS:
+  void Run();
+  void AsyncRun();
+  void Add();
+  void Resize();
+  void Move();
+  void HandleGameOver();
 
  protected:
   void paintEvent(QPaintEvent* event) override;
@@ -37,12 +45,6 @@ class MainWindow : public BaseCanvas {
 
   QColor Color() const;
   void SetPlayerMoveEdge(Edge edge);
-
- public Q_SLOTS:
-  void Run();
-  void AsyncRun();
-  void Add();
-  void HandleGameOver();
 };
 
 }  // namespace dab::__detail__::frontend

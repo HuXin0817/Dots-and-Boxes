@@ -27,7 +27,7 @@ QColor BoxCanvas::Color() const {
       return Player2OccupyColor;
   }
 
-  return {};
+  return {0, 0, 0, 0};
 }
 
 }  // namespace dab::__detail__::frontend

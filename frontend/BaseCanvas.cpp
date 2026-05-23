@@ -36,7 +36,7 @@ const GameBoard& BaseCanvas::GetBoard() const {
   const QVariant value = mainWindow->property("Board");
   Q_ASSERT(value.isValid());
   bool ok = false;
-  const std::size_t num = value.toULongLong(&ok);
+  const std::uintptr_t num = value.toULongLong(&ok);
   Q_ASSERT(ok);
   const GameBoard* board = reinterpret_cast<GameBoard*>(num);
   Q_ASSERT(board != nullptr);

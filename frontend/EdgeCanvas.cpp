@@ -9,7 +9,7 @@ namespace dab::__detail__::frontend {
 
 EdgeCanvas::EdgeCanvas(Edge edge, std::function<void(Edge)> callback, QWidget* parent)
     : BaseCanvas(parent), Value(edge), Callback(std::move(callback)) {
-  setFixedSize(edge.Rotate() ? Width : Height, edge.Rotate() ? Height : Width);
+  Resize();
 }
 
 void EdgeCanvas::mousePressEvent(QMouseEvent* event) {
@@ -41,6 +41,7 @@ QColor EdgeCanvas::Color() const {
     if (Hovered()) {
       return ThemeColor(DarkThemeHoveredColor, LightThemeHoveredColor);
     }
+
     return ThemeColor(DarkThemeColor, LightThemeColor);
   }
 
@@ -50,6 +51,7 @@ QColor EdgeCanvas::Color() const {
   } else if (board.GetOwner(Value) == Owner::Player2) {
     color = Player2OccupyColor;
   }
+
   if (board.MoveRecord().Back() == Value) {
     color.setAlpha(255);
   } else if (Hovered()) {
