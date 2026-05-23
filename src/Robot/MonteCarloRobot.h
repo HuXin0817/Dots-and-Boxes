@@ -56,7 +56,7 @@ inline void MonteCarloRobot::ScoreMap::Add(const ScoreMap& other) {
 
 inline Span<const Edge> MonteCarloRobot::ScoreMap::Export(List<Edge, Edge::Max>& edges) {
   edges.Clear();
-  float maxScore = 0.0;
+  float maxScore = 0.0f;
   for (const Edge edge : Iota<Edge>()) {
     if (Time.At(edge) > 0) {
       if (const float score = static_cast<float>(Score.At(edge)) / static_cast<float>(Time.At(edge));

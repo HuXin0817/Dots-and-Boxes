@@ -7,7 +7,7 @@
 namespace dab::__detail__::robot {
 
 class ParallelSearchRobot {
-  static constexpr int WorkersNumber = std::min<int>(NUM_CPUS, Edge::Max);
+  static constexpr std::int64_t WorkersNumber = std::min<std::int64_t>(NUM_CPUS, Edge::Max);
 
  public:
   ParallelSearchRobot() = default;

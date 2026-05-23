@@ -9,18 +9,18 @@
 
 namespace dab::__detail__::frontend {
 
-QColor BaseCanvas::ThemeColor(const QColor& DarkThemeColor, const QColor& LightThemeColor) {
-  QColor color = LightThemeColor;
+QColor BaseCanvas::ThemeColor(const QColor& darkThemeColor, const QColor& lightThemeColor) {
+  QColor color = lightThemeColor;
   switch (QApplication::styleHints()->colorScheme()) {
     case Qt::ColorScheme::Unknown: {
       break;
     }
     case Qt::ColorScheme::Light: {
-      color = LightThemeColor;
+      color = lightThemeColor;
       break;
     }
     case Qt::ColorScheme::Dark: {
-      color = DarkThemeColor;
+      color = darkThemeColor;
       break;
     }
     default: {

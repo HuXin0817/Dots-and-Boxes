@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Common.h"
+#include "../Board.h"
 #include "GreedyRobot.h"
 
 namespace dab::__detail__::robot {

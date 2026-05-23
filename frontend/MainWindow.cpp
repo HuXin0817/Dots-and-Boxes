@@ -126,8 +126,7 @@ void MainWindow::AsyncRun() {
 
 void MainWindow::Add() {
   Int step = Board.NowStep();
-  Int turn = Board.GetTurn();
-  int player = turn == board::Player1Turn ? 1 : 2;
+  int player = Board.IsPlayer1Turn() ? 1 : 2;
   Int move = PlayerMoveEdge;
   EdgeCanvases.At(PlayerMoveEdge)->raise();
   DotCanvases.At(PlayerMoveEdge.Dot1())->raise();

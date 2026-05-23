@@ -138,8 +138,6 @@ class BoardImpl : BasicMixin,
   constexpr bool IsPlayer2Turn() const { return this->Turn == Player2Turn; }
   constexpr Int Player1Score() const { return (this->TotalScore + this->Score) / 2; }
   constexpr Int Player2Score() const { return (this->TotalScore - this->Score) / 2; }
-  constexpr double Player1MovingTimeSecond() const { return this->Player1MovingTime / 1000.0; }
-  constexpr double Player2MovingTimeSecond() const { return this->Player2MovingTime / 1000.0; }
   constexpr Owner NowOwner() const { return IsPlayer1Turn() ? Owner::Player1 : Owner::Player2; }
   constexpr Owner GetOwner(Edge edge) const { return this->EdgeOwner.At(edge); }
   constexpr Owner GetOwner(Box box) const { return this->BoxOwner.At(box); }

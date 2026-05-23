@@ -16,7 +16,7 @@ class BaseCanvas : public QWidget {
 
   using QWidget::QWidget;
 
-  static QColor ThemeColor(const QColor& DarkThemeColor, const QColor& LightThemeColor);
+  static QColor ThemeColor(const QColor& darkThemeColor, const QColor& lightThemeColor);
   bool Hovered() const { return HoverState; }
 
  protected:
