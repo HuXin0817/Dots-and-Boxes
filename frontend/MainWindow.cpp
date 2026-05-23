@@ -6,6 +6,8 @@
 #include <QPointer>
 #include <QPushButton>
 #include <QThreadPool>
+#include <chrono>
+#include <print>
 
 #include "../src/Robot.h"
 #include "BaseCanvas.h"
@@ -123,10 +125,21 @@ void MainWindow::AsyncRun() {
 }
 
 void MainWindow::Add() {
+  Int step = Board.NowStep();
+  Int turn = Board.GetTurn();
+  int player = turn == board::Player1Turn ? 1 : 2;
+  Int move = PlayerMoveEdge;
   EdgeCanvases.At(PlayerMoveEdge)->raise();
   DotCanvases.At(PlayerMoveEdge.Dot1())->raise();
   DotCanvases.At(PlayerMoveEdge.Dot2())->raise();
   Board.Add(PlayerMoveEdge);
+  std::println(R"({:%Y-%m-%d %H:%M:%S} {{"Step":{},"Player":{},"Move":{},"Score":{{"Player1":{},"Player2":{}}}}})",
+               std::chrono::system_clock::now(),
+               step,
+               player,
+               move,
+               Board.Player1Score(),
+               Board.Player2Score());
   update();
   QApplication::beep();
 }
