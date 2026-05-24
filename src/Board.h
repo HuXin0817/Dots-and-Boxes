@@ -66,31 +66,12 @@ struct RelativeScoreMixin {
 };
 
 struct AbsoluteScoreMixin {
-  Int TotalScore;
+  Int TotalScore = 0;
 };
 
 struct HashValueMixin {
-  static Array<std::uint64_t, Edge::Max> HashMapper;
-
   std::uint64_t HashValue;
 };
-
-inline Array<std::uint64_t, Edge::Max> HashValueMixin::HashMapper = []() -> Array<std::uint64_t, Edge::Max> {
-  Random random;
-  Array<std::uint64_t, Edge::Max> result;
-  std::unordered_set<std::uint64_t> visited;
-  std::function<std::uint64_t()> randv = [&]() -> std::uint64_t {
-    return random.Range<std::uint64_t>(1, std::numeric_limits<std::uint64_t>::max());
-  };
-  for (std::uint64_t& v : result) {
-    v = randv();
-    while (visited.contains(v)) {
-      v = randv();
-    }
-    visited.insert(v);
-  }
-  return result;
-}();
 
 enum class Owner {
   None,
@@ -102,6 +83,23 @@ struct OwnerMixin {
   Array<Owner, Edge::Max> EdgeOwner;
   Array<Owner, Box::Max> BoxOwner;
 };
+
+static inline Array<std::uint64_t, Edge::Max> HashMapper = []() -> Array<std::uint64_t, Edge::Max> {
+  Random random;
+  Array<std::uint64_t, Edge::Max> result;
+  std::unordered_set<std::uint64_t> visited;
+  std::function<std::uint64_t()> randomValue = [&]() -> std::uint64_t {
+    return random.Range<std::uint64_t>(1, std::numeric_limits<std::uint64_t>::max());
+  };
+  for (std::uint64_t& v : result) {
+    v = randomValue();
+    while (visited.contains(v)) {
+      v = randomValue();
+    }
+    visited.insert(v);
+  }
+  return result;
+}();
 
 template <int Config>
 class BoardImpl : BasicMixin,
@@ -192,7 +190,7 @@ constexpr Int BoardImpl<Config>::Add(Edge edge) {
   EdgeIndexes.At(nowEdge) = edgeIndex;
   ++Step;
   if constexpr (HasFlag(EnableHashValue)) {
-    this->HashValue += this->HashMapper.At(edge);
+    this->HashValue += HashMapper.At(edge);
   }
   if constexpr (HasFlag(EnableOwner)) {
     this->EdgeOwner.At(edge) = NowOwner();
