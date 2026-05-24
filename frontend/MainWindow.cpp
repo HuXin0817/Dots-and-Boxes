@@ -36,7 +36,7 @@ MainWindow::MainWindow(PlayerType player1Type, PlayerType player2Type, QWidget* 
   }
   Resize();
 
-  QShortcut* scZoomOut = new QShortcut(QKeySequence::ZoomOut, this);
+  QPointer<QShortcut> scZoomOut = new QShortcut(QKeySequence::ZoomOut, this);
   connect(scZoomOut, &QShortcut::activated, this, [&]() -> void {
     UnitSize = std::min<int>(UnitSize - 1, static_cast<double>(UnitSize) * 0.9);
     if (UnitSize <= 0) {
@@ -46,13 +46,13 @@ MainWindow::MainWindow(PlayerType player1Type, PlayerType player2Type, QWidget* 
     Resize();
   });
 
-  QShortcut* scZoomIn = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Equal), this);
+  QPointer<QShortcut> scZoomIn = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Equal), this);
   connect(scZoomIn, &QShortcut::activated, this, [&]() -> void {
     UnitSize = std::max<int>(UnitSize + 1, static_cast<double>(UnitSize) * 1.1);
     Resize();
   });
 
-  QShortcut* scRefresh = new QShortcut(QKeySequence::Refresh, this);
+  QPointer<QShortcut> scRefresh = new QShortcut(QKeySequence::Refresh, this);
   connect(scRefresh, &QShortcut::activated, this, [&]() -> void {
     UnitSize = DefaultUnitSize;
     Resize();
@@ -191,7 +191,7 @@ void MainWindow::Move() {
 }
 
 void MainWindow::HandleGameOver() {
-  const QPointer messagebox = new QMessageBox(this);
+  const QPointer<QMessageBox> messagebox = new QMessageBox(this);
   if (Board.RelativeScore() > 0) {
     messagebox->setText(QString("Blue Team Win! (Score %1:%2)").arg(Board.Player1Score()).arg(Board.Player2Score()));
   } else if (Board.RelativeScore() < 0) {
@@ -200,10 +200,10 @@ void MainWindow::HandleGameOver() {
     messagebox->setText("Draw!");
   }
   messagebox->setIcon(QMessageBox::Information);
-  const QPointer restartButton = messagebox->addButton(QMessageBox::Reset);
+  const QPointer<QPushButton> restartButton = messagebox->addButton(QMessageBox::Reset);
   restartButton->setText("Restart");
   connect(restartButton, &QPushButton::pressed, this, &MainWindow::AsyncRun);
-  const QPointer closeButton = messagebox->addButton(QMessageBox::Close);
+  const QPointer<QPushButton> closeButton = messagebox->addButton(QMessageBox::Close);
   connect(closeButton, &QPushButton::pressed, this, &MainWindow::close);
   messagebox->exec();
 }
