@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QApplication>
+#include <QStyleHints>
 #include <QWidget>
 
 #include "../src/Board.h"
@@ -14,7 +15,12 @@ class BaseCanvas : public QWidget {
  public:
   using QWidget::QWidget;
 
-  static QColor ThemeColor(const QColor& darkThemeColor, const QColor& lightThemeColor);
+  static bool IsDarkTheme() { return QApplication::styleHints()->colorScheme() == Qt::ColorScheme::Dark; }
+
+  static QColor ThemeColor(const QColor& darkThemeColor, const QColor& lightThemeColor) {
+    return IsDarkTheme() ? darkThemeColor : lightThemeColor;
+  }
+
   bool Hovered() const { return HoverState; }
 
  protected:

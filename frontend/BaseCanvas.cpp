@@ -2,33 +2,11 @@
 
 #include <QApplication>
 #include <QPainter>
-#include <QStyleHints>
 #include <QWidget>
 
 #include "../src/Board.h"
 
 namespace dab::__detail__::frontend {
-
-QColor BaseCanvas::ThemeColor(const QColor& darkThemeColor, const QColor& lightThemeColor) {
-  QColor color = lightThemeColor;
-  switch (QApplication::styleHints()->colorScheme()) {
-    case Qt::ColorScheme::Unknown: {
-      break;
-    }
-    case Qt::ColorScheme::Light: {
-      color = lightThemeColor;
-      break;
-    }
-    case Qt::ColorScheme::Dark: {
-      color = darkThemeColor;
-      break;
-    }
-    default: {
-      break;
-    }
-  }
-  return color;
-}
 
 const GameBoard& BaseCanvas::GetBoard() const {
   QObject* mainWindow = parent();

@@ -9,6 +9,9 @@ class DotCanvas : public BaseCanvas {
   Q_DISABLE_COPY(DotCanvas)
 
  public:
+  static constexpr QColor DarkThemeColor = QColor(202, 202, 202, 255);
+  static constexpr QColor LightThemeColor = QColor(255, 255, 255, 255);
+
   static int Width() { return 2 * UnitSize; }
 
   DotCanvas(QWidget* parent) : BaseCanvas(parent) { Resize(); }
@@ -20,7 +23,7 @@ class DotCanvas : public BaseCanvas {
   void paintEvent(QPaintEvent* event) override;
 
  private:
-  QColor Color() const;
+  QColor Color() const { return ThemeColor(DarkThemeColor, LightThemeColor); }
 };
 
 }  // namespace dab::__detail__::frontend

@@ -15,9 +15,6 @@ void BoxCanvas::paintEvent(QPaintEvent* event) {
 }
 
 QColor BoxCanvas::Color() const {
-  static constexpr QColor Player1OccupyColor = QColor(64, 64, 255, 64);
-  static constexpr QColor Player2OccupyColor = QColor(255, 64, 64, 64);
-
   switch (GetBoard().GetOwner(Value)) {
     case Owner::None:
       return {0, 0, 0, 0};

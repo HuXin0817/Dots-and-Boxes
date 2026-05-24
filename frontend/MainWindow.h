@@ -13,10 +13,13 @@ class MainWindow : public BaseCanvas {
   Q_OBJECT
   Q_DISABLE_COPY(MainWindow)
 
+ public:
+  static constexpr QColor DarkThemeColor = QColor(43, 43, 43, 255);
+  static constexpr QColor LightThemeColor = QColor(242, 242, 242, 255);
+
   static int BoardWidth() { return BoardSize * EdgeCanvas::Height(); }
   static int WindowSize() { return BoardWidth() + 2 * BoxCanvas::Width(); }
 
- public:
   MainWindow(PlayerType player1Type, PlayerType player2Type, QWidget* parent = nullptr);
 
  public Q_SLOTS:
@@ -43,7 +46,8 @@ class MainWindow : public BaseCanvas {
   Array<QPointer<DotCanvas>, Dot::Max> DotCanvases;
   Array<QPointer<EdgeCanvas>, Edge::Max> EdgeCanvases;
 
-  QColor Color() const;
+  QColor Color() const { return ThemeColor(DarkThemeColor, LightThemeColor); }
+
   void SetPlayerMoveEdge(Edge edge);
 };
 

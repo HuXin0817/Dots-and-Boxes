@@ -24,13 +24,6 @@ void EdgeCanvas::paintEvent(QPaintEvent* event) {
 }
 
 QColor EdgeCanvas::Color() const {
-  static constexpr QColor DarkThemeColor = QColor(65, 65, 65, 255);
-  static constexpr QColor LightThemeColor = QColor(217, 217, 217, 255);
-  static constexpr QColor DarkThemeHoveredColor = QColor(90, 90, 90, 255);
-  static constexpr QColor LightThemeHoveredColor = QColor(202, 202, 202, 255);
-  static constexpr QColor Player1OccupyColor = QColor(64, 64, 255, 255);
-  static constexpr QColor Player2OccupyColor = QColor(255, 64, 64, 255);
-
   const GameBoard& board = GetBoard();
   if (board.GetOwner(Value) == Owner::None) {
     if (Hovered()) {

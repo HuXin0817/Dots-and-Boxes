@@ -76,13 +76,6 @@ void MainWindow::showEvent(QShowEvent* event) {
   AsyncRun();
 }
 
-QColor MainWindow::Color() const {
-  static constexpr QColor DarkThemeColor = QColor(43, 43, 43, 255);
-  static constexpr QColor LightThemeColor = QColor(242, 242, 242, 255);
-
-  return ThemeColor(DarkThemeColor, LightThemeColor);
-}
-
 void MainWindow::SetPlayerMoveEdge(Edge edge) {
   if (Board.Contains(edge)) {
     return;
