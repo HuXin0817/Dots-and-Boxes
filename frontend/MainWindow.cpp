@@ -146,12 +146,12 @@ void MainWindow::Resize() {
     DotCanvases.At(dot)->Resize();
   }
 
+  QSize size(WindowSize(), WindowSize());
   if ((windowState() & Qt::WindowFullScreen) == 0) {
-    QSize size(WindowSize(), WindowSize());
-    setMinimumSize(size);
     resize(size);
   }
 
+  setMinimumSize(size);
   Move();
 }
 

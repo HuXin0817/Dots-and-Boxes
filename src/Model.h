@@ -6,6 +6,12 @@
 #include "Common.h"
 #include "Iterable.h"
 
+#if __BoardSize__ > 30
+#define __constexpr__
+#else
+#define __constexpr__ constexpr
+#endif
+
 namespace dab {
 
 template <typename T>
@@ -113,7 +119,7 @@ constexpr Array<Edge, 4> Box::GetNearEdges() const {
 }
 
 constexpr const Array<Edge, 4>& Box::NearEdges() const {
-  static constexpr Array<Array<Edge, 4>, Max> Mapper = []() -> Array<Array<Edge, 4>, Max> {
+  static __constexpr__ Array<Array<Edge, 4>, Max> Mapper = []() -> Array<Array<Edge, 4>, Max> {
     Array<Array<Edge, 4>, Max> mapper;
     for (const Box box : Iota<Box>()) {
       mapper.At(box) = box.GetNearEdges();
@@ -139,7 +145,7 @@ constexpr List<Box, 2> Edge::GetNearBoxes() const {
 }
 
 constexpr const List<Box, 2>& Edge::NearBoxes() const {
-  static constexpr Array<List<Box, 2>, Max> Mapper = []() -> Array<List<Box, 2>, Max> {
+  static __constexpr__ Array<List<Box, 2>, Max> Mapper = []() -> Array<List<Box, 2>, Max> {
     Array<List<Box, 2>, Max> mapper;
     for (const Edge edge : Iota<Edge>()) {
       mapper.At(edge) = edge.GetNearBoxes();
