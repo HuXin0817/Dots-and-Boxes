@@ -7,11 +7,6 @@
 
 namespace dab::__detail__::frontend {
 
-EdgeCanvas::EdgeCanvas(Edge edge, std::function<void(Edge)> callback, QWidget* parent)
-    : BaseCanvas(parent), Value(edge), Callback(std::move(callback)) {
-  Resize();
-}
-
 void EdgeCanvas::mousePressEvent(QMouseEvent* event) {
   QWidget::mousePressEvent(event);
 

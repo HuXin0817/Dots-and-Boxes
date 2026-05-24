@@ -28,6 +28,7 @@ class IntWrapper {
 };
 
 template <Int Length>
+  requires(BoardSize <= Length && Length <= BoardSize + 1)
 class Square : public IntWrapper {
  public:
   static constexpr Int Max = Length * Length;

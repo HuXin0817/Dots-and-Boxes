@@ -14,8 +14,8 @@ class MonteCarloRobot {
     void Add(const ScoreMap& other);
     Span<const Edge> Export(List<Edge, Edge::Max>& edges);
 
-    Array<int64_t, Edge::Max> Time;
-    Array<int64_t, Edge::Max> Score;
+    Array<std::int64_t, Edge::Max> Time;
+    Array<std::int64_t, Edge::Max> Score;
   };
 
   static constexpr std::uint64_t SearchTime = static_cast<std::uint64_t>(Edge::Max) << 8;
@@ -56,10 +56,10 @@ inline void MonteCarloRobot::ScoreMap::Add(const ScoreMap& other) {
 
 inline Span<const Edge> MonteCarloRobot::ScoreMap::Export(List<Edge, Edge::Max>& edges) {
   edges.Clear();
-  float maxScore = 0.0f;
+  double maxScore = 0.0;
   for (const Edge edge : Iota<Edge>()) {
     if (Time.At(edge) > 0) {
-      if (const float score = static_cast<float>(Score.At(edge)) / static_cast<float>(Time.At(edge));
+      if (const double score = static_cast<double>(Score.At(edge)) / static_cast<double>(Time.At(edge));
           score > maxScore || edges.Empty()) {
         maxScore = score;
         edges.ClearAndSet(edge);

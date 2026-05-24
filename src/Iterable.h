@@ -23,19 +23,19 @@ static constexpr int EnableEndPointer = 1 << 5;
 static constexpr bool HasFlag(int config, int flag) { return (config & flag) != 0; }
 
 static constexpr bool CheckConfig(int config, Int arraySize) {
-  bool ans = true;
+  bool result = true;
   if (arraySize > 0) {
-    ans &= HasFlag(config, EnableArray);
+    result &= HasFlag(config, EnableArray);
   } else {
-    ans &= arraySize == 0;
-    ans &= !HasFlag(config, EnableArray);
+    result &= arraySize == 0;
+    result &= !HasFlag(config, EnableArray);
   }
   int n = 0;
   n += HasFlag(config, EnableArray);
   n += HasFlag(config, EnableSpan);
   n += HasFlag(config, EnableAllocSize);
-  ans &= n == 1;
-  return ans;
+  result &= n == 1;
+  return result;
 }
 
 template <bool Bp, typename T>

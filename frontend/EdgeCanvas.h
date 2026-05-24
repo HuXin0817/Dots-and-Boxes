@@ -14,7 +14,10 @@ class EdgeCanvas : public BaseCanvas {
   static int Width() { return UnitSize * 2; }
   static int Height() { return Width() * 5; }
 
-  EdgeCanvas(Edge edge, std::function<void(Edge)> callback, QWidget* parent);
+  EdgeCanvas(Edge edge, std::function<void(Edge)> callback, QWidget* parent)
+      : BaseCanvas(parent), Value(edge), Callback(std::move(callback)) {
+    Resize();
+  }
 
  public Q_SLOTS:
   void Resize() { setFixedSize(Value.Rotate() ? Width() : Height(), Value.Rotate() ? Height() : Width()); }

@@ -79,8 +79,8 @@ inline Array<std::uint64_t, Edge::Max> HashValueMixin::HashMapper = []() -> Arra
   Random random;
   Array<std::uint64_t, Edge::Max> result;
   std::unordered_set<std::uint64_t> visited;
-  auto randv = [&]() -> std::uint64_t {
-    return random.Range(static_cast<std::uint64_t>(1), std::numeric_limits<std::uint64_t>::max());
+  std::function<std::uint64_t()> randv = [&]() -> std::uint64_t {
+    return random.Range<std::uint64_t>(1, std::numeric_limits<std::uint64_t>::max());
   };
   for (std::uint64_t& v : result) {
     v = randv();

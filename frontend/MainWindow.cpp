@@ -37,9 +37,9 @@ MainWindow::MainWindow(PlayerType player1Type, PlayerType player2Type, QWidget* 
   Resize();
 
   QShortcut* scZoomOut = new QShortcut(QKeySequence::ZoomOut, this);
-  connect(scZoomOut, &QShortcut::activated, this, [&]() {
+  connect(scZoomOut, &QShortcut::activated, this, [&]() -> void {
     UnitSize = std::min<int>(UnitSize - 1, static_cast<double>(UnitSize) * 0.9);
-    if (UnitSize == 0) {
+    if (UnitSize <= 0) {
       UnitSize = 1;
       QApplication::beep();
     }
@@ -47,13 +47,13 @@ MainWindow::MainWindow(PlayerType player1Type, PlayerType player2Type, QWidget* 
   });
 
   QShortcut* scZoomIn = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Equal), this);
-  connect(scZoomIn, &QShortcut::activated, this, [&]() {
+  connect(scZoomIn, &QShortcut::activated, this, [&]() -> void {
     UnitSize = std::max<int>(UnitSize + 1, static_cast<double>(UnitSize) * 1.1);
     Resize();
   });
 
   QShortcut* scRefresh = new QShortcut(QKeySequence::Refresh, this);
-  connect(scRefresh, &QShortcut::activated, this, [&]() {
+  connect(scRefresh, &QShortcut::activated, this, [&]() -> void {
     UnitSize = DefaultUnitSize;
     Resize();
   });
@@ -118,7 +118,7 @@ void MainWindow::Run() {
 }
 
 void MainWindow::AsyncRun() {
-  QThreadPool::globalInstance()->start([this]() -> void { Run(); });
+  QThreadPool::globalInstance()->start([&]() -> void { Run(); });
 }
 
 void MainWindow::Add() {
