@@ -22,7 +22,7 @@ class MainWindow : public QMainWindow {
   static int BoardWidth(int unitSize) { return BoardSize * EdgeCanvas::Height(unitSize); }
   static int WindowSize(int unitSize) { return BoardWidth(unitSize) + 2 * BoxCanvas::Width(unitSize); }
 
-  MainWindow(PlayerType player1Type, PlayerType player2Type, QWidget* parent = nullptr);
+  MainWindow(PlayerType player1Type, PlayerType player2Type);
 
  public Q_SLOTS:
   void Run();

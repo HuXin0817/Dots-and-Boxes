@@ -21,8 +21,8 @@
 
 namespace dab::__detail__::frontend {
 
-MainWindow::MainWindow(PlayerType player1Type, PlayerType player2Type, QWidget* parent)
-    : QMainWindow(parent), Player1Type(player1Type), Player2Type(player2Type) {
+MainWindow::MainWindow(PlayerType player1Type, PlayerType player2Type)
+    : Player1Type(player1Type), Player2Type(player2Type) {
   Robot1 = Robot::Create(Player1Type);
   Robot2 = Robot::Create(Player2Type);
   Env = std::unique_ptr<GlobalEnv>();
