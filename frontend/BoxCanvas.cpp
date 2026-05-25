@@ -8,8 +8,8 @@ void BoxCanvas::paintEvent(QPaintEvent* event) {
   QWidget::paintEvent(event);
 
   QPainter painter(this);
-  painter.setRenderHint(QPainter::Antialiasing);
-  painter.setPen(Qt::NoPen);
+  painter.setRenderHint(QPainter::RenderHint::Antialiasing);
+  painter.setPen(Qt::PenStyle::NoPen);
   painter.setBrush(QBrush(Color()));
   painter.drawRect(rect());
 }

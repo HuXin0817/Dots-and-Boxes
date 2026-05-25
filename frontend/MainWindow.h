@@ -2,6 +2,7 @@
 
 #include <QMainWindow>
 #include <QPointer>
+#include <QPropertyAnimation>
 
 #include "../src/Robot.h"
 #include "BoxCanvas.h"
@@ -39,16 +40,17 @@ class MainWindow : public QMainWindow {
  private:
   const PlayerType Player1Type;
   const PlayerType Player2Type;
-  std::unique_ptr<Robot> Robot1;
-  std::unique_ptr<Robot> Robot2;
+  std::unique_ptr<Robot> Robot1 = nullptr;
+  std::unique_ptr<Robot> Robot2 = nullptr;
+  std::unique_ptr<GlobalEnv> Env = nullptr;
   Edge PlayerMoveEdge;
   Array<QPointer<BoxCanvas>, Box::Max> BoxCanvases;
   Array<QPointer<DotCanvas>, Dot::Max> DotCanvases;
   Array<QPointer<EdgeCanvas>, Edge::Max> EdgeCanvases;
-  GlobalEnv Env;
 
   QColor Color() const { return ThemeColor(DarkThemeColor, LightThemeColor); }
 
+  static QPointer<QPropertyAnimation> CreatePosAnimation(QWidget* widget, int x, int y);
   void SetPlayerMoveEdge(Edge edge);
 };
 

@@ -42,7 +42,6 @@ class EdgeCanvas : public QWidget {
   const GlobalEnv* Env;
   Edge Value;
   std::function<void(Edge)> Callback;
-
   bool Hovered = false;
 
   QColor Color() const;

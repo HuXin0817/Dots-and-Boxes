@@ -16,7 +16,7 @@ class CachedRobot : public SubRobotType {
 
  private:
   using CacheType = tstarling::ThreadSafeLRUCache<HashValueBoard, Vector<Edge>>;
-  static inline CacheType Cache{static_cast<std::size_t>(Edge::Max) << 10};
+  static inline CacheType Cache = CacheType(static_cast<std::size_t>(Edge::Max) << 10);
 
   HashValueBoard Key;
 };

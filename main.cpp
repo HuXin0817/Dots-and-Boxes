@@ -55,11 +55,11 @@ QCommandLineOption CreatePlayerTypeOption(int playerId) {
 }
 
 PlayerType ParsePlayerType(const QString& arg) {
-  if (arg.compare("robot", Qt::CaseInsensitive) == 0) {
+  if (arg.compare("robot", Qt::CaseSensitivity::CaseInsensitive) == 0) {
     return DefaultPlayerType;
   }
   for (const std::size_t i : std::views::iota(static_cast<std::size_t>(0), std::size(PlayerTypeOptionStrings))) {
-    if (arg.compare(PlayerTypeOptionStrings[i], Qt::CaseInsensitive) == 0) {
+    if (arg.compare(PlayerTypeOptionStrings[i], Qt::CaseSensitivity::CaseInsensitive) == 0) {
       return static_cast<PlayerType>(i);
     }
   }

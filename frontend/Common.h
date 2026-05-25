@@ -36,7 +36,6 @@ class GlobalEnv {
 
  private:
   static constexpr int DefaultUnitSize = 6 + 16 / BoardSize;
-
   int UnitSize = DefaultUnitSize;
 
   GameBoard Board;

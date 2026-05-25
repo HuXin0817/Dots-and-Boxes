@@ -8,9 +8,9 @@ void DotCanvas::paintEvent(QPaintEvent* event) {
   QWidget::paintEvent(event);
 
   QPainter painter(this);
-  painter.setRenderHint(QPainter::Antialiasing);
+  painter.setRenderHint(QPainter::RenderHint::Antialiasing);
   painter.setBrush(QBrush(Color()));
-  painter.setPen(Qt::NoPen);
+  painter.setPen(Qt::PenStyle::NoPen);
 
   const int x = width() / 2;
   const int y = height() / 2;
