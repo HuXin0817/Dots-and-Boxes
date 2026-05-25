@@ -14,7 +14,7 @@ void DotCanvas::paintEvent(QPaintEvent* event) {
 
   const int x = width() / 2;
   const int y = height() / 2;
-  painter.drawEllipse(QPoint(x, y), UnitSize, UnitSize);
+  painter.drawEllipse(QPoint(x, y), Env->GetUnitSize(), Env->GetUnitSize());
 }
 
 }  // namespace dab::__detail__::frontend

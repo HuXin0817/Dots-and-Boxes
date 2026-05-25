@@ -2,11 +2,11 @@
 
 #include <functional>
 
-#include "BaseCanvas.h"
+#include "Common.h"
 
 namespace dab::__detail__::frontend {
 
-class EdgeCanvas : public BaseCanvas {
+class EdgeCanvas : public QWidget {
   Q_OBJECT
   Q_DISABLE_COPY(EdgeCanvas)
 
@@ -18,24 +18,32 @@ class EdgeCanvas : public BaseCanvas {
   static constexpr QColor Player1OccupyColor = QColor(64, 64, 255, 255);
   static constexpr QColor Player2OccupyColor = QColor(255, 64, 64, 255);
 
-  static int Width() { return UnitSize * 2; }
-  static int Height() { return Width() * 5; }
+  static int Width(int unitSize) { return unitSize * 2; }
+  static int Height(int unitSize) { return Width(unitSize) * 5; }
 
-  EdgeCanvas(Edge edge, std::function<void(Edge)> callback, QWidget* parent)
-      : BaseCanvas(parent), Value(edge), Callback(std::move(callback)) {
-    Resize();
-  }
+  EdgeCanvas(const GlobalEnv* env, Edge edge, std::function<void(Edge)> callback, QWidget* parent)
+      : Env(env), Value(edge), Callback(std::move(callback)), QWidget(parent) {}
+
+  Edge GetValue() const { return Value; }
 
  public Q_SLOTS:
-  void Resize() { setFixedSize(Value.Rotate() ? Width() : Height(), Value.Rotate() ? Height() : Width()); }
+  void Resize() {
+    setFixedSize(Value.Rotate() ? Width(Env->GetUnitSize()) : Height(Env->GetUnitSize()),
+                 Value.Rotate() ? Height(Env->GetUnitSize()) : Width(Env->GetUnitSize()));
+  }
 
  protected:
   void mousePressEvent(QMouseEvent* event) override;
   void paintEvent(QPaintEvent* event) override;
+  void enterEvent(QEnterEvent* event) override;
+  void leaveEvent(QEvent* event) override;
 
  private:
+  const GlobalEnv* Env;
   Edge Value;
   std::function<void(Edge)> Callback;
+
+  bool Hovered = false;
 
   QColor Color() const;
 };

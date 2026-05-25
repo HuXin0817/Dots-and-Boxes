@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QMainWindow>
 #include <QPointer>
 
 #include "../src/Robot.h"
@@ -9,7 +10,7 @@
 
 namespace dab::__detail__::frontend {
 
-class MainWindow : public BaseCanvas {
+class MainWindow : public QMainWindow {
   Q_OBJECT
   Q_DISABLE_COPY(MainWindow)
 
@@ -17,8 +18,8 @@ class MainWindow : public BaseCanvas {
   static constexpr QColor DarkThemeColor = QColor(43, 43, 43, 255);
   static constexpr QColor LightThemeColor = QColor(242, 242, 242, 255);
 
-  static int BoardWidth() { return BoardSize * EdgeCanvas::Height(); }
-  static int WindowSize() { return BoardWidth() + 2 * BoxCanvas::Width(); }
+  static int BoardWidth(int unitSize) { return BoardSize * EdgeCanvas::Height(unitSize); }
+  static int WindowSize(int unitSize) { return BoardWidth(unitSize) + 2 * BoxCanvas::Width(unitSize); }
 
   MainWindow(PlayerType player1Type, PlayerType player2Type, QWidget* parent = nullptr);
 
@@ -40,11 +41,11 @@ class MainWindow : public BaseCanvas {
   const PlayerType Player2Type;
   std::unique_ptr<Robot> Robot1;
   std::unique_ptr<Robot> Robot2;
-  GameBoard Board;
   Edge PlayerMoveEdge;
   Array<QPointer<BoxCanvas>, Box::Max> BoxCanvases;
   Array<QPointer<DotCanvas>, Dot::Max> DotCanvases;
   Array<QPointer<EdgeCanvas>, Edge::Max> EdgeCanvases;
+  GlobalEnv Env;
 
   QColor Color() const { return ThemeColor(DarkThemeColor, LightThemeColor); }
 

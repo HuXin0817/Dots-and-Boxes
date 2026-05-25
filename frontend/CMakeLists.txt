@@ -1,6 +1,5 @@
 set(FrontendLibrary "frontend${BoardSize}x${BoardSize}")
 set(FrontendSources
-  BaseCanvas.cpp
   BoxCanvas.cpp
   DotCanvas.cpp
   EdgeCanvas.cpp

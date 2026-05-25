@@ -15,7 +15,7 @@ void BoxCanvas::paintEvent(QPaintEvent* event) {
 }
 
 QColor BoxCanvas::Color() const {
-  switch (GetBoard().GetOwner(Value)) {
+  switch (Env->GetBoard().GetOwner(Value)) {
     case Owner::None:
       return {0, 0, 0, 0};
     case Owner::Player1:

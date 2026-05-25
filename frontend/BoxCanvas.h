@@ -1,11 +1,10 @@
 #pragma once
 
-#include "BaseCanvas.h"
 #include "EdgeCanvas.h"
 
 namespace dab::__detail__::frontend {
 
-class BoxCanvas : public BaseCanvas {
+class BoxCanvas : public QWidget {
   Q_OBJECT
   Q_DISABLE_COPY(BoxCanvas)
 
@@ -13,17 +12,20 @@ class BoxCanvas : public BaseCanvas {
   static constexpr QColor Player1OccupyColor = QColor(64, 64, 255, 64);
   static constexpr QColor Player2OccupyColor = QColor(255, 64, 64, 64);
 
-  static int Width() { return EdgeCanvas::Height() - 2 * UnitSize; }
+  static int Width(int unitSize) { return EdgeCanvas::Height(unitSize) - 2 * unitSize; }
 
-  BoxCanvas(Box box, QWidget* parent) : BaseCanvas(parent), Value(box) { Resize(); }
+  BoxCanvas(const GlobalEnv* env, Box box, QWidget* parent) : Env(env), Value(box), QWidget(parent) {}
+
+  Box GetValue() const { return Value; }
 
  public Q_SLOTS:
-  void Resize() { setFixedSize(Width(), Width()); }
+  void Resize() { setFixedSize(Width(Env->GetUnitSize()), Width(Env->GetUnitSize())); }
 
  protected:
   void paintEvent(QPaintEvent* event) override;
 
  private:
+  const GlobalEnv* Env;
   Box Value;
 
   QColor Color() const;

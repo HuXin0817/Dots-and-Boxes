@@ -23,17 +23,16 @@ QCommandLineOption CreateBoardSizeOption() {
   return {names, description, "size", defaultBoardSize};
 }
 
-QCommandLineOption CreatePlayerTypeOption(int playerid) {
-  const QByteArray playerTypeEnv = qgetenv(std::format("PLAYER{}", playerid).c_str());
+QCommandLineOption CreatePlayerTypeOption(int playerId) {
+  const QByteArray playerTypeEnv = qgetenv(QString("PLAYER%1").arg(playerId).toLocal8Bit().constData());
   QString defaultPlayerType = "robot";
   if (!playerTypeEnv.isEmpty()) {
     defaultPlayerType = playerTypeEnv;
   }
 
-  QStringList accepted;
-  accepted << "human" << "robot";
-  for (const char* option : PlayerTypeOptionStrings) {
-    accepted << QString::fromUtf8(option);
+  QStringList accepted = {"human", "robot"};
+  for (const QString option : PlayerTypeOptionStrings) {
+    accepted << option;
   }
 
   QString acceptedStr;
@@ -46,13 +45,12 @@ QCommandLineOption CreatePlayerTypeOption(int playerid) {
     acceptedStr = "'" + allButLast + "' or '" + accepted.last() + "'";
   }
 
-  const QStringList names = {QString("p%1").arg(playerid), QString("player%1").arg(playerid)};
-  const QString defaultPlayerTypeString = PlayerTypeOptionStrings[static_cast<int>(DefaultPlayerType)];
+  const QStringList names = {QString("p%1").arg(playerId), QString("player%1").arg(playerId)};
   const QString discription =
       QString("Set type of player %1. Accepts: %2 (default: 'robot'). Note: 'robot' is equivalent to '%3'.")
-          .arg(playerid)
+          .arg(playerId)
           .arg(acceptedStr)
-          .arg(defaultPlayerTypeString);
+          .arg(DefaultPlayerTypeString);
   return {names, discription, "type", defaultPlayerType};
 }
 
@@ -60,7 +58,7 @@ PlayerType ParsePlayerType(const QString& arg) {
   if (arg.compare("robot", Qt::CaseInsensitive) == 0) {
     return DefaultPlayerType;
   }
-  for (const std::size_t i : std::views::iota(0ull, std::size(PlayerTypeOptionStrings))) {
+  for (const std::size_t i : std::views::iota(static_cast<std::size_t>(0), std::size(PlayerTypeOptionStrings))) {
     if (arg.compare(PlayerTypeOptionStrings[i], Qt::CaseInsensitive) == 0) {
       return static_cast<PlayerType>(i);
     }
@@ -74,7 +72,7 @@ int64_t ParseBoardSize(const QString& arg) {
   const std::int64_t boardSize = arg.toLongLong(&ok);
   if (!ok || boardSize < 1 || boardSize > MaxBoardSize) {
     std::println(
-        stderr, "Invalid board size '{}'. Must be between 1 and {}.", arg.toLocal8Bit().constData(), MaxBoardSize);
+        stderr, "Invalid board size '{}'. Must be between {} and {}.", arg.toLocal8Bit().constData(), 1, MaxBoardSize);
     exit(EXIT_FAILURE);
   }
   return boardSize;

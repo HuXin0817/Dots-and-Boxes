@@ -22,6 +22,9 @@ static constexpr const char* PlayerTypeOptionStrings[] = {
 
 static constexpr PlayerType DefaultPlayerType = PlayerType::ParallelSearchRobot;
 
+static constexpr const char* DefaultPlayerTypeString =
+    PlayerTypeOptionStrings[static_cast<std::size_t>(DefaultPlayerType)];
+
 constexpr bool PlayerTypeIsRobot(PlayerType playerType) { return playerType != PlayerType::Human; }
 
 }  // namespace dab

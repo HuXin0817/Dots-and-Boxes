@@ -3,7 +3,7 @@
 #include <QPainter>
 
 #include "../src/Board.h"
-#include "BaseCanvas.h"
+#include "Common.h"
 
 namespace dab::__detail__::frontend {
 
@@ -23,10 +23,21 @@ void EdgeCanvas::paintEvent(QPaintEvent* event) {
   painter.drawRect(rect());
 }
 
+void EdgeCanvas::enterEvent(QEnterEvent* event) {
+  QWidget::enterEvent(event);
+  Hovered = true;
+  update();
+}
+
+void EdgeCanvas::leaveEvent(QEvent* event) {
+  QWidget::leaveEvent(event);
+  Hovered = false;
+  update();
+}
+
 QColor EdgeCanvas::Color() const {
-  const GameBoard& board = GetBoard();
-  if (board.GetOwner(Value) == Owner::None) {
-    if (Hovered()) {
+  if (Env->GetBoard().GetOwner(Value) == Owner::None) {
+    if (Hovered) {
       return ThemeColor(DarkThemeHoveredColor, LightThemeHoveredColor);
     }
 
@@ -34,15 +45,15 @@ QColor EdgeCanvas::Color() const {
   }
 
   QColor color;
-  if (board.GetOwner(Value) == Owner::Player1) {
+  if (Env->GetBoard().GetOwner(Value) == Owner::Player1) {
     color = Player1OccupyColor;
-  } else if (board.GetOwner(Value) == Owner::Player2) {
+  } else if (Env->GetBoard().GetOwner(Value) == Owner::Player2) {
     color = Player2OccupyColor;
   }
 
-  if (board.MoveRecord().Back() == Value) {
+  if (Env->GetBoard().MoveRecord().Back() == Value) {
     color.setAlpha(255);
-  } else if (Hovered()) {
+  } else if (Hovered) {
     color.setAlpha(144);
   } else {
     color.setAlpha(128);
