@@ -25,35 +25,34 @@ MainWindow::MainWindow(PlayerType player1Type, PlayerType player2Type)
     : Player1Type(player1Type), Player2Type(player2Type) {
   Robot1 = Robot::Create(Player1Type);
   Robot2 = Robot::Create(Player2Type);
-  Env = std::unique_ptr<GlobalEnv>();
 
   for (const Box box : Iota<Box>()) {
-    BoxCanvases.At(box) = new BoxCanvas(Env.get(), box, this);
+    BoxCanvases.At(box) = new BoxCanvas(&Env, box, this);
   }
   std::function<void(Edge)> callback = [&](Edge edge) -> void { SetPlayerMoveEdge(edge); };
   for (const Edge edge : Iota<Edge>()) {
-    EdgeCanvases.At(edge) = new EdgeCanvas(Env.get(), edge, callback, this);
+    EdgeCanvases.At(edge) = new EdgeCanvas(&Env, edge, callback, this);
   }
   for (const Dot dot : Iota<Dot>()) {
-    DotCanvases.At(dot) = new DotCanvas(Env.get(), dot, this);
+    DotCanvases.At(dot) = new DotCanvas(&Env, dot, this);
   }
   Resize();
 
   QPointer<QShortcut> scZoomOut = new QShortcut(QKeySequence::ZoomOut, this);
   connect(scZoomOut, &QShortcut::activated, this, [&]() -> void {
-    Env->ReduceUnitSize();
+    Env.ReduceUnitSize();
     Resize();
   });
 
   QPointer<QShortcut> scZoomIn = new QShortcut(QKeySequence(Qt::Modifier::CTRL | Qt::Key::Key_Equal), this);
   connect(scZoomIn, &QShortcut::activated, this, [&]() -> void {
-    Env->AddUnitSize();
+    Env.AddUnitSize();
     Resize();
   });
 
   QPointer<QShortcut> scRefresh = new QShortcut(QKeySequence::Refresh, this);
   connect(scRefresh, &QShortcut::activated, this, [&]() -> void {
-    Env->ResetUnitSize();
+    Env.ResetUnitSize();
     Resize();
   });
 }
@@ -76,27 +75,27 @@ void MainWindow::showEvent(QShowEvent* event) {
 }
 
 void MainWindow::SetPlayerMoveEdge(Edge edge) {
-  if (Env->GetBoard().Contains(edge)) {
+  if (Env.GetBoard().Contains(edge)) {
     return;
   }
-  if (PlayerTypeIsRobot(Player1Type) && Env->GetBoard().IsPlayer1Turn()) {
+  if (PlayerTypeIsRobot(Player1Type) && Env.GetBoard().IsPlayer1Turn()) {
     return;
   }
-  if (PlayerTypeIsRobot(Player2Type) && Env->GetBoard().IsPlayer2Turn()) {
+  if (PlayerTypeIsRobot(Player2Type) && Env.GetBoard().IsPlayer2Turn()) {
     return;
   }
   PlayerMoveEdge = edge;
 }
 
 void MainWindow::Run() {
-  Env->GetBoard().Reset();
+  Env.GetBoard().Reset();
   Random random;
-  while (Env->GetBoard().Gaming()) {
-    if (PlayerTypeIsRobot(Player1Type) && Env->GetBoard().IsPlayer1Turn()) {
-      Span<const Edge> candidateEdges = Robot1->BestCandidateEdges(Env->GetBoard());
+  while (Env.GetBoard().Gaming()) {
+    if (PlayerTypeIsRobot(Player1Type) && Env.GetBoard().IsPlayer1Turn()) {
+      Span<const Edge> candidateEdges = Robot1->BestCandidateEdges(Env.GetBoard());
       PlayerMoveEdge = random.Choice(candidateEdges);
-    } else if (PlayerTypeIsRobot(Player2Type) && Env->GetBoard().IsPlayer2Turn()) {
-      Span<const Edge> candidateEdges = Robot2->BestCandidateEdges(Env->GetBoard());
+    } else if (PlayerTypeIsRobot(Player2Type) && Env.GetBoard().IsPlayer2Turn()) {
+      Span<const Edge> candidateEdges = Robot2->BestCandidateEdges(Env.GetBoard());
       PlayerMoveEdge = random.Choice(candidateEdges);
     } else {
       PlayerMoveEdge = Edge::Invalid;
@@ -114,20 +113,20 @@ void MainWindow::AsyncRun() {
 }
 
 void MainWindow::Add() {
-  Int step = Env->GetBoard().NowStep();
-  int player = Env->GetBoard().IsPlayer1Turn() ? 1 : 2;
+  Int step = Env.GetBoard().NowStep();
+  int player = Env.GetBoard().IsPlayer1Turn() ? 1 : 2;
   Int move = PlayerMoveEdge;
   EdgeCanvases.At(PlayerMoveEdge)->raise();
   DotCanvases.At(PlayerMoveEdge.Dot1())->raise();
   DotCanvases.At(PlayerMoveEdge.Dot2())->raise();
-  Env->GetBoard().Add(PlayerMoveEdge);
+  Env.GetBoard().Add(PlayerMoveEdge);
   std::println(R"({:%Y-%m-%d %H:%M:%S} {{"Step":{},"Player":{},"Move":{},"Score":{{"Player1":{},"Player2":{}}}}})",
                std::chrono::system_clock::now(),
                step,
                player,
                move,
-               Env->GetBoard().Player1Score(),
-               Env->GetBoard().Player2Score());
+               Env.GetBoard().Player1Score(),
+               Env.GetBoard().Player2Score());
   update();
   QApplication::beep();
 }
@@ -145,7 +144,7 @@ void MainWindow::Resize() {
     DotCanvases.At(dot)->Resize();
   }
 
-  int windowSize = WindowSize(Env->GetUnitSize());
+  int windowSize = WindowSize(Env.GetUnitSize());
   setFixedSize(windowSize, windowSize);
 }
 
@@ -161,29 +160,29 @@ QPointer<QPropertyAnimation> MainWindow::CreatePosAnimation(QWidget* widget, int
 void MainWindow::Move() {
   QPointer<QParallelAnimationGroup> animationGroup = new QParallelAnimationGroup(this);
 
-  const int x0 = (width() - BoardWidth(Env->GetUnitSize())) / 2 - Env->GetUnitSize();
-  const int y0 = (height() - BoardWidth(Env->GetUnitSize())) / 2 - Env->GetUnitSize();
+  const int x0 = (width() - BoardWidth(Env.GetUnitSize())) / 2 - Env.GetUnitSize();
+  const int y0 = (height() - BoardWidth(Env.GetUnitSize())) / 2 - Env.GetUnitSize();
 
   for (QPointer<BoxCanvas> canvas : BoxCanvases) {
-    const int x = x0 + canvas->GetValue().X() * EdgeCanvas::Height(Env->GetUnitSize()) + 2 * Env->GetUnitSize();
-    const int y = y0 + canvas->GetValue().Y() * EdgeCanvas::Height(Env->GetUnitSize()) + 2 * Env->GetUnitSize();
+    const int x = x0 + canvas->GetValue().X() * EdgeCanvas::Height(Env.GetUnitSize()) + 2 * Env.GetUnitSize();
+    const int y = y0 + canvas->GetValue().Y() * EdgeCanvas::Height(Env.GetUnitSize()) + 2 * Env.GetUnitSize();
     animationGroup->addAnimation(CreatePosAnimation(canvas, x, y));
   }
 
   for (QPointer<EdgeCanvas> canvas : EdgeCanvases) {
-    int x = x0 + canvas->GetValue().Dot1().X() * EdgeCanvas::Height(Env->GetUnitSize());
-    int y = y0 + canvas->GetValue().Dot1().Y() * EdgeCanvas::Height(Env->GetUnitSize());
+    int x = x0 + canvas->GetValue().Dot1().X() * EdgeCanvas::Height(Env.GetUnitSize());
+    int y = y0 + canvas->GetValue().Dot1().Y() * EdgeCanvas::Height(Env.GetUnitSize());
     if (canvas->GetValue().Rotate()) {
-      y += Env->GetUnitSize();
+      y += Env.GetUnitSize();
     } else {
-      x += Env->GetUnitSize();
+      x += Env.GetUnitSize();
     }
     animationGroup->addAnimation(CreatePosAnimation(canvas, x, y));
   }
 
   for (QPointer<DotCanvas> canvas : DotCanvases) {
-    const int x = x0 + canvas->GetValue().X() * EdgeCanvas::Height(Env->GetUnitSize());
-    const int y = y0 + canvas->GetValue().Y() * EdgeCanvas::Height(Env->GetUnitSize());
+    const int x = x0 + canvas->GetValue().X() * EdgeCanvas::Height(Env.GetUnitSize());
+    const int y = y0 + canvas->GetValue().Y() * EdgeCanvas::Height(Env.GetUnitSize());
     animationGroup->addAnimation(CreatePosAnimation(canvas, x, y));
   }
 
@@ -192,13 +191,12 @@ void MainWindow::Move() {
 
 void MainWindow::HandleGameOver() {
   QPointer<QMessageBox> messagebox = new QMessageBox(this);
-  if (Env->GetBoard().RelativeScore() > 0) {
-    messagebox->setText(QString("Blue Team Win! (Score %1:%2)")
-                            .arg(Env->GetBoard().Player1Score())
-                            .arg(Env->GetBoard().Player2Score()));
-  } else if (Env->GetBoard().RelativeScore() < 0) {
+  if (Env.GetBoard().RelativeScore() > 0) {
     messagebox->setText(
-        QString("Red Team Win! (Score %1:%2)").arg(Env->GetBoard().Player1Score()).arg(Env->GetBoard().Player2Score()));
+        QString("Blue Team Win! (Score %1:%2)").arg(Env.GetBoard().Player1Score()).arg(Env.GetBoard().Player2Score()));
+  } else if (Env.GetBoard().RelativeScore() < 0) {
+    messagebox->setText(
+        QString("Red Team Win! (Score %1:%2)").arg(Env.GetBoard().Player1Score()).arg(Env.GetBoard().Player2Score()));
   } else {
     messagebox->setText("Draw!");
   }

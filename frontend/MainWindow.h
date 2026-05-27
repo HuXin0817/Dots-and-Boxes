@@ -42,7 +42,7 @@ class MainWindow : public QMainWindow {
   const PlayerType Player2Type;
   std::unique_ptr<Robot> Robot1 = nullptr;
   std::unique_ptr<Robot> Robot2 = nullptr;
-  std::unique_ptr<GlobalEnv> Env = nullptr;
+  GlobalEnv Env;
   Edge PlayerMoveEdge;
   Array<QPointer<BoxCanvas>, Box::Max> BoxCanvases;
   Array<QPointer<DotCanvas>, Dot::Max> DotCanvases;
