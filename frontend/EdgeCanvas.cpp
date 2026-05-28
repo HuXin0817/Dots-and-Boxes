@@ -3,14 +3,13 @@
 #include <QPainter>
 
 #include "../src/Board.h"
-#include "Common.h"
+#include "GlobalEnv.h"
 
 namespace dab::__detail__::frontend {
 
 void EdgeCanvas::mousePressEvent(QMouseEvent* event) {
   QWidget::mousePressEvent(event);
-
-  Callback(Value);
+  Env->SetHumanMoveEdge(Value);
 }
 
 void EdgeCanvas::paintEvent(QPaintEvent* event) {
@@ -38,10 +37,10 @@ void EdgeCanvas::leaveEvent(QEvent* event) {
 QColor EdgeCanvas::Color() const {
   if (Env->GetBoard().GetOwner(Value) == Owner::None) {
     if (Hovered) {
-      return ThemeColor(DarkThemeHoveredColor, LightThemeHoveredColor);
+      return Env->ThemeColor(DarkThemeHoveredColor, LightThemeHoveredColor);
     }
 
-    return ThemeColor(DarkThemeColor, LightThemeColor);
+    return Env->ThemeColor(DarkThemeColor, LightThemeColor);
   }
 
   QColor color;

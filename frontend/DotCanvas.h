@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Common.h"
+#include "GlobalEnv.h"
 
 namespace dab::__detail__::frontend {
 
@@ -14,7 +14,7 @@ class DotCanvas : public QWidget {
 
   static int Width(int unitSize) { return 2 * unitSize; }
 
-  DotCanvas(const GlobalEnv* env, Dot dot, QWidget* parent) : Env(env), Value(dot), QWidget(parent) {}
+  DotCanvas(GlobalEnv* env, Dot dot, QWidget* parent) : Env(env), Value(dot), QWidget(parent) {}
 
   Dot GetValue() const { return Value; }
 
@@ -25,10 +25,10 @@ class DotCanvas : public QWidget {
   void paintEvent(QPaintEvent* event) override;
 
  private:
-  const GlobalEnv* Env;
+  GlobalEnv* Env;
   Dot Value;
 
-  QColor Color() const { return ThemeColor(DarkThemeColor, LightThemeColor); }
+  QColor Color() const { return Env->ThemeColor(DarkThemeColor, LightThemeColor); }
 };
 
 }  // namespace dab::__detail__::frontend

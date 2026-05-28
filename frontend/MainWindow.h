@@ -38,20 +38,17 @@ class MainWindow : public QMainWindow {
   void showEvent(QShowEvent* event) override;
 
  private:
-  const PlayerType Player1Type;
-  const PlayerType Player2Type;
   std::unique_ptr<Robot> Robot1 = nullptr;
   std::unique_ptr<Robot> Robot2 = nullptr;
   GlobalEnv Env;
-  Edge PlayerMoveEdge;
+  Edge CandidateEdge;
   Array<QPointer<BoxCanvas>, Box::Max> BoxCanvases;
   Array<QPointer<DotCanvas>, Dot::Max> DotCanvases;
   Array<QPointer<EdgeCanvas>, Edge::Max> EdgeCanvases;
 
-  QColor Color() const { return ThemeColor(DarkThemeColor, LightThemeColor); }
+  QColor Color() const { return Env.ThemeColor(DarkThemeColor, LightThemeColor); }
 
   static QPointer<QPropertyAnimation> CreatePosAnimation(QWidget* widget, int x, int y);
-  void SetPlayerMoveEdge(Edge edge);
 };
 
 }  // namespace dab::__detail__::frontend

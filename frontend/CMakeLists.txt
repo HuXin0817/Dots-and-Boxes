@@ -4,6 +4,7 @@ set(FrontendSources
   DotCanvas.cpp
   EdgeCanvas.cpp
   Frontend.cpp
+  GlobalEnv.cpp
   MainWindow.cpp
 )
 add_library(${FrontendLibrary} STATIC ${FrontendSources})

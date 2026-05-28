@@ -14,7 +14,7 @@ class BoxCanvas : public QWidget {
 
   static int Width(int unitSize) { return EdgeCanvas::Height(unitSize) - 2 * unitSize; }
 
-  BoxCanvas(const GlobalEnv* env, Box box, QWidget* parent) : Env(env), Value(box), QWidget(parent) {}
+  BoxCanvas(GlobalEnv* env, Box box, QWidget* parent) : Env(env), Value(box), QWidget(parent) {}
 
   Box GetValue() const { return Value; }
 
@@ -25,7 +25,7 @@ class BoxCanvas : public QWidget {
   void paintEvent(QPaintEvent* event) override;
 
  private:
-  const GlobalEnv* Env;
+  GlobalEnv* Env;
   Box Value;
 
   QColor Color() const;

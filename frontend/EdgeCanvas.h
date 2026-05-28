@@ -2,7 +2,7 @@
 
 #include <functional>
 
-#include "Common.h"
+#include "GlobalEnv.h"
 
 namespace dab::__detail__::frontend {
 
@@ -21,8 +21,7 @@ class EdgeCanvas : public QWidget {
   static int Width(int unitSize) { return unitSize * 2; }
   static int Height(int unitSize) { return Width(unitSize) * 5; }
 
-  EdgeCanvas(const GlobalEnv* env, Edge edge, std::function<void(Edge)> callback, QWidget* parent)
-      : Env(env), Value(edge), Callback(std::move(callback)), QWidget(parent) {}
+  EdgeCanvas(GlobalEnv* env, Edge edge, QWidget* parent) : Env(env), Value(edge), QWidget(parent) {}
 
   Edge GetValue() const { return Value; }
 
@@ -39,9 +38,8 @@ class EdgeCanvas : public QWidget {
   void leaveEvent(QEvent* event) override;
 
  private:
-  const GlobalEnv* Env;
+  GlobalEnv* Env;
   Edge Value;
-  std::function<void(Edge)> Callback;
   bool Hovered = false;
 
   QColor Color() const;

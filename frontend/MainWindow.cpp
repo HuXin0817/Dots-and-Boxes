@@ -15,23 +15,24 @@
 
 #include "../src/Robot.h"
 #include "BoxCanvas.h"
-#include "Common.h"
 #include "DotCanvas.h"
 #include "EdgeCanvas.h"
+#include "GlobalEnv.h"
 
 namespace dab::__detail__::frontend {
 
-MainWindow::MainWindow(PlayerType player1Type, PlayerType player2Type)
-    : Player1Type(player1Type), Player2Type(player2Type) {
-  Robot1 = Robot::Create(Player1Type);
-  Robot2 = Robot::Create(Player2Type);
+MainWindow::MainWindow(PlayerType player1Type, PlayerType player2Type) {
+  Env.SetPlayer1Type(player1Type);
+  Env.SetPlayer2Type(player2Type);
+
+  Robot1 = Robot::Create(player1Type);
+  Robot2 = Robot::Create(player2Type);
 
   for (const Box box : Iota<Box>()) {
     BoxCanvases.At(box) = new BoxCanvas(&Env, box, this);
   }
-  std::function<void(Edge)> callback = [&](Edge edge) -> void { SetPlayerMoveEdge(edge); };
   for (const Edge edge : Iota<Edge>()) {
-    EdgeCanvases.At(edge) = new EdgeCanvas(&Env, edge, callback, this);
+    EdgeCanvases.At(edge) = new EdgeCanvas(&Env, edge, this);
   }
   for (const Dot dot : Iota<Dot>()) {
     DotCanvases.At(dot) = new DotCanvas(&Env, dot, this);
@@ -74,34 +75,16 @@ void MainWindow::showEvent(QShowEvent* event) {
   AsyncRun();
 }
 
-void MainWindow::SetPlayerMoveEdge(Edge edge) {
-  if (Env.GetBoard().Contains(edge)) {
-    return;
-  }
-  if (PlayerTypeIsRobot(Player1Type) && Env.GetBoard().IsPlayer1Turn()) {
-    return;
-  }
-  if (PlayerTypeIsRobot(Player2Type) && Env.GetBoard().IsPlayer2Turn()) {
-    return;
-  }
-  PlayerMoveEdge = edge;
-}
-
 void MainWindow::Run() {
   Env.GetBoard().Reset();
   Random random;
   while (Env.GetBoard().Gaming()) {
-    if (PlayerTypeIsRobot(Player1Type) && Env.GetBoard().IsPlayer1Turn()) {
-      Span<const Edge> candidateEdges = Robot1->BestCandidateEdges(Env.GetBoard());
-      PlayerMoveEdge = random.Choice(candidateEdges);
-    } else if (PlayerTypeIsRobot(Player2Type) && Env.GetBoard().IsPlayer2Turn()) {
-      Span<const Edge> candidateEdges = Robot2->BestCandidateEdges(Env.GetBoard());
-      PlayerMoveEdge = random.Choice(candidateEdges);
+    if (PlayerTypeIsRobot(Env.GetPlayer1Type()) && Env.GetBoard().IsPlayer1Turn()) {
+      CandidateEdge = random.Choice(Robot1->BestCandidateEdges(Env.GetBoard()));
+    } else if (PlayerTypeIsRobot(Env.GetPlayer2Type()) && Env.GetBoard().IsPlayer2Turn()) {
+      CandidateEdge = random.Choice(Robot2->BestCandidateEdges(Env.GetBoard()));
     } else {
-      PlayerMoveEdge = Edge::Invalid;
-      while (PlayerMoveEdge == Edge::Invalid) {
-        QThread::yieldCurrentThread();
-      }
+      CandidateEdge = Env.GetHumanMoveEdgeSync();
     }
     QMetaObject::invokeMethod(this, &MainWindow::Add, Qt::ConnectionType::BlockingQueuedConnection);
   }
@@ -115,11 +98,11 @@ void MainWindow::AsyncRun() {
 void MainWindow::Add() {
   Int step = Env.GetBoard().NowStep();
   int player = Env.GetBoard().IsPlayer1Turn() ? 1 : 2;
-  Int move = PlayerMoveEdge;
-  EdgeCanvases.At(PlayerMoveEdge)->raise();
-  DotCanvases.At(PlayerMoveEdge.Dot1())->raise();
-  DotCanvases.At(PlayerMoveEdge.Dot2())->raise();
-  Env.GetBoard().Add(PlayerMoveEdge);
+  Int move = CandidateEdge;
+  EdgeCanvases.At(CandidateEdge)->raise();
+  DotCanvases.At(CandidateEdge.Dot1())->raise();
+  DotCanvases.At(CandidateEdge.Dot2())->raise();
+  Env.GetBoard().Add(CandidateEdge);
   std::println(R"({:%Y-%m-%d %H:%M:%S} {{"Step":{},"Player":{},"Move":{},"Score":{{"Player1":{},"Player2":{}}}}})",
                std::chrono::system_clock::now(),
                step,
