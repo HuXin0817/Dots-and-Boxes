@@ -16,7 +16,7 @@ class Robot {
  public:
   virtual ~Robot() = default;
 
-  virtual Span<const Edge> BestCandidateEdges(const GameBoard& board) = 0;
+  virtual Edge Move(const GameBoard& board) = 0;
 
   static std::unique_ptr<Robot> Create(PlayerType playerType);
 };
@@ -27,7 +27,10 @@ class RobotWrapper : public Robot, public Derived {
   using Derived::Derived;
   ~RobotWrapper() override = default;
 
-  Span<const Edge> BestCandidateEdges(const GameBoard& board) override { return Derived::BestCandidateEdges(board); }
+  Edge Move(const GameBoard& board) override { return Random.Choice(Derived::BestCandidateEdges(board)); }
+
+ private:
+  Random Random;
 };
 
 inline std::unique_ptr<Robot> Robot::Create(PlayerType playerType) {

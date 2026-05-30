@@ -77,12 +77,11 @@ void MainWindow::showEvent(QShowEvent* event) {
 
 void MainWindow::Run() {
   Env.GetBoard().Reset();
-  Random random;
   while (Env.GetBoard().Gaming()) {
     if (PlayerTypeIsRobot(Env.GetPlayer1Type()) && Env.GetBoard().IsPlayer1Turn()) {
-      CandidateEdge = random.Choice(Robot1->BestCandidateEdges(Env.GetBoard()));
+      CandidateEdge = Robot1->Move(Env.GetBoard());
     } else if (PlayerTypeIsRobot(Env.GetPlayer2Type()) && Env.GetBoard().IsPlayer2Turn()) {
-      CandidateEdge = random.Choice(Robot2->BestCandidateEdges(Env.GetBoard()));
+      CandidateEdge = Robot2->Move(Env.GetBoard());
     } else {
       CandidateEdge = Env.GetHumanMoveEdgeSync();
     }
