@@ -13,20 +13,20 @@ namespace dab::__detail__ {
 
 namespace board {
 
-static constexpr int EnableEdgeCount = 1 << 0;
-static constexpr int EnableRelativeScore = 1 << 1;
-static constexpr int EnableAbsoluteScore = 1 << 2;
-static constexpr int EnableScoreableCount = 1 << 3;
-static constexpr int EnableHashValue = 1 << 5;
-static constexpr int EnableOwner = 1 << 6;
-static constexpr int MaxFlag = 1 << 7;
+static constexpr std::int64_t EnableEdgeCount = 1 << 0;
+static constexpr std::int64_t EnableRelativeScore = 1 << 1;
+static constexpr std::int64_t EnableAbsoluteScore = 1 << 2;
+static constexpr std::int64_t EnableScoreableCount = 1 << 3;
+static constexpr std::int64_t EnableHashValue = 1 << 5;
+static constexpr std::int64_t EnableOwner = 1 << 6;
+static constexpr std::int64_t MaxFlag = 1 << 7;
 
 static constexpr Int Player1Turn = 1;
 static constexpr Int Player2Turn = -Player1Turn;
 
-static constexpr bool HasFlag(int config, int flag) { return (config & flag) != 0; }
+static constexpr bool HasFlag(std::int64_t config, std::int64_t flag) { return (config & flag) != 0; }
 
-static constexpr int FixedConfig(int config) {
+static constexpr std::int64_t FixedConfig(std::int64_t config) {
   config %= MaxFlag;
   if (HasFlag(config, EnableRelativeScore)) {
     config |= EnableEdgeCount;
@@ -100,7 +100,7 @@ static inline Array<std::uint64_t, Edge::Max> HashMapper = []() -> Array<std::ui
   return result;
 }();
 
-template <int Config>
+template <std::int64_t Config>
 class BoardImpl : BasicMixin,
                   Mixin<HasFlag(Config, EnableEdgeCount), EdgeCountMixin>,
                   Mixin<HasFlag(Config, EnableScoreableCount), ScoreableCountMixin>,
@@ -108,9 +108,9 @@ class BoardImpl : BasicMixin,
                   Mixin<HasFlag(Config, EnableAbsoluteScore), AbsoluteScoreMixin>,
                   Mixin<HasFlag(Config, EnableHashValue), HashValueMixin>,
                   Mixin<HasFlag(Config, EnableOwner), OwnerMixin> {
-  template <int>
+  template <std::int64_t>
   friend class BoardImpl;
-  static constexpr bool HasFlag(int flag) { return (Config & flag) != 0; }
+  static constexpr bool HasFlag(std::int64_t flag) { return (Config & flag) != 0; }
   static_assert(Config == FixedConfig(Config));
 
  public:
@@ -151,7 +151,7 @@ class BoardImpl : BasicMixin,
   constexpr std::strong_ordering operator<=>(const Other& other) const;
 };
 
-template <int Config>
+template <std::int64_t Config>
 constexpr void BoardImpl<Config>::Reset() {
   Step = 0;
   std::iota(EdgeIndexes.begin(), EdgeIndexes.end(), 0);
@@ -178,7 +178,7 @@ constexpr void BoardImpl<Config>::Reset() {
   }
 }
 
-template <int Config>
+template <std::int64_t Config>
 constexpr Int BoardImpl<Config>::Add(Edge edge) {
   assert(NotContains(edge));
   const Edge nowEdge = Edges.At(Step);
@@ -227,13 +227,13 @@ constexpr Int BoardImpl<Config>::Add(Edge edge) {
   return score;
 }
 
-template <int Config>
+template <std::int64_t Config>
 constexpr Edge BoardImpl<Config>::FindNotContainsEdgeInBox(Box box) const {
   assert(this->Counter.At(box) == 3);
   return *std::ranges::find_if(box.NearEdges(), [&](Edge edge) -> bool { return NotContains(edge); });
 }
 
-template <int Config>
+template <std::int64_t Config>
 constexpr Int BoardImpl<Config>::FindScoreableEdge() {
   for (const Edge edge : EmptyEdges()) {
     if (Scoreable(edge)) {
@@ -243,7 +243,7 @@ constexpr Int BoardImpl<Config>::FindScoreableEdge() {
   return this->ScoreableEdges.Size();
 }
 
-template <int Config>
+template <std::int64_t Config>
 constexpr Int BoardImpl<Config>::MaxObtainableScore(Int endScore) {
   Int score = 0;
   while (Gaming() && score < endScore) {
@@ -261,13 +261,13 @@ constexpr Int BoardImpl<Config>::MaxObtainableScore(Int endScore) {
   return score;
 }
 
-template <int Config>
+template <std::int64_t Config>
 constexpr std::uint8_t BoardImpl<Config>::MaxEdgeCount(Edge edge) const {
   const List<Box, 2>& nearBoxes = edge.NearBoxes();
   return std::max(this->Counter.At(nearBoxes.Front()), this->Counter.At(nearBoxes.Back()));
 }
 
-template <int Config>
+template <std::int64_t Config>
 template <typename Other>
 constexpr BoardImpl<Config>& BoardImpl<Config>::operator=(const Other& other) {
   Step = other.Step;
@@ -306,7 +306,7 @@ constexpr BoardImpl<Config>& BoardImpl<Config>::operator=(const Other& other) {
   return *this;
 }
 
-template <int Config>
+template <std::int64_t Config>
 template <typename Other>
 constexpr bool BoardImpl<Config>::operator==(const Other& other) const {
   if constexpr (HasFlag(EnableHashValue) && Other::HasFlag(EnableHashValue)) {
@@ -320,36 +320,28 @@ constexpr bool BoardImpl<Config>::operator==(const Other& other) const {
   return std::ranges::all_of(EmptyEdges(), [&](Edge edge) -> bool { return !other.Contains(edge); });
 }
 
-template <int Config>
+template <std::int64_t Config>
 template <typename Other>
 constexpr std::strong_ordering BoardImpl<Config>::operator<=>(const Other& other) const {
   if constexpr (HasFlag(EnableHashValue) && Other::HasFlag(EnableHashValue)) {
-    std::strong_ordering cmp = this->HashValue <=> other.HashValue;
-    if (cmp != std::strong_ordering::equal) {
+    if (std::strong_ordering cmp = this->HashValue <=> other.HashValue; cmp != std::strong_ordering::equal) {
       return cmp;
     }
   }
-
-  std::strong_ordering cmp = Step <=> other.Step;
-  if (cmp != std::strong_ordering::equal) {
+  if (std::strong_ordering cmp = Step <=> other.Step; cmp != std::strong_ordering::equal) {
     return cmp;
   }
-
   for (Edge edge : Iota<Edge>()) {
-    int c1 = Contains(edge);
-    int c2 = other.Contains(edge);
-    std::strong_ordering cmp = c1 <=> c2;
-    if (cmp != std::strong_ordering::equal) {
+    if (std::strong_ordering cmp = Contains(edge) <=> other.Contains(edge); cmp != std::strong_ordering::equal) {
       return cmp;
     }
   }
-
   return std::strong_ordering::equal;
 }
 
 static_assert(sizeof(BoardImpl<0>) == sizeof(BasicMixin));
 
-template <int Config>
+template <std::int64_t Config>
 using Board = BoardImpl<FixedConfig(Config)>;
 
 }  // namespace board
@@ -369,7 +361,7 @@ namespace std {
 
 using namespace dab::__detail__::board;
 
-template <int Config>
+template <std::int64_t Config>
   requires(HasFlag(Config, EnableHashValue))
 struct hash<BoardImpl<Config>> {
   constexpr std::uint64_t operator()(const BoardImpl<Config>& board) const { return board.Hash(); }

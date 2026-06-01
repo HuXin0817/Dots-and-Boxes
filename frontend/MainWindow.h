@@ -21,6 +21,10 @@ class MainWindow : public QMainWindow {
 
   static int BoardWidth(int unitSize) { return BoardSize * EdgeCanvas::Height(unitSize); }
   static int WindowSize(int unitSize) { return BoardWidth(unitSize) + 2 * BoxCanvas::Width(unitSize); }
+  static int StartOffset(int unitSize) { return (WindowSize(unitSize) - BoardWidth(unitSize)) / 2 - unitSize; }
+
+  QSize Size() const { return {WindowSize(Env.GetUnitSize()), WindowSize(Env.GetUnitSize())}; }
+  QColor Color() const { return Env.ThemeColor(DarkThemeColor, LightThemeColor); }
 
   MainWindow(PlayerType player1Type, PlayerType player2Type);
 
@@ -29,12 +33,10 @@ class MainWindow : public QMainWindow {
   void AsyncRun();
   void Add();
   void Resize();
-  void Move();
   void HandleGameOver();
 
  protected:
   void paintEvent(QPaintEvent* event) override;
-  void resizeEvent(QResizeEvent* event) override;
   void showEvent(QShowEvent* event) override;
 
  private:
@@ -45,10 +47,6 @@ class MainWindow : public QMainWindow {
   Array<QPointer<BoxCanvas>, Box::Max> BoxCanvases;
   Array<QPointer<DotCanvas>, Dot::Max> DotCanvases;
   Array<QPointer<EdgeCanvas>, Edge::Max> EdgeCanvases;
-
-  QColor Color() const { return Env.ThemeColor(DarkThemeColor, LightThemeColor); }
-
-  static QPointer<QPropertyAnimation> CreatePosAnimation(QWidget* widget, int x, int y);
 };
 
 }  // namespace dab::__detail__::frontend

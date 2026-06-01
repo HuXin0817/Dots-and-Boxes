@@ -14,15 +14,15 @@ namespace __detail__ {
 
 namespace iterable {
 
-static constexpr int EnableArray = 1 << 1;
-static constexpr int EnableSpan = 1 << 2;
-static constexpr int EnableAllocSize = 1 << 3;
-static constexpr int EnableFrontPointer = 1 << 4;
-static constexpr int EnableEndPointer = 1 << 5;
+static constexpr std::int64_t EnableArray = 1 << 1;
+static constexpr std::int64_t EnableSpan = 1 << 2;
+static constexpr std::int64_t EnableAllocSize = 1 << 3;
+static constexpr std::int64_t EnableFrontPointer = 1 << 4;
+static constexpr std::int64_t EnableEndPointer = 1 << 5;
 
-static constexpr bool HasFlag(int config, int flag) { return (config & flag) != 0; }
+static constexpr bool HasFlag(std::int64_t config, std::int64_t flag) { return (config & flag) != 0; }
 
-static constexpr bool CheckConfig(int config, Int arraySize) {
+static constexpr bool CheckConfig(std::int64_t config, Int arraySize) {
   bool result = true;
   if (arraySize > 0) {
     result &= HasFlag(config, EnableArray);
@@ -30,7 +30,7 @@ static constexpr bool CheckConfig(int config, Int arraySize) {
     result &= arraySize == 0;
     result &= !HasFlag(config, EnableArray);
   }
-  int n = 0;
+  std::int64_t n = 0;
   n += HasFlag(config, EnableArray);
   n += HasFlag(config, EnableSpan);
   n += HasFlag(config, EnableAllocSize);
@@ -66,13 +66,13 @@ struct SpanMixin {
   T* Data = nullptr;
 };
 
-template <int Config, typename T, Int ArraySize = 0>
+template <std::int64_t Config, typename T, Int ArraySize = 0>
 class Iterable : Mixin<HasFlag(Config, EnableArray), ArrayMixin<T, ArraySize>>,
                  Mixin<HasFlag(Config, EnableSpan), SpanMixin<T>>,
                  Mixin<HasFlag(Config, EnableAllocSize), PtrMixin<T>>,
                  Mixin<HasFlag(Config, EnableFrontPointer), FrontPointerMixin>,
                  Mixin<HasFlag(Config, EnableEndPointer), EndPointerMixin> {
-  static constexpr bool HasFlag(int flag) { return (Config & flag) != 0; }
+  static constexpr bool HasFlag(std::int64_t flag) { return (Config & flag) != 0; }
   static_assert(CheckConfig(Config, ArraySize));
 
  public:
@@ -121,7 +121,7 @@ class Iterable : Mixin<HasFlag(Config, EnableArray), ArrayMixin<T, ArraySize>>,
   constexpr Int CheckIndex(Int i) const;
 };
 
-template <int Config, typename T, Int ArraySize>
+template <std::int64_t Config, typename T, Int ArraySize>
 constexpr Iterable<Config, T, ArraySize>& Iterable<Config, T, ArraySize>::Reset(Int size) {
   if constexpr (HasFlag(EnableAllocSize)) {
     this->Length = size;
@@ -136,7 +136,7 @@ constexpr Iterable<Config, T, ArraySize>& Iterable<Config, T, ArraySize>::Reset(
   return *this;
 }
 
-template <int Config, typename T, Int ArraySize>
+template <std::int64_t Config, typename T, Int ArraySize>
 constexpr Iterable<Config, T, ArraySize>& Iterable<Config, T, ArraySize>::Reset(const T* data, Int size) {
   Reset(size);
   if constexpr (HasFlag(EnableArray) || HasFlag(EnableAllocSize)) {
@@ -147,7 +147,7 @@ constexpr Iterable<Config, T, ArraySize>& Iterable<Config, T, ArraySize>::Reset(
   return *this;
 }
 
-template <int Config, typename T, Int ArraySize>
+template <std::int64_t Config, typename T, Int ArraySize>
 constexpr Int Iterable<Config, T, ArraySize>::Cap() const {
   if constexpr (HasFlag(EnableArray)) {
     return ArraySize;
@@ -159,7 +159,7 @@ constexpr Int Iterable<Config, T, ArraySize>::Cap() const {
   return 0;
 }
 
-template <int Config, typename T, Int ArraySize>
+template <std::int64_t Config, typename T, Int ArraySize>
 constexpr void Iterable<Config, T, ArraySize>::Clear() {
   if constexpr (HasFlag(EnableFrontPointer)) {
     this->FrontPos = 0;
@@ -169,7 +169,7 @@ constexpr void Iterable<Config, T, ArraySize>::Clear() {
   }
 }
 
-template <int Config, typename T, Int ArraySize>
+template <std::int64_t Config, typename T, Int ArraySize>
 constexpr void Iterable<Config, T, ArraySize>::ClearAndSet(T ele) {
   this->Data[0] = ele;
   if constexpr (HasFlag(EnableFrontPointer)) {
@@ -180,7 +180,7 @@ constexpr void Iterable<Config, T, ArraySize>::ClearAndSet(T ele) {
   }
 }
 
-template <int Config, typename T, Int ArraySize>
+template <std::int64_t Config, typename T, Int ArraySize>
 constexpr Int Iterable<Config, T, ArraySize>::FrontIndex() const {
   if constexpr (HasFlag(EnableFrontPointer)) {
     return this->FrontPos;
@@ -189,7 +189,7 @@ constexpr Int Iterable<Config, T, ArraySize>::FrontIndex() const {
   }
 }
 
-template <int Config, typename T, Int ArraySize>
+template <std::int64_t Config, typename T, Int ArraySize>
 constexpr Int Iterable<Config, T, ArraySize>::EndIndex() const {
   if constexpr (HasFlag(EnableEndPointer)) {
     if constexpr (!HasFlag(EnableSpan)) {
@@ -201,7 +201,7 @@ constexpr Int Iterable<Config, T, ArraySize>::EndIndex() const {
   }
 }
 
-template <int Config, typename T, Int ArraySize>
+template <std::int64_t Config, typename T, Int ArraySize>
 constexpr Int Iterable<Config, T, ArraySize>::CheckIndex(Int i) const {
   assert(i >= 0 && i < Size());
   return i;

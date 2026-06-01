@@ -16,10 +16,9 @@ class BoxCanvas : public QWidget {
 
   BoxCanvas(GlobalEnv* env, Box box, QWidget* parent) : Env(env), Value(box), QWidget(parent) {}
 
-  Box GetValue() const { return Value; }
-
- public Q_SLOTS:
-  void Resize() { setFixedSize(Width(Env->GetUnitSize()), Width(Env->GetUnitSize())); }
+  QSize Size() const;
+  QPoint Pos() const;
+  QColor Color() const;
 
  protected:
   void paintEvent(QPaintEvent* event) override;
@@ -27,8 +26,6 @@ class BoxCanvas : public QWidget {
  private:
   GlobalEnv* Env;
   Box Value;
-
-  QColor Color() const;
 };
 
 }  // namespace dab::__detail__::frontend

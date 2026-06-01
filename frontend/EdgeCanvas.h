@@ -23,13 +23,9 @@ class EdgeCanvas : public QWidget {
 
   EdgeCanvas(GlobalEnv* env, Edge edge, QWidget* parent) : Env(env), Value(edge), QWidget(parent) {}
 
-  Edge GetValue() const { return Value; }
-
- public Q_SLOTS:
-  void Resize() {
-    setFixedSize(Value.Rotate() ? Width(Env->GetUnitSize()) : Height(Env->GetUnitSize()),
-                 Value.Rotate() ? Height(Env->GetUnitSize()) : Width(Env->GetUnitSize()));
-  }
+  QSize Size() const;
+  QPoint Pos();
+  QColor Color() const;
 
  protected:
   void mousePressEvent(QMouseEvent* event) override;
@@ -41,8 +37,6 @@ class EdgeCanvas : public QWidget {
   GlobalEnv* Env;
   Edge Value;
   bool Hovered = false;
-
-  QColor Color() const;
 };
 
 }  // namespace dab::__detail__::frontend

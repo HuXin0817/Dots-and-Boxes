@@ -60,14 +60,8 @@ MainWindow::MainWindow(PlayerType player1Type, PlayerType player2Type) {
 
 void MainWindow::paintEvent(QPaintEvent* event) {
   QMainWindow::paintEvent(event);
-
   QPainter painter(this);
   painter.fillRect(rect(), Color());
-}
-
-void MainWindow::resizeEvent(QResizeEvent* event) {
-  QMainWindow::resizeEvent(event);
-  Move();
 }
 
 void MainWindow::showEvent(QShowEvent* event) {
@@ -113,61 +107,41 @@ void MainWindow::Add() {
   QApplication::beep();
 }
 
-void MainWindow::Resize() {
-  for (const Box box : Iota<Box>()) {
-    BoxCanvases.At(box)->Resize();
-  }
-
-  for (const Edge edge : Iota<Edge>()) {
-    EdgeCanvases.At(edge)->Resize();
-  }
-
-  for (const Dot dot : Iota<Dot>()) {
-    DotCanvases.At(dot)->Resize();
-  }
-
-  int windowSize = WindowSize(Env.GetUnitSize());
-  setFixedSize(windowSize, windowSize);
+template <typename Canvas>
+QPointer<QPropertyAnimation> CreateSizeAnimation(Canvas canvas) {
+  QPointer<QPropertyAnimation> sizeAnimation = new QPropertyAnimation(canvas, "size");
+  sizeAnimation->setDuration(500);
+  sizeAnimation->setStartValue(canvas->size());
+  sizeAnimation->setEndValue(canvas->Size());
+  sizeAnimation->setEasingCurve(QEasingCurve::OutQuad);
+  return sizeAnimation;
 }
 
-QPointer<QPropertyAnimation> MainWindow::CreatePosAnimation(QWidget* widget, int x, int y) {
-  QPointer<QPropertyAnimation> posAnimation = new QPropertyAnimation(widget, "pos");
+template <typename Canvas>
+QPointer<QPropertyAnimation> CreatePosAnimation(Canvas canvas) {
+  QPointer<QPropertyAnimation> posAnimation = new QPropertyAnimation(canvas, "pos");
   posAnimation->setDuration(500);
-  posAnimation->setStartValue(widget->pos());
-  posAnimation->setEndValue(QPoint(x, y));
+  posAnimation->setStartValue(canvas->pos());
+  posAnimation->setEndValue(canvas->Pos());
   posAnimation->setEasingCurve(QEasingCurve::OutQuad);
   return posAnimation;
 }
 
-void MainWindow::Move() {
+void MainWindow::Resize() {
   QPointer<QParallelAnimationGroup> animationGroup = new QParallelAnimationGroup(this);
-
-  const int x0 = (width() - BoardWidth(Env.GetUnitSize())) / 2 - Env.GetUnitSize();
-  const int y0 = (height() - BoardWidth(Env.GetUnitSize())) / 2 - Env.GetUnitSize();
-
   for (QPointer<BoxCanvas> canvas : BoxCanvases) {
-    const int x = x0 + canvas->GetValue().X() * EdgeCanvas::Height(Env.GetUnitSize()) + 2 * Env.GetUnitSize();
-    const int y = y0 + canvas->GetValue().Y() * EdgeCanvas::Height(Env.GetUnitSize()) + 2 * Env.GetUnitSize();
-    animationGroup->addAnimation(CreatePosAnimation(canvas, x, y));
+    animationGroup->addAnimation(CreateSizeAnimation(canvas));
+    animationGroup->addAnimation(CreatePosAnimation(canvas));
   }
-
   for (QPointer<EdgeCanvas> canvas : EdgeCanvases) {
-    int x = x0 + canvas->GetValue().Dot1().X() * EdgeCanvas::Height(Env.GetUnitSize());
-    int y = y0 + canvas->GetValue().Dot1().Y() * EdgeCanvas::Height(Env.GetUnitSize());
-    if (canvas->GetValue().Rotate()) {
-      y += Env.GetUnitSize();
-    } else {
-      x += Env.GetUnitSize();
-    }
-    animationGroup->addAnimation(CreatePosAnimation(canvas, x, y));
+    animationGroup->addAnimation(CreateSizeAnimation(canvas));
+    animationGroup->addAnimation(CreatePosAnimation(canvas));
   }
-
   for (QPointer<DotCanvas> canvas : DotCanvases) {
-    const int x = x0 + canvas->GetValue().X() * EdgeCanvas::Height(Env.GetUnitSize());
-    const int y = y0 + canvas->GetValue().Y() * EdgeCanvas::Height(Env.GetUnitSize());
-    animationGroup->addAnimation(CreatePosAnimation(canvas, x, y));
+    animationGroup->addAnimation(CreateSizeAnimation(canvas));
+    animationGroup->addAnimation(CreatePosAnimation(canvas));
   }
-
+  setFixedSize(Size());
   animationGroup->start();
 }
 

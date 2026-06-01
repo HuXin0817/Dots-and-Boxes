@@ -4,34 +4,30 @@
 
 #include "../src/Board.h"
 #include "GlobalEnv.h"
+#include "MainWindow.h"
 
 namespace dab::__detail__::frontend {
 
-void EdgeCanvas::mousePressEvent(QMouseEvent* event) {
-  QWidget::mousePressEvent(event);
-  Env->SetHumanMoveEdge(Value);
+QSize EdgeCanvas::Size() const {
+  int width = Width(Env->GetUnitSize());
+  int height = Height(Env->GetUnitSize());
+  return {
+      Value.Rotate() ? width : height,
+      Value.Rotate() ? height : width,
+  };
 }
 
-void EdgeCanvas::paintEvent(QPaintEvent* event) {
-  QWidget::paintEvent(event);
-
-  QPainter painter(this);
-  painter.setRenderHint(QPainter::RenderHint::Antialiasing);
-  painter.setPen(Qt::PenStyle::NoPen);
-  painter.setBrush(QBrush(Color()));
-  painter.drawRect(rect());
-}
-
-void EdgeCanvas::enterEvent(QEnterEvent* event) {
-  QWidget::enterEvent(event);
-  Hovered = true;
-  update();
-}
-
-void EdgeCanvas::leaveEvent(QEvent* event) {
-  QWidget::leaveEvent(event);
-  Hovered = false;
-  update();
+QPoint EdgeCanvas::Pos() {
+  int offset = MainWindow::StartOffset(Env->GetUnitSize());
+  int height = EdgeCanvas::Height(Env->GetUnitSize());
+  int x = offset + Value.Dot1().X() * height;
+  int y = offset + Value.Dot1().Y() * height;
+  if (Value.Rotate()) {
+    y += Env->GetUnitSize();
+  } else {
+    x += Env->GetUnitSize();
+  }
+  return {x, y};
 }
 
 QColor EdgeCanvas::Color() const {
@@ -59,6 +55,33 @@ QColor EdgeCanvas::Color() const {
   }
 
   return color;
+}
+
+void EdgeCanvas::mousePressEvent(QMouseEvent* event) {
+  QWidget::mousePressEvent(event);
+  Env->SetHumanMoveEdge(Value);
+}
+
+void EdgeCanvas::paintEvent(QPaintEvent* event) {
+  QWidget::paintEvent(event);
+
+  QPainter painter(this);
+  painter.setRenderHint(QPainter::RenderHint::Antialiasing);
+  painter.setPen(Qt::PenStyle::NoPen);
+  painter.setBrush(QBrush(Color()));
+  painter.drawRect(rect());
+}
+
+void EdgeCanvas::enterEvent(QEnterEvent* event) {
+  QWidget::enterEvent(event);
+  Hovered = true;
+  update();
+}
+
+void EdgeCanvas::leaveEvent(QEvent* event) {
+  QWidget::leaveEvent(event);
+  Hovered = false;
+  update();
 }
 
 }  // namespace dab::__detail__::frontend

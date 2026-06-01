@@ -2,16 +2,20 @@
 
 #include <QPainter>
 
+#include "EdgeCanvas.h"
+#include "MainWindow.h"
+
 namespace dab::__detail__::frontend {
 
-void BoxCanvas::paintEvent(QPaintEvent* event) {
-  QWidget::paintEvent(event);
+QSize BoxCanvas::Size() const {
+  int width = Width(Env->GetUnitSize());
+  return {width, width};
+}
 
-  QPainter painter(this);
-  painter.setRenderHint(QPainter::RenderHint::Antialiasing);
-  painter.setPen(Qt::PenStyle::NoPen);
-  painter.setBrush(QBrush(Color()));
-  painter.drawRect(rect());
+QPoint BoxCanvas::Pos() const {
+  int offset = MainWindow::StartOffset(Env->GetUnitSize()) + 2 * Env->GetUnitSize();
+  int height = EdgeCanvas::Height(Env->GetUnitSize());
+  return {offset + Value.X() * height, offset + Value.Y() * height};
 }
 
 QColor BoxCanvas::Color() const {
@@ -25,6 +29,16 @@ QColor BoxCanvas::Color() const {
   }
 
   return {0, 0, 0, 0};
+}
+
+void BoxCanvas::paintEvent(QPaintEvent* event) {
+  QWidget::paintEvent(event);
+
+  QPainter painter(this);
+  painter.setRenderHint(QPainter::RenderHint::Antialiasing);
+  painter.setPen(Qt::PenStyle::NoPen);
+  painter.setBrush(QBrush(Color()));
+  painter.drawRect(rect());
 }
 
 }  // namespace dab::__detail__::frontend

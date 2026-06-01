@@ -16,10 +16,9 @@ class DotCanvas : public QWidget {
 
   DotCanvas(GlobalEnv* env, Dot dot, QWidget* parent) : Env(env), Value(dot), QWidget(parent) {}
 
-  Dot GetValue() const { return Value; }
-
- public Q_SLOTS:
-  void Resize() { setFixedSize(Width(Env->GetUnitSize()), Width(Env->GetUnitSize())); }
+  QSize Size() const;
+  QPoint Pos() const;
+  QColor Color() const { return Env->ThemeColor(DarkThemeColor, LightThemeColor); }
 
  protected:
   void paintEvent(QPaintEvent* event) override;
@@ -27,8 +26,6 @@ class DotCanvas : public QWidget {
  private:
   GlobalEnv* Env;
   Dot Value;
-
-  QColor Color() const { return Env->ThemeColor(DarkThemeColor, LightThemeColor); }
 };
 
 }  // namespace dab::__detail__::frontend
