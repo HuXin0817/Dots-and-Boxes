@@ -27,10 +27,7 @@ class RobotWrapper : public Robot, public Derived {
   using Derived::Derived;
   ~RobotWrapper() override = default;
 
-  Edge Move(const GameBoard& board) override { return Random.Choice(Derived::BestCandidateEdges(board)); }
-
- private:
-  Random Random;
+  Edge Move(const GameBoard& board) override { return Random().Choice(Derived::BestCandidateEdges(board)); }
 };
 
 inline std::unique_ptr<Robot> Robot::Create(PlayerType playerType) {

@@ -225,7 +225,7 @@ using Vector = iterable::Iterable<iterable::EnableAllocSize, T>;
 
 class Random {
  public:
-  Random();
+  Random() { Rng.seed(std::chrono::steady_clock::now().time_since_epoch().count()); }
 
   template <typename T>
   T Range(T min, T max);
@@ -235,8 +235,6 @@ class Random {
  private:
   std::mt19937_64 Rng;
 };
-
-inline Random::Random() { Rng.seed(std::chrono::steady_clock::now().time_since_epoch().count()); }
 
 template <typename T>
 T Random::Range(T min, T max) {

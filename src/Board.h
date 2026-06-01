@@ -85,16 +85,15 @@ struct OwnerMixin {
 };
 
 static inline Array<std::uint64_t, Edge::Max> HashMapper = []() -> Array<std::uint64_t, Edge::Max> {
-  Random random;
   Array<std::uint64_t, Edge::Max> result;
   std::unordered_set<std::uint64_t> visited;
-  std::function<std::uint64_t()> randomValue = [&]() -> std::uint64_t {
-    return random.Range<std::uint64_t>(1, std::numeric_limits<std::uint64_t>::max());
+  std::function<std::uint64_t()> rand = [&]() -> std::uint64_t {
+    return Random().Range<std::uint64_t>(1, std::numeric_limits<std::uint64_t>::max());
   };
   for (std::uint64_t& v : result) {
-    v = randomValue();
+    v = rand();
     while (visited.contains(v)) {
-      v = randomValue();
+      v = rand();
     }
     visited.insert(v);
   }
@@ -148,6 +147,8 @@ class BoardImpl : BasicMixin,
   constexpr BoardImpl& operator=(const Other& other);
   template <typename Other>
   constexpr bool operator==(const Other& other) const;
+  template <typename Other>
+  constexpr std::strong_ordering operator<=>(const Other& other) const;
 };
 
 template <int Config>
@@ -316,7 +317,34 @@ constexpr bool BoardImpl<Config>::operator==(const Other& other) const {
   if (Step != other.Step) {
     return false;
   }
-  return std::ranges::all_of(EmptyEdges(), [&](Edge edge) { return !other.Contains(edge); });
+  return std::ranges::all_of(EmptyEdges(), [&](Edge edge) -> bool { return !other.Contains(edge); });
+}
+
+template <int Config>
+template <typename Other>
+constexpr std::strong_ordering BoardImpl<Config>::operator<=>(const Other& other) const {
+  if constexpr (HasFlag(EnableHashValue) && Other::HasFlag(EnableHashValue)) {
+    std::strong_ordering cmp = this->HashValue <=> other.HashValue;
+    if (cmp != std::strong_ordering::equal) {
+      return cmp;
+    }
+  }
+
+  std::strong_ordering cmp = Step <=> other.Step;
+  if (cmp != std::strong_ordering::equal) {
+    return cmp;
+  }
+
+  for (Edge edge : Iota<Edge>()) {
+    int c1 = Contains(edge);
+    int c2 = other.Contains(edge);
+    std::strong_ordering cmp = c1 <=> c2;
+    if (cmp != std::strong_ordering::equal) {
+      return cmp;
+    }
+  }
+
+  return std::strong_ordering::equal;
 }
 
 static_assert(sizeof(BoardImpl<0>) == sizeof(BasicMixin));

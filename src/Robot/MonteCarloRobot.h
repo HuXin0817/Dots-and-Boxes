@@ -6,6 +6,9 @@
 namespace dab::__detail__::robot {
 
 class MonteCarloRobot {
+ public:
+  static constexpr std::int64_t SearchTime = static_cast<std::int64_t>(Edge::Max) << 8;
+
   struct ScoreMap {
     ScoreMap() { Reset(); }
 
@@ -18,12 +21,9 @@ class MonteCarloRobot {
     Array<std::int64_t, Edge::Max> Score;
   };
 
-  static constexpr std::uint64_t SearchTime = static_cast<std::uint64_t>(Edge::Max) << 8;
-
- public:
   MonteCarloRobot() = default;
   template <typename Board>
-  void SearchCandidateEdges(const Board& board);
+  void SearchOnce(const Board& board);
   template <typename Board>
   Span<const Edge> BestCandidateEdges(const Board& board);
   template <typename Board>
@@ -72,19 +72,15 @@ inline Span<const Edge> MonteCarloRobot::ScoreMap::Export(List<Edge, Edge::Max>&
 }
 
 template <typename Board>
-void MonteCarloRobot::SearchCandidateEdges(const Board& board) {
+void MonteCarloRobot::SearchOnce(const Board& board) {
   Random random;
-  SearchResult.Reset();
-  const Int turn = board.GetTurn();
-  for (std::uint64_t i = 0; i < SearchTime / board.RemainStep(); i++) {
-    SimulationBoard = board;
-    const Edge edge = random.Choice(SubRobot.BestCandidateEdges(SimulationBoard));
-    SimulationBoard.Add(edge);
-    while (SimulationBoard.Gaming()) {
-      SimulationBoard.Add(random.Choice(SubRobot.BestCandidateEdges(SimulationBoard)));
-    }
-    SearchResult.Add(edge, turn * SimulationBoard.RelativeScore());
+  SimulationBoard = board;
+  const Edge edge = random.Choice(SubRobot.BestCandidateEdges(SimulationBoard));
+  SimulationBoard.Add(edge);
+  while (SimulationBoard.Gaming()) {
+    SimulationBoard.Add(random.Choice(SubRobot.BestCandidateEdges(SimulationBoard)));
   }
+  SearchResult.Add(edge, board.GetTurn() * SimulationBoard.RelativeScore());
 }
 
 template <typename Board>
@@ -92,14 +88,16 @@ Span<const Edge> MonteCarloRobot::BestCandidateEdges(const Board& board) {
   if (Span<const Edge> edges; CanEarlyExit(board, edges)) {
     return edges;
   }
-  SearchCandidateEdges(board);
+  SearchResult.Reset();
+  for (std::int64_t i = 0; i < SearchTime / board.RemainStep(); i++) {
+    SearchOnce(board);
+  }
   return SearchResult.Export(GetSearchEdges());
 }
 
 template <typename Board>
 bool MonteCarloRobot::CanEarlyExit(const Board& board, Span<const Edge>& result) {
-  result = SubRobot.BestCandidateEdges(board);
-  return result.Size() == 1;
+  return (result = SubRobot.BestCandidateEdges(board)).Size() == 1;
 }
 
 }  // namespace dab::__detail__::robot
