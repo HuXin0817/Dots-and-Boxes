@@ -19,14 +19,10 @@ class MainWindow : public QMainWindow {
   static constexpr QColor DarkThemeColor = QColor(43, 43, 43, 255);
   static constexpr QColor LightThemeColor = QColor(242, 242, 242, 255);
 
-  static int BoardWidth(int unitSize) { return BoardSize * EdgeCanvas::Height(unitSize); }
-  static int WindowSize(int unitSize) { return BoardWidth(unitSize) + 2 * BoxCanvas::Width(unitSize); }
-  static int StartOffset(int unitSize) { return (WindowSize(unitSize) - BoardWidth(unitSize)) / 2 - unitSize; }
-
-  QSize Size() const { return {WindowSize(Env.GetUnitSize()), WindowSize(Env.GetUnitSize())}; }
-  QColor Color() const { return Env.ThemeColor(DarkThemeColor, LightThemeColor); }
-
   MainWindow(PlayerType player1Type, PlayerType player2Type);
+
+  QSize Size() const { return {Env.WindowSize(), Env.WindowSize()}; }
+  QColor Color() const { return Env.ThemeColor(DarkThemeColor, LightThemeColor); }
 
  public Q_SLOTS:
   void Run();
@@ -47,6 +43,32 @@ class MainWindow : public QMainWindow {
   Array<QPointer<BoxCanvas>, Box::Max> BoxCanvases;
   Array<QPointer<DotCanvas>, Dot::Max> DotCanvases;
   Array<QPointer<EdgeCanvas>, Edge::Max> EdgeCanvases;
+
+  static constexpr int kAnimationDuration = 500;
+  template <typename Canvas>
+  QPointer<QPropertyAnimation> CreateSizeAnimation(Canvas canvas);
+  template <typename Canvas>
+  QPointer<QPropertyAnimation> CreatePosAnimation(Canvas canvas);
 };
+
+template <typename Canvas>
+QPointer<QPropertyAnimation> MainWindow::CreateSizeAnimation(Canvas canvas) {
+  QPointer<QPropertyAnimation> sizeAnimation = new QPropertyAnimation(canvas, "size");
+  sizeAnimation->setDuration(kAnimationDuration);
+  sizeAnimation->setStartValue(canvas->size());
+  sizeAnimation->setEndValue(canvas->Size());
+  sizeAnimation->setEasingCurve(QEasingCurve::OutQuad);
+  return sizeAnimation;
+}
+
+template <typename Canvas>
+QPointer<QPropertyAnimation> MainWindow::CreatePosAnimation(Canvas canvas) {
+  QPointer<QPropertyAnimation> posAnimation = new QPropertyAnimation(canvas, "pos");
+  posAnimation->setDuration(kAnimationDuration);
+  posAnimation->setStartValue(canvas->pos());
+  posAnimation->setEndValue(canvas->Pos());
+  posAnimation->setEasingCurve(QEasingCurve::OutQuad);
+  return posAnimation;
+}
 
 }  // namespace dab::__detail__::frontend

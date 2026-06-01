@@ -12,12 +12,10 @@ class DotCanvas : public QWidget {
   static constexpr QColor DarkThemeColor = QColor(202, 202, 202, 255);
   static constexpr QColor LightThemeColor = QColor(255, 255, 255, 255);
 
-  static int Width(int unitSize) { return 2 * unitSize; }
-
   DotCanvas(GlobalEnv* env, Dot dot, QWidget* parent) : Env(env), Value(dot), QWidget(parent) {}
 
-  QSize Size() const;
-  QPoint Pos() const;
+  QSize Size() const { return MakeSize(Env->DotDiameter()); }
+  QPoint Pos() const { return MakePos(Value, Env->Padding(), Env->EdgeWidth()); }
   QColor Color() const { return Env->ThemeColor(DarkThemeColor, LightThemeColor); }
 
  protected:

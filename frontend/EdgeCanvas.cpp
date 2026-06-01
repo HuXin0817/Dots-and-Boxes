@@ -9,23 +9,19 @@
 namespace dab::__detail__::frontend {
 
 QSize EdgeCanvas::Size() const {
-  int width = Width(Env->GetUnitSize());
-  int height = Height(Env->GetUnitSize());
   return {
-      Value.Rotate() ? width : height,
-      Value.Rotate() ? height : width,
+      Value.Rotate() ? Env->DotDiameter() : Env->EdgeWidth(),
+      Value.Rotate() ? Env->EdgeWidth() : Env->DotDiameter(),
   };
 }
 
-QPoint EdgeCanvas::Pos() {
-  int offset = MainWindow::StartOffset(Env->GetUnitSize());
-  int height = EdgeCanvas::Height(Env->GetUnitSize());
-  int x = offset + Value.Dot1().X() * height;
-  int y = offset + Value.Dot1().Y() * height;
+QPoint EdgeCanvas::Pos() const {
+  int x = Env->Padding() + Value.Dot1().X() * Env->EdgeWidth();
+  int y = Env->Padding() + Value.Dot1().Y() * Env->EdgeWidth();
   if (Value.Rotate()) {
-    y += Env->GetUnitSize();
+    y += Env->DotRadius();
   } else {
-    x += Env->GetUnitSize();
+    x += Env->DotRadius();
   }
   return {x, y};
 }

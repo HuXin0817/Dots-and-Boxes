@@ -107,26 +107,6 @@ void MainWindow::Add() {
   QApplication::beep();
 }
 
-template <typename Canvas>
-QPointer<QPropertyAnimation> CreateSizeAnimation(Canvas canvas) {
-  QPointer<QPropertyAnimation> sizeAnimation = new QPropertyAnimation(canvas, "size");
-  sizeAnimation->setDuration(500);
-  sizeAnimation->setStartValue(canvas->size());
-  sizeAnimation->setEndValue(canvas->Size());
-  sizeAnimation->setEasingCurve(QEasingCurve::OutQuad);
-  return sizeAnimation;
-}
-
-template <typename Canvas>
-QPointer<QPropertyAnimation> CreatePosAnimation(Canvas canvas) {
-  QPointer<QPropertyAnimation> posAnimation = new QPropertyAnimation(canvas, "pos");
-  posAnimation->setDuration(500);
-  posAnimation->setStartValue(canvas->pos());
-  posAnimation->setEndValue(canvas->Pos());
-  posAnimation->setEasingCurve(QEasingCurve::OutQuad);
-  return posAnimation;
-}
-
 void MainWindow::Resize() {
   QPointer<QParallelAnimationGroup> animationGroup = new QParallelAnimationGroup(this);
   for (QPointer<BoxCanvas> canvas : BoxCanvases) {

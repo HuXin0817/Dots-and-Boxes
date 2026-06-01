@@ -7,17 +7,6 @@
 
 namespace dab::__detail__::frontend {
 
-QSize BoxCanvas::Size() const {
-  int width = Width(Env->GetUnitSize());
-  return {width, width};
-}
-
-QPoint BoxCanvas::Pos() const {
-  int offset = MainWindow::StartOffset(Env->GetUnitSize()) + 2 * Env->GetUnitSize();
-  int height = EdgeCanvas::Height(Env->GetUnitSize());
-  return {offset + Value.X() * height, offset + Value.Y() * height};
-}
-
 QColor BoxCanvas::Color() const {
   switch (Env->GetBoard().GetOwner(Value)) {
     case Owner::None:

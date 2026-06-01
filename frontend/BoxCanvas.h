@@ -12,12 +12,10 @@ class BoxCanvas : public QWidget {
   static constexpr QColor Player1OccupyColor = QColor(64, 64, 255, 64);
   static constexpr QColor Player2OccupyColor = QColor(255, 64, 64, 64);
 
-  static int Width(int unitSize) { return EdgeCanvas::Height(unitSize) - 2 * unitSize; }
-
   BoxCanvas(GlobalEnv* env, Box box, QWidget* parent) : Env(env), Value(box), QWidget(parent) {}
 
-  QSize Size() const;
-  QPoint Pos() const;
+  QSize Size() const { return MakeSize(Env->BoxWidth()); }
+  QPoint Pos() const { return MakePos(Value, Env->BoxPadding(), Env->EdgeWidth()); }
   QColor Color() const;
 
  protected:

@@ -7,17 +7,6 @@
 
 namespace dab::__detail__::frontend {
 
-QSize DotCanvas::Size() const {
-  int width = Width(Env->GetUnitSize());
-  return {width, width};
-}
-
-QPoint DotCanvas::Pos() const {
-  int offset = MainWindow::StartOffset(Env->GetUnitSize());
-  int height = EdgeCanvas::Height(Env->GetUnitSize());
-  return {offset + Value.X() * height, offset + Value.Y() * height};
-}
-
 void DotCanvas::paintEvent(QPaintEvent* event) {
   QWidget::paintEvent(event);
 

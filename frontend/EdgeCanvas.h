@@ -18,13 +18,10 @@ class EdgeCanvas : public QWidget {
   static constexpr QColor Player1OccupyColor = QColor(64, 64, 255, 255);
   static constexpr QColor Player2OccupyColor = QColor(255, 64, 64, 255);
 
-  static int Width(int unitSize) { return unitSize * 2; }
-  static int Height(int unitSize) { return Width(unitSize) * 5; }
-
   EdgeCanvas(GlobalEnv* env, Edge edge, QWidget* parent) : Env(env), Value(edge), QWidget(parent) {}
 
   QSize Size() const;
-  QPoint Pos();
+  QPoint Pos() const;
   QColor Color() const;
 
  protected:
