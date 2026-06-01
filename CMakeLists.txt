@@ -31,14 +31,10 @@ endif()
 
 file(READ VERSION Version)
 
-include(ProcessorCount)
-ProcessorCount(NumCPU IGNORE_ERRORS)
-add_compile_definitions(NumCPU=${NumCPU} __Version__="${Version}")
-
+add_compile_definitions(__Version__="${Version}")
 message(STATUS "Version: ${Version}")
 message(STATUS "MaxBoardSize: ${MaxBoardSize}")
 message(STATUS "DefaultBoardSize: ${DefaultBoardSize}")
-message(STATUS "CPU Number: ${NumCPU}")
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 

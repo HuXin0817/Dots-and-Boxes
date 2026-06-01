@@ -8,15 +8,15 @@ namespace dab::__detail__::robot {
 
 class ParallelSearchRobot {
  public:
-  static constexpr std::int64_t WorkersNumber = std::min<std::int64_t>(NumCPU - 1, Edge::Max);
-  static constexpr std::int64_t SearchTime = WorkersNumber * MonteCarloRobot::SearchTime;
+  static inline std::int64_t WorkersNumber = std::min<std::int64_t>(std::thread::hardware_concurrency() - 1, Edge::Max);
+  static inline std::int64_t SearchTime = WorkersNumber * MonteCarloRobot::SearchTime;
 
-  ParallelSearchRobot() = default;
+  ParallelSearchRobot() { Workers.Reset(WorkersNumber); }
   template <typename Board>
   Span<const Edge> BestCandidateEdges(const Board& board);
 
  private:
-  Array<MonteCarloRobot, WorkersNumber> Workers;
+  Vector<MonteCarloRobot> Workers;
 };
 
 template <typename Board>
