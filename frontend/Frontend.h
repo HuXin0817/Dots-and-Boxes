@@ -1,16 +1,16 @@
 #pragma once
 
-#include <QWidget>
+#include <QMainWindow>
 
 #include "../src/PlayerType.h"
 
 namespace dab {
 
 template <std::int64_t BoardSize>
-QWidget* CreateMainWindowImpl(PlayerType player1Type, PlayerType player2Type);
+QMainWindow* CreateMainWindowImpl(PlayerType player1Type, PlayerType player2Type);
 
 template <std::int64_t BoardSize>
-QWidget* CreateMainWindow(std::int64_t boardSize, PlayerType player1Type, PlayerType player2Type) {
+QMainWindow* CreateMainWindow(std::int64_t boardSize, PlayerType player1Type, PlayerType player2Type) {
   if constexpr (BoardSize == 0) {
     return nullptr;
   } else {

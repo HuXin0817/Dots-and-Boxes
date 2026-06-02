@@ -100,7 +100,7 @@ int main(int argc, char* argv[]) {
   const PlayerType player1Type = ParsePlayerType(parser.value(player1Option));
   const PlayerType player2Type = ParsePlayerType(parser.value(player2Option));
 
-  QWidget* mainWindow = CreateMainWindow<MaxBoardSize>(boardSize, player1Type, player2Type);
+  QMainWindow* mainWindow = CreateMainWindow<MaxBoardSize>(boardSize, player1Type, player2Type);
   mainWindow->show();
   const int code = application.exec();
   if (code != 0) {
