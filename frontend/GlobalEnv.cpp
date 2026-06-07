@@ -12,7 +12,7 @@ void GlobalEnv::ReduceUnitSize() {
   }
 }
 
-void GlobalEnv::SetHumanMoveEdge(Edge edge) {
+void GlobalEnv::SetHumanMoveEdge(model::Edge edge) {
   if (Board.Contains(edge)) {
     return;
   }
@@ -27,8 +27,8 @@ void GlobalEnv::SetHumanMoveEdge(Edge edge) {
   }
 }
 
-Edge GlobalEnv::GetHumanMoveEdgeSync() {
-  Edge result;
+model::Edge GlobalEnv::GetHumanMoveEdgeSync() {
+  model::Edge result;
   HumanMoveEdgeQueue.pop(result);
   return result;
 }

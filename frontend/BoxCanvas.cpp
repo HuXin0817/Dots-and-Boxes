@@ -9,11 +9,11 @@ namespace dab::__detail__::frontend {
 
 QColor BoxCanvas::Color() const {
   switch (Env->GetBoard().GetOwner(Value)) {
-    case Owner::None:
+    case board::Owner::None:
       return {0, 0, 0, 0};
-    case Owner::Player1:
+    case board::Owner::Player1:
       return Player1OccupyColor;
-    case Owner::Player2:
+    case board::Owner::Player2:
       return Player2OccupyColor;
   }
 

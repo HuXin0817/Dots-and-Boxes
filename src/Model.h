@@ -12,16 +12,12 @@
 #define __constexpr__ constexpr
 #endif
 
-namespace dab {
+namespace dab::__detail__::model {
 
 template <typename T>
 static constexpr auto Iota() {
   return std::views::iota(static_cast<decltype(T::Max)>(0), T::Max);
 }
-
-namespace __detail__ {
-
-namespace model {
 
 class IntWrapper {
  public:
@@ -52,10 +48,10 @@ class Edge;
 class Box : public Square<BoardSize> {
  public:
   using Square::Square;
-  constexpr const Array<Edge, 4>& NearEdges() const;
+  constexpr const iterable::Array<Edge, 4>& NearEdges() const;
 
  private:
-  constexpr Array<Edge, 4> GetNearEdges() const;
+  constexpr iterable::Array<Edge, 4> GetNearEdges() const;
 };
 
 class Edge : public IntWrapper {
@@ -68,10 +64,10 @@ class Edge : public IntWrapper {
   constexpr Dot Dot1() const;
   constexpr Dot Dot2() const;
   constexpr bool Rotate() const { return Value & 1; }
-  constexpr const List<Box, 2>& NearBoxes() const;
+  constexpr const iterable::List<Box, 2>& NearBoxes() const;
 
  private:
-  constexpr List<Box, 2> GetNearBoxes() const;
+  constexpr iterable::List<Box, 2> GetNearBoxes() const;
 };
 
 constexpr Edge::Edge(Dot dot1, Dot dot2) {
@@ -102,8 +98,8 @@ constexpr Dot Edge::Dot2() const {
   return dot;
 }
 
-constexpr Array<Edge, 4> Box::GetNearEdges() const {
-  List<Edge, 4> nearEdges;
+constexpr iterable::Array<Edge, 4> Box::GetNearEdges() const {
+  iterable::List<Edge, 4> nearEdges;
   const Int x = X();
   const Int y = Y();
   const Dot topLeft(x, y);
@@ -118,9 +114,10 @@ constexpr Array<Edge, 4> Box::GetNearEdges() const {
   return nearEdges;
 }
 
-constexpr const Array<Edge, 4>& Box::NearEdges() const {
-  static __constexpr__ Array<Array<Edge, 4>, Max> Mapper = []() -> Array<Array<Edge, 4>, Max> {
-    Array<Array<Edge, 4>, Max> mapper;
+constexpr const iterable::Array<Edge, 4>& Box::NearEdges() const {
+  static __constexpr__ iterable::Array<iterable::Array<Edge, 4>, Max> Mapper =
+      []() -> iterable::Array<iterable::Array<Edge, 4>, Max> {
+    iterable::Array<iterable::Array<Edge, 4>, Max> mapper;
     for (const Box box : Iota<Box>()) {
       mapper.At(box) = box.GetNearEdges();
     }
@@ -129,8 +126,8 @@ constexpr const Array<Edge, 4>& Box::NearEdges() const {
   return Mapper.At(Value);
 }
 
-constexpr List<Box, 2> Edge::GetNearBoxes() const {
-  List<Box, 2> result;
+constexpr iterable::List<Box, 2> Edge::GetNearBoxes() const {
+  iterable::List<Box, 2> result;
   Int x = Dot2().X() - 1;
   Int y = Dot2().Y() - 1;
   if (x >= 0 && y >= 0) {
@@ -144,9 +141,10 @@ constexpr List<Box, 2> Edge::GetNearBoxes() const {
   return result;
 }
 
-constexpr const List<Box, 2>& Edge::NearBoxes() const {
-  static __constexpr__ Array<List<Box, 2>, Max> Mapper = []() -> Array<List<Box, 2>, Max> {
-    Array<List<Box, 2>, Max> mapper;
+constexpr const iterable::List<Box, 2>& Edge::NearBoxes() const {
+  static __constexpr__ iterable::Array<iterable::List<Box, 2>, Max> Mapper =
+      []() -> iterable::Array<iterable::List<Box, 2>, Max> {
+    iterable::Array<iterable::List<Box, 2>, Max> mapper;
     for (const Edge edge : Iota<Edge>()) {
       mapper.At(edge) = edge.GetNearBoxes();
     }
@@ -155,12 +153,4 @@ constexpr const List<Box, 2>& Edge::NearBoxes() const {
   return Mapper.At(Value);
 }
 
-}  // namespace model
-
-using model::Box;
-using model::Dot;
-using model::Edge;
-
-}  // namespace __detail__
-
-}  // namespace dab
+}  // namespace dab::__detail__::model

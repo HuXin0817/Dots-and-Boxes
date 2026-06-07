@@ -4,7 +4,7 @@
 #include <QPointer>
 #include <QPropertyAnimation>
 
-#include "../src/Robot.h"
+#include "../src/Robot/Robot.h"
 #include "BoxCanvas.h"
 #include "DotCanvas.h"
 #include "EdgeCanvas.h"
@@ -36,13 +36,13 @@ class MainWindow : public QMainWindow {
   void showEvent(QShowEvent* event) override;
 
  private:
-  std::unique_ptr<Robot> Robot1 = nullptr;
-  std::unique_ptr<Robot> Robot2 = nullptr;
+  std::unique_ptr<robot::Robot> Robot1 = nullptr;
+  std::unique_ptr<robot::Robot> Robot2 = nullptr;
   GlobalEnv Env;
-  Edge CandidateEdge;
-  Array<QPointer<BoxCanvas>, Box::Max> BoxCanvases;
-  Array<QPointer<DotCanvas>, Dot::Max> DotCanvases;
-  Array<QPointer<EdgeCanvas>, Edge::Max> EdgeCanvases;
+  model::Edge CandidateEdge;
+  iterable::Array<QPointer<BoxCanvas>, model::Box::Max> BoxCanvases;
+  iterable::Array<QPointer<DotCanvas>, model::Dot::Max> DotCanvases;
+  iterable::Array<QPointer<EdgeCanvas>, model::Edge::Max> EdgeCanvases;
 
   static constexpr int kAnimationDuration = 500;
   template <typename Canvas>

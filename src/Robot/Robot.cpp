@@ -1,25 +1,6 @@
-#pragma once
+#include "Robot.h"
 
-#include "Board.h"
-#include "PlayerType.h"
-#include "Robot/GreedyRobot.h"
-#include "Robot/ImproveGreedyRobot.h"
-#include "Robot/MonteCarloRobot.h"
-#include "Robot/ParallelSearchRobot.h"
-#include "Robot/SimulationRobot.h"
-
-namespace dab::__detail__ {
-
-namespace robot {
-
-class Robot {
- public:
-  virtual ~Robot() = default;
-
-  virtual Edge Move(const GameBoard& board) = 0;
-
-  static std::unique_ptr<Robot> Create(PlayerType playerType);
-};
+namespace dab::__detail__::robot {
 
 template <typename Derived>
 class RobotWrapper : public Robot, public Derived {
@@ -27,10 +8,12 @@ class RobotWrapper : public Robot, public Derived {
   using Derived::Derived;
   ~RobotWrapper() override = default;
 
-  Edge Move(const GameBoard& board) override { return Random().Choice(Derived::BestCandidateEdges(board)); }
+  model::Edge Move(const board::GameBoard& board) override {
+    return iterable::Random().Choice(Derived::BestCandidateEdges(board));
+  }
 };
 
-inline std::unique_ptr<Robot> Robot::Create(PlayerType playerType) {
+std::unique_ptr<Robot> Robot::Create(PlayerType playerType) {
   switch (playerType) {
     case PlayerType::GreedyRobot:
       return std::make_unique<RobotWrapper<GreedyRobot>>();
@@ -49,8 +32,4 @@ inline std::unique_ptr<Robot> Robot::Create(PlayerType playerType) {
   }
 }
 
-}  // namespace robot
-
-using robot::Robot;
-
-}  // namespace dab::__detail__
+}  // namespace dab::__detail__::robot

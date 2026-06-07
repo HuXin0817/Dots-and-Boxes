@@ -8,11 +8,7 @@
 
 #include "Common.h"
 
-namespace dab {
-
-namespace __detail__ {
-
-namespace iterable {
+namespace dab::__detail__::iterable {
 
 static constexpr std::int64_t EnableArray = 1 << 1;
 static constexpr std::int64_t EnableSpan = 1 << 2;
@@ -207,21 +203,16 @@ constexpr Int Iterable<Config, T, ArraySize>::CheckIndex(Int i) const {
   return i;
 }
 
-}  // namespace iterable
-
 template <typename T, Int Size>
-using Array = iterable::Iterable<iterable::EnableArray, T, Size>;
+using Array = iterable::Iterable<EnableArray, T, Size>;
 template <typename T, Int Size>
-using List = iterable::Iterable<iterable::EnableArray | iterable::EnableEndPointer, T, Size>;
+using List = iterable::Iterable<EnableArray | EnableEndPointer, T, Size>;
 template <typename T, Int Size>
-using Queue =
-    iterable::Iterable<iterable::EnableArray | iterable::EnableFrontPointer | iterable::EnableEndPointer, T, Size>;
+using Queue = iterable::Iterable<EnableArray | EnableFrontPointer | EnableEndPointer, T, Size>;
 template <typename T>
-using Span = iterable::Iterable<iterable::EnableSpan | iterable::EnableEndPointer, T>;
+using Span = iterable::Iterable<EnableSpan | EnableEndPointer, T>;
 template <typename T>
-using Vector = iterable::Iterable<iterable::EnableAllocSize, T>;
-
-}  // namespace __detail__
+using Vector = iterable::Iterable<EnableAllocSize, T>;
 
 class Random {
  public:
@@ -248,4 +239,4 @@ const auto& Random::Choice(const Iterable& data) {
   return data.At(Range(0, data.Size() - 1));
 }
 
-}  // namespace dab
+}  // namespace dab::__detail__::iterable

@@ -27,7 +27,7 @@ QPoint EdgeCanvas::Pos() const {
 }
 
 QColor EdgeCanvas::Color() const {
-  if (Env->GetBoard().GetOwner(Value) == Owner::None) {
+  if (Env->GetBoard().GetOwner(Value) == board::Owner::None) {
     if (Hovered) {
       return Env->ThemeColor(DarkThemeHoveredColor, LightThemeHoveredColor);
     }
@@ -36,9 +36,9 @@ QColor EdgeCanvas::Color() const {
   }
 
   QColor color;
-  if (Env->GetBoard().GetOwner(Value) == Owner::Player1) {
+  if (Env->GetBoard().GetOwner(Value) == board::Owner::Player1) {
     color = Player1OccupyColor;
-  } else if (Env->GetBoard().GetOwner(Value) == Owner::Player2) {
+  } else if (Env->GetBoard().GetOwner(Value) == board::Owner::Player2) {
     color = Player2OccupyColor;
   }
 

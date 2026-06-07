@@ -18,7 +18,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
 if(NOT MaxBoardSize)
-  set(MaxBoardSize 16)
+  set(MaxBoardSize 1)
 endif()
 
 if(NOT DefaultBoardSize)
@@ -43,8 +43,9 @@ include_directories("${CMAKE_SOURCE_DIR}/deps/lru")
 
 set(ExternLibraries)
 foreach(BoardSize RANGE 1 ${MaxBoardSize})
+  add_subdirectory(src "src/detail@${BoardSize}x${BoardSize}")
   add_subdirectory(frontend "frontend/detail@${BoardSize}x${BoardSize}")
-  list(APPEND ExternLibraries ${FrontendLibrary})
+  list(APPEND ExternLibraries ${RobotLibrary} ${CoreLibrary} ${FrontendLibrary})
 endforeach()
 
 qt_add_executable("${PROJECT_NAME}" main.cpp)

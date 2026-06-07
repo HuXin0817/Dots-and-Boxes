@@ -1,17 +1,17 @@
 #pragma once
 
 #include <algorithm>
+#include <chrono>
 #include <cstdint>
 #include <functional>
 #include <numeric>
+#include <print>
 #include <unordered_set>
 
 #include "Iterable.h"
 #include "Model.h"
 
-namespace dab::__detail__ {
-
-namespace board {
+namespace dab::__detail__::board {
 
 static constexpr std::int64_t EnableEdgeCount = 1 << 0;
 static constexpr std::int64_t EnableRelativeScore = 1 << 1;
@@ -19,7 +19,8 @@ static constexpr std::int64_t EnableAbsoluteScore = 1 << 2;
 static constexpr std::int64_t EnableScoreableCount = 1 << 3;
 static constexpr std::int64_t EnableHashValue = 1 << 5;
 static constexpr std::int64_t EnableOwner = 1 << 6;
-static constexpr std::int64_t MaxFlag = 1 << 7;
+static constexpr std::int64_t EnableLogging = 1 << 7;
+static constexpr std::int64_t MaxFlag = 1 << 8;
 
 static constexpr Int Player1Turn = 1;
 static constexpr Int Player2Turn = -Player1Turn;
@@ -48,16 +49,16 @@ using Mixin = std::conditional_t<Bp, T, std::type_identity<T>>;
 
 struct BasicMixin {
   Int Step = 0;
-  Array<Edge, Edge::Max> Edges;
-  Array<Int, Edge::Max> EdgeIndexes;
+  iterable::Array<model::Edge, model::Edge::Max> Edges;
+  iterable::Array<Int, model::Edge::Max> EdgeIndexes;
 };
 
 struct EdgeCountMixin {
-  Array<std::uint8_t, Box::Max> Counter;
+  iterable::Array<std::uint8_t, model::Box::Max> Counter;
 };
 
 struct ScoreableCountMixin {
-  Queue<Edge, Edge::Max> ScoreableEdges;
+  iterable::Queue<model::Edge, model::Edge::Max> ScoreableEdges;
 };
 
 struct RelativeScoreMixin {
@@ -80,15 +81,16 @@ enum class Owner {
 };
 
 struct OwnerMixin {
-  Array<Owner, Edge::Max> EdgeOwner;
-  Array<Owner, Box::Max> BoxOwner;
+  iterable::Array<Owner, model::Edge::Max> EdgeOwner;
+  iterable::Array<Owner, model::Box::Max> BoxOwner;
 };
 
-static inline Array<std::uint64_t, Edge::Max> HashMapper = []() -> Array<std::uint64_t, Edge::Max> {
-  Array<std::uint64_t, Edge::Max> result;
+static inline iterable::Array<std::uint64_t, model::Edge::Max> HashMapper =
+    []() -> iterable::Array<std::uint64_t, model::Edge::Max> {
+  iterable::Array<std::uint64_t, model::Edge::Max> result;
   std::unordered_set<std::uint64_t> visited;
   std::function<std::uint64_t()> rand = [&]() -> std::uint64_t {
-    return Random().Range<std::uint64_t>(1, std::numeric_limits<std::uint64_t>::max());
+    return iterable::Random().Range<std::uint64_t>(1, std::numeric_limits<std::uint64_t>::max());
   };
   for (std::uint64_t& v : result) {
     v = rand();
@@ -117,18 +119,18 @@ class BoardImpl : BasicMixin,
   constexpr BoardImpl() { Reset(); }
 
   constexpr void Reset();
-  constexpr Int Add(Edge edge);
-  constexpr bool Contains(Edge edge) const { return EdgeIndexes.At(edge) < Step; }
-  constexpr bool NotContains(Edge edge) const { return EdgeIndexes.At(edge) >= Step; }
-  constexpr Span<const Edge> EmptyEdges() const { return {Edges.begin() + Step, Edges.end()}; }
-  constexpr Span<const Edge> MoveRecord() const { return {Edges.begin(), Step}; }
-  constexpr bool Gaming() const { return Step < Edge::Max; }
-  constexpr Int RemainStep() const { return Edge::Max - Step; }
+  constexpr Int Add(model::Edge edge);
+  constexpr bool Contains(model::Edge edge) const { return EdgeIndexes.At(edge) < Step; }
+  constexpr bool NotContains(model::Edge edge) const { return EdgeIndexes.At(edge) >= Step; }
+  constexpr iterable::Span<const model::Edge> EmptyEdges() const { return {Edges.begin() + Step, Edges.end()}; }
+  constexpr iterable::Span<const model::Edge> MoveRecord() const { return {Edges.begin(), Step}; }
+  constexpr bool Gaming() const { return Step < model::Edge::Max; }
+  constexpr Int RemainStep() const { return model::Edge::Max - Step; }
   constexpr Int NowStep() const { return Step; }
   constexpr std::uint64_t Hash() const { return this->HashValue; }
-  constexpr std::uint8_t EdgeCount(Box box) const { return this->Counter.At(box); }
-  constexpr std::uint8_t MaxEdgeCount(Edge edge) const;
-  constexpr bool Scoreable(Edge edge) const { return MaxEdgeCount(edge) == 3; }
+  constexpr std::uint8_t EdgeCount(model::Box box) const { return this->Counter.At(box); }
+  constexpr std::uint8_t MaxEdgeCount(model::Edge edge) const;
+  constexpr bool Scoreable(model::Edge edge) const { return MaxEdgeCount(edge) == 3; }
   constexpr Int RelativeScore() const { return this->Score; }
   constexpr Int GetTurn() const { return this->Turn; }
   constexpr bool IsPlayer1Turn() const { return this->Turn == Player1Turn; }
@@ -136,9 +138,9 @@ class BoardImpl : BasicMixin,
   constexpr Int Player1Score() const { return (this->TotalScore + this->Score) / 2; }
   constexpr Int Player2Score() const { return (this->TotalScore - this->Score) / 2; }
   constexpr Owner NowOwner() const { return IsPlayer1Turn() ? Owner::Player1 : Owner::Player2; }
-  constexpr Owner GetOwner(Edge edge) const { return this->EdgeOwner.At(edge); }
-  constexpr Owner GetOwner(Box box) const { return this->BoxOwner.At(box); }
-  constexpr Edge FindNotContainsEdgeInBox(Box box) const;
+  constexpr Owner GetOwner(model::Edge edge) const { return this->EdgeOwner.At(edge); }
+  constexpr Owner GetOwner(model::Box box) const { return this->BoxOwner.At(box); }
+  constexpr model::Edge FindNotContainsEdgeInBox(model::Box box) const;
   constexpr Int FindScoreableEdge();
   constexpr Int MaxObtainableScore(Int endScore);
 
@@ -179,9 +181,9 @@ constexpr void BoardImpl<Config>::Reset() {
 }
 
 template <std::int64_t Config>
-constexpr Int BoardImpl<Config>::Add(Edge edge) {
+constexpr Int BoardImpl<Config>::Add(model::Edge edge) {
   assert(NotContains(edge));
-  const Edge nowEdge = Edges.At(Step);
+  const model::Edge nowEdge = Edges.At(Step);
   const Int edgeIndex = EdgeIndexes.At(edge);
   assert(Edges.At(edgeIndex) == edge);
   assert(edgeIndex >= Step);
@@ -198,7 +200,7 @@ constexpr Int BoardImpl<Config>::Add(Edge edge) {
   }
   Int score = 0;
   if constexpr (HasFlag(EnableEdgeCount)) {
-    for (const Box box : edge.NearBoxes()) {
+    for (const model::Box box : edge.NearBoxes()) {
       const std::uint8_t num = ++this->Counter.At(box);
       assert(num <= 4);
       if (num == 4) {
@@ -224,18 +226,30 @@ constexpr Int BoardImpl<Config>::Add(Edge edge) {
       }
     }
   }
+  if constexpr (HasFlag(EnableLogging)) {
+    Int step = Step - 1;
+    Int turn = score == 0 ? -this->Turn : this->Turn;
+    int player = turn == Player1Turn ? 1 : 2;
+    std::println(R"({:%Y-%m-%d %H:%M:%S} {{"Step":{},"Player":{},"Move":{},"Score":{{"Player1":{},"Player2":{}}}}})",
+                 std::chrono::system_clock::now(),
+                 step,
+                 player,
+                 static_cast<Int>(edge),
+                 Player1Score(),
+                 Player2Score());
+  }
   return score;
 }
 
 template <std::int64_t Config>
-constexpr Edge BoardImpl<Config>::FindNotContainsEdgeInBox(Box box) const {
+constexpr model::Edge BoardImpl<Config>::FindNotContainsEdgeInBox(model::Box box) const {
   assert(this->Counter.At(box) == 3);
-  return *std::ranges::find_if(box.NearEdges(), [&](Edge edge) -> bool { return NotContains(edge); });
+  return *std::ranges::find_if(box.NearEdges(), [&](model::Edge edge) -> bool { return NotContains(edge); });
 }
 
 template <std::int64_t Config>
 constexpr Int BoardImpl<Config>::FindScoreableEdge() {
-  for (const Edge edge : EmptyEdges()) {
+  for (const model::Edge edge : EmptyEdges()) {
     if (Scoreable(edge)) {
       this->ScoreableEdges.Append(edge);
     }
@@ -251,7 +265,7 @@ constexpr Int BoardImpl<Config>::MaxObtainableScore(Int endScore) {
       assert(FindScoreableEdge() == 0);
       break;
     }
-    const Edge edge = this->ScoreableEdges.Pop();
+    const model::Edge edge = this->ScoreableEdges.Pop();
     if (Contains(edge)) {
       continue;
     }
@@ -262,8 +276,8 @@ constexpr Int BoardImpl<Config>::MaxObtainableScore(Int endScore) {
 }
 
 template <std::int64_t Config>
-constexpr std::uint8_t BoardImpl<Config>::MaxEdgeCount(Edge edge) const {
-  const List<Box, 2>& nearBoxes = edge.NearBoxes();
+constexpr std::uint8_t BoardImpl<Config>::MaxEdgeCount(model::Edge edge) const {
+  const iterable::List<model::Box, 2>& nearBoxes = edge.NearBoxes();
   return std::max(this->Counter.At(nearBoxes.Front()), this->Counter.At(nearBoxes.Back()));
 }
 
@@ -317,7 +331,7 @@ constexpr bool BoardImpl<Config>::operator==(const Other& other) const {
   if (Step != other.Step) {
     return false;
   }
-  return std::ranges::all_of(EmptyEdges(), [&](Edge edge) -> bool { return !other.Contains(edge); });
+  return std::ranges::all_of(EmptyEdges(), [&](model::Edge edge) -> bool { return !other.Contains(edge); });
 }
 
 template <std::int64_t Config>
@@ -331,7 +345,7 @@ constexpr std::strong_ordering BoardImpl<Config>::operator<=>(const Other& other
   if (std::strong_ordering cmp = Step <=> other.Step; cmp != std::strong_ordering::equal) {
     return cmp;
   }
-  for (Edge edge : Iota<Edge>()) {
+  for (model::Edge edge : model::Iota<model::Edge>()) {
     if (std::strong_ordering cmp = Contains(edge) <=> other.Contains(edge); cmp != std::strong_ordering::equal) {
       return cmp;
     }
@@ -344,18 +358,15 @@ static_assert(sizeof(BoardImpl<0>) == sizeof(BasicMixin));
 template <std::int64_t Config>
 using Board = BoardImpl<FixedConfig(Config)>;
 
-}  // namespace board
+using BasicBoard = Board<0>;
+using HashValueBoard = Board<EnableHashValue>;
+using EdgeCountBoard = Board<EnableEdgeCount | EnableHashValue>;
+using RelativeScoreBoard = Board<EnableRelativeScore | EnableHashValue>;
+using AbsoluteScoreBoard = Board<EnableAbsoluteScore | EnableHashValue>;
+using GameBoard = Board<EnableAbsoluteScore | EnableOwner | EnableHashValue | EnableLogging>;
+using ScoreableCountBoard = Board<EnableScoreableCount>;
 
-using board::Owner;
-using BasicBoard = board::Board<0>;
-using HashValueBoard = board::Board<board::EnableHashValue>;
-using EdgeCountBoard = board::Board<board::EnableEdgeCount | board::EnableHashValue>;
-using RelativeScoreBoard = board::Board<board::EnableRelativeScore | board::EnableHashValue>;
-using AbsoluteScoreBoard = board::Board<board::EnableAbsoluteScore | board::EnableHashValue>;
-using GameBoard = board::Board<board::EnableAbsoluteScore | board::EnableOwner | board::EnableHashValue>;
-using ScoreableCountBoard = board::Board<board::EnableScoreableCount>;
-
-}  // namespace dab::__detail__
+}  // namespace dab::__detail__::board
 
 namespace std {
 

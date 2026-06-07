@@ -18,7 +18,7 @@ class EdgeCanvas : public QWidget {
   static constexpr QColor Player1OccupyColor = QColor(64, 64, 255, 255);
   static constexpr QColor Player2OccupyColor = QColor(255, 64, 64, 255);
 
-  EdgeCanvas(GlobalEnv* env, Edge edge, QWidget* parent) : Env(env), Value(edge), QWidget(parent) {}
+  EdgeCanvas(GlobalEnv* env, model::Edge edge, QWidget* parent) : Env(env), Value(edge), QWidget(parent) {}
 
   QSize Size() const;
   QPoint Pos() const;
@@ -32,7 +32,7 @@ class EdgeCanvas : public QWidget {
 
  private:
   GlobalEnv* Env;
-  Edge Value;
+  model::Edge Value;
   bool Hovered = false;
 };
 

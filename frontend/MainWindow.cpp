@@ -10,10 +10,8 @@
 #include <QPushButton>
 #include <QShortcut>
 #include <QThreadPool>
-#include <chrono>
-#include <print>
 
-#include "../src/Robot.h"
+#include "../src/Robot/Robot.h"
 #include "BoxCanvas.h"
 #include "DotCanvas.h"
 #include "EdgeCanvas.h"
@@ -25,16 +23,16 @@ MainWindow::MainWindow(PlayerType player1Type, PlayerType player2Type) {
   Env.SetPlayer1Type(player1Type);
   Env.SetPlayer2Type(player2Type);
 
-  Robot1 = Robot::Create(player1Type);
-  Robot2 = Robot::Create(player2Type);
+  Robot1 = robot::Robot::Create(player1Type);
+  Robot2 = robot::Robot::Create(player2Type);
 
-  for (const Box box : Iota<Box>()) {
+  for (const model::Box box : model::Iota<model::Box>()) {
     BoxCanvases.At(box) = new BoxCanvas(&Env, box, this);
   }
-  for (const Edge edge : Iota<Edge>()) {
+  for (const model::Edge edge : model::Iota<model::Edge>()) {
     EdgeCanvases.At(edge) = new EdgeCanvas(&Env, edge, this);
   }
-  for (const Dot dot : Iota<Dot>()) {
+  for (const model::Dot dot : model::Iota<model::Dot>()) {
     DotCanvases.At(dot) = new DotCanvas(&Env, dot, this);
   }
   Resize();
@@ -89,20 +87,10 @@ void MainWindow::AsyncRun() {
 }
 
 void MainWindow::Add() {
-  Int step = Env.GetBoard().NowStep();
-  int player = Env.GetBoard().IsPlayer1Turn() ? 1 : 2;
-  Int move = CandidateEdge;
   EdgeCanvases.At(CandidateEdge)->raise();
   DotCanvases.At(CandidateEdge.Dot1())->raise();
   DotCanvases.At(CandidateEdge.Dot2())->raise();
   Env.GetBoard().Add(CandidateEdge);
-  std::println(R"({:%Y-%m-%d %H:%M:%S} {{"Step":{},"Player":{},"Move":{},"Score":{{"Player1":{},"Player2":{}}}}})",
-               std::chrono::system_clock::now(),
-               step,
-               player,
-               move,
-               Env.GetBoard().Player1Score(),
-               Env.GetBoard().Player2Score());
   update();
   QApplication::beep();
 }

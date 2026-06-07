@@ -12,7 +12,7 @@ class DotCanvas : public QWidget {
   static constexpr QColor DarkThemeColor = QColor(202, 202, 202, 255);
   static constexpr QColor LightThemeColor = QColor(255, 255, 255, 255);
 
-  DotCanvas(GlobalEnv* env, Dot dot, QWidget* parent) : Env(env), Value(dot), QWidget(parent) {}
+  DotCanvas(GlobalEnv* env, model::Dot dot, QWidget* parent) : Env(env), Value(dot), QWidget(parent) {}
 
   QSize Size() const { return MakeSize(Env->DotDiameter()); }
   QPoint Pos() const { return MakePos(Value, Env->Padding(), Env->EdgeWidth()); }
@@ -23,7 +23,7 @@ class DotCanvas : public QWidget {
 
  private:
   GlobalEnv* Env;
-  Dot Value;
+  model::Dot Value;
 };
 
 }  // namespace dab::__detail__::frontend

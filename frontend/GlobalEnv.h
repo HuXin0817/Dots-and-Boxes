@@ -7,7 +7,7 @@
 #include <QThread>
 #include <QWidget>
 
-#include "../src/Robot.h"
+#include "../src/Robot/Robot.h"
 
 namespace dab::__detail__::frontend {
 
@@ -47,22 +47,22 @@ class GlobalEnv {
   void ResetUnitSize() { UnitSize = kDefaultUnitSize; }
   void AddUnitSize();
   void ReduceUnitSize();
-  const GameBoard& GetBoard() const { return Board; }
-  GameBoard& GetBoard() { return Board; }
+  const board::GameBoard& GetBoard() const { return Board; }
+  board::GameBoard& GetBoard() { return Board; }
   void SetPlayer1Type(PlayerType player1Type) { Player1Type = player1Type; }
   void SetPlayer2Type(PlayerType player2Type) { Player2Type = player2Type; }
   PlayerType GetPlayer1Type() const { return Player1Type; }
   PlayerType GetPlayer2Type() const { return Player2Type; }
-  void SetHumanMoveEdge(Edge edge);
-  Edge GetHumanMoveEdgeSync();
+  void SetHumanMoveEdge(model::Edge edge);
+  model::Edge GetHumanMoveEdgeSync();
 
  private:
   int UnitSize = kDefaultUnitSize;
 
   PlayerType Player1Type;
   PlayerType Player2Type;
-  tbb::concurrent_bounded_queue<Edge> HumanMoveEdgeQueue;
-  GameBoard Board;
+  tbb::concurrent_bounded_queue<model::Edge> HumanMoveEdgeQueue;
+  board::GameBoard Board;
 };
 
 }  // namespace dab::__detail__::frontend
