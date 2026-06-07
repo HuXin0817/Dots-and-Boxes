@@ -2,7 +2,7 @@
 
 #include <QMainWindow>
 
-#include "../src/PlayerType.h"
+#include "../PlayerType.h"
 
 namespace dab {
 

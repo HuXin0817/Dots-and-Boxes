@@ -11,7 +11,7 @@
 #include <QShortcut>
 #include <QThreadPool>
 
-#include "../src/Robot/Robot.h"
+#include "../robot/Robot.h"
 #include "BoxCanvas.h"
 #include "DotCanvas.h"
 #include "EdgeCanvas.h"

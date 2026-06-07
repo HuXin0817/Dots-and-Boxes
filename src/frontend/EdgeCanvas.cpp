@@ -2,7 +2,7 @@
 
 #include <QPainter>
 
-#include "../src/Board.h"
+#include "../Board.h"
 #include "GlobalEnv.h"
 #include "MainWindow.h"
 

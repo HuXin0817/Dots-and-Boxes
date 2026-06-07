@@ -7,7 +7,7 @@
 #include <QThread>
 #include <QWidget>
 
-#include "../src/Robot/Robot.h"
+#include "../robot/Robot.h"
 
 namespace dab::__detail__::frontend {
 

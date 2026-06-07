@@ -44,7 +44,6 @@ include_directories("${CMAKE_SOURCE_DIR}/deps/lru")
 set(ExternLibraries)
 foreach(BoardSize RANGE 1 ${MaxBoardSize})
   add_subdirectory(src "src/detail@${BoardSize}x${BoardSize}")
-  add_subdirectory(frontend "frontend/detail@${BoardSize}x${BoardSize}")
   list(APPEND ExternLibraries ${RobotLibrary} ${CoreLibrary} ${FrontendLibrary})
 endforeach()
 

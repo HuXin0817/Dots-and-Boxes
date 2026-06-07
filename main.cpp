@@ -4,7 +4,7 @@
 #include <print>
 #include <ranges>
 
-#include "frontend/Frontend.h"
+#include "src/frontend/Frontend.h"
 
 using namespace dab;
 

@@ -1,6 +1,6 @@
 #include "Frontend.h"
 
-#include "../src/PlayerType.h"
+#include "../PlayerType.h"
 #include "MainWindow.h"
 
 namespace dab {
