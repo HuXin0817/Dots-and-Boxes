@@ -9,7 +9,7 @@ namespace dab::__detail__::robot {
 class ParallelSearchRobot {
  public:
   static inline std::int64_t WorkersNumber =
-      std::clamp<std::int64_t>(std::thread::hardware_concurrency() - 2, 1, model::Edge::Max);
+      std::clamp<std::int64_t>(std::thread::hardware_concurrency() - 1, 1, model::Edge::Max);
   static inline std::int64_t SearchTime = WorkersNumber * MonteCarloRobot::SearchTime;
 
   ParallelSearchRobot() { Workers.Reset(WorkersNumber); }

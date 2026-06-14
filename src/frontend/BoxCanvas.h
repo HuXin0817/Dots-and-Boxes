@@ -1,6 +1,9 @@
 #pragma once
 
-#include "EdgeCanvas.h"
+#include <QColor>
+#include <QWidget>
+
+#include "GlobalEnv.h"
 
 namespace dab::__detail__::frontend {
 

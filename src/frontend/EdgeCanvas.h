@@ -1,7 +1,5 @@
 #pragma once
 
-#include <functional>
-
 #include "GlobalEnv.h"
 
 namespace dab::__detail__::frontend {

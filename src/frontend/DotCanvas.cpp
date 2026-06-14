@@ -2,9 +2,6 @@
 
 #include <QPainter>
 
-#include "EdgeCanvas.h"
-#include "MainWindow.h"
-
 namespace dab::__detail__::frontend {
 
 void DotCanvas::paintEvent(QPaintEvent* event) {

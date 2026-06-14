@@ -3,8 +3,6 @@
 #include <QPainter>
 
 #include "../Board.h"
-#include "GlobalEnv.h"
-#include "MainWindow.h"
 
 namespace dab::__detail__::frontend {
 

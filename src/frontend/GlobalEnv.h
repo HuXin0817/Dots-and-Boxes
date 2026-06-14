@@ -7,7 +7,8 @@
 #include <QThread>
 #include <QWidget>
 
-#include "../robot/Robot.h"
+#include "../Board.h"
+#include "../PlayerType.h"
 
 namespace dab::__detail__::frontend {
 
