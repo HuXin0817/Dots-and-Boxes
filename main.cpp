@@ -8,13 +8,11 @@
 
 using namespace dab;
 
-static constexpr std::int64_t DefaultBoardSize = __DefaultBoardSize__;
 static constexpr std::int64_t MaxBoardSize = __MaxBoardSize__;
-static_assert(DefaultBoardSize <= MaxBoardSize);
 
 QCommandLineOption CreateBoardSizeOption() {
   const QByteArray boardSizeEnv = qgetenv("BOARD_SIZE");
-  QString defaultBoardSize = QString::number(DefaultBoardSize);
+  QString defaultBoardSize = QString::number(MaxBoardSize);
   if (!boardSizeEnv.isEmpty()) {
     defaultBoardSize = boardSizeEnv;
   }

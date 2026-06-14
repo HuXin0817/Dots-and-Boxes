@@ -18,15 +18,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
 if(NOT MaxBoardSize)
-  set(MaxBoardSize 16)
-endif()
-
-if(NOT DefaultBoardSize)
-  if(6 LESS ${MaxBoardSize})
-    set(DefaultBoardSize 6)
-  else()
-    set(DefaultBoardSize ${MaxBoardSize})
-  endif()
+  set(MaxBoardSize 6)
 endif()
 
 file(READ VERSION Version)
@@ -34,7 +26,6 @@ file(READ VERSION Version)
 add_compile_definitions(__Version__="${Version}")
 message(STATUS "Version: ${Version}")
 message(STATUS "MaxBoardSize: ${MaxBoardSize}")
-message(STATUS "DefaultBoardSize: ${DefaultBoardSize}")
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 
@@ -48,10 +39,7 @@ foreach(BoardSize RANGE 1 ${MaxBoardSize})
 endforeach()
 
 qt_add_executable("${PROJECT_NAME}" main.cpp)
-target_compile_definitions("${PROJECT_NAME}" PRIVATE
-  __MaxBoardSize__=${MaxBoardSize}
-  __DefaultBoardSize__=${DefaultBoardSize}
-)
+target_compile_definitions("${PROJECT_NAME}" PRIVATE __MaxBoardSize__=${MaxBoardSize})
 target_link_libraries(${PROJECT_NAME} PRIVATE
   Qt6::Core
   Qt6::Gui
