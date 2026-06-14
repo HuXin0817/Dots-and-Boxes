@@ -9,10 +9,6 @@ if(CMAKE_BUILD_TYPE STREQUAL "Release")
   set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
 endif()
 
-message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
-message(STATUS "CMAKE_UNITY_BUILD: ${CMAKE_UNITY_BUILD}")
-message(STATUS "CMAKE_INTERPROCEDURAL_OPTIMIZATION: ${CMAKE_INTERPROCEDURAL_OPTIMIZATION}")
-
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
@@ -20,12 +16,6 @@ set(CMAKE_AUTORCC ON)
 if(NOT MaxBoardSize)
   set(MaxBoardSize 6)
 endif()
-
-file(READ VERSION Version)
-
-add_compile_definitions(__Version__="${Version}")
-message(STATUS "Version: ${Version}")
-message(STATUS "MaxBoardSize: ${MaxBoardSize}")
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 
@@ -35,7 +25,7 @@ include_directories("${CMAKE_SOURCE_DIR}/deps/lru")
 set(ExternLibraries)
 foreach(BoardSize RANGE 1 ${MaxBoardSize})
   add_subdirectory(src "src/detail@${BoardSize}x${BoardSize}")
-  list(APPEND ExternLibraries ${RobotLibrary} ${CoreLibrary} ${FrontendLibrary})
+  list(APPEND ExternLibraries ${CoreLibrary})
 endforeach()
 
 qt_add_executable("${PROJECT_NAME}" main.cpp)

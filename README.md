@@ -154,7 +154,6 @@ Dots-and-Boxes/
 ├── CMakeLists.txt      # Build configuration
 ├── LICENSE             # License file
 ├── README.md           # This file
-├── VERSION             # Version information
 ├── build.sh            # Build script
 ├── demo.png            # Game demo screenshot
 ├── format.sh           # Code formatting script

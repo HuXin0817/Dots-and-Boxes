@@ -3,7 +3,7 @@
 namespace dab {
 
 enum class PlayerType {
-  Human = 0,
+  Human,
   GreedyRobot,
   ImproveGreedyRobot,
   SimulationRobot,
@@ -22,9 +22,8 @@ static constexpr const char* PlayerTypeOptionStrings[] = {
 
 static constexpr PlayerType DefaultPlayerType = PlayerType::ParallelSearchRobot;
 
-static constexpr const char* DefaultPlayerTypeString =
-    PlayerTypeOptionStrings[static_cast<std::size_t>(DefaultPlayerType)];
+static constexpr const char* DefaultPlayerTypeString = PlayerTypeOptionStrings[static_cast<int>(DefaultPlayerType)];
 
-constexpr bool PlayerTypeIsRobot(PlayerType playerType) { return playerType != PlayerType::Human; }
+static constexpr bool PlayerTypeIsRobot(PlayerType playerType) { return playerType != PlayerType::Human; }
 
 }  // namespace dab

@@ -79,7 +79,7 @@ int64_t ParseBoardSize(const QString& arg) {
 int main(int argc, char* argv[]) {
   QApplication application(argc, argv);
   application.setApplicationName("Dots and Boxes");
-  application.setApplicationVersion(__Version__);
+  application.setApplicationVersion("1.0.0");
   application.setOrganizationName("Dots and Boxes");
 
   const QCommandLineOption boardSizeOption = CreateBoardSizeOption();
