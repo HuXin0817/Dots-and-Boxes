@@ -15,9 +15,7 @@
 namespace dab::__detail__::model {
 
 template <typename T>
-static constexpr auto Iota() {
-  return std::views::iota(static_cast<decltype(T::Max)>(0), T::Max);
-}
+constexpr auto Iota = std::views::iota(static_cast<decltype(T::Max)>(0), T::Max);
 
 class IntWrapper {
  public:
@@ -118,7 +116,7 @@ constexpr const iterable::Array<Edge, 4>& Box::NearEdges() const {
   static __constexpr__ iterable::Array<iterable::Array<Edge, 4>, Max> Mapper =
       []() -> iterable::Array<iterable::Array<Edge, 4>, Max> {
     iterable::Array<iterable::Array<Edge, 4>, Max> mapper;
-    for (const Box box : Iota<Box>()) {
+    for (const Box box : Iota<Box>) {
       mapper.At(box) = box.GetNearEdges();
     }
     return mapper;
@@ -145,7 +143,7 @@ constexpr const iterable::List<Box, 2>& Edge::NearBoxes() const {
   static __constexpr__ iterable::Array<iterable::List<Box, 2>, Max> Mapper =
       []() -> iterable::Array<iterable::List<Box, 2>, Max> {
     iterable::Array<iterable::List<Box, 2>, Max> mapper;
-    for (const Edge edge : Iota<Edge>()) {
+    for (const Edge edge : Iota<Edge>) {
       mapper.At(edge) = edge.GetNearBoxes();
     }
     return mapper;

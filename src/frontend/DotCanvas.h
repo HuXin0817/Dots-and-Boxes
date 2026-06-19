@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GlobalEnv.h"
+#include "Env.h"
 
 namespace dab::__detail__::frontend {
 
@@ -12,7 +12,7 @@ class DotCanvas : public QWidget {
   static constexpr QColor DarkThemeColor = QColor(202, 202, 202, 255);
   static constexpr QColor LightThemeColor = QColor(255, 255, 255, 255);
 
-  DotCanvas(GlobalEnv* env, model::Dot dot, QWidget* parent) : Env(env), Value(dot), QWidget(parent) {}
+  DotCanvas(Env* env, model::Dot dot, QWidget* parent) : Env(env), Value(dot), QWidget(parent) {}
 
   QSize Size() const { return MakeSize(Env->DotDiameter()); }
   QPoint Pos() const { return MakePos(Value, Env->Padding(), Env->EdgeWidth()); }
@@ -22,7 +22,7 @@ class DotCanvas : public QWidget {
   void paintEvent(QPaintEvent* event) override;
 
  private:
-  GlobalEnv* Env;
+  Env* Env;
   model::Dot Value;
 };
 

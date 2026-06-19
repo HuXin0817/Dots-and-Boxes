@@ -3,7 +3,7 @@
 #include <QColor>
 #include <QWidget>
 
-#include "GlobalEnv.h"
+#include "Env.h"
 
 namespace dab::__detail__::frontend {
 
@@ -15,7 +15,7 @@ class BoxCanvas : public QWidget {
   static constexpr QColor Player1OccupyColor = QColor(64, 64, 255, 64);
   static constexpr QColor Player2OccupyColor = QColor(255, 64, 64, 64);
 
-  BoxCanvas(GlobalEnv* env, model::Box box, QWidget* parent) : Env(env), Value(box), QWidget(parent) {}
+  BoxCanvas(Env* env, model::Box box, QWidget* parent) : Env(env), Value(box), QWidget(parent) {}
 
   QSize Size() const { return MakeSize(Env->BoxWidth()); }
   QPoint Pos() const { return MakePos(Value, Env->BoxPadding(), Env->EdgeWidth()); }
@@ -25,7 +25,7 @@ class BoxCanvas : public QWidget {
   void paintEvent(QPaintEvent* event) override;
 
  private:
-  GlobalEnv* Env;
+  Env* Env;
   model::Box Value;
 };
 

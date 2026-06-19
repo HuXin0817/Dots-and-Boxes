@@ -1,10 +1,10 @@
-#include "GlobalEnv.h"
+#include "Env.h"
 
 namespace dab::__detail__::frontend {
 
-void GlobalEnv::AddUnitSize() { UnitSize = std::max<int>(UnitSize + 1, static_cast<double>(UnitSize) * 1.1); }
+void Env::AddUnitSize() { UnitSize = std::max<int>(UnitSize + 1, static_cast<double>(UnitSize) * 1.1); }
 
-void GlobalEnv::ReduceUnitSize() {
+void Env::ReduceUnitSize() {
   UnitSize = std::min<int>(UnitSize - 1, static_cast<double>(UnitSize) * 0.9);
   if (UnitSize <= 0) {
     UnitSize = 1;
@@ -12,7 +12,7 @@ void GlobalEnv::ReduceUnitSize() {
   }
 }
 
-void GlobalEnv::SetHumanMoveEdge(model::Edge edge) {
+void Env::SetHumanMoveEdge(model::Edge edge) {
   if (Board.Contains(edge)) {
     return;
   }
@@ -27,7 +27,7 @@ void GlobalEnv::SetHumanMoveEdge(model::Edge edge) {
   }
 }
 
-model::Edge GlobalEnv::GetHumanMoveEdgeSync() {
+model::Edge Env::GetHumanMoveEdgeSync() {
   model::Edge result;
   HumanMoveEdgeQueue.pop(result);
   return result;

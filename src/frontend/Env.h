@@ -19,9 +19,9 @@ inline QPoint MakePos(Square value, int padding, int width) {
   return {value.X() * width + padding, value.Y() * width + padding};
 }
 
-class GlobalEnv {
+class Env {
  public:
-  GlobalEnv() { HumanMoveEdgeQueue.set_capacity(1); }
+  Env() { HumanMoveEdgeQueue.set_capacity(1); }
 
   static constexpr int kDefaultUnitSize = 6 + 16 / BoardSize;
 

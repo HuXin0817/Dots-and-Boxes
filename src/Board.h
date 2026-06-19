@@ -345,7 +345,7 @@ constexpr std::strong_ordering BoardImpl<Config>::operator<=>(const Other& other
   if (std::strong_ordering cmp = Step <=> other.Step; cmp != std::strong_ordering::equal) {
     return cmp;
   }
-  for (model::Edge edge : model::Iota<model::Edge>()) {
+  for (model::Edge edge : model::Iota<model::Edge>) {
     if (std::strong_ordering cmp = Contains(edge) <=> other.Contains(edge); cmp != std::strong_ordering::equal) {
       return cmp;
     }

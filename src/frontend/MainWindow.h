@@ -8,6 +8,7 @@
 #include "BoxCanvas.h"
 #include "DotCanvas.h"
 #include "EdgeCanvas.h"
+#include "Env.h"
 
 namespace dab::__detail__::frontend {
 
@@ -21,7 +22,7 @@ class MainWindow : public QMainWindow {
 
   MainWindow(PlayerType player1Type, PlayerType player2Type);
 
-  QSize Size() const { return {Env.WindowSize(), Env.WindowSize()}; }
+  QSize Size() const { return MakeSize(Env.WindowSize()); }
   QColor Color() const { return Env.ThemeColor(DarkThemeColor, LightThemeColor); }
 
  public Q_SLOTS:
@@ -38,7 +39,7 @@ class MainWindow : public QMainWindow {
  private:
   std::unique_ptr<robot::Robot> Robot1 = nullptr;
   std::unique_ptr<robot::Robot> Robot2 = nullptr;
-  GlobalEnv Env;
+  Env Env;
   model::Edge CandidateEdge;
   iterable::Array<QPointer<BoxCanvas>, model::Box::Max> BoxCanvases;
   iterable::Array<QPointer<DotCanvas>, model::Dot::Max> DotCanvases;

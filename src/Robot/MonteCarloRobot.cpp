@@ -1,7 +1,5 @@
 #include "MonteCarloRobot.h"
 
-#include <ranges>
-
 namespace dab::__detail__::robot {
 
 void MonteCarloRobot::ScoreMap::Reset() {
@@ -15,7 +13,7 @@ void MonteCarloRobot::ScoreMap::Add(model::Edge edge, Int score) {
 }
 
 void MonteCarloRobot::ScoreMap::Add(const ScoreMap& other) {
-  for (const Int i : model::Iota<model::Edge>()) {
+  for (const Int i : model::Iota<model::Edge>) {
     Time.At(i) += other.Time.At(i);
     Score.At(i) += other.Score.At(i);
   }
@@ -25,7 +23,7 @@ iterable::Span<const model::Edge> MonteCarloRobot::ScoreMap::Export(
     iterable::List<model::Edge, model::Edge::Max>& edges) {
   edges.Clear();
   double maxScore = 0.0;
-  for (const model::Edge edge : model::Iota<model::Edge>()) {
+  for (const model::Edge edge : model::Iota<model::Edge>) {
     if (Time.At(edge) > 0) {
       if (const double score = static_cast<double>(Score.At(edge)) / static_cast<double>(Time.At(edge));
           score > maxScore || edges.Empty()) {

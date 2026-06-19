@@ -15,7 +15,7 @@
 #include "BoxCanvas.h"
 #include "DotCanvas.h"
 #include "EdgeCanvas.h"
-#include "GlobalEnv.h"
+#include "Env.h"
 
 namespace dab::__detail__::frontend {
 
@@ -26,13 +26,13 @@ MainWindow::MainWindow(PlayerType player1Type, PlayerType player2Type) {
   Robot1 = robot::Robot::Create(player1Type);
   Robot2 = robot::Robot::Create(player2Type);
 
-  for (const model::Box box : model::Iota<model::Box>()) {
+  for (const model::Box box : model::Iota<model::Box>) {
     BoxCanvases.At(box) = new BoxCanvas(&Env, box, this);
   }
-  for (const model::Edge edge : model::Iota<model::Edge>()) {
+  for (const model::Edge edge : model::Iota<model::Edge>) {
     EdgeCanvases.At(edge) = new EdgeCanvas(&Env, edge, this);
   }
-  for (const model::Dot dot : model::Iota<model::Dot>()) {
+  for (const model::Dot dot : model::Iota<model::Dot>) {
     DotCanvases.At(dot) = new DotCanvas(&Env, dot, this);
   }
   Resize();

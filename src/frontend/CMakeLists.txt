@@ -3,11 +3,11 @@ set(FrontendSources
   BoxCanvas.cpp
   DotCanvas.cpp
   EdgeCanvas.cpp
+  Env.cpp
   Frontend.cpp
-  GlobalEnv.cpp
   MainWindow.cpp
 )
-add_library(${FrontendLibrary} STATIC ${FrontendSources})
+qt_add_library(${FrontendLibrary} STATIC ${FrontendSources})
 target_compile_definitions(${FrontendLibrary} PRIVATE QT_NO_KEYWORDS __BoardSize__=${BoardSize})
 target_link_libraries(${FrontendLibrary} PRIVATE
   TBB::tbb
