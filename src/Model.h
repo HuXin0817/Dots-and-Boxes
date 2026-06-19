@@ -6,12 +6,6 @@
 #include "Common.h"
 #include "Iterable.h"
 
-#if __BoardSize__ > 30
-#define __constexpr__
-#else
-#define __constexpr__ constexpr
-#endif
-
 namespace dab::__detail__::model {
 
 template <typename T>
@@ -113,7 +107,7 @@ constexpr iterable::Array<Edge, 4> Box::GetNearEdges() const {
 }
 
 constexpr const iterable::Array<Edge, 4>& Box::NearEdges() const {
-  static __constexpr__ iterable::Array<iterable::Array<Edge, 4>, Max> Mapper =
+  static constexpr iterable::Array<iterable::Array<Edge, 4>, Max> Mapper =
       []() -> iterable::Array<iterable::Array<Edge, 4>, Max> {
     iterable::Array<iterable::Array<Edge, 4>, Max> mapper;
     for (const Box box : Iota<Box>) {
@@ -140,7 +134,7 @@ constexpr iterable::List<Box, 2> Edge::GetNearBoxes() const {
 }
 
 constexpr const iterable::List<Box, 2>& Edge::NearBoxes() const {
-  static __constexpr__ iterable::Array<iterable::List<Box, 2>, Max> Mapper =
+  static constexpr iterable::Array<iterable::List<Box, 2>, Max> Mapper =
       []() -> iterable::Array<iterable::List<Box, 2>, Max> {
     iterable::Array<iterable::List<Box, 2>, Max> mapper;
     for (const Edge edge : Iota<Edge>) {
