@@ -1,4 +1,4 @@
-name: macOS Build
+name: build
 
 on:
   push:
@@ -28,7 +28,7 @@ jobs:
       - name: Install requirements
         run: |
           brew update
-          brew install coreutils qt@6 llvm
+          brew install qt@6 llvm
 
       - name: Build
         run: |
