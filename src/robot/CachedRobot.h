@@ -16,23 +16,22 @@ class CachedRobot : public SubRobotType {
 
  private:
   using CacheType = tstarling::ThreadSafeLRUCache<board::HashValueBoard, iterable::Vector<model::Edge>>;
-  static inline CacheType Cache = CacheType(static_cast<std::size_t>(model::Edge::Max) << 10);
-
-  board::HashValueBoard Key;
+  static constexpr std::size_t CacheSize = static_cast<std::size_t>(model::Edge::Max) << 10;
+  static inline CacheType Cache = CacheType(CacheSize);
 };
 
 template <typename SubRobotType>
 template <typename Board>
 iterable::Span<const model::Edge> CachedRobot<SubRobotType>::BestCandidateEdges(const Board& board) {
-  Key = board;
-  if (CacheType::ConstAccessor ac; Cache.find(ac, Key)) {
+  board::HashValueBoard key = board;
+  if (CacheType::ConstAccessor ac; Cache.find(ac, key)) {
     return *ac;
   }
 
-  const iterable::Span<const model::Edge> result = SubRobotType::BestCandidateEdges(board);
+  const iterable::Span<const model::Edge> value = SubRobotType::BestCandidateEdges(board);
   assert(!result.Empty());
-  Cache.insert(Key, result);
-  return result;
+  Cache.insert(key, value);
+  return value;
 }
 
 }  // namespace dab::__detail__::robot

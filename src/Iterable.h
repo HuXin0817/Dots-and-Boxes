@@ -3,8 +3,7 @@
 #include <algorithm>
 #include <array>
 #include <cassert>
-#include <chrono>
-#include <random>
+#include <cstdint>
 
 #include "Common.h"
 
@@ -213,30 +212,5 @@ template <typename T>
 using Span = iterable::Iterable<EnableSpan | EnableEndPointer, T>;
 template <typename T>
 using Vector = iterable::Iterable<EnableAllocSize, T>;
-
-class Random {
- public:
-  Random() { Rng.seed(std::chrono::steady_clock::now().time_since_epoch().count()); }
-
-  template <typename T>
-  T Range(T min, T max);
-  template <typename Iterable>
-  const auto& Choice(const Iterable& data);
-
- private:
-  std::mt19937_64 Rng;
-};
-
-template <typename T>
-T Random::Range(T min, T max) {
-  std::uniform_int_distribution<T> dist(min, max);
-  return dist(Rng);
-}
-
-template <typename Iterable>
-const auto& Random::Choice(const Iterable& data) {
-  assert(!data.Empty());
-  return data.At(Range(0, data.Size() - 1));
-}
 
 }  // namespace dab::__detail__::iterable

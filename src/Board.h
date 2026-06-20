@@ -1,15 +1,16 @@
 #pragma once
 
 #include <algorithm>
+#include <cassert>
 #include <chrono>
 #include <cstdint>
 #include <functional>
 #include <numeric>
 #include <print>
-#include <unordered_set>
 
 #include "Iterable.h"
 #include "Model.h"
+#include "Random.h"
 
 namespace dab::__detail__::board {
 
@@ -85,22 +86,16 @@ struct OwnerMixin {
   iterable::Array<Owner, model::Box::Max> BoxOwner;
 };
 
-static inline iterable::Array<std::uint64_t, model::Edge::Max> HashMapper =
-    []() -> iterable::Array<std::uint64_t, model::Edge::Max> {
+static constexpr iterable::Array<std::uint64_t, model::Edge::Max> CreateHashMapper() {
+  ZobristHash hash;
   iterable::Array<std::uint64_t, model::Edge::Max> result;
-  std::unordered_set<std::uint64_t> visited;
-  std::function<std::uint64_t()> rand = [&]() -> std::uint64_t {
-    return iterable::Random().Range<std::uint64_t>(1, std::numeric_limits<std::uint64_t>::max());
-  };
-  for (std::uint64_t& v : result) {
-    v = rand();
-    while (visited.contains(v)) {
-      v = rand();
-    }
-    visited.insert(v);
+  for (std::uint64_t& i : result) {
+    i = hash.Next();
   }
   return result;
-}();
+}
+
+static constexpr iterable::Array<std::uint64_t, model::Edge::Max> HashMapper = CreateHashMapper();
 
 template <std::int64_t Config>
 class BoardImpl : BasicMixin,
@@ -244,7 +239,13 @@ constexpr Int BoardImpl<Config>::Add(model::Edge edge) {
 template <std::int64_t Config>
 constexpr model::Edge BoardImpl<Config>::FindNotContainsEdgeInBox(model::Box box) const {
   assert(this->Counter.At(box) == 3);
-  return *std::ranges::find_if(box.NearEdges(), [&](model::Edge edge) -> bool { return NotContains(edge); });
+  for (model::Edge edge : box.NearEdges()) {
+    if (NotContains(edge)) {
+      return edge;
+    }
+  }
+  assert(false);
+  return model::Edge::Invalid;
 }
 
 template <std::int64_t Config>
@@ -328,10 +329,15 @@ constexpr bool BoardImpl<Config>::operator==(const Other& other) const {
       return false;
     }
   }
-  if (Step != other.Step) {
+  if (UNLIKELY(Step != other.Step)) {
     return false;
   }
-  return std::ranges::all_of(EmptyEdges(), [&](model::Edge edge) -> bool { return !other.Contains(edge); });
+  for (model::Edge edge : MoveRecord()) {
+    if (UNLIKELY(other.NotContains(edge))) {
+      return false;
+    }
+  }
+  return true;
 }
 
 template <std::int64_t Config>
@@ -370,12 +376,11 @@ using ScoreableCountBoard = Board<EnableScoreableCount>;
 
 namespace std {
 
-using namespace dab::__detail__::board;
-
 template <std::int64_t Config>
-  requires(HasFlag(Config, EnableHashValue))
-struct hash<BoardImpl<Config>> {
-  constexpr std::uint64_t operator()(const BoardImpl<Config>& board) const { return board.Hash(); }
+struct hash<dab::__detail__::board::BoardImpl<Config>> {
+  constexpr std::uint64_t operator()(const dab::__detail__::board::BoardImpl<Config>& board) const {
+    return board.Hash();
+  }
 };
 
 }  // namespace std

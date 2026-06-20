@@ -22,7 +22,6 @@ class IntWrapper {
 };
 
 template <Int Length>
-  requires(BoardSize <= Length && Length <= BoardSize + 1)
 class Square : public IntWrapper {
  public:
   static constexpr Int Max = Length * Length;
@@ -44,6 +43,7 @@ class Box : public Square<BoardSize> {
 
  private:
   constexpr iterable::Array<Edge, 4> GetNearEdges() const;
+  static constexpr iterable::Array<iterable::Array<Edge, 4>, Max> CreateMapper();
 };
 
 class Edge : public IntWrapper {
@@ -60,6 +60,7 @@ class Edge : public IntWrapper {
 
  private:
   constexpr iterable::List<Box, 2> GetNearBoxes() const;
+  static constexpr iterable::Array<iterable::List<Box, 2>, Max> CreateMapper();
 };
 
 constexpr Edge::Edge(Dot dot1, Dot dot2) {
@@ -106,15 +107,16 @@ constexpr iterable::Array<Edge, 4> Box::GetNearEdges() const {
   return nearEdges;
 }
 
+constexpr iterable::Array<iterable::Array<Edge, 4>, Box::Max> Box::CreateMapper() {
+  iterable::Array<iterable::Array<Edge, 4>, Max> mapper;
+  for (const Box box : Iota<Box>) {
+    mapper.At(box) = box.GetNearEdges();
+  }
+  return mapper;
+}
+
 constexpr const iterable::Array<Edge, 4>& Box::NearEdges() const {
-  static constexpr iterable::Array<iterable::Array<Edge, 4>, Max> Mapper =
-      []() -> iterable::Array<iterable::Array<Edge, 4>, Max> {
-    iterable::Array<iterable::Array<Edge, 4>, Max> mapper;
-    for (const Box box : Iota<Box>) {
-      mapper.At(box) = box.GetNearEdges();
-    }
-    return mapper;
-  }();
+  static constexpr iterable::Array<iterable::Array<Edge, 4>, Max> Mapper = CreateMapper();
   return Mapper.At(Value);
 }
 
@@ -133,15 +135,16 @@ constexpr iterable::List<Box, 2> Edge::GetNearBoxes() const {
   return result;
 }
 
+constexpr iterable::Array<iterable::List<Box, 2>, Edge::Max> Edge::CreateMapper() {
+  iterable::Array<iterable::List<Box, 2>, Max> mapper;
+  for (const Edge edge : Iota<Edge>) {
+    mapper.At(edge) = edge.GetNearBoxes();
+  }
+  return mapper;
+}
+
 constexpr const iterable::List<Box, 2>& Edge::NearBoxes() const {
-  static constexpr iterable::Array<iterable::List<Box, 2>, Max> Mapper =
-      []() -> iterable::Array<iterable::List<Box, 2>, Max> {
-    iterable::Array<iterable::List<Box, 2>, Max> mapper;
-    for (const Edge edge : Iota<Edge>) {
-      mapper.At(edge) = edge.GetNearBoxes();
-    }
-    return mapper;
-  }();
+  static constexpr iterable::Array<iterable::List<Box, 2>, Max> Mapper = CreateMapper();
   return Mapper.At(Value);
 }
 

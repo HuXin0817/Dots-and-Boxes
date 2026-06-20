@@ -7,6 +7,9 @@
 #define JOIN(x, y) CAT(x, y)
 #define __detail__ JOIN(JOIN(JOIN(__detail__, __BoardSize__), x), __BoardSize__)
 
+#define LIKELY(expr) __builtin_expect(!!(expr), 1)
+#define UNLIKELY(expr) __builtin_expect(!!(expr), 0)
+
 namespace dab::__detail__ {
 
 using Int = decltype([]() -> auto {

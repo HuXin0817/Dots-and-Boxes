@@ -6,8 +6,6 @@
 
 #include "src/frontend/Frontend.h"
 
-using namespace dab;
-
 static constexpr std::int64_t MaxBoardSize = __MaxBoardSize__;
 
 QCommandLineOption CreateBoardSizeOption() {
@@ -29,7 +27,7 @@ QCommandLineOption CreatePlayerTypeOption(int playerId) {
   }
 
   QStringList accepted = {"human", "robot"};
-  for (const QString option : PlayerTypeOptionStrings) {
+  for (const QString option : dab::PlayerTypeOptionStrings) {
     accepted << option;
   }
 
@@ -48,17 +46,17 @@ QCommandLineOption CreatePlayerTypeOption(int playerId) {
       QString("Set type of player %1. Accepts: %2 (default: 'robot'). Note: 'robot' is equivalent to '%3'.")
           .arg(playerId)
           .arg(acceptedStr)
-          .arg(DefaultPlayerTypeString);
+          .arg(dab::DefaultPlayerTypeString);
   return {names, discription, "type", defaultPlayerType};
 }
 
-PlayerType ParsePlayerType(const QString& arg) {
+dab::PlayerType ParsePlayerType(const QString& arg) {
   if (arg.compare("robot", Qt::CaseSensitivity::CaseInsensitive) == 0) {
-    return DefaultPlayerType;
+    return dab::DefaultPlayerType;
   }
-  for (const std::size_t i : std::views::iota(static_cast<std::size_t>(0), std::size(PlayerTypeOptionStrings))) {
-    if (arg.compare(PlayerTypeOptionStrings[i], Qt::CaseSensitivity::CaseInsensitive) == 0) {
-      return static_cast<PlayerType>(i);
+  for (const std::size_t i : std::views::iota(static_cast<std::size_t>(0), std::size(dab::PlayerTypeOptionStrings))) {
+    if (arg.compare(dab::PlayerTypeOptionStrings[i], Qt::CaseSensitivity::CaseInsensitive) == 0) {
+      return static_cast<dab::PlayerType>(i);
     }
   }
   std::println(stderr, "Invalid player type '{}'.", arg.toLocal8Bit().constData());
@@ -95,8 +93,8 @@ int main(int argc, char* argv[]) {
   parser.process(application);
 
   const std::int64_t boardSize = ParseBoardSize(parser.value(boardSizeOption));
-  const PlayerType player1Type = ParsePlayerType(parser.value(player1Option));
-  const PlayerType player2Type = ParsePlayerType(parser.value(player2Option));
+  const dab::PlayerType player1Type = ParsePlayerType(parser.value(player1Option));
+  const dab::PlayerType player2Type = ParsePlayerType(parser.value(player2Option));
 
   QMainWindow* mainWindow = CreateMainWindow<MaxBoardSize>(boardSize, player1Type, player2Type);
   mainWindow->show();

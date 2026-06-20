@@ -1,5 +1,6 @@
 #include "Robot.h"
 
+#include "../Random.h"
 #include "GreedyRobot.h"
 #include "ImproveGreedyRobot.h"
 #include "MonteCarloRobot.h"
@@ -15,7 +16,7 @@ class RobotWrapper : public Robot, public Derived {
   ~RobotWrapper() override = default;
 
   model::Edge Move(const board::GameBoard& board) override {
-    return iterable::Random().Choice(Derived::BestCandidateEdges(board));
+    return Random().Choice(Derived::BestCandidateEdges(board));
   }
 };
 

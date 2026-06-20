@@ -1,5 +1,7 @@
 #include "MonteCarloRobot.h"
 
+#include "../Random.h"
+
 namespace dab::__detail__::robot {
 
 void MonteCarloRobot::ScoreMap::Reset() {
@@ -39,7 +41,7 @@ iterable::Span<const model::Edge> MonteCarloRobot::ScoreMap::Export(
 
 template <typename Board>
 void MonteCarloRobot::SearchOnce(const Board& board) {
-  iterable::Random random;
+  Random random;
   SimulationBoard = board;
   const model::Edge edge = random.Choice(SubRobot.BestCandidateEdges(SimulationBoard));
   SimulationBoard.Add(edge);
