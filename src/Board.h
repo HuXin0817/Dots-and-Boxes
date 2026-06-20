@@ -112,6 +112,10 @@ class BoardImpl : BasicMixin,
 
  public:
   constexpr BoardImpl() { Reset(); }
+  template <typename Other>
+  constexpr BoardImpl(const Other& other) {
+    operator=(other);
+  }
 
   constexpr void Reset();
   constexpr Int Add(model::Edge edge);
