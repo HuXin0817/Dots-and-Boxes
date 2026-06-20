@@ -12,13 +12,6 @@
 
 namespace dab::__detail__::frontend {
 
-inline QSize MakeSize(int x) { return {x, x}; }
-
-template <typename Square>
-inline QPoint MakePos(Square value, int padding, int width) {
-  return {value.X() * width + padding, value.Y() * width + padding};
-}
-
 class Env {
  public:
   Env() { HumanMoveEdgeQueue.set_capacity(1); }

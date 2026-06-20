@@ -14,8 +14,8 @@ class DotCanvas : public QWidget {
 
   DotCanvas(Env* env, model::Dot dot, QWidget* parent) : Env(env), Value(dot), QWidget(parent) {}
 
-  QSize Size() const { return MakeSize(Env->DotDiameter()); }
-  QPoint Pos() const { return MakePos(Value, Env->Padding(), Env->EdgeWidth()); }
+  QSize Size() const { return {Env->DotDiameter(), Env->DotDiameter()}; }
+  QPoint Pos() const;
   QColor Color() const { return Env->ThemeColor(DarkThemeColor, LightThemeColor); }
 
  protected:

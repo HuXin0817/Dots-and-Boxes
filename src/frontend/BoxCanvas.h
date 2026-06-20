@@ -17,8 +17,8 @@ class BoxCanvas : public QWidget {
 
   BoxCanvas(Env* env, model::Box box, QWidget* parent) : Env(env), Value(box), QWidget(parent) {}
 
-  QSize Size() const { return MakeSize(Env->BoxWidth()); }
-  QPoint Pos() const { return MakePos(Value, Env->BoxPadding(), Env->EdgeWidth()); }
+  QSize Size() const { return {Env->BoxWidth(), Env->BoxWidth()}; }
+  QPoint Pos() const;
   QColor Color() const;
 
  protected:

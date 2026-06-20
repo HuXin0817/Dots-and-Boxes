@@ -22,7 +22,7 @@ class MainWindow : public QMainWindow {
 
   MainWindow(PlayerType player1Type, PlayerType player2Type);
 
-  QSize Size() const { return MakeSize(Env.WindowSize()); }
+  QSize Size() const { return {Env.WindowSize(), Env.WindowSize()}; }
   QColor Color() const { return Env.ThemeColor(DarkThemeColor, LightThemeColor); }
 
  public Q_SLOTS:

@@ -4,6 +4,12 @@
 
 namespace dab::__detail__::frontend {
 
+QPoint BoxCanvas::Pos() const {
+  int x = Value.X() * Env->EdgeWidth() + Env->BoxPadding();
+  int y = Value.Y() * Env->EdgeWidth() + Env->BoxPadding();
+  return {x, y};
+}
+
 QColor BoxCanvas::Color() const {
   switch (Env->GetBoard().GetOwner(Value)) {
     case board::Owner::None:

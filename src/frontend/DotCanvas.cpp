@@ -4,6 +4,12 @@
 
 namespace dab::__detail__::frontend {
 
+QPoint DotCanvas::Pos() const {
+  int x = Value.X() * Env->EdgeWidth() + Env->Padding();
+  int y = Value.Y() * Env->EdgeWidth() + Env->Padding();
+  return {x, y};
+}
+
 void DotCanvas::paintEvent(QPaintEvent* event) {
   QWidget::paintEvent(event);
 

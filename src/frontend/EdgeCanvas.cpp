@@ -7,10 +7,9 @@
 namespace dab::__detail__::frontend {
 
 QSize EdgeCanvas::Size() const {
-  return {
-      Value.Rotate() ? Env->DotDiameter() : Env->EdgeWidth(),
-      Value.Rotate() ? Env->EdgeWidth() : Env->DotDiameter(),
-  };
+  int x = Value.Rotate() ? Env->DotDiameter() : Env->EdgeWidth();
+  int y = Value.Rotate() ? Env->EdgeWidth() : Env->DotDiameter();
+  return {x, y};
 }
 
 QPoint EdgeCanvas::Pos() const {
