@@ -6,6 +6,7 @@
 #include <QStyleHints>
 #include <QThread>
 #include <QWidget>
+#include <cstddef>
 
 #include "../Board.h"
 #include "../PlayerType.h"
@@ -36,13 +37,16 @@ class Env {
   int Padding() const { return kPadding * UnitSize; }
   int BoxPadding() const { return kBoxPadding * UnitSize; }
 
-  bool IsDarkTheme() const { return QApplication::styleHints()->colorScheme() == Qt::ColorScheme::Dark; }
-  QColor ThemeColor(QColor dark, QColor light) const { return IsDarkTheme() ? dark : light; }
+  QColor BackgroundColor() const;
+  QColor DotColor() const;
+  QColor BoxColor(board::Owner owner) const;
+  QColor EdgeColor(bool hovered, bool highlight, board::Owner owner) const;
+
   void ResetUnitSize() { UnitSize = kDefaultUnitSize; }
   void AddUnitSize();
   void ReduceUnitSize();
   const board::GameBoard& GetBoard() const { return Board; }
-  board::GameBoard& GetBoard() { return Board; }
+  board::GameBoard& GetMutableBoard() { return Board; }
   void SetPlayer1Type(PlayerType player1Type) { Player1Type = player1Type; }
   void SetPlayer2Type(PlayerType player2Type) { Player2Type = player2Type; }
   PlayerType GetPlayer1Type() const { return Player1Type; }
@@ -57,6 +61,8 @@ class Env {
   PlayerType Player2Type;
   tbb::concurrent_bounded_queue<model::Edge> HumanMoveEdgeQueue;
   board::GameBoard Board;
+
+  bool IsDarkTheme() const { return QApplication::styleHints()->colorScheme() == Qt::ColorScheme::Dark; }
 };
 
 }  // namespace dab::__detail__::frontend

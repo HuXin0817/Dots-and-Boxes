@@ -1,6 +1,31 @@
 #include "Env.h"
 
+#include "Color.h"
+
 namespace dab::__detail__::frontend {
+
+static constexpr QColor ToQColor(Color color) { return {color.r, color.g, color.b, color.a}; }
+
+QColor Env::BackgroundColor() const {
+  static constexpr iterable::Array<Color, 2> BackgroundColorMap = CreateBackgroundColorMap();
+  return ToQColor(BackgroundColorMap.At(IsDarkTheme()));
+}
+
+QColor Env::DotColor() const {
+  static constexpr iterable::Array<Color, 2> DotColorMap = CreateDotColorMap();
+  return ToQColor(DotColorMap.At(IsDarkTheme()));
+}
+
+QColor Env::BoxColor(board::Owner owner) const {
+  static constexpr iterable::Array<iterable::Array<Color, 3>, 2> BoxColorMap = CreateBoxColorMap();
+  return ToQColor(BoxColorMap.At(IsDarkTheme()).At(static_cast<Int>(owner)));
+}
+
+QColor Env::EdgeColor(bool hovered, bool highlight, board::Owner owner) const {
+  static constexpr iterable::Array<iterable::Array<iterable::Array<iterable::Array<Color, 3>, 2>, 2>, 2> EdgeColorMap =
+      CreateEdgeColorMap();
+  return ToQColor(EdgeColorMap.At(IsDarkTheme()).At(hovered).At(highlight).At(static_cast<Int>(owner)));
+}
 
 void Env::AddUnitSize() { UnitSize = std::max<int>(UnitSize + 1, static_cast<double>(UnitSize) * 1.1); }
 

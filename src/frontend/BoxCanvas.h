@@ -12,14 +12,10 @@ class BoxCanvas : public QWidget {
   Q_DISABLE_COPY(BoxCanvas)
 
  public:
-  static constexpr QColor Player1OccupyColor = QColor(64, 64, 255, 64);
-  static constexpr QColor Player2OccupyColor = QColor(255, 64, 64, 64);
-
   BoxCanvas(Env* env, model::Box box, QWidget* parent) : Env(env), Value(box), QWidget(parent) {}
 
   QSize Size() const { return {Env->BoxWidth(), Env->BoxWidth()}; }
   QPoint Pos() const;
-  QColor Color() const;
 
  protected:
   void paintEvent(QPaintEvent* event) override;

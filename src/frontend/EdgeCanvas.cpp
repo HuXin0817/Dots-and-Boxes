@@ -23,33 +23,6 @@ QPoint EdgeCanvas::Pos() const {
   return {x, y};
 }
 
-QColor EdgeCanvas::Color() const {
-  if (Env->GetBoard().GetOwner(Value) == board::Owner::None) {
-    if (Hovered) {
-      return Env->ThemeColor(DarkThemeHoveredColor, LightThemeHoveredColor);
-    }
-
-    return Env->ThemeColor(DarkThemeColor, LightThemeColor);
-  }
-
-  QColor color;
-  if (Env->GetBoard().GetOwner(Value) == board::Owner::Player1) {
-    color = Player1OccupyColor;
-  } else if (Env->GetBoard().GetOwner(Value) == board::Owner::Player2) {
-    color = Player2OccupyColor;
-  }
-
-  if (Env->GetBoard().MoveRecord().Back() == Value) {
-    color.setAlpha(255);
-  } else if (Hovered) {
-    color.setAlpha(144);
-  } else {
-    color.setAlpha(128);
-  }
-
-  return color;
-}
-
 void EdgeCanvas::mousePressEvent(QMouseEvent* event) {
   QWidget::mousePressEvent(event);
   Env->SetHumanMoveEdge(Value);
@@ -58,10 +31,13 @@ void EdgeCanvas::mousePressEvent(QMouseEvent* event) {
 void EdgeCanvas::paintEvent(QPaintEvent* event) {
   QWidget::paintEvent(event);
 
+  bool highlight = Env->GetBoard().MoveRecord().Back() == Value;
+  board::Owner owner = Env->GetBoard().GetOwner(Value);
+
   QPainter painter(this);
   painter.setRenderHint(QPainter::RenderHint::Antialiasing);
   painter.setPen(Qt::PenStyle::NoPen);
-  painter.setBrush(QBrush(Color()));
+  painter.setBrush(QBrush(Env->EdgeColor(Hovered, highlight, owner)));
   painter.drawRect(rect());
 }
 

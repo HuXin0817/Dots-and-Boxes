@@ -17,13 +17,9 @@ class MainWindow : public QMainWindow {
   Q_DISABLE_COPY(MainWindow)
 
  public:
-  static constexpr QColor DarkThemeColor = QColor(43, 43, 43, 255);
-  static constexpr QColor LightThemeColor = QColor(242, 242, 242, 255);
-
   MainWindow(PlayerType player1Type, PlayerType player2Type);
 
   QSize Size() const { return {Env.WindowSize(), Env.WindowSize()}; }
-  QColor Color() const { return Env.ThemeColor(DarkThemeColor, LightThemeColor); }
 
  public Q_SLOTS:
   void Run();

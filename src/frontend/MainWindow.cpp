@@ -59,7 +59,7 @@ MainWindow::MainWindow(PlayerType player1Type, PlayerType player2Type) {
 void MainWindow::paintEvent(QPaintEvent* event) {
   QMainWindow::paintEvent(event);
   QPainter painter(this);
-  painter.fillRect(rect(), Color());
+  painter.fillRect(rect(), Env.BackgroundColor());
 }
 
 void MainWindow::showEvent(QShowEvent* event) {
@@ -68,7 +68,7 @@ void MainWindow::showEvent(QShowEvent* event) {
 }
 
 void MainWindow::Run() {
-  Env.GetBoard().Reset();
+  Env.GetMutableBoard().Reset();
   while (Env.GetBoard().Gaming()) {
     if (PlayerTypeIsRobot(Env.GetPlayer1Type()) && Env.GetBoard().IsPlayer1Turn()) {
       CandidateEdge = Robot1->Move(Env.GetBoard());
@@ -90,7 +90,7 @@ void MainWindow::Add() {
   EdgeCanvases.At(CandidateEdge)->raise();
   DotCanvases.At(CandidateEdge.Dot1())->raise();
   DotCanvases.At(CandidateEdge.Dot2())->raise();
-  Env.GetBoard().Add(CandidateEdge);
+  Env.GetMutableBoard().Add(CandidateEdge);
   update();
   QApplication::beep();
 }

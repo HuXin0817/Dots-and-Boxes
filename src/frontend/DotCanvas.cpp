@@ -15,7 +15,7 @@ void DotCanvas::paintEvent(QPaintEvent* event) {
 
   QPainter painter(this);
   painter.setRenderHint(QPainter::RenderHint::Antialiasing);
-  painter.setBrush(QBrush(Color()));
+  painter.setBrush(QBrush(Env->DotColor()));
   painter.setPen(Qt::PenStyle::NoPen);
 
   const int x = width() / 2;

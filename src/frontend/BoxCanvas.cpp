@@ -10,26 +10,13 @@ QPoint BoxCanvas::Pos() const {
   return {x, y};
 }
 
-QColor BoxCanvas::Color() const {
-  switch (Env->GetBoard().GetOwner(Value)) {
-    case board::Owner::None:
-      return {0, 0, 0, 0};
-    case board::Owner::Player1:
-      return Player1OccupyColor;
-    case board::Owner::Player2:
-      return Player2OccupyColor;
-  }
-
-  return {0, 0, 0, 0};
-}
-
 void BoxCanvas::paintEvent(QPaintEvent* event) {
   QWidget::paintEvent(event);
 
   QPainter painter(this);
   painter.setRenderHint(QPainter::RenderHint::Antialiasing);
   painter.setPen(Qt::PenStyle::NoPen);
-  painter.setBrush(QBrush(Color()));
+  painter.setBrush(QBrush(Env->BoxColor(Env->GetBoard().GetOwner(Value))));
   painter.drawRect(rect());
 }
 
