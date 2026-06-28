@@ -44,32 +44,6 @@ class MainWindow : public QMainWindow {
   iterable::Array<QPointer<BoxCanvas>, model::Box::Max> BoxCanvases;
   iterable::Array<QPointer<DotCanvas>, model::Dot::Max> DotCanvases;
   iterable::Array<QPointer<EdgeCanvas>, model::Edge::Max> EdgeCanvases;
-
-  static constexpr int kAnimationDuration = 500;
-  template <typename Canvas>
-  QPointer<QPropertyAnimation> CreateSizeAnimation(Canvas canvas);
-  template <typename Canvas>
-  QPointer<QPropertyAnimation> CreatePosAnimation(Canvas canvas);
 };
-
-template <typename Canvas>
-QPointer<QPropertyAnimation> MainWindow::CreateSizeAnimation(Canvas canvas) {
-  QPointer<QPropertyAnimation> sizeAnimation = new QPropertyAnimation(canvas, "size");
-  sizeAnimation->setDuration(kAnimationDuration);
-  sizeAnimation->setStartValue(canvas->size());
-  sizeAnimation->setEndValue(canvas->Size());
-  sizeAnimation->setEasingCurve(QEasingCurve::OutQuad);
-  return sizeAnimation;
-}
-
-template <typename Canvas>
-QPointer<QPropertyAnimation> MainWindow::CreatePosAnimation(Canvas canvas) {
-  QPointer<QPropertyAnimation> posAnimation = new QPropertyAnimation(canvas, "pos");
-  posAnimation->setDuration(kAnimationDuration);
-  posAnimation->setStartValue(canvas->pos());
-  posAnimation->setEndValue(canvas->Pos());
-  posAnimation->setEasingCurve(QEasingCurve::OutQuad);
-  return posAnimation;
-}
 
 }  // namespace dab::__detail__::frontend

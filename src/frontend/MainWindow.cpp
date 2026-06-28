@@ -96,18 +96,35 @@ void MainWindow::Add() {
 }
 
 void MainWindow::Resize() {
+  static constexpr int kAnimationDuration = 500;
+  auto createSizeAnimation = [](auto canvas) -> QPointer<QPropertyAnimation> {
+    QPointer<QPropertyAnimation> sizeAnimation = new QPropertyAnimation(canvas, "size");
+    sizeAnimation->setDuration(kAnimationDuration);
+    sizeAnimation->setStartValue(canvas->size());
+    sizeAnimation->setEndValue(canvas->Size());
+    sizeAnimation->setEasingCurve(QEasingCurve::OutQuad);
+    return sizeAnimation;
+  };
+  auto createPosAnimation = [](auto canvas) -> QPointer<QPropertyAnimation> {
+    QPointer<QPropertyAnimation> posAnimation = new QPropertyAnimation(canvas, "pos");
+    posAnimation->setDuration(kAnimationDuration);
+    posAnimation->setStartValue(canvas->pos());
+    posAnimation->setEndValue(canvas->Pos());
+    posAnimation->setEasingCurve(QEasingCurve::OutQuad);
+    return posAnimation;
+  };
   QPointer<QParallelAnimationGroup> animationGroup = new QParallelAnimationGroup(this);
   for (QPointer<BoxCanvas> canvas : BoxCanvases) {
-    animationGroup->addAnimation(CreateSizeAnimation(canvas));
-    animationGroup->addAnimation(CreatePosAnimation(canvas));
+    animationGroup->addAnimation(createSizeAnimation(canvas));
+    animationGroup->addAnimation(createPosAnimation(canvas));
   }
   for (QPointer<EdgeCanvas> canvas : EdgeCanvases) {
-    animationGroup->addAnimation(CreateSizeAnimation(canvas));
-    animationGroup->addAnimation(CreatePosAnimation(canvas));
+    animationGroup->addAnimation(createSizeAnimation(canvas));
+    animationGroup->addAnimation(createPosAnimation(canvas));
   }
   for (QPointer<DotCanvas> canvas : DotCanvases) {
-    animationGroup->addAnimation(CreateSizeAnimation(canvas));
-    animationGroup->addAnimation(CreatePosAnimation(canvas));
+    animationGroup->addAnimation(createSizeAnimation(canvas));
+    animationGroup->addAnimation(createPosAnimation(canvas));
   }
   setFixedSize(Size());
   animationGroup->start();
