@@ -11,3 +11,8 @@ add_library(${RobotLibrary} STATIC ${RobotSources})
 target_compile_definitions(${RobotLibrary} PRIVATE __BoardSize__=${BoardSize})
 target_link_libraries(${RobotLibrary} PRIVATE TBB::tbb)
 set(RobotLibrary ${RobotLibrary} PARENT_SCOPE)
+
+set(RobotBenchmark "benchmark${BoardSize}x${BoardSize}")
+add_executable(${RobotBenchmark} Benchmark.cpp)
+target_compile_definitions(${RobotBenchmark} PRIVATE __BoardSize__=${BoardSize})
+target_link_libraries(${RobotBenchmark} PRIVATE ${RobotLibrary} TBB::tbb)

@@ -29,7 +29,7 @@ iterable::Span<const model::Edge> CachedRobot<SubRobotType>::BestCandidateEdges(
   }
 
   const iterable::Span<const model::Edge> value = SubRobotType::BestCandidateEdges(board);
-  assert(!result.Empty());
+  assert(!value.Empty());
   Map.insert(key, value);
   return value;
 }
