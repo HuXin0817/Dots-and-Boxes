@@ -7,16 +7,13 @@ using namespace dab::__detail__::board;
 int main() {
   std::unique_ptr<Robot> robot1 = Robot::Create(DefaultPlayerType);
   std::unique_ptr<Robot> robot2 = Robot::Create(DefaultPlayerType);
+  GameBoard board;
 
-  while (true) {
-    GameBoard board;
-
-    while (board.Gaming()) {
-      if (board.IsPlayer1Turn()) {
-        board.Add(robot1->Move(board));
-      } else {
-        board.Add(robot2->Move(board));
-      }
+  while (board.Gaming()) {
+    if (board.IsPlayer1Turn()) {
+      board.Add(robot1->Move(board));
+    } else {
+      board.Add(robot2->Move(board));
     }
   }
 
