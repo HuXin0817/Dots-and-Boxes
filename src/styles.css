@@ -1,0 +1,227 @@
+:root {
+  color-scheme: light dark;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  --background: #f2f2f2;
+  --dot: #ffffff;
+  --edge-empty: #d9d9d9;
+  --edge-hover: #cacaca;
+  --dialog-background: #ffffff;
+  --dialog-border: #c9c9c9;
+  --button-background: #f4f4f4;
+  --button-hover: #e8e8e8;
+  --text: #202020;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-width: 100%;
+  height: 100%;
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  overflow: hidden;
+  background: var(--background);
+  color: var(--text);
+}
+
+button {
+  font: inherit;
+}
+
+.app-shell,
+.closed-window {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  min-height: 100dvh;
+  place-items: center;
+  padding: 12px;
+  background: var(--background);
+}
+
+.board-stage {
+  position: relative;
+  width: min(var(--preferred-size), calc(100vw - 24px), calc(100dvh - 24px));
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--background);
+  isolation: isolate;
+  transition: width 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.box,
+.edge,
+.dot {
+  position: absolute;
+}
+
+.box {
+  z-index: 0;
+  pointer-events: none;
+}
+
+.box.owner-player-1 {
+  background: rgb(64 64 255 / 25%);
+}
+
+.box.owner-player-2 {
+  background: rgb(255 64 64 / 25%);
+}
+
+.edge {
+  z-index: 1;
+  display: block;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  appearance: none;
+  background: var(--edge-empty);
+  cursor: default;
+  transition: background-color 90ms linear;
+}
+
+.edge[aria-disabled="false"] {
+  cursor: pointer;
+}
+
+.edge.owner-none:hover {
+  background: var(--edge-hover);
+}
+
+.edge.owner-player-1 {
+  background: rgb(64 64 255 / 50%);
+}
+
+.edge.owner-player-2 {
+  background: rgb(255 64 64 / 50%);
+}
+
+.edge.owner-player-1:not(.edge-last):hover {
+  background: rgb(64 64 255 / 56%);
+}
+
+.edge.owner-player-2:not(.edge-last):hover {
+  background: rgb(255 64 64 / 56%);
+}
+
+.edge.edge-last {
+  z-index: 3;
+}
+
+.edge.edge-last.owner-player-1 {
+  background: #4040ff;
+}
+
+.edge.edge-last.owner-player-2 {
+  background: #ff4040;
+}
+
+.edge:focus-visible {
+  z-index: 5;
+  outline: 2px solid currentColor;
+  outline-offset: 1px;
+}
+
+.board-stage[aria-busy="true"] .edge.owner-none {
+  cursor: progress;
+}
+
+.dot {
+  z-index: 4;
+  border-radius: 50%;
+  background: var(--dot);
+  pointer-events: none;
+}
+
+.dialog-backdrop {
+  position: fixed;
+  z-index: 20;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgb(0 0 0 / 30%);
+}
+
+.result-dialog {
+  width: min(390px, 100%);
+  padding: 22px;
+  border: 1px solid var(--dialog-border);
+  border-radius: 6px;
+  background: var(--dialog-background);
+  box-shadow: 0 14px 34px rgb(0 0 0 / 24%);
+}
+
+.result-dialog p {
+  margin: 0 0 22px;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.dialog-actions button {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 6px 12px;
+  border: 1px solid var(--dialog-border);
+  border-radius: 5px;
+  background: var(--button-background);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.dialog-actions button:hover {
+  background: var(--button-hover);
+}
+
+.dialog-actions button:focus-visible {
+  outline: 2px solid #4040ff;
+  outline-offset: 2px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #2b2b2b;
+    --dot: #cacaca;
+    --edge-empty: #414141;
+    --edge-hover: #5a5a5a;
+    --dialog-background: #353535;
+    --dialog-border: #5b5b5b;
+    --button-background: #444444;
+    --button-hover: #505050;
+    --text: #f0f0f0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .board-stage,
+  .edge {
+    transition: none;
+  }
+}
