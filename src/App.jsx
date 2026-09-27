@@ -2,15 +2,17 @@ import { RotateCcw, X } from "lucide-react";
 import {
   useCallback,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from "react";
 
-import { readGameConfig } from "./config";
+import { BoardSize, readPlayerConfig } from "./config";
 import { Board, Owner } from "./game/board";
-import { BoardModel } from "./game/model";
+import { BoardTopology } from "./game/board-topology";
 import { PlayerType } from "./game/robots";
+
+const Model = new BoardTopology(BoardSize);
+const DefaultUnitSize = 8;
 
 function ownerClass(owner) {
   switch (owner) {
@@ -134,29 +136,26 @@ function ResultDialog({ board, onClose, onRestart }) {
 }
 
 export default function App() {
-  const config = useMemo(readGameConfig, []);
-  const model = useMemo(
-    () => new BoardModel(config.boardSize),
-    [config.boardSize],
-  );
-  const board = useMemo(() => new Board(model), [model]);
-  const boardRef = useRef(board);
+  const [{ player1Type, player2Type }] = useState(readPlayerConfig);
+  const [board] = useState(() => new Board(Model));
   const workerRef = useRef(null);
   const pendingRequest = useRef(0);
   const [revision, setRevision] = useState(0);
   const [thinking, setThinking] = useState(false);
   const [closed, setClosed] = useState(false);
   const [workerGeneration, setWorkerGeneration] = useState(0);
-  const [unitSize, setUnitSize] = useState(6 + Math.floor(16 / model.size));
+  const [unitSize, setUnitSize] = useState(DefaultUnitSize);
+  const currentPlayerType = board.isPlayer1Turn()
+    ? player1Type
+    : player2Type;
 
   const applyMove = useCallback((edge) => {
-    const currentBoard = boardRef.current;
-    if (!currentBoard.gaming() || currentBoard.contains(edge)) {
+    if (!board.gaming() || board.contains(edge)) {
       return;
     }
-    currentBoard.add(edge);
+    board.add(edge);
     setRevision((value) => value + 1);
-  }, []);
+  }, [board]);
 
   useEffect(() => {
     const worker = new Worker(
@@ -180,14 +179,10 @@ export default function App() {
   }, [applyMove, workerGeneration]);
 
   useEffect(() => {
-    const currentBoard = boardRef.current;
-    if (closed || thinking || !currentBoard.gaming()) {
+    if (closed || thinking || !board.gaming()) {
       return;
     }
-    const playerType = currentBoard.isPlayer1Turn()
-      ? config.player1Type
-      : config.player2Type;
-    if (playerType !== PlayerType.Robot || !workerRef.current) {
+    if (currentPlayerType !== PlayerType.Robot || !workerRef.current) {
       return;
     }
 
@@ -195,14 +190,14 @@ export default function App() {
     pendingRequest.current = requestId;
     const request = {
       requestId,
-      board: currentBoard.toSnapshot(),
+      board: board.toSnapshot(),
     };
     setThinking(true);
     workerRef.current.postMessage(request);
   }, [
+    board,
     closed,
-    config.player1Type,
-    config.player2Type,
+    currentPlayerType,
     revision,
     thinking,
     workerGeneration,
@@ -227,22 +222,24 @@ export default function App() {
         setUnitSize((current) =>
           Math.max(current + 1, Math.floor(current * 1.1)),
         );
-      } else if (event.code === "KeyR" || event.code === "Digit0") {
+      } else if (event.code === "Digit0") {
         event.preventDefault();
-        setUnitSize(6 + Math.floor(16 / model.size));
+        setUnitSize(DefaultUnitSize);
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [model.size]);
+  }, []);
 
-  const currentPlayerType = boardRef.current.isPlayer1Turn()
-    ? config.player1Type
-    : config.player2Type;
+  if (closed) {
+    return (
+      <main className="closed-window" aria-label="Dots and Boxes closed" />
+    );
+  }
+
   const interactive =
     !thinking &&
-    !closed &&
-    boardRef.current.gaming() &&
+    board.gaming() &&
     currentPlayerType !== PlayerType.Robot;
 
   const handleEdgeClick = (edge) => {
@@ -253,7 +250,7 @@ export default function App() {
 
   const restart = () => {
     pendingRequest.current += 1;
-    boardRef.current.reset();
+    board.reset();
     setThinking(false);
     setClosed(false);
     setRevision((value) => value + 1);
@@ -267,24 +264,18 @@ export default function App() {
     window.close();
   };
 
-  if (closed) {
-    return (
-      <main className="closed-window" aria-label="Dots and Boxes closed" />
-    );
-  }
-
   return (
     <main className="app-shell">
       <GameBoard
-        board={boardRef.current}
+        board={board}
         interactive={interactive}
         thinking={thinking}
         unitSize={unitSize}
         onEdgeClick={handleEdgeClick}
       />
-      {!boardRef.current.gaming() && (
+      {!board.gaming() && (
         <ResultDialog
-          board={boardRef.current}
+          board={board}
           onRestart={restart}
           onClose={close}
         />

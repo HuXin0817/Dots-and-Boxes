@@ -1,30 +1,21 @@
-import { LRUCache } from "lru-cache";
-import { uniformInt } from "pure-rand/distribution/uniformInt";
-import { xoroshiro128plus } from "pure-rand/generator/xoroshiro128plus";
-
 import { InvalidEdge } from "./board";
+import { Random } from "./random";
 import { SearchBoard } from "./search-board";
+import { SearchCache } from "./search-cache";
 
 const ExactSearchThreshold = 26;
+const AdaptiveExactSearchThreshold = 50;
 const ExactCacheLimit = 500_000;
-const RolloutBudgetMultiplier = 16;
+const AdaptiveExactNodeLimit = 500_000;
+const ExactBoundCount = 3;
+const RolloutBudgetMultiplier = 32;
+const ExactSearchAborted = Symbol("ExactSearchAborted");
 
 const ExactBound = Object.freeze({
   Exact: 0,
   Lower: 1,
   Upper: 2,
 });
-
-function createRandomSeed() {
-  const values = new Uint32Array(1);
-  globalThis.crypto?.getRandomValues(values);
-  if (values[0] !== 0) {
-    return values[0];
-  }
-
-  const now = Date.now();
-  return (now ^ Math.floor(now / 0x1_0000_0000)) >>> 0;
-}
 
 export const PlayerType = Object.freeze({
   Human: "Human",
@@ -40,7 +31,7 @@ export function parsePlayerType(value) {
 export class Robot {
   constructor(model) {
     this.model = model;
-    this.rootBoard = new SearchBoard(model, true);
+    this.rootBoard = new SearchBoard(model);
     this.greedyBoard = new SearchBoard(model);
     this.evaluationBoard = new SearchBoard(model);
     this.rolloutBoard = new SearchBoard(model);
@@ -48,15 +39,20 @@ export class Robot {
     this.candidateEdges = new Int8Array(model.edgeCount);
     this.times = new Int32Array(model.edgeCount);
     this.scores = new Int32Array(model.edgeCount);
-    this.exactCache = new LRUCache({ max: ExactCacheLimit });
-    this.random = xoroshiro128plus(createRandomSeed());
+    this.exactCache = new SearchCache(
+      this.rootBoard.occupied.length,
+      ExactCacheLimit,
+    );
+    this.random = new Random();
+    this.exactNodesVisited = 0;
+    this.exactNodeLimit = Number.POSITIVE_INFINITY;
     this.candidateCount = 0;
   }
 
   move(board) {
     this.rootBoard.loadFrom(board);
     const bestCount = this.findBestEdges(this.rootBoard);
-    const index = uniformInt(this.random, 0, bestCount - 1);
+    const index = this.random.int(bestCount);
     return this.edgeBuffer[index];
   }
 
@@ -184,13 +180,13 @@ export class Robot {
   }
 
   randomChoice() {
-    const index = uniformInt(this.random, 0, this.candidateCount - 1);
+    const index = this.random.int(this.candidateCount);
     return this.candidateEdges[index];
   }
 
   searchOnce(source, rootEdgeCount) {
     this.rolloutBoard.copyFrom(source);
-    const index = uniformInt(this.random, 0, rootEdgeCount - 1);
+    const index = this.random.int(rootEdgeCount);
     const firstEdge = this.edgeBuffer[index];
     this.rolloutBoard.add(firstEdge);
     while (this.rolloutBoard.gaming) {
@@ -208,23 +204,30 @@ export class Robot {
       return 0;
     }
 
-    const key = board.key;
     let alpha = initialAlpha;
     let beta = initialBeta;
-    const cached = this.exactCache.get(key);
-    if (cached) {
-      if (cached.bound === ExactBound.Exact) {
-        return cached.value;
+    const cached = this.exactCache.get(board.occupied);
+    if (cached !== undefined) {
+      const cachedBound = cached % ExactBoundCount;
+      const cachedValue =
+        (cached - cachedBound) / ExactBoundCount - this.model.boxCount;
+      if (cachedBound === ExactBound.Exact) {
+        return cachedValue;
       }
-      if (cached.bound === ExactBound.Lower) {
-        alpha = Math.max(alpha, cached.value);
+      if (cachedBound === ExactBound.Lower) {
+        alpha = Math.max(alpha, cachedValue);
       } else {
-        beta = Math.min(beta, cached.value);
+        beta = Math.min(beta, cachedValue);
       }
       if (alpha >= beta) {
-        return cached.value;
+        return cachedValue;
       }
     }
+
+    if (this.exactNodesVisited >= this.exactNodeLimit) {
+      return ExactSearchAborted;
+    }
+    this.exactNodesVisited += 1;
 
     let best = -this.model.boxCount - 1;
     for (const scoreable of [true, false]) {
@@ -237,19 +240,21 @@ export class Robot {
         }
 
         const points = board.add(edge);
-        const value =
+        const future =
           points > 0
-            ? points +
-              this.exactFutureMargin(board, alpha - points, beta - points)
-            : -this.exactFutureMargin(board, -beta, -alpha);
+            ? this.exactFutureMargin(board, alpha - points, beta - points)
+            : this.exactFutureMargin(board, -beta, -alpha);
         board.undo(edge, points);
+        if (future === ExactSearchAborted) {
+          return ExactSearchAborted;
+        }
+        const value = points > 0 ? points + future : -future;
         best = Math.max(best, value);
         alpha = Math.max(alpha, best);
         if (alpha >= beta) {
-          this.exactCache.set(key, {
-            value: best,
-            bound: ExactBound.Lower,
-          });
+          const encoded =
+            (best + this.model.boxCount) * ExactBoundCount + ExactBound.Lower;
+          this.exactCache.set(board.occupied, encoded);
           return best;
         }
       }
@@ -261,11 +266,14 @@ export class Robot {
         : best >= initialBeta
           ? ExactBound.Lower
           : ExactBound.Exact;
-    this.exactCache.set(key, { value: best, bound });
+    const encoded = (best + this.model.boxCount) * ExactBoundCount + bound;
+    this.exactCache.set(board.occupied, encoded);
     return best;
   }
 
-  exactBestEdges(board) {
+  exactBestEdges(board, nodeLimit = Number.POSITIVE_INFINITY) {
+    this.exactNodesVisited = 0;
+    this.exactNodeLimit = nodeLimit;
     let bestScore = -this.model.boxCount - 1;
     let resultCount = 0;
     for (let edge = 0; edge < this.model.edgeCount; edge += 1) {
@@ -274,20 +282,16 @@ export class Robot {
       }
 
       const points = board.add(edge);
-      const score =
-        points > 0
-          ? points +
-            this.exactFutureMargin(
-              board,
-              -this.model.boxCount,
-              this.model.boxCount,
-            )
-          : -this.exactFutureMargin(
-              board,
-              -this.model.boxCount,
-              this.model.boxCount,
-            );
+      const future = this.exactFutureMargin(
+        board,
+        -this.model.boxCount,
+        this.model.boxCount,
+      );
       board.undo(edge, points);
+      if (future === ExactSearchAborted) {
+        return 0;
+      }
+      const score = points > 0 ? points + future : -future;
 
       if (resultCount === 0 || score > bestScore) {
         bestScore = score;
@@ -300,9 +304,37 @@ export class Robot {
     return resultCount;
   }
 
+  shouldTryAdaptiveExact(board) {
+    if (board.remainingSteps > AdaptiveExactSearchThreshold) {
+      return false;
+    }
+
+    let scoreableCount = 0;
+    let safeCount = 0;
+    for (let edge = 0; edge < this.model.edgeCount; edge += 1) {
+      if (board.contains(edge)) {
+        continue;
+      }
+      const count = board.maxEdgeCount(edge);
+      if (count === 3) {
+        scoreableCount += 1;
+      } else if (count < 2) {
+        safeCount += 1;
+      }
+    }
+    return safeCount === 0 || (scoreableCount > 0 && safeCount <= 2);
+  }
+
   findBestEdges(board) {
     if (board.remainingSteps <= ExactSearchThreshold) {
       return this.exactBestEdges(board);
+    }
+
+    if (this.shouldTryAdaptiveExact(board)) {
+      const exactCount = this.exactBestEdges(board, AdaptiveExactNodeLimit);
+      if (exactCount > 0) {
+        return exactCount;
+      }
     }
 
     this.findSimulationCandidates(board);

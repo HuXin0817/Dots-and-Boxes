@@ -1,7 +1,4 @@
-export const MinBoardSize = 1;
-export const MaxBoardSize = 6;
-
-export class BoardModel {
+export class BoardTopology {
   constructor(size) {
     this.size = size;
     this.dotCount = (size + 1) * (size + 1);

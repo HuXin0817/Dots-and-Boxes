@@ -1,27 +1,21 @@
+import { BoardSize } from "../config";
 import { Board } from "./board";
-import { BoardModel } from "./model";
+import { BoardTopology } from "./board-topology";
 import { Robot } from "./robots";
 
-const models = new Map();
+const model = new BoardTopology(BoardSize);
 const robots = new Map();
 
 self.onmessage = ({ data }) => {
-  let model = models.get(data.board.size);
-  if (!model) {
-    model = new BoardModel(data.board.size);
-    models.set(data.board.size, model);
-  }
-
   const board = new Board(model);
   for (const edge of data.board.moves) {
     board.add(edge);
   }
 
-  const robotKey = `${data.board.size}:${board.turn}`;
-  let robot = robots.get(robotKey);
+  let robot = robots.get(board.turn);
   if (!robot) {
     robot = new Robot(model);
-    robots.set(robotKey, robot);
+    robots.set(board.turn, robot);
   }
 
   self.postMessage({

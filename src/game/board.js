@@ -1,5 +1,5 @@
 export const Player1Turn = 1;
-const Player2Turn = -1;
+export const Player2Turn = -1;
 export const InvalidEdge = -1;
 
 export const Owner = Object.freeze({
@@ -104,7 +104,6 @@ export class Board {
 
   toSnapshot() {
     return {
-      size: this.model.size,
       moves: Array.from(this.edges.subarray(0, this.step)),
     };
   }

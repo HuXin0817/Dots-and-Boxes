@@ -1,15 +1,13 @@
 import { InvalidEdge, Player1Turn } from "./board";
 
 export class SearchBoard {
-  constructor(model, trackKey = false) {
+  constructor(model) {
     this.model = model;
     this.occupied = new Uint32Array(Math.ceil(model.edgeCount / 32));
     this.counters = new Uint8Array(model.boxCount);
     this.scoreQueue = new Int8Array(Math.max(1, model.edgeCount * 4));
     this.chainStack = new Int8Array(Math.max(1, model.boxCount));
     this.chainRemaining = new Uint8Array(model.boxCount);
-    this.trackKey = trackKey;
-    this.keyValue = trackKey ? 0n : null;
     this.step = 0;
     this.score = 0;
     this.turn = Player1Turn;
@@ -23,10 +21,6 @@ export class SearchBoard {
     return this.model.edgeCount - this.step;
   }
 
-  get key() {
-    return this.keyValue;
-  }
-
   loadFrom(board) {
     this.step = board.step;
     this.score = board.relativeScore;
@@ -34,16 +28,9 @@ export class SearchBoard {
     this.occupied.fill(0);
     this.counters.set(board.counters);
 
-    let key = 0n;
     for (let index = 0; index < board.step; index += 1) {
       const edge = board.edges[index];
       this.occupied[edge >>> 5] |= 1 << (edge & 31);
-      if (this.trackKey) {
-        key |= 1n << BigInt(edge);
-      }
-    }
-    if (this.trackKey) {
-      this.keyValue = key;
     }
   }
 
@@ -70,9 +57,6 @@ export class SearchBoard {
     const word = edge >>> 5;
     const bit = 1 << (edge & 31);
     this.occupied[word] |= bit;
-    if (this.keyValue !== null) {
-      this.keyValue |= 1n << BigInt(edge);
-    }
     this.step += 1;
 
     let points = 0;
@@ -115,9 +99,6 @@ export class SearchBoard {
     const word = edge >>> 5;
     const bit = 1 << (edge & 31);
     this.occupied[word] &= ~bit;
-    if (this.keyValue !== null) {
-      this.keyValue &= ~(1n << BigInt(edge));
-    }
   }
 
   maxObtainableScore(endScore) {
