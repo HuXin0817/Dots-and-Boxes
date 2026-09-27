@@ -6,18 +6,13 @@ function parseBoardSize(value) {
   if (!Number.isFinite(boardSize)) {
     return 6;
   }
-  return Math.min(
-    MaxBoardSize,
-    Math.max(MinBoardSize, Math.floor(boardSize)),
-  );
+  return Math.min(MaxBoardSize, Math.max(MinBoardSize, Math.floor(boardSize)));
 }
 
 export function readGameConfig() {
   const params = new URLSearchParams(window.location.search);
   return {
-    boardSize: parseBoardSize(
-      params.get("boardsize") ?? params.get("size"),
-    ),
+    boardSize: parseBoardSize(params.get("boardsize") ?? params.get("size")),
     player1Type: parsePlayerType(params.get("player1")),
     player2Type: parsePlayerType(params.get("player2")),
   };

@@ -219,7 +219,6 @@ button {
 }
 
 @media (prefers-reduced-motion: reduce) {
-
   .board-stage,
   .edge {
     transition: none;

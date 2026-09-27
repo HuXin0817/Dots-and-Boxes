@@ -99,8 +99,7 @@ export class Robot {
       }
       this.evaluationBoard.copyFrom(board);
       this.evaluationBoard.add(edge);
-      const score =
-        this.evaluationBoard.maxObtainableScore(minimumScore);
+      const score = this.evaluationBoard.maxObtainableScore(minimumScore);
       if (score < minimumScore) {
         minimumScore = score;
         candidateCount = 1;
@@ -168,9 +167,7 @@ export class Robot {
       this.evaluationBoard.copyFrom(board);
       this.evaluationBoard.add(edge);
       while (this.evaluationBoard.gaming) {
-        const candidate = this.improvedGreedyMove(
-          this.evaluationBoard,
-        );
+        const candidate = this.improvedGreedyMove(this.evaluationBoard);
         this.evaluationBoard.add(candidate);
       }
 
@@ -187,21 +184,13 @@ export class Robot {
   }
 
   randomChoice() {
-    const index = uniformInt(
-      this.random,
-      0,
-      this.candidateCount - 1,
-    );
+    const index = uniformInt(this.random, 0, this.candidateCount - 1);
     return this.candidateEdges[index];
   }
 
   searchOnce(source, rootEdgeCount) {
     this.rolloutBoard.copyFrom(source);
-    const index = uniformInt(
-      this.random,
-      0,
-      rootEdgeCount - 1,
-    );
+    const index = uniformInt(this.random, 0, rootEdgeCount - 1);
     const firstEdge = this.edgeBuffer[index];
     this.rolloutBoard.add(firstEdge);
     while (this.rolloutBoard.gaming) {
@@ -251,11 +240,7 @@ export class Robot {
         const value =
           points > 0
             ? points +
-            this.exactFutureMargin(
-              board,
-              alpha - points,
-              beta - points,
-            )
+              this.exactFutureMargin(board, alpha - points, beta - points)
             : -this.exactFutureMargin(board, -beta, -alpha);
         board.undo(edge, points);
         best = Math.max(best, value);
@@ -292,16 +277,16 @@ export class Robot {
       const score =
         points > 0
           ? points +
-          this.exactFutureMargin(
-            board,
-            -this.model.boxCount,
-            this.model.boxCount,
-          )
+            this.exactFutureMargin(
+              board,
+              -this.model.boxCount,
+              this.model.boxCount,
+            )
           : -this.exactFutureMargin(
-            board,
-            -this.model.boxCount,
-            this.model.boxCount,
-          );
+              board,
+              -this.model.boxCount,
+              this.model.boxCount,
+            );
       board.undo(edge, points);
 
       if (resultCount === 0 || score > bestScore) {
@@ -332,8 +317,7 @@ export class Robot {
     }
 
     const rolloutCount = Math.floor(
-      (this.model.edgeCount * RolloutBudgetMultiplier) /
-      board.remainingSteps,
+      (this.model.edgeCount * RolloutBudgetMultiplier) / board.remainingSteps,
     );
     this.times.fill(0);
     this.scores.fill(0);

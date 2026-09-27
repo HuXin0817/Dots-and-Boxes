@@ -56,18 +56,14 @@ export class SearchBoard {
   }
 
   contains(edge) {
-    return (
-      (this.occupied[edge >>> 5] & (1 << (edge & 31))) !== 0
-    );
+    return (this.occupied[edge >>> 5] & (1 << (edge & 31))) !== 0;
   }
 
   maxEdgeCount(edge) {
     const firstBox = this.model.edgeBoxA[edge];
     const secondBox = this.model.edgeBoxB[edge];
     const first = this.counters[firstBox];
-    return secondBox < 0
-      ? first
-      : Math.max(first, this.counters[secondBox]);
+    return secondBox < 0 ? first : Math.max(first, this.counters[secondBox]);
   }
 
   add(edge) {
@@ -205,10 +201,7 @@ export class SearchBoard {
           const first = this.model.edgeBoxA[edge];
           const second = this.model.edgeBoxB[edge];
           const neighbor = first === box ? second : first;
-          if (
-            neighbor >= 0 &&
-            this.chainRemaining[neighbor] !== 0
-          ) {
+          if (neighbor >= 0 && this.chainRemaining[neighbor] !== 0) {
             this.chainRemaining[neighbor] = 0;
             this.chainStack[stackCount++] = neighbor;
           }
