@@ -22,11 +22,8 @@ export class SearchCache {
   constructor(keyWordCount, maxEntries) {
     this.keyWordCount = keyWordCount;
     this.maxEntries = maxEntries;
-    this.keyBytes = new Uint8Array(
-      maxEntries * keyWordCount * Uint32Array.BYTES_PER_ELEMENT,
-    );
-    this.keys = new Uint32Array(this.keyBytes.buffer);
-    this.values = new Uint8Array(maxEntries);
+    this.keys = new Uint32Array(maxEntries * keyWordCount);
+    this.values = new Uint32Array(maxEntries);
     this.hashes = new Uint32Array(maxEntries);
     this.hashNext = new Int32Array(maxEntries);
     this.newer = new Int32Array(maxEntries);
@@ -38,10 +35,6 @@ export class SearchCache {
     this.entryCount = 0;
     this.head = 0;
     this.tail = 0;
-  }
-
-  get size() {
-    return this.entryCount;
   }
 
   get(key) {
@@ -79,13 +72,6 @@ export class SearchCache {
     this.hashes[index] = hash;
     this.insertIntoBucket(index);
     this.addToHead(index);
-  }
-
-  clear() {
-    this.bucketHeads.fill(0);
-    this.entryCount = 0;
-    this.head = 0;
-    this.tail = 0;
   }
 
   find(key, hash) {

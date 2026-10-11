@@ -1,5 +1,4 @@
 export const Player1Turn = 1;
-export const Player2Turn = -1;
 export const InvalidEdge = -1;
 
 export const Owner = Object.freeze({
@@ -76,10 +75,6 @@ export class Board {
 
   isPlayer1Turn() {
     return this.turn === Player1Turn;
-  }
-
-  isPlayer2Turn() {
-    return this.turn === Player2Turn;
   }
 
   player1Score() {

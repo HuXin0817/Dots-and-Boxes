@@ -1,6 +1,6 @@
 import { parsePlayerType } from "./game/robots";
 
-// Supported range: 1-6; exact-search cache values must fit in one byte.
+// Supported range: 1-6 for the compact topology and move buffers.
 export const BoardSize = 6;
 
 export function readPlayerConfig() {

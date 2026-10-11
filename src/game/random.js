@@ -1,4 +1,4 @@
-const Uint32Range = 0x1_0000_0000;
+const Uint32Range = 0x100000000;
 
 function rotateLeft(value, shift) {
   return ((value << shift) | (value >>> (32 - shift))) >>> 0;
