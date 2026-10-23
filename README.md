@@ -2,6 +2,8 @@
 
 A browser implementation of Dots and Boxes with a strong, training-free AI written entirely in JavaScript. The default game uses a 6 x 6 box board and runs the search engine in a Web Worker so the interface remains responsive.
 
+The interface uses native DOM APIs with no runtime framework dependencies. Vite provides the development server and production bundling.
+
 The project combines rule-guided PUCT, exact alpha-beta search, symmetry reduction, transposition caching, and Dots and Boxes chain theory. It does not use a neural network, offline training, or an opening book.
 
 ## Run
@@ -102,7 +104,8 @@ Exact endgame and chain values are stored separately from rollout estimates. A P
 
 ```text
 src/
-|-- App.jsx                  Game interface and worker coordination
+|-- main.js                  Browser entry point
+|-- app.js                   Game interface and worker coordination
 |-- config.js                Board and player configuration
 `-- game/
     |-- board.js             Live game state
