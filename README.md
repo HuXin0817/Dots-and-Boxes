@@ -15,15 +15,9 @@ npm install
 npm run dev
 ```
 
-Open the local URL printed by Vite. Both players are robots by default; use query parameters to choose human players:
+Open the local URL printed by Vite. Both players are robots by default. Set `Player1Type` and `Player2Type` in `src/config.js` to `PlayerType.Human` or `PlayerType.Robot` to choose the players. URL query parameters do not affect the player configuration.
 
-```text
-?player1=human&player2=robot
-?player1=human&player2=human
-?player1=robot&player2=robot
-```
-
-Click an unclaimed edge to play. Completing a box scores one point and keeps the turn. Use `Ctrl/Cmd` + `+`, `-`, or `0` to resize or reset the board scale.
+Click an unclaimed edge to play. Completing a box scores one point and keeps the turn.
 
 For a production build:
 

@@ -20,12 +20,6 @@ export const PlayerType = Object.freeze({
   Robot: "Robot",
 });
 
-export function parsePlayerType(value) {
-  return value?.toLowerCase() === PlayerType.Human.toLowerCase()
-    ? PlayerType.Human
-    : PlayerType.Robot;
-}
-
 export class Robot {
   constructor(model, options = {}) {
     const config = { ...DefaultRobotOptions, ...options };

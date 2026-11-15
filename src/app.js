@@ -1,9 +1,9 @@
-import { BoardSize, readPlayerConfig } from "./config";
+import { BoardSize, Player1Type, Player2Type } from "./config";
 import { Board, Owner } from "./game/board";
 import { BoardTopology } from "./game/board-topology";
 import { PlayerType } from "./game/robots";
 
-const DefaultUnitSize = 8;
+const BoardUnitSize = 8;
 
 function ownerClass(owner) {
   switch (owner) {
@@ -20,6 +20,10 @@ function createBoardView(model, onEdgeClick) {
   const element = document.createElement("div");
   element.className = "board-stage";
   const logicalWindowSize = model.size * 10 + 18;
+  element.style.setProperty(
+    "--preferred-size",
+    `${logicalWindowSize * BoardUnitSize}px`,
+  );
   const percent = (value) => `${(value / logicalWindowSize) * 100}%`;
 
   function addElement(tag, className, left, top, width, height) {
@@ -37,19 +41,24 @@ function createBoardView(model, onEdgeClick) {
 
   const boxes = Array.from({ length: model.boxCount }, (_, box) =>
     addElement(
-      "div", "box",
-      model.boxX(box) * 10 + 10, model.boxY(box) * 10 + 10,
-      8, 8,
+      "div",
+      "box",
+      model.boxX(box) * 10 + 10,
+      model.boxY(box) * 10 + 10,
+      8,
+      8,
     ),
   );
   const edges = Array.from({ length: model.edgeCount }, (_, edge) => {
     const dot = model.edgeDot1[edge];
     const rotated = model.edgeRotated(edge);
     const button = addElement(
-      "button", "edge",
+      "button",
+      "edge",
       8 + model.dotX(dot) * 10 + (rotated ? 0 : 1),
       8 + model.dotY(dot) * 10 + (rotated ? 1 : 0),
-      rotated ? 2 : 10, rotated ? 10 : 2,
+      rotated ? 2 : 10,
+      rotated ? 10 : 2,
     );
     button.type = "button";
     button.setAttribute("aria-label", `Edge ${edge}`);
@@ -58,20 +67,19 @@ function createBoardView(model, onEdgeClick) {
   });
   for (let dot = 0; dot < model.dotCount; dot += 1) {
     addElement(
-      "div", "dot",
-      8 + model.dotX(dot) * 10, 8 + model.dotY(dot) * 10,
-      2, 2,
+      "div",
+      "dot",
+      8 + model.dotX(dot) * 10,
+      8 + model.dotY(dot) * 10,
+      2,
+      2,
     );
   }
 
   return {
     element,
-    render(board, interactive, thinking, unitSize) {
+    render(board, interactive, thinking) {
       element.setAttribute("aria-busy", String(thinking));
-      element.style.setProperty(
-        "--preferred-size",
-        `${logicalWindowSize * unitSize}px`,
-      );
       boxes.forEach((box, index) => {
         box.className = `box ${ownerClass(board.boxOwner(index))}`;
       });
@@ -124,15 +132,18 @@ function createResultDialog(board, onRestart, onClose) {
     message = `Red Team Win! (Score ${board.player1Score()}:${board.player2Score()})`;
   }
   backdrop.querySelector("#result-message").textContent = message;
-  backdrop.querySelector('[data-action="restart"]').addEventListener("click", onRestart);
-  backdrop.querySelector('[data-action="close"]').addEventListener("click", onClose);
+  backdrop
+    .querySelector('[data-action="restart"]')
+    .addEventListener("click", onRestart);
+  backdrop
+    .querySelector('[data-action="close"]')
+    .addEventListener("click", onClose);
   return backdrop;
 }
 
 export function createApp(root) {
   const model = new BoardTopology(BoardSize);
   const board = new Board(model);
-  const { player1Type, player2Type } = readPlayerConfig();
   const main = document.createElement("main");
   main.className = "app-shell";
   const boardView = createBoardView(model, handleEdgeClick);
@@ -143,11 +154,12 @@ export function createApp(root) {
   let pendingRequest = 0;
   let thinking = false;
   let closed = false;
-  let unitSize = DefaultUnitSize;
   let resultDialog = null;
 
   function isRobotTurn() {
-    return (board.isPlayer1Turn() ? player1Type : player2Type) === PlayerType.Robot;
+    return (
+      (board.isPlayer1Turn() ? Player1Type : Player2Type) === PlayerType.Robot
+    );
   }
 
   function render() {
@@ -166,7 +178,6 @@ export function createApp(root) {
       board,
       !thinking && board.gaming() && !robotTurn,
       thinking,
-      unitSize,
     );
     if (!board.gaming() && !resultDialog) {
       resultDialog = createResultDialog(board, restart, close);
@@ -176,8 +187,11 @@ export function createApp(root) {
 
   function applyMove(edge) {
     if (
-      closed || !board.gaming() ||
-      !Number.isInteger(edge) || edge < 0 || edge >= model.edgeCount ||
+      closed ||
+      !board.gaming() ||
+      !Number.isInteger(edge) ||
+      edge < 0 ||
+      edge >= model.edgeCount ||
       board.contains(edge)
     ) {
       return;
@@ -199,7 +213,11 @@ export function createApp(root) {
     );
     worker = nextWorker;
     nextWorker.onmessage = ({ data }) => {
-      if (closed || worker !== nextWorker || data.requestId !== pendingRequest) {
+      if (
+        closed ||
+        worker !== nextWorker ||
+        data.requestId !== pendingRequest
+      ) {
         return;
       }
       thinking = false;
@@ -226,7 +244,6 @@ export function createApp(root) {
     pendingRequest += 1;
     worker?.terminate();
     worker = null;
-    window.removeEventListener("keydown", handleKeyDown);
   }
 
   function close() {
@@ -237,26 +254,6 @@ export function createApp(root) {
     window.close();
   }
 
-  function handleKeyDown(event) {
-    if (!event.ctrlKey && !event.metaKey) {
-      return;
-    }
-    if (event.code === "Minus") {
-      event.preventDefault();
-      unitSize = Math.max(1, Math.min(unitSize - 1, Math.floor(unitSize * 0.9)));
-    } else if (event.code === "Equal") {
-      event.preventDefault();
-      unitSize = Math.max(unitSize + 1, Math.floor(unitSize * 1.1));
-    } else if (event.code === "Digit0") {
-      event.preventDefault();
-      unitSize = DefaultUnitSize;
-    } else {
-      return;
-    }
-    render();
-  }
-
-  window.addEventListener("keydown", handleKeyDown);
   startWorker();
   render();
   return destroy;
